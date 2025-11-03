@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cadastrar — Zupi</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="auth-page">
+
+  <!-- Fundo decorativo com bolhas e quadrados -->
+  <div class="auth-bubbles">
+    <!-- Bolhas -->
+    <span class="bubble" style="background-color:#7EBCE6; top:10%; left:15%; width:60px; height:60px;"></span>
+    <span class="bubble" style="background-color:#F9E39A; top:40%; left:70%; width:50px; height:50px;"></span>
+    <span class="bubble" style="background-color:#A8E6CF; top:70%; left:25%; width:45px; height:45px;"></span>
+    <span class="bubble" style="background-color:#FFB677; top:20%; left:80%; width:55px; height:55px;"></span>
+    <span class="bubble" style="background-color:#7EBCE6; top:60%; left:50%; width:35px; height:35px;"></span>
+    <span class="bubble" style="background-color:#FFB677; top:80%; left:10%; width:40px; height:40px;"></span>
+    <span class="bubble" style="background-color:#F9E39A; top:5%; left:60%; width:70px; height:70px;"></span>
+    <span class="bubble" style="background-color:#A8E6CF; top:90%; left:70%; width:60px; height:60px;"></span>
+    <span class="bubble" style="background-color:#7EBCE6; top:30%; left:5%; width:50px; height:50px;"></span>
+    <span class="bubble" style="background-color:#FFB677; top:50%; left:85%; width:45px; height:45px;"></span>
+
+    <!-- Quadrados flutuantes -->
+    <span class="square" style="background-color:#F9E39A; top:15%; left:25%; width:35px; height:35px;"></span>
+    <span class="square" style="background-color:#A8E6CF; top:45%; left:15%; width:40px; height:40px;"></span>
+    <span class="square" style="background-color:#7EBCE6; top:65%; left:65%; width:50px; height:50px;"></span>
+    <span class="square" style="background-color:#FFB677; top:75%; left:35%; width:55px; height:55px;"></span>
+    <span class="square" style="background-color:#F9E39A; top:35%; left:90%; width:40px; height:40px;"></span>
+  </div>
+
+  <!-- Cabeçalho -->
+  <header class="topbar">
+    <div class="container flex-between">
+      <a href="index.html" class="logo">Zupi</a>
+      <nav>
+        <ul class="nav-menu">
+          <li><a href="index.html">Início</a></li>
+          <li><a href="sobre.html">Sobre</a></li>
+          <li><a href="planos.html">Planos</a></li>
+          <li><a href="contato.html">Contato</a></li>
+          <li><a href="login.html" class="btn-login">Entrar</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Conteúdo principal -->
+  <main class="site-content">
+    <div class="auth-card">
+      <h1>Crie sua conta</h1>
+      <form id="signupForm" action="dashboard-pais.html" method="get">
+        <label for="nome">Nome</label>
+        <input type="text" id="nome" name="nome" placeholder="Seu nome completo" required>
+
+        <label for="email">E-mail</label>
+        <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required>
+
+        <label for="senha">Senha</label>
+        <input type="password" id="senha" name="senha" placeholder="Crie uma senha" required>
+
+        <button type="submit">Cadastrar</button>
+      </form>
+      <p class="small-link">
+        Já tem conta? <a href="login.html">Entre aqui</a>
+      </p>
+    </div>
+  </main>
+
+  <!-- Rodapé -->
+  <footer class="site-footer">
+    <p>© 2025 Zupi</p>
+  </footer>
+
+  <!-- Animação dos quadrados -->
+  <style>
+    .square {
+      position: absolute;
+      opacity: 0.35;
+      transform: rotate(15deg);
+      animation: floatSquare 14s infinite ease-in-out;
+      z-index: 1;
+      border-radius: 8px;
+    }
+
+    @keyframes floatSquare {
+      0%, 100% {
+        transform: translateY(0) rotate(15deg);
+        opacity: 0.35;
+      }
+      50% {
+        transform: translateY(-40px) rotate(35deg);
+        opacity: 0.8;
+      }
+    }
+  </style>
+
+</body>
+</html>

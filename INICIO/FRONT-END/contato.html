@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Contato — Zupi</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/contato.css" />
+  <link rel="icon" href="img/favicon.png" type="image/png">
+</head>
+<body class="contato-page">
+
+  <!-- Cabeçalho -->
+  <header class="topbar">
+    <div class="container">
+      <a href="index.html" class="logo">Zupi</a>
+      <nav>
+        <a href="index.html">Início</a>
+        <a href="sobre.html">Sobre</a>
+        <a href="planos.html">Planos</a>
+        <a href="contato.html" class="btn active">Contato</a>
+        <a href="login.html" class="btn">Entrar</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Conteúdo principal -->
+  <main class="contato-main">
+    <!-- Bolhas animadas de fundo -->
+    <div class="contato-bubbles">
+      <span class="bubble" style="--size:50px; --x:10%; --y:20%; --color:#7EBCE6; --delay:0s;"></span>
+      <span class="bubble" style="--size:70px; --x:30%; --y:40%; --color:#F9E39A; --delay:1s;"></span>
+      <span class="bubble" style="--size:40px; --x:60%; --y:25%; --color:#A8E6CF; --delay:2s;"></span>
+      <span class="bubble" style="--size:60px; --x:80%; --y:50%; --color:#FFB677; --delay:0.5s;"></span>
+      <span class="bubble" style="--size:35px; --x:50%; --y:70%; --color:#7EBCE6; --delay:1.5s;"></span>
+    </div>
+
+    <!-- Cabeçalho da seção -->
+    <section class="contato-header">
+      <h1>Fale conosco</h1>
+      <p>Tem dúvida, sugestão ou quer nos seguir? Envie uma mensagem ou fale com a gente pelas redes 👇</p>
+    </section>
+
+    <!-- Cards de contato -->
+    <section class="contato-info">
+      <div class="info-card">
+        <h3>📧 E-mail</h3>
+        <p><a href="Zupii.up0@gmail.com">contato@zupi.com.br</a></p>
+      </div>
+
+      <div class="info-card">
+        <h3>📞 Telefone</h3>
+        <p><a href="tel:+5575999999999">(75) 99999-9999</a></p>
+      </div>
+
+      <div class="info-card">
+        <h3>📷 Instagram</h3>
+        <p><a href="https://www.instagram.com/zupi.up" target="_blank">@zupi.up</a></p>
+        <p class="small">Siga-nos para novidades, dicas e conteúdo divertido!</p>
+      </div>
+    </section>
+
+    <!-- Formulário -->
+    <section class="contato-form-section">
+      <form id="contactForm" class="contato-form" onsubmit="handleContact(event)">
+        <label for="nome">Nome (responsável)</label>
+        <input type="text" id="nome" name="nome" placeholder="Seu nome" required>
+
+        <label for="email">E-mail</label>
+        <input type="email" id="email" name="email" placeholder="Seu e-mail" required>
+
+        <label for="assunto">Assunto</label>
+        <input type="text" id="assunto" name="assunto" placeholder="Ex: Dúvida sobre planos" required>
+
+        <label for="mensagem">Mensagem</label>
+        <textarea id="mensagem" name="mensagem" rows="5" placeholder="Escreva sua mensagem..." required></textarea>
+
+        <div class="form-actions">
+          <button class="btn primary" type="submit">Enviar</button>
+          <button class="btn ghost" type="reset">Limpar</button>
+        </div>
+
+        <div id="contactFeedback" class="contact-feedback" aria-live="polite"></div>
+      </form>
+    </section>
+  </main>
+
+  <!-- Rodapé -->
+  <footer class="footer">
+    <div class="container">
+      <p>© 2025 Zupi. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <script>
+    function handleContact(e) {
+      e.preventDefault();
+      const feedback = document.getElementById('contactFeedback');
+      const btn = e.target.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      btn.textContent = 'Enviando...';
+
+      // Simula envio
+      setTimeout(() => {
+        feedback.innerHTML = '<strong>Mensagem enviada!</strong> Obrigado pelo contato.';
+        feedback.classList.add('visible');
+        // animação confete simples
+        createConfetti();
+        btn.disabled = false;
+        btn.textContent = 'Enviar';
+        e.target.reset();
+        setTimeout(()=> feedback.classList.remove('visible'), 6000);
+      }, 1000);
+    }
+  </script>
+</body>
+</html>

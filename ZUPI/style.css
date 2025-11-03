@@ -1,0 +1,267 @@
+/* ======================================================
+   🌟 ZUPI 2.0 — Peludinho Vivo e Carismático
+   Paleta: #7EBCE6, #F9E39A, #A8E6CF, #FFB677, #F1F1F1
+   ====================================================== */
+
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(circle at top, #F1F1F1, #E8F8F5);
+  font-family: 'Comic Neue', 'Poppins', sans-serif;
+  overflow: hidden;
+}
+
+/* === Aura mágica === */
+.aura {
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.45), transparent 70%);
+  animation: pulse 4s infinite ease-in-out;
+  z-index: 0;
+  filter: blur(25px);
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.1); opacity: 0.8; }
+}
+
+/* === Estrutura geral === */
+.zupi {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  animation: idle 3s ease-in-out infinite;
+  filter: drop-shadow(0 8px 15px rgba(0,0,0,0.25));
+  transition: transform 0.3s ease;
+}
+
+@keyframes idle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+/* === Efeito de pulo === */
+.zupi.bounce {
+  animation: bounce 0.5s cubic-bezier(.28,.84,.42,1);
+}
+
+@keyframes bounce {
+  0%   { transform: translateY(0) scale(1); }
+  40%  { transform: translateY(-30px) scale(1.05); }
+  60%  { transform: translateY(-15px) scale(0.97); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+/* === Textura fofinha === */
+.furry {
+  background: linear-gradient(145deg, #7EBCE6, #A8E6CF);
+  box-shadow:
+    inset 0 0 15px rgba(255,255,255,0.5),
+    0 0 20px rgba(255,255,255,0.2);
+}
+
+/* === Cabeça === */
+.head {
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  position: relative;
+  z-index: 2;
+  animation: headWiggle 6s infinite ease-in-out;
+}
+
+@keyframes headWiggle {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(2deg); }
+}
+
+/* === Orelhas === */
+.ear {
+  position: absolute;
+  width: 50px;
+  height: 60px;
+  background: linear-gradient(145deg, #7EBCE6, #A8E6CF);
+  border-radius: 50%;
+  top: -25px;
+  transform-origin: bottom center;
+  animation: earWiggle 5s infinite ease-in-out;
+  box-shadow: inset 0 0 8px rgba(255,255,255,0.3);
+}
+
+@keyframes earWiggle {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(8deg); }
+}
+
+.ear.left { left: -15px; animation-delay: 0.5s; }
+.ear.right { right: -15px; animation-delay: 0.8s; }
+
+/* === Olhos === */
+.eye {
+  position: absolute;
+  width: 38px;
+  height: 38px;
+  background: #fff;
+  border-radius: 50%;
+  top: 65px;
+  border: 2px solid #333;
+  overflow: hidden;
+  animation: blink 5s infinite;
+}
+
+.eye.left { left: 35px; }
+.eye.right { right: 35px; }
+
+@keyframes blink {
+  0%, 92%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0.15); }
+}
+
+.pupil {
+  width: 14px;
+  height: 14px;
+  background: radial-gradient(circle, #000 60%, #333);
+  border-radius: 50%;
+  margin: 9px auto;
+  animation: lookAround 6s infinite ease-in-out;
+}
+
+@keyframes lookAround {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(5px, 2px); }
+  50% { transform: translate(-4px, -2px); }
+  75% { transform: translate(2px, 3px); }
+}
+
+.pupil::after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: white;
+  border-radius: 50%;
+  top: 1px;
+  left: 2px;
+}
+
+/* === Bochechas === */
+.blush {
+  position: absolute;
+  width: 22px;
+  height: 12px;
+  background: radial-gradient(circle, #FFB677 40%, transparent 70%);
+  opacity: 0.8;
+  border-radius: 50%;
+  bottom: 45px;
+  filter: blur(1px);
+}
+
+.blush.left { left: 25px; }
+.blush.right { right: 25px; }
+
+/* === Boca === */
+.mouth {
+  position: absolute;
+  width: 42px;
+  height: 22px;
+  border-bottom: 4px solid #E75480;
+  border-radius: 0 0 25px 25px;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* === Corpo === */
+.body {
+  width: 140px;
+  height: 160px;
+  border-radius: 70px;
+  position: relative;
+  margin-top: -10px;
+  z-index: 1;
+  animation: breathe 3s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(1.05); }
+}
+
+/* === Manchinhas === */
+.spot {
+  position: absolute;
+  width: 38px;
+  height: 38px;
+  background: #B38FC9;
+  border-radius: 50%;
+  opacity: 0.4;
+}
+
+.spot1 { top: 35px; left: 25px; }
+.spot2 { top: 80px; right: 10px; }
+.spot3 { bottom: 25px; left: 45px; }
+
+/* === Barriga === */
+.belly {
+  width: 70px;
+  height: 90px;
+  background: #FFF1F1;
+  border-radius: 50%;
+  position: absolute;
+  bottom: 25px;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: inset 0 0 8px rgba(255,255,255,0.4);
+}
+
+/* === Braços === */
+.arm {
+  position: absolute;
+  width: 35px;
+  height: 65px;
+  background: linear-gradient(145deg, #7EBCE6, #A8E6CF);
+  border-radius: 40px;
+  top: 50px;
+  box-shadow: inset 0 0 10px rgba(255,255,255,0.3);
+}
+
+.arm.left { left: -30px; transform: rotate(-25deg); }
+.arm.right { right: -30px; transform: rotate(25deg); }
+
+/* === Pernas === */
+.leg {
+  position: absolute;
+  width: 45px;
+  height: 60px;
+  background: linear-gradient(145deg, #7EBCE6, #A8E6CF);
+  border-radius: 50%;
+  bottom: -25px;
+  box-shadow: inset 0 0 10px rgba(255,255,255,0.4);
+}
+
+.leg.left { left: 15px; }
+.leg.right { right: 15px; }
+
+/* === Nome === */
+.zupi-name {
+  margin-top: 20px;
+  font-size: 28px;
+  color: #555;
+  text-shadow: 0 0 12px #FFB677, 0 0 25px #F9E39A;
+  animation: glow 3s ease-in-out infinite;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+@keyframes glow {
+  0%, 100% { text-shadow: 0 0 10px #FFB677, 0 0 25px #F9E39A; }
+  50% { text-shadow: 0 0 15px #FFF, 0 0 35px #FFB677; }
+}

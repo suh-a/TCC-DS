@@ -1,0 +1,269 @@
+/* ===================================================
+   css/configuracoes.css — Estilos da página Configurações
+   Paleta: #7EBCE6, #F9E39A, #A8E6CF, #FFB677, #F1F1F1
+   =================================================== */
+
+:root {
+  --primary: #7EBCE6;
+  --secondary: #F9E39A;
+  --accent: #A8E6CF;
+  --highlight: #FFB677;
+  --bg: #F1F1F1;
+  --surface: #fff;
+  --text: #333;
+  --card-shadow: 0 10px 30px rgba(7,32,35,0.06);
+}
+
+/* reset */
+* {
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* ===================== FUNDO DECORATIVO ===================== */
+.background-decor { 
+  position: fixed; 
+  inset: 0; 
+  z-index: -1; 
+  overflow: hidden; 
+}
+
+.background-decor span { 
+  position: absolute; 
+  opacity: 0.15; 
+  animation: float 12s infinite alternate ease-in-out; 
+  filter: blur(1px); 
+}
+
+.circle { border-radius: 50%; }
+.c1 { width:180px; height:180px; top:10%; left:5%; background:var(--accent);}
+.c2 { width:240px; height:240px; bottom:8%; right:10%; background:var(--highlight);}
+.c3 { width:120px; height:120px; top:50%; left:60%; background:var(--primary);}
+.square { border-radius:12px; }
+.s1 { width:100px; height:100px; top:20%; right:25%; transform:rotate(25deg); background:var(--secondary);}
+.s2 { width:80px; height:80px; bottom:20%; left:10%; transform:rotate(15deg); background:var(--primary);}
+.s3 { width:120px; height:120px; top:60%; left:50%; transform:rotate(35deg); background:var(--highlight);}
+.triangle { width:0; height:0; border-left:30px solid transparent; border-right:30px solid transparent; border-bottom:50px solid var(--accent);}
+.t1 { top:30%; left:70%; transform:rotate(10deg);}
+.t2 { bottom:25%; right:20%; transform:rotate(-20deg);}
+
+@keyframes float {
+  0% { transform: translateY(0) rotate(0deg); opacity:0.15; }
+  100% { transform: translateY(-20px) rotate(20deg); opacity:0.25; }
+}
+
+/* ===================== HEADER ===================== */
+header {
+  background: var(--primary);
+  padding: 18px 30px;
+  color: #fff;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  font-size: 1.8rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  animation: pulse 2s infinite;
+}
+
+nav ul {
+  display: flex;
+  gap: 20px;
+  list-style: none;
+}
+
+nav a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+nav a:hover,
+nav a.active {
+  background: var(--highlight);
+  color: var(--text);
+  transform: translateY(-2px);
+}
+
+/* ===================== MAIN ===================== */
+.settings-container {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.settings-container h2 {
+  font-size: 2rem;
+  color: var(--primary);
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.settings-container h2::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 4px;
+  background: var(--highlight);
+  margin-top: 6px;
+  border-radius: 2px;
+  animation: slideIn 1s ease forwards;
+}
+
+/* ===================== CARDS DE CONFIGURAÇÕES ===================== */
+.settings-card {
+  background: var(--surface);
+  border-radius: 16px;
+  padding: 24px 18px;
+  margin-bottom: 24px;
+  box-shadow: var(--card-shadow);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.settings-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 28px rgba(0,0,0,0.2);
+}
+
+.settings-card h3 {
+  font-size: 1.4rem;
+  color: var(--primary);
+  margin-bottom: 18px;
+}
+
+/* ===================== FORMULÁRIO ===================== */
+.settings-card form label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.settings-card form input {
+  width: 100%;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  background: #fafafa;
+  transition: border 0.3s;
+}
+
+.settings-card form input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.btn-save {
+  padding: 12px 20px;
+  background: linear-gradient(90deg, var(--highlight), var(--secondary));
+  border: none;
+  color: #333;
+  font-weight: 700;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-save:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(255,182,119,0.3);
+}
+
+/* ===================== SWITCHES ===================== */
+.setting-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 26px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  background-color: #ccc;
+  border-radius: 34px;
+  top:0; left:0;
+  right:0; bottom:0;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  border-radius: 50%;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: var(--highlight);
+}
+
+input:checked + .slider:before {
+  transform: translateX(24px);
+}
+
+/* ===================== RODAPÉ ===================== */
+footer {
+  text-align: center;
+  padding: 20px;
+  background: var(--primary);
+  color: #fff;
+  margin-top: 40px;
+  font-weight: 600;
+}
+
+/* ===================== ANIMAÇÕES ===================== */
+@keyframes pulse {
+  0%,100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes slideIn {
+  0% { width:0; opacity:0; }
+  100% { width:60px; opacity:1; }
+}
+
+/* ===================== RESPONSIVIDADE ===================== */
+@media(max-width:768px){
+  .settings-card { padding: 20px 14px; }
+  nav ul { gap:12px; }
+}
