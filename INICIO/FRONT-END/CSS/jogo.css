@@ -1,0 +1,171 @@
+/* ===================================================
+   jogo.css — Jogo da Memória (versão com modal)
+   Paleta: #7EBCE6, #F9E39A, #A8E6CF, #FFB677, #F1F1F1
+   =================================================== */
+
+:root {
+  --azul: #7ebce6;
+  --amarelo: #f9e39a;
+  --verde: #a8e6cf;
+  --laranja: #ffb677;
+  --cinza: #f1f1f1;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  background: var(--cinza);
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  color: #333;
+}
+
+.site-header {
+  background: var(--azul);
+  color: white;
+  text-align: center;
+  padding: 16px 0;
+  font-size: 1.8rem;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.game-panel {
+  background: #fff;
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.stats {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  font-size: 1.1rem;
+  background: var(--amarelo);
+  border-radius: 12px;
+  padding: 10px 15px;
+  margin-bottom: 15px;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(4, 90px);
+  gap: 12px;
+  justify-content: center;
+  margin: 20px auto;
+}
+
+.card {
+  width: 90px;
+  height: 90px;
+  background: white;
+  border: 2px solid var(--azul);
+  border-radius: 14px;
+  font-size: 2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+.card:hover {
+  background: var(--verde);
+  transform: scale(1.05);
+}
+
+.card.flipped {
+  background: var(--azul);
+  color: white;
+}
+
+.card.matched {
+  background: var(--laranja);
+  color: white;
+  cursor: default;
+  transform: scale(1.05);
+}
+
+.btn {
+  background: var(--azul);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s;
+}
+
+.btn:hover {
+  background: var(--laranja);
+  transform: scale(1.05);
+}
+
+.btn.outline {
+  background: var(--verde);
+  color: #333;
+}
+
+.site-footer {
+  background: var(--amarelo);
+  text-align: center;
+  padding: 10px;
+  border-top: 2px solid var(--azul);
+  font-weight: 500;
+}
+
+/* ===== Modal ===== */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal.show {
+  display: flex;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px 30px;
+  border-radius: 14px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  animation: pop 0.3s ease;
+}
+
+@keyframes pop {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 15px;
+}

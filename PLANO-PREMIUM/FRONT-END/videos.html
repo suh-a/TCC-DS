@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Vídeos — Zupi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/videos.css" />
+  <link rel="icon" href="img/favicon.png" type="image/png">
+</head>
+<body>
+    <!-- ===================== HEADER ===================== -->
+  <header>
+    <div class="header-container">
+      <h1 class="brand">Zupi</h1>
+      <nav>
+        <ul>
+          <li><a href="dashboard-pais.html">Dashboard</a></li>
+          <li><a href="relatorios.html" class="active">Relatórios</a></li>
+          <li><a href="configuracoes.html">Configurações</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <main class="page" id="main" role="main">
+    <section class="hero">
+      <div class="hero-content">
+        <h1>Vídeos Zupi — Autismo, TDAH e Acessibilidade</h1>
+        <p>Conteúdos para famílias, educadores e profissionais: práticas inclusivas, dicas, 
+          histórias reais e atividades acessíveis para crianças.</p>
+      </div>
+
+      <div class="hero-decor" aria-hidden="true">
+        <span class="bubble" style="--size:120px; --x:8%; --y:12%;"></span>
+        <span class="bubble" style="--size:80px; --x:85%; --y:18%; --delay:1s;"></span>
+        <span class="square" style="--size:96px; --x:35%; --y:70%; --delay:0.6s;"></span>
+      </div>
+    </section>
+
+    <!-- Featured video -->
+    <section class="featured" aria-label="Vídeo em destaque">
+      <div class="featured-player" id="featured-player">
+        <div class="player-frame" data-video-id="7jNQlP38tG0" tabindex="0" aria-live="polite">
+          <button class="play-button" aria-label="Reproduzir vídeo em destaque" id="play-featured">
+            <svg width="70" height="70" viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M8 5v14l11-7z"/></svg>
+          </button>
+          <img src="https://youtu.be/7jNQlP38tG0?si=8KMKIUEfDdwyIV18" alt="DRONE VISITA o GASA - Grupo Autismo de Santo Amaro" class="thumb" />
+        </div>
+
+        <div class="featured-meta">
+          <h2 id="featured-title">Histórias de Inclusão — Atividades sensoriais para crianças</h2>
+          <p class="meta-tags">
+            <span class="tag">Autismo</span>
+            <span class="tag">Atividades Sensoriais</span>
+            <span class="tag">Família</span>
+          </p>
+
+          <div class="actions">
+            <button class="action-btn" id="btn-captions" aria-pressed="false">Legendas</button>
+            <button class="action-btn" id="btn-transcript" aria-controls="transcript" aria-expanded="false">Transcrição</button>
+            <a class="action-link" href="#" id="btn-cc-link" aria-label="Abrir no YouTube com legendas">Abrir no YouTube</a>
+          </div>
+
+          <div id="transcript" class="transcript" hidden>
+            <h3>Transcrição</h3>
+            <p><em>Transcrição resumida do vídeo — exemplo:</em> Olá, somos a equipe Zupi. Neste vídeo mostramos atividades sensoriais que ajudam crianças com autismo a explorar texturas e movimentos com segurança...</p>
+            <a href="#" class="download-transcript">Baixar transcrição (.txt)</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Gallery -->
+    <section class="gallery" aria-label="Mais vídeos">
+      <h3 class="section-title">Mais vídeos relacionados</h3>
+
+      <ul class="video-list" role="list">
+        <li class="video-card" tabindex="0" role="listitem" data-video="BNfpcaUoMQs" data-title="Como criar rotinas previsíveis para crianças com TDAH" data-tags="TDAH,Routine,Escola">
+          <button class="thumb-btn" aria-label="Abrir vídeo: Como criar rotinas previsíveis para crianças com TDAH">
+            <img src="https://youtu.be/BNfpcaUoMQs?si=hIOij0guF7ek8nyR" alt="">
+            <span class="duration">6:12</span>
+          </button>
+          <div class="video-info">
+            <h4>Como criar rotinas previsíveis para crianças com TDAH</h4>
+            <p class="small">Dicas práticas para casa e sala de aula · <span class="tag">TDAH</span></p>
+          </div>
+        </li>
+
+        <li class="video-card" tabindex="0" role="listitem" data-video="sUPVOq6dkDk" data-title="3 brincadeiras para estimular as crianças" data-tags="Autismo,Sensorial,Família">
+          <button class="thumb-btn" aria-label="Abrir vídeo: Atividades sensoriais para brincar em casa">
+            <img src="https://youtu.be/sUPVOq6dkDk?si=C7CRJrqGDDISV2k-" alt="">
+            <span class="duration">5:34</span>
+          </button>
+          <div class="video-info">
+            <h4>Atividades sensoriais para brincar em casa</h4>
+            <p class="small">Ideias simples e seguras · <span class="tag">Autismo</span></p>
+          </div>
+        </li>
+
+        <li class="video-card" tabindex="0" role="listitem" data-video="OYC5-XVjlOs" data-title="ADEUS PECS: a ALTERNATIVA mais EFICAZ para 
+        a COMUNICAÇÃO" data-tags="Acessibilidade,Comunicação">
+          <button class="thumb-btn" aria-label="Abrir vídeo: Comunicação alternativa: PECS e outras soluções">
+            <img src="https://www.youtube.com/watch?v=OYC5-XVjlOs" alt="">
+            <span class="duration">12:05</span>
+          </button>
+          <div class="video-info">
+            <h4>Comunicação alternativa: PECS e outras soluções</h4>
+            <p class="small">Ferramentas para ampliar a voz das crianças · <span class="tag">Acessibilidade</span></p>
+          </div>
+        </li>
+
+        <li class="video-card" tabindex="0" role="listitem" data-video="rfe7rr_ipPM" data-title="FAMÍLIA E INCLUSÃO | UMA LINDA HISTÓRIA | INCLUA MUNDO | 
+        PAPO DE MÃE" data-tags="Histórias,Família">
+          <button class="thumb-btn" aria-label="Abrir vídeo: Histórias reais: Famílias e inclusão">
+            <img src="https://www.youtube.com/watch?v=rfe7rr_ipPM&pp=ygUnSGlzdMOzcmlhcyByZWFpczogRmFtw61saWFzIGUgaW5jbHVzw6Nv" alt="">
+            <span class="duration">10:22</span>
+          </button>
+          <div class="video-info">
+            <h4>Histórias reais: Famílias e inclusão</h4>
+            <p class="small">Depoimentos inspiradores · <span class="tag">Família</span></p>
+          </div>
+        </li>
+      </ul>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <p>© 2025 Zupi — Conteúdo educativo com foco em inclusão e acessibilidade.</p>
+      <p><a href="contato.html">Contato</a> · <a href="#">Política de Privacidade</a></p>
+    </div>
+  </footer>
+
+  <!-- JS externo -->
+  <script src="js/videos.js"></script>
+</body>
+</html>

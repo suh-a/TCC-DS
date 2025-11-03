@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jogo da Memória — Zupi</title>
+  <!-- O CSS do jogo -->
+  <link rel="stylesheet" href="css/jogo.css" />
+</head>
+<body>
+  <header class="site-header">
+    <h1>Jogo da Memória • Zupi</h1>
+  </header>
+
+  <main class="main">
+    <section class="game-panel">
+      <div class="game-controls">
+        <div class="stats">
+          <div>⏱️ Tempo: <span id="timer">00:00</span></div>
+          <div>🎯 Movimentos: <span id="moves">0</span></div>
+          <div>💎 Pares: <span id="matched">0</span>/8</div>
+        </div>
+        <div class="buttons">
+          <button id="restartBtn" class="btn">Reiniciar</button>
+          <a href="menu-jogos.html" class="btn outline">Voltar ao Menu</a>
+        </div>
+      </div>
+
+      <div id="board" class="board"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    © 2025 Projeto Zupi - Todos os direitos reservados
+  </footer>
+
+  <!-- Modal de vitória -->
+  <div id="winModal" class="modal" aria-hidden="true">
+    <div class="modal-content">
+      <h2>🎉 Você venceu!</h2>
+      <p>Tempo: <span id="finalTime">00:00</span></p>
+      <p>Movimentos: <span id="finalMoves">0</span></p>
+      <div class="modal-actions">
+        <button id="playAgain" class="btn">Jogar novamente</button>
+        <button id="closeModal" class="btn outline">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- O JavaScript do jogo -->
+  <script src="js/jogo.js"></script>
+</body>
+</html>
