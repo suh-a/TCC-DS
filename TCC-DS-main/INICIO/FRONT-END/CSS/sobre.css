@@ -1,0 +1,91 @@
+/* ===============================================
+   Zupi — Fundo Animado da Página "Sobre"
+   =============================================== */
+
+.hero-about {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, #E9F6F5, #F1F7F6);
+  animation: gradientShift 8s ease-in-out infinite alternate;
+  color: #222;
+  text-align: center;
+  padding: 100px 20px;
+}
+
+.hero-about .hero-content {
+  position: relative;
+  z-index: 3;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.hero-about h1 {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+  color: var(--cor-primaria);
+}
+
+.hero-about p {
+  font-size: 1.2rem;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* Fundo animado */
+.auth-bubbles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 1;
+  filter: blur(0.8px);
+}
+
+/* Bolhas e quadrados flutuantes */
+.auth-bubbles .bubble,
+.auth-bubbles .square {
+  position: absolute;
+  opacity: 0.35;
+  animation: float 12s infinite ease-in-out alternate,
+             drift 16s infinite linear;
+  transform-origin: center;
+}
+
+.auth-bubbles .bubble {
+  border-radius: 50%;
+  backdrop-filter: blur(3px);
+}
+
+.auth-bubbles .square {
+  border-radius: 8px;
+  transform: rotate(15deg);
+}
+
+/* Animações */
+@keyframes float {
+  0% { transform: translateY(0) scale(1); opacity: 0.4; }
+  50% { transform: translateY(-40px) scale(1.1); opacity: 0.8; }
+  100% { transform: translateY(0) scale(1); opacity: 0.4; }
+}
+
+@keyframes drift {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes gradientShift {
+  0% { background: linear-gradient(180deg, #E9F6F5, #F1F7F6); }
+  50% { background: linear-gradient(180deg, #E3F3F1, #FDFBF3); }
+  100% { background: linear-gradient(180deg, #E9F6F5, #F1F7F6); }
+}
+
+/* ===============================================
+   Responsividade
+   =============================================== */
+@media (max-width: 768px) {
+  .hero-about h1 {
+    font-size: 2rem;
+  }
+  .hero-about p {
+    font-size: 1rem;
+  }
+}

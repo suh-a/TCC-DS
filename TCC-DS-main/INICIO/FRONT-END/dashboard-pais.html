@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dashboard — Zupi</title>
+<link rel="stylesheet" href="CSS/dashborard.css">
+<link rel="icon" href="img/favicon.png">
+</head>
+<body>
+
+<!-- ===================== FUNDO DINÂMICO ===================== -->
+<div class="background-decor">
+  <!-- 30 elementos flutuantes variados -->
+  <span class="float circle c1"></span>
+  <span class="float circle c2"></span>
+  <span class="float circle c3"></span>
+  <span class="float circle c4"></span>
+  <span class="float circle c5"></span>
+  <span class="float square s1"></span>
+  <span class="float square s2"></span>
+  <span class="float square s3"></span>
+  <span class="float square s4"></span>
+  <span class="float square s5"></span>
+  <span class="float circle c6"></span>
+  <span class="float circle c7"></span>
+  <span class="float square s6"></span>
+  <span class="float square s7"></span>
+  <span class="float circle c8"></span>
+  <span class="float square s8"></span>
+  <span class="float circle c9"></span>
+  <span class="float square s9"></span>
+  <span class="float circle c10"></span>
+  <span class="float square s10"></span>
+  <span class="float circle c11"></span>
+  <span class="float square s11"></span>
+  <span class="float circle c12"></span>
+  <span class="float square s12"></span>
+  <span class="float circle c13"></span>
+  <span class="float circle c14"></span>
+  <span class="float square s13"></span>
+  <span class="float square s14"></span>
+  <span class="float circle c15"></span>
+  <span class="float square s15"></span>
+</div>
+
+<!-- ===================== SIDEBAR ===================== -->
+<div class="sidebar">
+  <div class="brand">Zupi</div>
+  <nav>
+    <a href="perfil-criancas.html">Perfis</a>
+    <a href="relatorios.html">Relatórios</a>
+    <a href="configuracoes.html">Configurações</a>
+    <a href="index.html">Sair</a>
+  </nav>
+</div>
+
+<!-- ===================== DASHBOARD PRINCIPAL ===================== -->
+<main class="dashboard-main">
+
+  <!-- HEADER -->
+  <header class="dashboard-header">
+    <h1>Olá, responsável</h1>
+    <div class="summary">
+      <div class="card">Tempo total: <strong>1h 24m</strong></div>
+      <div class="card">Jogos completados: <strong>12</strong></div>
+      <div class="card highlight">Progresso: <strong>85%</strong></div>
+    </div>
+  </header>
+
+  <!-- CHAMADO PARA JOGOS -->
+  <section class="play-games">
+    <div class="play-card">
+      <h2>Vamos jogar!</h2>
+      <p>Toque aqui para acessar os jogos divertidos!</p>
+      <a href="menu-jogos.html" class="btn-play">🎮 Jogar Agora</a>
+    </div>
+  </section>
+
+  <!-- CARDS DE ACESSO RÁPIDO -->
+  <section class="cards">
+    <div class="card big">
+      <h3>Perfis das crianças</h3>
+      <p><a href="perfil-criancas.html" class="btn">Gerenciar perfis</a></p>
+    </div>
+    <div class="card big">
+      <h3>Relatórios rápidos</h3>
+      <p><a href="relatorios.html" class="btn">Ver relatórios</a></p>
+    </div>
+    <div class="card big">
+      <h3>Agenda de Atividades</h3>
+      <p><a href="agenda.html" class="btn">Visualizar Agenda</a></p>
+    </div>
+  </section>
+
+  <!-- PERFIS DAS CRIANÇAS -->
+  <section class="profiles">
+    <div class="profile">
+      <img src="img/logokids1.png" alt="Criança 1">
+      <h3>Lucas</h3>
+      <p>Idade: 7 anos</p>
+      <a href="#" class="btn">Ver Perfil</a>
+    </div>
+    <div class="profile">
+      <img src="img/logokids2.png" alt="Criança 2">
+      <h3>Mariana</h3>
+      <p>Idade: 6 anos</p>
+      <a href="#" class="btn">Ver Perfil</a>
+    </div>
+    <div class="profile add">
+      <div class="add-btn">+</div>
+    </div>
+  </section>
+
+  <!-- CHAT SIMULADO -->
+  <section class="chat-section">
+    <h2>Chat com a equipe Zupi</h2>
+    <div class="chat-box">
+      <div class="message received">
+        <span>Olá! Como está o progresso da criança hoje?</span>
+      </div>
+      <div class="message sent">
+        <span>Está indo muito bem, completou todos os jogos planejados!</span>
+      </div>
+      <div class="message received">
+        <span>Ótimo! Continue acompanhando e motivando-a.</span>
+      </div>
+    </div>
+
+    <form class="chat-form">
+      <input type="text" placeholder="Digite sua mensagem...">
+      <button type="submit">Enviar</button>
+    </form>
+  </section>
+
+  <!-- ===================== SEÇÃO EXTRA: RECURSOS E ATIVIDADES ===================== -->
+  <section class="resources">
+    <h2>Recursos & Atividades</h2>
+    <div class="cards-grid">
+      <div class="resource-card">
+        <h3>Vídeos Educativos</h3>
+        <a href="videos.html" class="btn">Assistir</a>
+      </div>
+      <div class="resource-card">
+        <h3>Guias para Casa</h3>
+        <a href="guias.html" class="btn">Ver Guias</a>
+      </div>
+      <div class="resource-card">
+        <h3>Dicas de Inclusão</h3>
+        <a href="inclusao.html" class="btn">Ler Dicas</a>
+      </div>
+      <div class="resource-card">
+        <h3>Atividades Interativas</h3>
+        <a href="atividades.html" class="btn">Explorar</a>
+      </div>
+      <div class="resource-card">
+        <h3>Desafios Semanais</h3>
+        <a href="desafios.html" class="btn">Participar</a>
+      </div>
+    </div>
+  </section>
+</main>
+</body>
+</html>

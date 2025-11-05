@@ -1,0 +1,80 @@
+/* ===================================================
+   css/agenda.css — Tela de Agenda Zupi com animações
+   =================================================== */
+
+:root {
+  --bg: #F1F7F6;
+  --surface: #fff;
+  --primary: #7EBCE6;
+  --secondary: #F9E39A;
+  --accent: #A8E6CF;
+  --highlight: #FFB677;
+  --text: #333;
+  --card-shadow: 0 10px 30px rgba(7,32,35,0.06);
+}
+
+/* reset básico */
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; position: relative; overflow-x: hidden; }
+
+/* ===================== FUNDO DECORATIVO ===================== */
+.background-decor { position: fixed; inset: 0; z-index: -1; overflow: hidden; }
+.background-decor span {
+  position: absolute;
+  opacity: 0.1;
+  animation: float 15s infinite alternate ease-in-out;
+  filter: blur(1px);
+}
+.circle { border-radius: 50%; background: var(--accent); width: 120px; height: 120px; }
+.square { border-radius: 12px; background: var(--secondary); width: 100px; height: 100px; }
+
+@keyframes float { 0%{transform:translateY(0) rotate(0deg);}50%{transform:translateY(-20px) rotate(20deg);}100%{transform:translateY(0) rotate(0deg);} }
+
+/* ===================== SIDEBAR ===================== */
+.sidebar {
+  width: 220px; background: var(--primary); height: 100vh; position: fixed; left: 0; top: 0;
+  padding: 30px 0; display: flex; flex-direction: column; align-items: center;
+}
+.sidebar .brand { font-size: 2rem; font-weight: 800; color: #fff; margin-bottom: 40px; }
+.sidebar nav { display: flex; flex-direction: column; gap: 12px; width: 100%; align-items: center; }
+.sidebar nav a { width: 80%; text-align: center; padding: 10px 12px; border-radius: 10px; color: #fff; font-weight: 600; text-decoration: none; transition: all 0.3s ease; }
+.sidebar nav a:hover { background: var(--highlight); transform: translateX(5px); }
+
+/* ===================== MAIN ===================== */
+.agenda-main { margin-left: 220px; padding: 30px; flex: 1; }
+.agenda-header { display: flex; flex-direction: column; gap: 10px; margin-bottom: 30px; }
+.agenda-header h1 { font-size: 2rem; color: var(--primary); position: relative; }
+.agenda-header h1::after { content: ''; width: 60px; height: 4px; background: var(--highlight); display: block; margin-top: 5px; border-radius: 2px; animation: slideIn 1s ease forwards; }
+.agenda-header p { color: #555; font-size: 1.1rem; }
+.btn-add {
+  display: inline-block; padding: 12px 25px; background: linear-gradient(135deg, var(--primary), var(--highlight));
+  color: #fff; border-radius: 15px; font-weight: bold; text-decoration: none; transition: all 0.3s ease;
+}
+.btn-add:hover { transform: scale(1.05) translateY(-3px); background: linear-gradient(135deg, var(--highlight), var(--primary)); }
+
+/* ===================== CARDS ===================== */
+.agenda-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+.agenda-card {
+  background: var(--surface); padding: 20px; border-radius: 20px; box-shadow: var(--card-shadow);
+  transition: transform 0.3s, box-shadow 0.3s; position: relative; overflow: hidden; cursor: pointer;
+}
+.agenda-card:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 12px 25px rgba(0,0,0,0.2); }
+.agenda-card h3 { color: var(--primary); margin-bottom: 10px; font-size: 1.2rem; }
+.agenda-card p { color: #555; margin-bottom: 15px; }
+.btn-view {
+  display: inline-block; padding: 8px 20px; background: linear-gradient(135deg, var(--accent), var(--highlight));
+  color: #fff; border-radius: 12px; font-weight: 600; text-decoration: none; transition: all 0.3s ease;
+}
+.btn-view:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 6px 15px rgba(0,0,0,0.15); background: linear-gradient(135deg, var(--highlight), var(--accent)); }
+
+/* ===================== ANIMAÇÕES ===================== */
+@keyframes pulse { 0%{transform:translateY(0) scale(1);}50%{transform:translateY(-10px) scale(1.05);}100%{transform:translateY(0) scale(1);} }
+@keyframes slideIn { 0%{width:0;opacity:0;}100%{width:60px;opacity:1;} }
+@keyframes fadeIn { from{opacity:0;transform:translateY(5px);} to{opacity:1;transform:translateY(0);} }
+
+/* ===================== RESPONSIVIDADE ===================== */
+@media (max-width:900px){
+  .sidebar { position: relative; width: 100%; height: auto; display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; }
+  .agenda-main { margin-left: 0; padding: 18px; }
+  .agenda-cards { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+}

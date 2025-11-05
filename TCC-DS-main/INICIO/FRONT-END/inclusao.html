@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dicas de Inclusão — Zupi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/dicas.css" />
+</head>
+<body>
+  <!-- FUNDO DECORATIVO GLOBAL -->
+  <div class="background-decor">
+    <span class="circle c1"></span>
+    <span class="circle c2"></span>
+    <span class="square s1"></span>
+    <span class="square s2"></span>
+    <span class="triangle t1"></span>
+  </div>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-container">
+      <h1 class="brand">Zupi</h1>
+      <nav>
+        <ul>
+          <li><a href="dashboard-pais.html">Dashboard</a></li>
+          <li><a href="videos.html">Vídeos</a></li>
+          <li><a href="dicas.html" class="active">Dicas</a></li>
+          <li><a href="configuracoes.html">Configurações</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Dicas de Inclusão </h1>
+      <p>Inspire-se com ações simples para tornar o dia a dia mais inclusivo e acolhedor para crianças autistas e suas famílias.</p>
+    </div>
+  </section>
+
+  <!-- CONTEÚDO DE DICAS -->
+  <section class="dicas-container" id="dicasContainer">
+    <!-- Dicas geradas dinamicamente -->
+  </section>
+
+  <div class="btn-container">
+    <button id="verMaisBtn">✨ Ver mais dicas</button>
+  </div>
+
+  <!-- CHAT ZUPI IA -->
+  <section class="chat-section">
+    <h2>💬 Converse com a Zupi IA</h2>
+    <p>Pergunte sobre inclusão, rotina, brincadeiras e estratégias para apoiar o desenvolvimento infantil.</p>
+
+    <div class="chat-container">
+      <div id="chat-box" class="chat-box">
+        <div class="bot-message">
+          <p>Olá! 👋 Eu sou a Zupi IA. Como posso ajudar você hoje?</p>
+        </div>
+      </div>
+
+      <form id="chat-form" class="chat-form">
+        <input type="text" id="user-input" placeholder="Digite sua pergunta..." required autocomplete="off" />
+        <button type="submit">Enviar</button>
+      </form>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© 2025 Zupi — Promovendo inclusão com empatia e tecnologia 💙</p>
+  </footer>
+
+  <script>
+    const dicas = [
+      { cor:'#7EBCE6', titulo:'🧩 Use imagens para facilitar a comunicação', texto:'Crie cartões com figuras para representar atividades diárias, emoções e pedidos. Isso ajuda a criança a se expressar com mais autonomia.' },
+      { cor:'#A8E6CF', titulo:'🎵 Sons suaves ajudam na concentração', texto:'Músicas instrumentais leves podem ajudar a reduzir a ansiedade e melhorar o foco durante as tarefas.' },
+      { cor:'#F9E39A', titulo:'👣 Rotinas visuais', texto:'Monte painéis com ícones coloridos representando manhã, tarde e noite. Isso cria segurança e previsibilidade.' },
+      { cor:'#FFB677', titulo:'🤗 Reforce conquistas com afeto', texto:'Elogie pequenas conquistas com um toque ou sorriso. O reforço positivo motiva e fortalece o vínculo.' },
+      { cor:'#7EBCE6', titulo:'📦 Cantinho do relaxamento', texto:'Monte um espaço com almofadas, brinquedos sensoriais e luz suave para ajudar a regular emoções.' },
+      { cor:'#A8E6CF', titulo:'💬 Linguagem simples e clara', texto:'Use frases diretas e evite metáforas. A comunicação objetiva facilita a compreensão.' },
+      { cor:'#F9E39A', titulo:'🎨 Arte como expressão', texto:'Pintar, desenhar e modelar são ótimas formas de a criança se expressar sem precisar falar.' },
+      { cor:'#FFB677', titulo:'🌟 Celebre as diferenças', texto:'Converse sobre como cada pessoa é única e especial. Isso ensina empatia desde cedo.' },
+      { cor:'#7EBCE6', titulo:'👂 Escute mais, fale menos', texto:'Observe gestos, expressões e sons. Eles comunicam tanto quanto palavras.' },
+      { cor:'#A8E6CF', titulo:'📖 Leia com emoção', texto:'Use entonações divertidas e mostre figuras. Isso estimula atenção e imaginação.' },
+      { cor:'#F9E39A', titulo:'🎲 Brinque juntos', texto:'Jogos cooperativos ajudam a desenvolver habilidades sociais sem a pressão de competir.' },
+      { cor:'#FFB677', titulo:'🚶 Faça pausas', texto:'Intervalos curtos ajudam a criança a recarregar a energia e manter o foco.' },
+      { cor:'#7EBCE6', titulo:'🖐️ Explore texturas', texto:'Massinhas, tecidos e areia cinética são estímulos sensoriais calmantes e divertidos.' },
+      { cor:'#A8E6CF', titulo:'💡 Luz suave', texto:'Evite lâmpadas muito fortes. Prefira iluminação indireta e natural.' },
+      { cor:'#F9E39A', titulo:'🌳 Contato com a natureza', texto:'Passeios ao ar livre ajudam na autorregulação e reduzem o estresse sensorial.' },
+      { cor:'#FFB677', titulo:'🎧 Use fones abafadores', texto:'Em ambientes barulhentos, proteja a criança com abafadores ou sons relaxantes.' },
+      { cor:'#7EBCE6', titulo:'🍽️ Respeite o paladar', texto:'Algumas texturas e sabores causam desconforto. Experimente aos poucos e respeite limites.' },
+      { cor:'#A8E6CF', titulo:'🧩 Use histórias sociais', texto:'Conte histórias curtas explicando situações cotidianas para preparar a criança para novos contextos.' },
+      { cor:'#F9E39A', titulo:'🎈 Simplifique tarefas', texto:'Divida atividades em pequenas etapas e comemore cada avanço.' },
+      { cor:'#FFB677', titulo:'🤝 Trabalhe com o olhar', texto:'Use o contato visual de forma gentil, sem forçar. Ele fortalece o vínculo de confiança.' },
+    ];
+
+    const dicasContainer = document.getElementById('dicasContainer');
+    const verMaisBtn = document.getElementById('verMaisBtn');
+    let index = 0;
+
+    function mostrarDicas() {
+      const next = dicas.slice(index, index + 5);
+      next.forEach(dica => {
+        const card = document.createElement('div');
+        card.className = 'dica-card show';
+        card.style.setProperty('--cor', dica.cor);
+        card.innerHTML = `<h3>${dica.titulo}</h3><p>${dica.texto}</p>`;
+        dicasContainer.appendChild(card);
+      });
+      index += 5;
+      if (index >= dicas.length) verMaisBtn.style.display = 'none';
+    }
+
+    verMaisBtn.addEventListener('click', mostrarDicas);
+    mostrarDicas();
+
+    // Chat IA
+    const form = document.getElementById('chat-form');
+    const input = document.getElementById('user-input');
+    const chatBox = document.getElementById('chat-box');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const userMessage = input.value.trim();
+      if (!userMessage) return;
+
+      const userBubble = document.createElement('div');
+      userBubble.className = 'user-message';
+      userBubble.innerHTML = `<p>${userMessage}</p>`;
+      chatBox.appendChild(userBubble);
+      input.value = '';
+
+      const botBubble = document.createElement('div');
+      botBubble.className = 'bot-message';
+      botBubble.innerHTML = `<p><span class='typing'>Zupi IA está digitando...</span></p>`;
+      chatBox.appendChild(botBubble);
+
+      setTimeout(() => {
+        botBubble.innerHTML = `<p>💡 Que pergunta interessante! A Zupi IA sugere: mantenha o ambiente calmo e celebre cada progresso. 🧡</p>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }, 1500);
+
+      chatBox.scrollTop = chatBox.scrollHeight;
+    });
+  </script>
+</body>
+</html>

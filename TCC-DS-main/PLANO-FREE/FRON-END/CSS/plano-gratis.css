@@ -1,0 +1,241 @@
+:root {
+  --primary: #7EBCE6;
+  --secondary: #F9E39A;
+  --accent: #A8E6CF;
+  --highlight: #FFB677;
+  --bg: #F1F1F1;
+  --text: #333;
+  --card-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  --font: 'Poppins', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+/* Fundo decorativo */
+.background-decor span {
+  position: absolute;
+  border-radius: 50%;
+  animation: float 12s infinite ease-in-out alternate;
+  opacity: 0.15;
+}
+
+.background-decor .square { border-radius: 12px; }
+
+/* Header */
+.topbar {
+  background: #fff;
+  padding: 15px 0;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.topbar .logo {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.nav-menu {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+}
+
+.nav-menu li a {
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.nav-menu li a:hover {
+  color: var(--highlight);
+  transform: scale(1.1);
+}
+
+/* Hero */
+.hero {
+  background: linear-gradient(135deg, var(--highlight), var(--secondary));
+  color: #fff;
+  padding: 80px 20px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  border-radius: 25px;
+  margin: 40px;
+  box-shadow: var(--card-shadow);
+  animation: fadeInUp 1s ease forwards;
+}
+
+.hero h1 { font-size: 3rem; margin-bottom: 15px; }
+.hero p { font-size: 1.2rem; margin-bottom: 20px; }
+.hero .price {
+  font-size: 2rem;
+  font-weight: 900;
+  display: inline-block;
+  padding: 12px 25px;
+  background: rgba(255,255,255,0.3);
+  border-radius: 15px;
+  transition: transform 0.3s, background 0.3s;
+}
+.hero .price:hover {
+  transform: scale(1.1);
+  background: rgba(255,255,255,0.5);
+}
+
+/* Funcionalidades */
+.features {
+  padding: 50px 20px;
+  text-align: center;
+}
+
+.features h2 {
+  font-size: 2rem;
+  color: var(--primary);
+  margin-bottom: 40px;
+  position: relative;
+}
+.features h2::after {
+  content: '';
+  width: 60px;
+  height: 4px;
+  background: var(--highlight);
+  display: block;
+  margin: 10px auto 0;
+  border-radius: 2px;
+}
+
+.features-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.feature-card {
+  background: #fff;
+  padding: 25px 20px;
+  border-radius: 20px;
+  box-shadow: var(--card-shadow);
+  transition: transform 0.4s, box-shadow 0.4s;
+}
+
+.feature-card:hover {
+  transform: translateY(-10px) scale(1.05);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.15);
+}
+
+.feature-card h3 {
+  color: var(--primary);
+  margin-bottom: 12px;
+}
+
+.feature-card p { opacity: 0.8; line-height: 1.4; }
+
+/* CTA */
+.cta {
+  text-align: center;
+  margin: 50px 20px;
+  animation: fadeInUp 1s ease forwards;
+}
+
+.btn-cta {
+  display: inline-block;
+  padding: 15px 35px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, var(--primary), var(--highlight));
+  border-radius: 15px;
+  text-decoration: none;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.btn-cta:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 12px 35px rgba(255,189,74,0.5);
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 20px 0;
+  color: #555;
+  font-size: 0.95rem;
+}
+
+/* Animações */
+@keyframes float {
+  0% { transform: translateY(0) rotate(0deg); opacity: 0.15; }
+  50% { transform: translateY(-20px) rotate(15deg); opacity: 0.25; }
+  100% { transform: translateY(0) rotate(0deg); opacity: 0.15; }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px);}
+  to { opacity: 1; transform: translateY(0);}
+}
+
+/* Responsividade */
+@media(max-width:768px) {
+  .hero h1 { font-size: 2.2rem; }
+  .hero p { font-size: 1rem; }
+}
+
+
+/* Header */
+.topbar {
+  background: #fff;
+  padding: 15px 0;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.topbar .logo {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.nav-menu {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+}
+
+.nav-menu li a {
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.nav-menu li a:hover {
+  color: var(--highlight);
+  transform: scale(1.1);
+}
+
+/* Flex container para alinhar logo e menu */
+.container.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
