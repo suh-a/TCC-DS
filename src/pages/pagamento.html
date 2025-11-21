@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zupi — Pagamento</title>
+
+  <!-- CSS da página -->
+     <link rel="stylesheet" href="/src/CSS/pagamento.css" />
+
+  <!-- Fonte -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="pagamento-page">
+
+  <header class="topbar">
+    <div class="container flex-between">
+      <a href="index.html" class="logo">Zupi</a>
+      <nav>
+        <ul class="nav-menu">
+          <li><a href="index.html">Início</a></li>
+          <li><a href="planos.html">Planos</a></li>
+          <li><a href="login.html" class="btn-login">Entrar</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <main class="pagamento-main">
+    
+    <div class="container pagamento-container">
+
+      <h1>Finalizar Pagamento</h1>
+      <p class="sub">Revise as informações antes de concluir a assinatura.</p>
+
+      <!-- CARD DO PLANO ESCOLHIDO -->
+      <div class="plano-info">
+        <h2 id="plano-nome">Plano</h2>
+        <p id="plano-desc">Descrição do plano...</p>
+        <span id="plano-preco" class="preco">R$ 00/mês</span>
+      </div>
+
+      <!-- FORM DE PAGAMENTO -->
+      <form id="formPagamento" class="form-pagamento">
+
+        <label for="nome">Nome completo</label>
+        <input type="text" id="nome" required placeholder="Seu nome">
+
+        <label for="email">E-mail</label>
+        <input type="email" id="email" required placeholder="seuemail@email.com">
+
+        <label for="cartao">Número do cartão</label>
+        <input type="text" id="cartao" maxlength="16" required placeholder="0000 0000 0000 0000">
+
+        <div class="row">
+          <div>
+            <label for="validade">Validade</label>
+            <input type="text" id="validade" maxlength="5" required placeholder="MM/AA">
+          </div>
+
+          <div>
+            <label for="cvv">CVV</label>
+            <input type="text" id="cvv" maxlength="3" required placeholder="000">
+          </div>
+        </div>
+
+        <button type="submit" class="btn-pagar">Concluir Pagamento</button>
+      </form>
+
+      <p class="seguro">🔒 Pagamento 100% seguro</p>
+       <!-- =================== RODAPÉ =================== -->
+  <footer class="footer">
+    <div class="container footer-container">
+      <p>© 2025 Zupi. Todos os direitos reservados.</p>
+    </div>
+
+
+    </div>
+  </main>
+
+  <script src="/src/js/pagamento.js"></script>
+
+</body>
+</html>
