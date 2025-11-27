@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Perfil — Lucas | Zupi</title>
+  
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="../assets/css/custom.css" />
+  
+  <link rel="icon" href="../assets/img/favicon.png" type="image/png">
+</head>
+<body>
+
+  <!-- FUNDO DECORATIVO -->
+  <div class="background-decor" aria-hidden="true">
+    <span class="decor-shape decor-circle" style="width: 180px; height: 180px; top: 10%; left: 5%; background: var(--zupi-accent);"></span>
+    <span class="decor-shape decor-circle" style="width: 120px; height: 120px; top: 50%; left: 60%; background: var(--zupi-primary);"></span>
+    <span class="decor-shape decor-square" style="width: 100px; height: 100px; top: 20%; right: 25%; background: var(--zupi-secondary); transform: rotate(25deg);"></span>
+  </div>
+
+  <!-- BOTÃO HAMBURGER PARA MOBILE -->
+  <button class="menu-toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#dashboardOffcanvas" aria-controls="dashboardOffcanvas" aria-label="Abrir menu">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </button>
+
+  <div class="container-fluid">
+    <div class="row">
+      <!-- SIDEBAR FIXA (DESKTOP) -->
+      <nav class="col-lg-2 dashboard-sidebar p-0 position-fixed vh-100 d-none d-lg-block" role="navigation" aria-label="Navegação do dashboard">
+        <div class="d-flex flex-column p-4 h-100">
+          <div class="navbar-brand text-white mb-4 fs-3 fw-bold">Zupi</div>
+          <ul class="nav nav-pills flex-column">
+            <li class="nav-item mb-2">
+              <a class="nav-link text-white" href="dashboard-pais.html">Dashboard</a>
+            </li>
+            <li class="nav-item mb-2">
+              <a class="nav-link text-white active" href="perfil-criancas.html">Perfis</a>
+            </li>
+            <li class="nav-item mb-2">
+              <a class="nav-link text-white" href="relatorios.html">Relatórios</a>
+            </li>
+            <li class="nav-item mb-2">
+              <a class="nav-link text-white" href="configuracoes.html">Configurações</a>
+            </li>
+            <li class="nav-item mt-auto">
+              <a class="nav-link text-white" href="index.html">Sair</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+      <!-- SIDEBAR OFFCANVAS (MOBILE/TABLET) -->
+      <div class="offcanvas offcanvas-start dashboard-offcanvas" tabindex="-1" id="dashboardOffcanvas" aria-labelledby="dashboardOffcanvasLabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="dashboardOffcanvasLabel">Zupi</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Fechar"></button>
+        </div>
+        <div class="offcanvas-body p-0">
+          <nav role="navigation" aria-label="Navegação do dashboard">
+            <ul class="nav nav-pills flex-column p-4">
+              <li class="nav-item mb-2">
+                <a class="nav-link text-white" href="dashboard-pais.html">Dashboard</a>
+              </li>
+              <li class="nav-item mb-2">
+                <a class="nav-link text-white active" href="perfil-criancas.html">Perfis</a>
+              </li>
+              <li class="nav-item mb-2">
+                <a class="nav-link text-white" href="relatorios.html">Relatórios</a>
+              </li>
+              <li class="nav-item mb-2">
+                <a class="nav-link text-white" href="configuracoes.html">Configurações</a>
+              </li>
+              <li class="nav-item mt-auto">
+                <a class="nav-link text-white" href="index.html">Sair</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+
+      <!-- CONTEÚDO PRINCIPAL -->
+      <main class="col-12 col-lg-10 ms-lg-auto dashboard-main-content px-3 px-lg-4 py-4">
+        <!-- Header / resumo superior -->
+        <header class="mb-4">
+          <div class="row align-items-center mb-4">
+            <div class="col-auto">
+              <img src="../assets/img/logokids1.png" alt="Lucas" class="rounded-circle" style="width: 120px; height: 120px; object-fit: cover;">
+              <div class="badge bg-success mt-2">Ativo • Última atualização: 2025-10-28</div>
+            </div>
+            <div class="col">
+              <h1 class="h2 mb-2">Lucas <span class="text-muted">— 5 anos</span></h1>
+              <p class="mb-2">Condição: <strong>TDAH</strong> • Terapeuta: <strong>Dra. Marina Silva</strong></p>
+              <div class="d-flex gap-3 mb-3">
+                <div><strong>ID:</strong> ZP-0042</div>
+                <div><strong>Turma:</strong> Pré I</div>
+                <div><strong>Entrada no Zupi:</strong> 2024-02-12</div>
+              </div>
+              <div class="d-flex gap-2">
+                <a href="relatorios.html" class="btn btn-primary">Ver relatório completo</a>
+                <a href="#" class="btn btn-outline-primary">Enviar mensagem ao terapeuta</a>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- Painel de indicadores -->
+        <section class="mb-5">
+          <div class="row g-4">
+            <div class="col-md-4">
+              <div class="card text-center">
+                <div class="card-body">
+                  <div class="display-4 mb-3 text-zupi-primary">85%</div>
+                  <h3 class="card-title h5">Concentração</h3>
+                  <p class="card-text text-muted small">Média últimos 30 dias</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card text-center">
+                <div class="card-body">
+                  <div class="display-4 mb-3 text-zupi-accent">92%</div>
+                  <h3 class="card-title h5">Interação Social</h3>
+                  <p class="card-text text-muted small">Participação em atividades</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card text-center">
+                <div class="card-body">
+                  <div class="display-4 mb-3 text-zupi-highlight">78%</div>
+                  <h3 class="card-title h5">Compreensão</h3>
+                  <p class="card-text text-muted small">Comandos e instruções</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Progresso por área -->
+        <section class="mb-5">
+          <div class="card">
+            <div class="card-body">
+              <h2 class="card-title h4 mb-4">Progresso por área (últimos 6 meses)</h2>
+              <div class="mb-3">
+                <div class="d-flex justify-content-between mb-2">
+                  <span><strong>Concentração</strong></span>
+                  <span class="text-muted">Mai → Out</span>
+                </div>
+                <div class="progress mb-3" style="height: 20px;">
+                  <div class="progress-bar bg-zupi-primary" role="progressbar" style="width: 85%">85%</div>
+                </div>
+              </div>
+              <div class="mb-3">
+                <div class="d-flex justify-content-between mb-2">
+                  <span><strong>Interação</strong></span>
+                  <span class="text-muted">Mai → Out</span>
+                </div>
+                <div class="progress mb-3" style="height: 20px;">
+                  <div class="progress-bar bg-zupi-accent" role="progressbar" style="width: 92%">92%</div>
+                </div>
+              </div>
+              <div class="mb-3">
+                <div class="d-flex justify-content-between mb-2">
+                  <span><strong>Compreensão</strong></span>
+                  <span class="text-muted">Mai → Out</span>
+                </div>
+                <div class="progress mb-3" style="height: 20px;">
+                  <div class="progress-bar bg-zupi-highlight" role="progressbar" style="width: 78%">78%</div>
+                </div>
+              </div>
+              <p class="text-muted small">Observação: valores gerados a partir das atividades e avaliações semanais.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Atividades recentes e Observações -->
+        <section class="mb-5">
+          <div class="row g-4">
+            <div class="col-lg-8">
+              <div class="card">
+                <div class="card-body">
+                  <h2 class="card-title h5 mb-4">Atividades recentes</h2>
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <thead>
+                        <tr>
+                          <th>Data</th>
+                          <th>Atividade</th>
+                          <th>Resultado</th>
+                          <th>Observação</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>2025-10-28</td>
+                          <td>Jogo de atenção (nível 3)</td>
+                          <td>Bom (85%)</td>
+                          <td>Melhor foco nas últimas rodadas.</td>
+                        </tr>
+                        <tr>
+                          <td>2025-10-22</td>
+                          <td>Atividade em grupo</td>
+                          <td>Ótimo (92%)</td>
+                          <td>Interagiu bem com 2 pares.</td>
+                        </tr>
+                        <tr>
+                          <td>2025-10-10</td>
+                          <td>Exercícios de compreensão</td>
+                          <td>Médio (78%)</td>
+                          <td>Precisa de apoio na leitura de instruções.</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="d-flex gap-2 mt-3">
+                    <a href="atividades-lucas.html" class="btn btn-primary">Ver todas as atividades</a>
+                    <a href="export-atividades-lucas.csv" class="btn btn-outline-secondary">Exportar CSV</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="card">
+                <div class="card-body">
+                  <h2 class="card-title h5 mb-4">Observações pedagógicas</h2>
+                  <div class="mb-4">
+                    <h3 class="h6">Resumo semanal — 2025-10-20 a 2025-10-28</h3>
+                    <p class="small">Lucas apresentou melhora consistente em autorregulação durante sessões de 1:1. Recomendamos introduzir atividades com duração progressiva (10 → 20 min) e reforços visuais para instruções.</p>
+                    <p class="small"><strong>Ações sugeridas:</strong> 1) Sessões adicionais de leitura guiada; 2) Estratégia de pausa ativa a cada 12 minutos; 3) Reforço positivo imediato.</p>
+                  </div>
+                  <h3 class="h6 mb-3">Recomendações do terapeuta</h3>
+                  <ul class="small">
+                    <li>Manter rotina previsível em casa.</li>
+                    <li>Utilizar timers visuais para tarefas.</li>
+                    <li>Reunião mensal com família para alinhar progresso.</li>
+                  </ul>
+                  <div class="d-flex flex-column gap-2 mt-3">
+                    <a href="mensagem-terapeuta.html" class="btn btn-outline-primary btn-sm">Solicitar reunião</a>
+                    <a href="anexos-lucas.html" class="btn btn-outline-secondary btn-sm">Ver anexos</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Histórico de relatórios -->
+        <section class="mb-5">
+          <div class="card">
+            <div class="card-body">
+              <h2 class="card-title h5 mb-4">Histórico de relatórios</h2>
+              <div class="row g-3">
+                <div class="col-md-4">
+                  <div class="card">
+                    <div class="card-body">
+                      <p class="card-text mb-2"><strong>Relatório — Set/2025</strong></p>
+                      <div class="d-flex gap-2">
+                        <a href="relatorio-set-2025.html" class="btn btn-primary btn-sm">Visualizar</a>
+                        <a href="relatorio-set-2025.pdf" class="btn btn-outline-secondary btn-sm">PDF</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="card">
+                    <div class="card-body">
+                      <p class="card-text mb-2"><strong>Relatório — Jul/2025</strong></p>
+                      <div class="d-flex gap-2">
+                        <a href="relatorio-jul-2025.html" class="btn btn-primary btn-sm">Visualizar</a>
+                        <a href="relatorio-jul-2025.pdf" class="btn btn-outline-secondary btn-sm">PDF</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="card">
+                    <div class="card-body">
+                      <p class="card-text mb-2"><strong>Relatório — Mai/2025</strong></p>
+                      <div class="d-flex gap-2">
+                        <a href="relatorio-mai-2025.html" class="btn btn-primary btn-sm">Visualizar</a>
+                        <a href="relatorio-mai-2025.pdf" class="btn btn-outline-secondary btn-sm">PDF</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-12">
+          <p class="mb-0 small">Dados do Zupi • Privacidade e segurança garantidas</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap 5 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  <!-- Custom JS -->
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>

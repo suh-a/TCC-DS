@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jogo da Memória — Zupi</title>
+  
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="../assets/css/custom.css" />
+  
+  <link rel="icon" href="../assets/img/favicon.png" type="image/png">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="bg-white shadow-sm py-3 mb-4">
+    <div class="container">
+      <h1 class="h4 mb-0">Jogo da Memória • Zupi</h1>
+    </div>
+  </header>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="container">
+    <section>
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="row align-items-center mb-3">
+            <div class="col-md-8">
+              <div class="d-flex gap-4">
+                <div>⏱️ Tempo: <strong id="timer">00:00</strong></div>
+                <div>🎯 Movimentos: <strong id="moves">0</strong></div>
+                <div>💎 Pares: <strong id="matched">0</strong>/8</div>
+              </div>
+            </div>
+            <div class="col-md-4 text-end">
+              <button id="restartBtn" class="btn btn-primary me-2">Reiniciar</button>
+              <a href="menu-jogos.html" class="btn btn-outline-secondary">Voltar ao Menu</a>
+            </div>
+          </div>
+          <div id="board" class="board"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-12">
+          <p class="mb-0">© 2025 Zupi. Todos os direitos reservados.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Modal de vitória -->
+  <div class="modal fade" id="winModal" tabindex="-1" aria-labelledby="winModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title h5" id="winModalLabel">🎉 Você venceu!</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body">
+          <p>Tempo: <strong id="finalTime">00:00</strong></p>
+          <p>Movimentos: <strong id="finalMoves">0</strong></p>
+        </div>
+        <div class="modal-footer">
+          <button id="playAgain" class="btn btn-primary">Jogar novamente</button>
+          <button id="closeModal" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap 5 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  <script src="../js/jogos.js"></script>
+</body>
+</html>
