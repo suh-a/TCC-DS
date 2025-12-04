@@ -38,8 +38,12 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--zupi-font-title);
   font-size: 1.8rem;
   font-weight: 700;
-  color: var(--zupi-primary) !important;
+  color: var(--zupi-white) !important;
   letter-spacing: 1px;
+}
+/* ==================== NAVBAR Index ==================== */
+#brand-color-2 {
+  color: var(--zupi-primary) !important;
 }
 
 .navbar-brand:hover {
