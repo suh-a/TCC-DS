@@ -531,6 +531,17 @@ body { background: var(--bg); color: var(--text); min-height: 100vh; display: fl
 .btn-play { display: inline-block; padding: 15px 35px; font-size: 1.2rem; font-weight: bold; border-radius: 15px; background-color: #7EBCE6; color: #fff; text-decoration: none; box-shadow: 0 6px 20px rgba(126, 188, 230, 0.6); transition: all 0.3s ease; }
 .btn-play:hover { background-color: #A8E6CF; transform: scale(1.1) translateY(-5px); box-shadow: 0 10px 30px rgba(168, 230, 207, 0.6); }
 
+/* ===================== ICON GRID (TELA INICIAL) ===================== */
+.icon-grid-section { margin: 30px 0 10px; }
+.icon-grid-section h2 { color: var(--primary); font-size: 1.6rem; margin-bottom: 14px; }
+.icon-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 14px; }
+.icon-card { background: var(--surface); border-radius: 14px; padding: 18px; text-align: center; box-shadow: var(--card-shadow); text-decoration: none; color: var(--text); display: flex; flex-direction: column; align-items: center; gap: 10px; transition: transform 0.18s ease, box-shadow 0.18s ease; }
+.icon-card svg { width: 48px; height: 48px; }
+.icon-card span { font-weight: 700; color: var(--primary); }
+.icon-card:hover { transform: translateY(-6px); box-shadow: 0 12px 25px rgba(0,0,0,0.12); }
+
+@media (max-width:700px){ .icon-grid { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); } }
+
 /* ===================== SEÇÃO RECURSOS ===================== */
 .resources { margin-top: 40px; }
 .resources h2 { color: var(--primary); font-size: 1.8rem; margin-bottom: 20px; position: relative; }

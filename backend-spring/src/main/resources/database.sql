@@ -54,8 +54,8 @@ CREATE TABLE IF NOT EXISTS relatorios (
 -- Inserir planos iniciais
 INSERT INTO planos (nome, preco, descricao, tipo, limite_criancas) VALUES
 ('Plano Gratuito', 0.00, 'Acesso limitado aos jogos educativos', 'gratis', 1),
-('Plano Premium', 29.90, 'Acesso completo a todos os jogos e relatórios avançados', 'premium', 3),
-('Plano Pro', 49.90, 'Acesso ilimitado com suporte prioritário e relatórios personalizados', 'pro', NULL);
+('Plano Pro', 29.90, 'Acesso completo a todos os jogos e relatórios avançados', 'pro', 3),
+('Plano Premium', 99.90, 'Acesso ilimitado com suporte prioritário e relatórios personalizados', 'premium', NULL);
 
 -- Criar índices para melhor performance
 CREATE INDEX idx_usuarios_email ON usuarios(email);

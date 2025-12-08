@@ -4,8 +4,8 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Dashboard — Zupi</title>
-<link rel="stylesheet" href="/src/CSS/dashboard.css">
-<link rel="icon" href="/src/assets/img/favicon.png">
+<link rel="stylesheet" href="/css/dashboard.css">
+<link rel="icon" href="/assets/img/favicon.png">
 </head>
 <body>
 
@@ -60,7 +60,11 @@
 
   <!-- HEADER -->
   <header class="dashboard-header">
-    <h1>Olá, responsável</h1>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <h1>Olá, <span style="color:var(--text); font-weight:600;">Elise</span></h1>
+      <div style="color:#666; font-size:0.95rem;">Responsável</div>
+    </div>
+
     <div class="summary">
       <div class="card">Tempo total: <strong>1h 24m</strong></div>
       <div class="card">Jogos completados: <strong>12</strong></div>
@@ -96,13 +100,13 @@
   <!-- PERFIS DAS CRIANÇAS -->
   <section class="profiles">
     <div class="profile">
-      <img src="img/logokids1.png" alt="Criança 1">
+      <img src="/assets/img/logokids1.png" alt="Criança 1">
       <h3>Lucas</h3>
       <p>Idade: 7 anos</p>
       <a href="#" class="btn">Ver Perfil</a>
     </div>
     <div class="profile">
-      <img src="img/logokids2.png" alt="Criança 2">
+      <img src="/assets/img/logokids2.png" alt="Criança 2">
       <h3>Mariana</h3>
       <p>Idade: 6 anos</p>
       <a href="#" class="btn">Ver Perfil</a>

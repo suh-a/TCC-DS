@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Entrar — Zupi</title>
-  <link rel="stylesheet" href="/src/CSS/style.css" />
+  <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body class="auth-page">
 
@@ -30,15 +30,16 @@
     <div class="auth-card">
       <h1>Entrar</h1>
 
-      <form class="login-form" action="dashboard-pais.html" method="get">
+      <form class="login-form" onsubmit="return false;">
         <label for="email">E-mail</label>
         <input type="email" id="email" placeholder="Digite seu e-mail" required>
 
         <label for="senha">Senha</label>
         <input type="password" id="senha" placeholder="Digite sua senha" required>
 
-        <button type="submit" class="btn primary">Entrar</button>
+        <button type="button" class="btn primary" id="loginBtn">Entrar</button>
       </form>
+      <noscript style="color:#d00; margin-top:12px; display:block;">JavaScript está desabilitado — habilite para fazer login.</noscript>
 
       <p class="register-link">
         Ainda não tem conta? <a href="cadastro.html">Crie uma agora</a>
@@ -52,9 +53,10 @@
       <p>© 2025 Zupi</p>
     </div>
   </footer>
+  <script src="/js/auth.js"></script>
 
-</body>
-</html>
+  </body>
+  </html>
 <!-- Fundo decorativo com bolhas e quadrados -->
   <div class="auth-bubbles">
     <!-- Bolhas -->

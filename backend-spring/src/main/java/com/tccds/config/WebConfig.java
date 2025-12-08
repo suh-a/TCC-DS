@@ -9,8 +9,13 @@ public class WebConfig implements WebMvcConfigurer {
     
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // Servir arquivos estáticos do frontend
+        // Servir arquivos estáticos do frontend diretamente do diretório original
+        // Suporta URLs que usam o prefixo /src/... (caminho antigo) e caminhos sem o prefixo
+        registry.addResourceHandler("/src/**")
+            .addResourceLocations("file:/home/suellen/TCC-DS/src/");
+
+        // Fallback para arquivos estáticos no diretório do frontend
         registry.addResourceHandler("/**")
-                .addResourceLocations("classpath:/static/");
+            .addResourceLocations("file:/home/suellen/TCC-DS/src/");
     }
 }

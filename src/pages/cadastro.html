@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Cadastrar — Zupi</title>
-  <link rel="stylesheet" href="/src/CSS/style.css" />
+  <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body class="auth-page">
 
@@ -50,7 +50,7 @@
   <main class="site-content">
     <div class="auth-card">
       <h1>Crie sua conta</h1>
-      <form id="signupForm" action="dashboard-pais.html" method="get">
+      <form id="signupForm" onsubmit="return false;">
         <label for="nome">Nome</label>
         <input type="text" id="nome" name="nome" placeholder="Seu nome completo" required>
 
@@ -60,8 +60,9 @@
         <label for="senha">Senha</label>
         <input type="password" id="senha" name="senha" placeholder="Crie uma senha" required>
 
-        <button type="submit">Cadastrar</button>
+        <button type="button" id="signupBtn">Cadastrar</button>
       </form>
+      <noscript style="color:#d00; margin-top:12px; display:block;">JavaScript está desabilitado — habilite para cadastrar.</noscript>
       <p class="small-link">
         Já tem conta? <a href="login.html">Entre aqui</a>
       </p>
@@ -97,4 +98,5 @@
   </style>
 
 </body>
+<script src="/js/auth.js"></script>
 </html>
