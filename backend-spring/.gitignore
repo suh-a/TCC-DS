@@ -1,0 +1,45 @@
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.backup
+release.properties
+dependency-reduced-pom.xml
+.flattened-pom.xml
+
+# IDE - IntelliJ
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# IDE - VS Code
+.vscode/
+*.code-workspace
+
+# IDE - Eclipse
+.classpath
+.project
+.settings/
+bin/
+
+# IDE - NetBeans
+nbproject/
+.nb-gradle/
+build/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Spring Boot
+*.log
+*.swp
+*.swo
+
+# Gradle
+.gradle/
+build/
