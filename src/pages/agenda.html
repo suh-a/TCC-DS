@@ -46,7 +46,7 @@
     <div class="row">
       <!-- SIDEBAR FIXA (DESKTOP) -->
       <nav class="col-lg-2 dashboard-sidebar p-0 position-fixed vh-100 d-none d-lg-block" role="navigation"
-        aria-label="Navegação do dashboard">
+        aria-label="Navegação">
         <div class="d-flex flex-column p-4 h-100">
           <div class="navbar-brand text-white mb-4 fs-3 fw-bold">Zupi</div>
           <ul class="nav nav-pills flex-column">
@@ -54,10 +54,7 @@
               <a class="nav-link text-white" href="dashboard-pais.html">Dashboard</a>
             </li>
             <li class="nav-item mb-2">
-              <a class="nav-link text-white" href="perfil-criancas.html">Perfis</a>
-            </li>
-            <li class="nav-item mb-2">
-              <a class="nav-link text-white" href="relatorios.html">Relatórios</a>
+              <a class="nav-link text-white" href="selecao-perfil.html">Perfis-Relatórios</a>
             </li>
             <li class="nav-item mb-2">
               <a class="nav-link text-white" href="agenda.html">Agenda</a>
@@ -74,7 +71,7 @@
           </ul>
         </div>
       </nav>
-
+      
       <!-- SIDEBAR OFFCANVAS (MOBILE/TABLET) -->
       <div class="offcanvas offcanvas-start dashboard-offcanvas" tabindex="-1" id="dashboardOffcanvas"
         aria-labelledby="dashboardOffcanvasLabel">
@@ -126,36 +123,64 @@
         <div class="modal fade" id="formModal" tabindex="-1" aria-hidden="true">
 
           <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header border-0">
+                <h5 class="modal-title" id="formModalLabel">Adicionar Atividade</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+              </div>
+              <div class="modal-body">
+                <form id="eventForm" role="form" aria-label="Formulário de adicionar atividade">
+                  <div class="mb-3">
+                    <label for="eventTitle" class="form-label">Título</label>
+                    <input type="text" class="form-control" id="eventTitle" name="eventTitle"
+                      placeholder="Ex: Aula de Matemática" required>
+                  </div>
 
-            <div class="auth-card">
-              <h1 class="text-center mb-4">Entrar</h1>
+                  <div class="mb-3">
+                    <label for="eventDate" class="form-label">Data</label>
+                    <input type="date" class="form-control" id="eventDate" name="eventDate" required>
+                  </div>
 
-              <form action="dashboard-pais.html" method="get" role="form" aria-label="Formulário de login">
-                <div class="mb-3">
-                  <label for="email" class="form-label">E-mail</label>
-                  <input type="email" class="form-control" id="email" name="email" placeholder="Digite seu e-mail"
-                    required aria-required="true">
-                </div>
+                  <div class="mb-3">
+                    <label for="eventTime" class="form-label">Horário de inicio</label>
+                    <input type="time" class="form-control" id="eventTime" name="eventTime" required>
+                  </div>
 
-                <div class="mb-3">
-                  <label for="senha" class="form-label">Senha</label>
-                  <input type="password" class="form-control" id="senha" name="senha" placeholder="Digite sua senha"
-                    required aria-required="true">
-                </div>
- 
-                <div class="mb-3">
-                  <label for="senha" class="form-label">Senha</label>
-                  <input type="password" class="form-control" id="senha" name="senha" placeholder="Digite sua senha"
-                    required aria-required="true">
-                </div>
+                  <div class="mb-3">
+                    <label for="eventEnd" class="form-label">Horário final</label>
+                    <input type="time" class="form-control" id="eventEnd" name="eventEnd" required>
+                  </div>
 
-                <button type="submit" class="btn btn-primary w-100 mb-3">Entrar</button>
-              </form>
+                  <div class="mb-3">
+                    <label for="eventCategory" class="form-label">Categoria</label>
+                    <select class="form-select" id="eventCategory" name="eventCategory" required>
+                      <option value="">Selecione...</option>
+                      <option value="estudo">Estudo</option>
+                      <option value="lazer">Lazer</option>
+                      <option value="esporte">Esporte</option>
+                      <option value="outro">Outro</option>
+                    </select>
+                  </div>
 
+                  <div class="mb-3">
+                    <label for="eventChild" class="form-label">Criança</label>
+                    <select class="form-select" id="eventChild" name="eventChild" required>
+                      <option value="">Selecione...</option>
+                      <option value="Ster">Ster</option>
+                      <option value="John">John</option>
+                      <option value="Rose">Rose</option>
+                      <option value="Auri">Auri</option>
+                    </select>
+                  </div>
+
+                </form>
+              </div>
+              <div class="modal-footer border-0">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="saveEventBtn">Salvar Atividade</button>
+              </div>
             </div>
-
           </div>
-
         </div>
 
         <section>

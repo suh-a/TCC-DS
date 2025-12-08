@@ -32,6 +32,9 @@ function highlightActiveNavLink() {
             link.classList.add('active');
             link.setAttribute('aria-current', 'page');
         } else {
+            if (currentPage === 'perfil-criancas.html'|| currentPage === 'relatorios.html') {
+                return;
+            }
             link.classList.remove('active');
             link.removeAttribute('aria-current');
         }
