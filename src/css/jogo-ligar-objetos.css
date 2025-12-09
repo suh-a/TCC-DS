@@ -1,0 +1,176 @@
+
+        /* --- ESTILO GERAL (Zupi Theme) --- */
+        :root {
+            --primary: #4A90E2; 
+            --accent: #F5A623;  
+            --success: #7ED321; 
+            --bg: #F0F4F8;      
+            --card-bg: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        header {
+            background-color: var(--primary);
+            color: white;
+            width: 100%;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 10;
+        }
+
+        h1 { margin: 0; font-size: 1.5rem; }
+        
+        #level-indicator {
+            background: rgba(255,255,255,0.2);
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            margin-top: 5px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        #instruction-text {
+            margin: 10px 0 0;
+            font-size: 1.1rem;
+            color: white;
+        }
+
+        /* --- ÁREA DO JOGO --- */
+        #game-container {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            width: 90%;
+            max-width: 700px;
+            margin-top: 20px;
+            padding: 20px;
+            flex-grow: 1; /* Ocupa o espaço disponível */
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around; /* Distribui itens verticalmente */
+            gap: 15px;
+            z-index: 2;
+            padding: 10px 0;
+        }
+
+        .item {
+            background: var(--card-bg);
+            width: 70px;
+            height: 70px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.2s, border 0.2s;
+            border: 4px solid transparent;
+            user-select: none;
+        }
+
+        @media (min-width: 600px) {
+            .item { width: 90px; height: 90px; font-size: 3rem; }
+        }
+
+        .item:hover { transform: scale(1.05); }
+        
+        .item.selected {
+            border-color: var(--primary);
+            transform: scale(1.1);
+        }
+
+        .item.matched {
+            border-color: var(--success);
+            background-color: #e8f5e9;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        .item.error {
+            animation: shake 0.5s;
+            border-color: #e74c3c;
+        }
+
+        /* --- SVG --- */
+        #connections {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        line {
+            stroke: var(--success);
+            stroke-width: 5;
+            stroke-linecap: round;
+            transition: opacity 0.5s;
+        }
+
+        /* --- MODAL --- */
+        #modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(3px);
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            width: 80%;
+            max-width: 400px;
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .modal-emoji { font-size: 4rem; margin-bottom: 10px; display: block; }
+        
+        .btn-action {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1.2rem;
+            border-radius: 12px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background 0.2s;
+            width: 100%;
+        }
+
+        .btn-action:hover { background: #d48e1b; }
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+        @keyframes popIn {
+            from { transform: scale(0.5); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
