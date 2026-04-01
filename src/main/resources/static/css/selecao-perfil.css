@@ -1,0 +1,131 @@
+/* ===================================================
+   Zupi - Seleção de Perfil CSS
+   Estilos específicos da página Seleção de Perfil
+   =================================================== */
+
+/* Cards de perfis */
+.perfil-card {
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.perfil-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--zupi-primary-gradient);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 0;
+}
+
+.perfil-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--zupi-primary-solid);
+  box-shadow: 0 8px 25px rgba(126, 200, 230, 0.3);
+}
+
+.perfil-card:hover::before {
+  opacity: 0.05;
+}
+
+.perfil-card .card-body {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 2rem;
+}
+
+/* Avatar do perfil */
+.perfil-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid var(--zupi-primary-solid);
+  margin: 0 auto 1rem;
+  box-shadow: 0 4px 15px rgba(126, 200, 230, 0.3);
+  transition: transform 0.3s ease;
+}
+
+.perfil-card:hover .perfil-avatar {
+  transform: scale(1.1);
+}
+
+/* Informações do perfil */
+.perfil-info {
+  margin-top: 1rem;
+}
+
+.perfil-info h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--zupi-text);
+  margin-bottom: 0.5rem;
+}
+
+.perfil-info p {
+  color: var(--zupi-text);
+  opacity: 0.7;
+  margin-bottom: 0.25rem;
+}
+
+/* Badge de status */
+.perfil-status {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+.perfil-status.ativo {
+  background: var(--zupi-accent);
+  color: var(--zupi-white);
+}
+
+.perfil-status.inativo {
+  background: rgba(0, 0, 0, 0.1);
+  color: var(--zupi-text);
+}
+
+/* Header da página */
+.selecao-perfil-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--zupi-primary-solid);
+  margin-bottom: 0.5rem;
+}
+
+.selecao-perfil-header p {
+  color: var(--zupi-text);
+  opacity: 0.8;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .perfil-card .card-body {
+    padding: 1.5rem;
+  }
+  
+  .perfil-avatar {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .perfil-info h3 {
+    font-size: 1.25rem;
+  }
+  
+  .selecao-perfil-header h1 {
+    font-size: 1.5rem;
+  }
+}
+

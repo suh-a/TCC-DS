@@ -1,0 +1,103 @@
+/* ===================================================
+   Zupi - Pagamento CSS
+   Estilos específicos da página de Pagamento
+   =================================================== */
+
+/* Card do plano selecionado */
+.plano-selecionado {
+  background: var(--zupi-primary-gradient);
+  color: var(--zupi-white);
+  border: none;
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.plano-selecionado .card-title {
+  color: var(--zupi-white);
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.plano-selecionado .h4 {
+  color: var(--zupi-white);
+  font-size: 2rem;
+}
+
+/* Formulário de pagamento */
+.pagamento-form {
+  background: var(--zupi-white);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.pagamento-form .form-label {
+  font-weight: 600;
+  color: var(--zupi-text);
+  margin-bottom: 0.5rem;
+}
+
+.pagamento-form .form-control {
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  transition: all 0.3s ease;
+}
+
+.pagamento-form .form-control:focus {
+  border-color: var(--zupi-primary-solid);
+  box-shadow: 0 0 0 0.2rem rgba(126, 200, 230, 0.35);
+}
+
+/* Campos de cartão */
+.cartao-field {
+  position: relative;
+}
+
+.cartao-field::after {
+  content: '💳';
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.5rem;
+}
+
+/* Botão de pagamento */
+.btn-pagamento {
+  background: var(--zupi-primary-gradient);
+  color: var(--zupi-white);
+  font-weight: 600;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+.btn-pagamento:hover {
+  background: var(--zupi-highlight);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 185, 128, 0.4);
+}
+
+/* Texto de segurança */
+.security-text {
+  text-align: center;
+  color: var(--zupi-text);
+  opacity: 0.7;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .plano-selecionado {
+    padding: 1.5rem;
+  }
+  
+  .pagamento-form {
+    padding: 1.5rem;
+  }
+}
+

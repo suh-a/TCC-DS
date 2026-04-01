@@ -1,0 +1,16 @@
+/* ===================================================
+   Zupi - Planos CSS
+   Estilos específicos para páginas de planos
+   =================================================== */
+
+/* Cards de Planos */
+.plano-card {
+  transition: var(--zupi-transition);
+  cursor: pointer;
+}
+
+.plano-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+

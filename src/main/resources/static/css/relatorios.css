@@ -1,0 +1,150 @@
+/* ===================================================
+   Zupi - Relatórios CSS
+   Estilos específicos da página de Relatórios
+   =================================================== */
+
+/* Layout para manter footer no final */
+html, body {
+  height: 100%;
+}
+
+body {
+  min-height: 100vh;
+  display: block;
+}
+
+body > .container-fluid {
+  min-height: calc(100vh - 200px);
+}
+
+body > .container-fluid > .row {
+  display: block;
+}
+
+.dashboard-main-content {
+  display: block;
+}
+
+/* Cards de relatórios */
+.relatorio-card {
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+
+.relatorio-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--zupi-primary-solid);
+  box-shadow: 0 8px 25px rgba(126, 200, 230, 0.3);
+}
+
+.relatorio-card .card-body {
+  padding: 1.5rem;
+}
+
+.relatorio-card .card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--zupi-text);
+  margin-bottom: 0.5rem;
+}
+
+.relatorio-card .card-text {
+  color: var(--zupi-text);
+  opacity: 0.7;
+  font-size: 0.9rem;
+}
+
+/* Modal de salvar relatório */
+#saveReportModal .modal-header {
+  background: var(--zupi-primary-gradient);
+  color: var(--zupi-white);
+  border-radius: 12px 12px 0 0;
+}
+
+#saveReportModal .modal-content {
+  border-radius: 12px;
+  border: none;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Seção de detalhes do relatório */
+.report-details-section {
+  background: var(--zupi-bg);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.report-details-section h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--zupi-text);
+  margin-bottom: 1rem;
+}
+
+/* Resumo semanal */
+.resumo-semanal {
+  background: var(--zupi-white);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.resumo-semanal h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--zupi-text);
+  margin-bottom: 1rem;
+}
+
+.resumo-semanal ul {
+  list-style: none;
+  padding: 0;
+}
+
+.resumo-semanal li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.resumo-semanal li:last-child {
+  border-bottom: none;
+}
+
+.resumo-semanal strong {
+  color: var(--zupi-primary-solid);
+}
+
+/* Botão de salvar relatório */
+.btn-save-relatorio {
+  background: var(--zupi-primary-gradient);
+  color: var(--zupi-white);
+  font-weight: 600;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.btn-save-relatorio:hover {
+  background: var(--zupi-highlight);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 185, 128, 0.5);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .relatorio-card .card-body {
+    padding: 1rem;
+  }
+  
+  .report-details-section {
+    padding: 1.5rem;
+  }
+  
+  .resumo-semanal {
+    padding: 1rem;
+  }
+}
+

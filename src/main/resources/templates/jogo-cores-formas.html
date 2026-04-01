@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zupi - Jogo de Cores e Formas</title>
+    <link rel="stylesheet" href="/css/jogo-cores-formas.css" />
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <div class="logo-shape logo-circle"></div>
+            <div class="logo-shape logo-pentagon"></div>
+            <div class="logo-shape logo-rectangle"></div>
+            <div class="logo-shape logo-pentagon-blue"></div>
+        </div>
+        <h1>🎨 Zupi - Cores e Formas</h1>
+        <div id="level-indicator">Fase 1 de 5</div>
+        <div id="score">Pontos: 0</div>
+    </header>
+
+    <main>
+        <div id="instruction-container">
+            <p id="instruction-text">Clique no círculo vermelho</p>
+        </div>
+
+        <div id="game-area">
+            <!-- As formas serão geradas dinamicamente pelo JavaScript -->
+        </div>
+
+        <div id="feedback" class="hidden">
+            <span id="feedback-text"></span>
+        </div>
+    </main>
+
+    <!-- Modal de Vitória -->
+    <div id="modal-overlay" class="hidden">
+        <div class="modal-content">
+            <span class="modal-emoji" id="modal-icon">🌟</span>
+            <h2 id="modal-title">Parabéns!</h2>
+            <p id="modal-message">Você completou todas as fases!</p>
+            <div class="modal-buttons">
+                <button class="btn-action" id="btn-restart">Jogar Novamente</button>
+                <button class="btn-action" id="btn-menu">Voltar ao Menu</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/jogo-cores-formas.js"></script>
+</body>
+</html>
+

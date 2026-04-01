@@ -1,0 +1,131 @@
+/* ===================================================
+   Zupi - Plano Premium CSS
+   Estilos específicos da página Plano Premium
+   =================================================== */
+
+/* Hero section específico */
+.plano-premium-hero {
+  background: linear-gradient(135deg, var(--zupi-highlight) 0%, var(--zupi-primary-solid) 100%);
+  color: var(--zupi-white);
+  padding: 4rem 0;
+  border-radius: 0 0 2rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.plano-premium-hero::before {
+  content: '⭐';
+  position: absolute;
+  font-size: 10rem;
+  opacity: 0.1;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: rotate 20s linear infinite;
+}
+
+@keyframes rotate {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+.plano-premium-hero .badge {
+  background: var(--zupi-white);
+  color: var(--zupi-highlight);
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+}
+
+.plano-premium-hero h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.plano-premium-hero .lead {
+  font-size: 1.3rem;
+  opacity: 0.95;
+  position: relative;
+  z-index: 1;
+}
+
+.plano-premium-hero .h2 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-top: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* Cards de benefícios */
+.beneficio-card {
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  height: 100%;
+  position: relative;
+}
+
+.beneficio-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--zupi-highlight);
+  box-shadow: 0 8px 25px rgba(255, 185, 128, 0.3);
+}
+
+.beneficio-card .card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--zupi-text);
+  margin-bottom: 0.75rem;
+}
+
+.beneficio-card .card-text {
+  color: var(--zupi-text);
+  opacity: 0.8;
+}
+
+/* Seção de CTA */
+.cta-section {
+  background: var(--zupi-bg);
+  padding: 3rem 0;
+  text-align: center;
+}
+
+.cta-section .btn {
+  padding: 1rem 2.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 50px;
+  background: var(--zupi-highlight);
+  border: none;
+  color: var(--zupi-white);
+}
+
+.cta-section .btn:hover {
+  background: var(--zupi-secondary);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 185, 128, 0.4);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .plano-premium-hero {
+    padding: 3rem 0;
+  }
+  
+  .plano-premium-hero h1 {
+    font-size: 2rem;
+  }
+  
+  .plano-premium-hero .h2 {
+    font-size: 2rem;
+  }
+}
+

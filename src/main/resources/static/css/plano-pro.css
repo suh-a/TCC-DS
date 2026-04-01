@@ -1,0 +1,117 @@
+/* ===================================================
+   Zupi - Plano Pro CSS
+   Estilos específicos da página Plano Pro
+   =================================================== */
+
+/* Hero section específico */
+.plano-pro-hero {
+  background: var(--zupi-primary-gradient);
+  color: var(--zupi-white);
+  padding: 4rem 0;
+  border-radius: 0 0 2rem 2rem;
+}
+
+.plano-pro-hero h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.plano-pro-hero .lead {
+  font-size: 1.3rem;
+  opacity: 0.95;
+}
+
+.plano-pro-hero .h2 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-top: 1rem;
+}
+
+/* Cards de funcionalidades */
+.funcionalidade-card {
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  height: 100%;
+}
+
+.funcionalidade-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--zupi-primary-solid);
+  box-shadow: 0 8px 25px rgba(126, 200, 230, 0.3);
+}
+
+.funcionalidade-card .card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--zupi-text);
+  margin-bottom: 0.75rem;
+}
+
+.funcionalidade-card .card-text {
+  color: var(--zupi-text);
+  opacity: 0.8;
+}
+
+/* Card desabilitado (atividades impressas) */
+.funcionalidade-card.opacity-50 {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.funcionalidade-card.opacity-50:hover {
+  transform: none;
+  border-color: transparent;
+}
+
+.funcionalidade-card.opacity-50 .card-text em {
+  color: var(--zupi-text);
+  opacity: 0.6;
+}
+
+/* Seção de CTA */
+.cta-section {
+  background: var(--zupi-bg);
+  padding: 3rem 0;
+  text-align: center;
+}
+
+.cta-section h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--zupi-text);
+  margin-bottom: 0.5rem;
+}
+
+.cta-section p {
+  color: var(--zupi-text);
+  opacity: 0.8;
+  margin-bottom: 1.5rem;
+}
+
+.cta-section .btn {
+  padding: 1rem 2.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 50px;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .plano-pro-hero {
+    padding: 3rem 0;
+  }
+  
+  .plano-pro-hero h1 {
+    font-size: 2rem;
+  }
+  
+  .plano-pro-hero .h2 {
+    font-size: 2rem;
+  }
+  
+  .cta-section h2 {
+    font-size: 1.5rem;
+  }
+}
+

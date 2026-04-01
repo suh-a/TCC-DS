@@ -1,0 +1,148 @@
+/* ===================================================
+   Zupi - Vídeos CSS
+   Estilos específicos da página de Vídeos
+   =================================================== */
+
+/* Hero section de vídeos */
+.videos-hero {
+  background: var(--zupi-primary-gradient);
+  color: var(--zupi-white);
+  padding: 3rem 0;
+  border-radius: 0 0 2rem 2rem;
+  margin-bottom: 3rem;
+}
+
+.videos-hero h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.videos-hero .lead {
+  font-size: 1.2rem;
+  opacity: 0.95;
+}
+
+/* Vídeo em destaque */
+.featured-video {
+  background: var(--zupi-white);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  margin-bottom: 3rem;
+}
+
+.featured-video .ratio {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.featured-video h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--zupi-text);
+  margin-bottom: 1rem;
+}
+
+/* Badges de categoria */
+.video-badge {
+  background: var(--zupi-primary-solid);
+  color: var(--zupi-white);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
+  display: inline-block;
+}
+
+/* Botões de ação do vídeo */
+.video-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.video-actions .btn {
+  border-radius: 8px;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+}
+
+/* Transcrição */
+#transcript {
+  background: var(--zupi-bg);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-top: 1rem;
+}
+
+#transcript h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--zupi-text);
+  margin-bottom: 0.75rem;
+}
+
+#transcript p {
+  color: var(--zupi-text);
+  opacity: 0.8;
+  line-height: 1.6;
+}
+
+/* Galeria de vídeos */
+.video-gallery .card {
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.video-gallery .card:hover {
+  transform: translateY(-5px);
+  border-color: var(--zupi-primary-solid);
+  box-shadow: 0 8px 25px rgba(126, 200, 230, 0.3);
+}
+
+.video-gallery .card .ratio {
+  border-radius: 12px 12px 0 0;
+  overflow: hidden;
+}
+
+.video-gallery .card-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--zupi-text);
+  margin-bottom: 0.5rem;
+}
+
+.video-gallery .card-text {
+  color: var(--zupi-text);
+  opacity: 0.7;
+  font-size: 0.9rem;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .videos-hero {
+    padding: 2rem 0;
+  }
+  
+  .videos-hero h1 {
+    font-size: 2rem;
+  }
+  
+  .featured-video {
+    padding: 1.5rem;
+  }
+  
+  .video-actions {
+    flex-direction: column;
+  }
+  
+  .video-actions .btn {
+    width: 100%;
+  }
+}
+

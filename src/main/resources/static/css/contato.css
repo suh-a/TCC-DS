@@ -1,0 +1,70 @@
+/* ===================================================
+   Zupi - Contato CSS
+   Estilos específicos da página Contato
+   =================================================== */
+
+/* Cards de contato */
+.contato-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.contato-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.contato-card .card-title {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.contato-card a {
+  color: var(--zupi-primary-solid);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.contato-card a:hover {
+  color: var(--zupi-highlight);
+}
+
+/* Formulário de contato */
+#contactForm {
+  max-width: 100%;
+}
+
+#contactForm textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+#contactFeedback {
+  min-height: 50px;
+}
+
+/* Seção de título */
+.section-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--zupi-text);
+  margin-bottom: 1rem;
+}
+
+.section-subtitle {
+  font-size: 1.1rem;
+  color: var(--zupi-text);
+  opacity: 0.8;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .section-title {
+    font-size: 2rem;
+  }
+  
+  .contato-card .card-title {
+    font-size: 1.5rem;
+  }
+}
+

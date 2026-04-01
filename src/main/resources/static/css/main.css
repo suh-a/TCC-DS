@@ -1,0 +1,385 @@
+/* ===================================================
+   Zupi - Main CSS
+   Estilos gerais do projeto
+   =================================================== */
+
+:root {
+  /* Cores do tema Zupi - Tons Pastéis Mais Vivos */
+  --zupi-primary: linear-gradient(135deg, #7EC8E6 0%, #A8D5BA 100%);
+  --zupi-primary-gradient: linear-gradient(135deg, #7EC8E6 0%, #A8D5BA 100%);
+  --zupi-primary-solid: #7EC8E6; /* Azul claro pastel mais vivo para uso em border, text, etc */
+  --zupi-secondary: #FFE66D; /* Amarelo pastel mais vivo */
+  --zupi-accent: #A8D5BA; /* PP516 - Verde Claro Brilhante pastel */
+  --zupi-highlight: #FFB980; /* Laranja/coral pastel mais vivo */
+  --zupi-bg: #F5F7FA;
+  --zupi-text: #2D3748;
+  --zupi-white: #FFFFFF;
+  
+  /* Fontes */
+  --zupi-font-title: 'Poppins', sans-serif;
+  --zupi-font-body: 'Roboto', sans-serif;
+  
+  /* Transições */
+  --zupi-transition: 0.3s ease;
+}
+
+/* ==================== TIPOGRAFIA ==================== */
+body {
+  font-family: var(--zupi-font-body);
+  color: var(--zupi-text);
+  background-color: var(--zupi-bg);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--zupi-font-title);
+  font-weight: 600;
+}
+
+/* ==================== NAVBAR ==================== */
+.navbar-brand {
+  font-family: var(--zupi-font-title);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--zupi-white) !important;
+  letter-spacing: 1px;
+}
+
+#brand-color-2 {
+  color: var(--zupi-primary-solid) !important;
+}
+
+.navbar-brand:hover {
+  color: var(--zupi-highlight) !important;
+}
+
+.navbar-nav .nav-link {
+  font-weight: 500;
+  color: var(--zupi-text) !important;
+  transition: var(--zupi-transition);
+  position: relative;
+}
+
+.navbar-nav .nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--zupi-highlight);
+  transition: width 0.3s, left 0.3s;
+}
+
+.navbar-nav .nav-link:hover::after,
+.navbar-nav .nav-link.active::after {
+  width: 100%;
+  left: 0;
+}
+
+.navbar-nav .nav-link:hover {
+  color: var(--zupi-primary-solid) !important;
+}
+
+/* ==================== BOTÕES ==================== */
+.btn-primary {
+  background: var(--zupi-primary-gradient);
+  border-color: var(--zupi-primary-solid);
+  font-weight: 600;
+  transition: var(--zupi-transition);
+}
+
+.btn-primary:hover {
+  background-color: var(--zupi-highlight);
+  border-color: var(--zupi-highlight);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 185, 128, 0.5);
+}
+
+.btn-outline-primary {
+  color: var(--zupi-primary-solid);
+  border-color: var(--zupi-primary-solid);
+}
+
+.btn-outline-primary:hover {
+  background: var(--zupi-primary-gradient);
+  border-color: var(--zupi-primary-solid);
+}
+
+.btn-warning {
+  background-color: var(--zupi-highlight);
+  border-color: var(--zupi-highlight);
+  color: var(--zupi-white);
+}
+
+.btn-warning:hover {
+  background-color: var(--zupi-secondary);
+  border-color: var(--zupi-secondary);
+}
+
+/* ==================== CARDS ==================== */
+.card {
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  transition: var(--zupi-transition);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.card-header {
+  background-color: transparent;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  font-weight: 600;
+}
+
+/* ==================== FUNDO DECORATIVO ==================== */
+.background-decor {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.background-decor .decor-shape {
+  position: absolute;
+  opacity: 0.15;
+  animation: float 12s infinite alternate ease-in-out;
+  filter: blur(1px);
+}
+
+.background-decor .decor-circle {
+  border-radius: 50%;
+}
+
+.background-decor .decor-square {
+  border-radius: 12px;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0.15;
+  }
+  100% {
+    transform: translateY(-20px) rotate(20deg);
+    opacity: 0.25;
+  }
+}
+
+/* ==================== FOOTER ==================== */
+.footer {
+  background-color: var(--zupi-white);
+  padding: 2rem 0;
+  margin-top: 4rem;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.footer a {
+  color: var(--zupi-primary-solid);
+  text-decoration: none;
+  transition: var(--zupi-transition);
+}
+
+.footer a:hover {
+  color: var(--zupi-highlight);
+  text-decoration: underline;
+}
+
+/* ==================== FORMULÁRIOS ==================== */
+.form-control:focus {
+  border-color: var(--zupi-primary-solid);
+  box-shadow: 0 0 0 0.2rem rgba(126, 200, 230, 0.35);
+}
+
+.form-label {
+  font-weight: 600;
+  color: var(--zupi-text);
+  margin-bottom: 0.5rem;
+}
+
+/* ==================== UTILITÁRIOS ==================== */
+.text-zupi-primary {
+  color: var(--zupi-primary-solid) !important;
+}
+
+.text-zupi-highlight {
+  color: var(--zupi-highlight) !important;
+}
+
+.bg-zupi-primary {
+  background: var(--zupi-primary-gradient) !important;
+}
+
+.bg-zupi-accent {
+  background-color: var(--zupi-accent) !important;
+}
+
+.bg-zupi-highlight {
+  background-color: var(--zupi-highlight) !important;
+}
+
+/* ==================== ANIMAÇÕES ==================== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+/* ==================== ACESSIBILIDADE ==================== */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* ==================== RESPONSIVIDADE GERAL ==================== */
+@media (max-width: 991.98px) {
+  /* Navbar mobile */
+  .navbar-nav {
+    text-align: center;
+    padding-top: 1rem;
+  }
+
+  .navbar-nav .btn {
+    margin-top: 0.5rem;
+    margin-left: 0 !important;
+    width: 100%;
+  }
+
+  .navbar-nav .nav-link {
+    padding: 0.75rem 1rem;
+  }
+
+  /* Footer mobile */
+  .footer {
+    padding: 1.5rem 0;
+    margin-top: 2rem;
+  }
+
+  /* Tabelas responsivas */
+  .table-responsive {
+    font-size: 0.875rem;
+  }
+
+  /* Espaçamentos reduzidos */
+  .py-5 {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+  }
+
+  .mb-5 {
+    margin-bottom: 2rem !important;
+  }
+
+  /* Botões em mobile */
+  .btn-lg {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+  }
+
+  /* Cards em mobile */
+  .card {
+    margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  /* Extra small devices */
+  .display-4 {
+    font-size: 2rem;
+  }
+
+  .display-5 {
+    font-size: 1.75rem;
+  }
+
+  .container-fluid {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  .card-body {
+    padding: 1rem;
+  }
+
+  /* Imagens responsivas */
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Botões em mobile */
+  .btn {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  .btn-group .btn {
+    width: auto;
+  }
+
+  /* Formulários mobile */
+  .form-control {
+    font-size: 16px; /* Evita zoom no iOS */
+  }
+
+  /* Tabelas em mobile */
+  .table {
+    font-size: 0.8rem;
+  }
+
+  /* Espaçamentos reduzidos */
+  .mb-4, .mb-5 {
+    margin-bottom: 1.5rem !important;
+  }
+
+  .py-5 {
+    padding-top: 1.5rem !important;
+    padding-bottom: 1.5rem !important;
+  }
+
+  /* Cards em mobile */
+  .card {
+    margin-bottom: 1rem;
+  }
+
+  /* Navbar mobile */
+  .navbar-brand {
+    font-size: 1.5rem;
+  }
+
+  /* Cards em mobile - full width */
+  .col-md-4, .col-md-6 {
+    margin-bottom: 1rem;
+  }
+
+  /* Formulários mobile */
+  .form-row {
+    flex-direction: column;
+  }
+
+  /* Progress bars mobile */
+  .progress {
+    height: 1.5rem;
+  }
+}
+

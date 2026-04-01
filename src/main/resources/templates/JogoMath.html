@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo de Matemática</title>
+    <link rel="stylesheet" href="/css/jogomathcss.css">
+</head>
+<body>
+
+<div id="game-container">
+    <h1>Desafio de Matemática</h1>
+
+    <div id="question"></div>
+
+    <!-- ⬇️ NOVO: container onde os objetos aparecerão -->
+    <div id="objects-container"></div>
+
+    <input type="number" id="answer-input" placeholder="Digite sua resposta">
+
+    <button onclick="checkAnswer()">Responder</button>
+
+    <div id="feedback"></div>
+    <div id="score">Pontuação: 0</div>
+</div>
+
+<script src="/js/jogomathscript.js"></script>
+</body>
+</html>

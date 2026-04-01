@@ -1,0 +1,69 @@
+/* ===================================================
+   Zupi - Sobre CSS
+   Estilos específicos da página Sobre
+   =================================================== */
+
+/* Timeline específica */
+.timeline {
+  position: relative;
+  padding-left: 2rem;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--zupi-primary-gradient);
+  border-radius: 2px;
+}
+
+.timeline-item {
+  position: relative;
+  padding-left: 2rem;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -1.5rem;
+  top: 0.5rem;
+  width: 12px;
+  height: 12px;
+  background: var(--zupi-primary-solid);
+  border-radius: 50%;
+  border: 3px solid var(--zupi-white);
+  box-shadow: 0 0 0 3px var(--zupi-primary-solid);
+}
+
+/* Cards de missão, visão e valores */
+.card .display-4 {
+  font-size: 3rem;
+  line-height: 1;
+}
+
+/* Hero section específico */
+.hero-section {
+  background: var(--zupi-primary-gradient);
+  color: var(--zupi-white);
+  padding: 4rem 0;
+  border-radius: 0 0 2rem 2rem;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .timeline {
+    padding-left: 1.5rem;
+  }
+  
+  .timeline-item {
+    padding-left: 1.5rem;
+  }
+  
+  .card .display-4 {
+    font-size: 2rem;
+  }
+}
+

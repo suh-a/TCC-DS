@@ -1,0 +1,111 @@
+/* === ESTILO GERAL === */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+  background: #ffffff; /* branco */
+  color: #333; /* texto escuro */
+  text-align: center;
+  overflow: hidden;
+}
+
+
+/* === TELAS === */
+.tela {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  transition: opacity 0.5s;
+}
+
+.oculto {
+  display: none;
+}
+
+/* === BOTÕES === */
+button {
+  background-color: #00a3cc;
+  color: #fffefe;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: 0.3s;
+}
+
+button:hover {
+  background-color: #333;
+  color: #fff;
+}
+
+/* === TABULEIRO === */
+#tabuleiro {
+  display: grid;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+/* === CARTAS === */
+.carta {
+  width: 100px;
+  height: 100px;
+  perspective: 1000px;
+  cursor: pointer;
+}
+
+.carta-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.6s;
+}
+
+.carta.virada .carta-inner {
+  transform: rotateY(180deg);
+}
+.carta-frente,
+.carta-verso {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 10px;
+}
+
+/* 🔹 Verso (o lado azul) — aparece primeiro */
+.carta-verso {
+  background: #2b7fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 🔹 Frente (imagem) — fica virada inicialmente */
+.carta-frente {
+  transform: rotateY(180deg);
+}
+
+.carta-frente img {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+
+/* === ANIMAÇÃO DE PARABÉNS === */
+.animacao-parabens {
+  font-size: 2rem;
+  animation: pulando 1s infinite alternate;
+}
+
+@keyframes pulando {
+  from { transform: scale(1); }
+  to { transform: scale(1.2); color: #ffd700; }
+}

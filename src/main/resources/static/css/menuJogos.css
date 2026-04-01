@@ -1,0 +1,90 @@
+/* ===================================================
+   Zupi - Menu Jogos CSS
+   Estilos específicos da página Menu de Jogos
+   =================================================== */
+
+/* Layout para manter footer no final */
+html, body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
+/* Header do menu */
+.menu-jogos-header {
+  background: var(--zupi-white);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 2rem 0;
+  margin-bottom: 3rem;
+}
+
+.menu-jogos-header h1 {
+  color: var(--zupi-primary-solid);
+  font-weight: 700;
+}
+
+/* Cards de jogos */
+.jogo-card {
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  height: 100%;
+}
+
+.jogo-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--zupi-primary-solid);
+  box-shadow: 0 8px 25px rgba(126, 200, 230, 0.3);
+}
+
+.jogo-card .card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+}
+
+.jogo-card .card-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--zupi-text);
+  margin-bottom: 1rem;
+}
+
+.jogo-card .card-text {
+  color: var(--zupi-text);
+  opacity: 0.8;
+  margin-bottom: 1.5rem;
+  flex-grow: 1;
+}
+
+.jogo-card .btn {
+  width: 100%;
+  max-width: 200px;
+}
+
+/* Emoji nos títulos */
+.jogo-card .card-title::before {
+  display: block;
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .menu-jogos-header {
+    padding: 1.5rem 0;
+    margin-bottom: 2rem;
+  }
+  
+  .jogo-card .card-body {
+    padding: 1.5rem;
+  }
+}
+
