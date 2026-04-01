@@ -1,72 +1,103 @@
-<p align="center">
-  <img src="https://api.iconify.design/simple-icons:spring.svg?color=%236DB33F" width="90">
-</p>
+# 🧩 Zupi — Aplicativo de Desenvolvimento Infantil
 
-<h1 align="center">🌱 Zupi Backend – Sistema de Auxílio de Pais e Responsáveis de Crianças Neurodivergentes(Projeto Backend)</h1>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/BACKEND%20JAVA%20SPRING-000000?style=for-the-badge&logo=spring&logoColor=6DB33F">
-</p>
+**Zupi** é um site/aplicativo voltado ao **desenvolvimento de crianças neurodivergentes**, com foco em aprendizado dinâmico e inclusivo.
+A plataforma utiliza **jogos e quizzes interativos** para estimular habilidades cognitivas, motoras e emocionais de forma divertida.
 
 ---
 
-## 👋 Visão Geral (para recrutadores)
+## 🎯 Objetivo
 
-O **Zupi Backend** é um projeto backend desenvolvido em **Java com Spring Boot**, com foco em **APIs REST**, **persistência de dados**, **modelagem de domínio** e **boas práticas de arquitetura**.
-
-O sistema simula um cenário real de acompanhamento educacional, permitindo:
-- Cadastro de usuários e crianças
-- Criação de relatórios diários
-- Registro histórico de scores por área de habilidade
-- Cálculo de médias e análises futuras
-
-👉 Projeto **publicado em produção** e acessível online.
+Promover o aprendizado infantil por meio de experiências lúdicas e personalizadas, respeitando o ritmo e as necessidades de cada criança.
+O Zupi também apoia pais, responsáveis e escolas no acompanhamento do progresso educacional.
 
 ---
 
-## 🛠️ Tecnologias Utilizadas
+## 💡 Público-Alvo
 
-- ☕ **Java 21**
-- 🌱 **Spring Boot**
-- 🔗 **API REST**
-- 🗄️ **JPA / Hibernate**
-- 🐘 **PostgreSQL**
-- 🎨 **Thymeleaf**
-- 🛠️ **Maven**
-- ☁️ **Deploy em Cloud (Render)**
-- 🔁 **Git / GitHub**
+* Crianças neurodivergentes.
+* Pais e responsáveis que desejam acompanhar o progresso de seus filhos.
 
 ---
 
-## 🧠 Conceitos Técnicos Aplicados
+## 🕹️ Funcionalidades Principais
 
-- Arquitetura em camadas (Controller, Service, Repository)
-- Uso de **DTOs** para isolamento de domínio
-- Relacionamentos JPA (`@OneToMany`, `@ManyToOne`)
-- Persistência de histórico de dados
-- Queries customizadas com JPQL
-- Consumo de API via frontend
-- Deploy de aplicação backend em ambiente real
+### 👤 Perfil do Usuário
+
+* Cadastro de criança e responsável.
+* Edição de informações pessoais.
+* Visualização de progresso e conquistas.
+
+### 🎮 Jogos e Quizzes
+
+* Jogos educativos por faixa etária e tema.
+* Quizzes interativos com feedback imediato.
+* Sistema de pontuação e medalhas.
+
+### 📊 Acompanhamento de Aprendizado
+
+* Exibição de progresso em gráficos e relatórios.
+* Recomendação automática de novas atividades conforme o desempenho.
+
+### 💬 Suporte e Comunicação
+
+* Chat de suporte direto com a equipe Zupi.
+* Canal de dúvidas e feedback.
+
+### 📦 Atividades Impressas (Plano Premium)
+
+* Atividades complementares enviadas via correio.
+* Personalizadas conforme o perfil da criança.
 
 ---
 
-## 🌐 Aplicação em Produção
+## 💎 Planos Disponíveis
 
-🚀 **Projeto online (Render):**  
-🔗 https://zupibackend.onrender.com/
-
-> Observação: por estar no plano gratuito, a primeira requisição pode levar alguns segundos.
-
----
-
-## 🎯 Objetivo do Projeto
-
-Projeto desenvolvido com foco em **aprendizado prático de backend**, simulando desafios reais encontrados em aplicações corporativas, como organização de código, persistência de dados e integração entre camadas.
+| Plano       | Descrição                            | Limitações               | Benefícios Extras                               |
+| :---------- | :----------------------------------- | :----------------------- | :---------------------------------------------- |
+| **Free**    | Acesso básico aos jogos e quizzes.   | Limitado e com anúncios. | —                                               |
+| **Pro**     | Acesso ilimitado e sem anúncios.     | —                        | Experiência fluida e sem interrupções.          |
+| **Premium** | Acesso total + atividades impressas. | —                        | Recebimento de atividades físicas via correios. |
 
 ---
 
-## 👤 Autor
+## 🧠 Tecnologias Utilizadas
 
-**Auri Jonathan Morais Sampaio**  
-🔗 GitHub: https://github.com/JohnSampa  
-🔗 LinkedIn: https://www.linkedin.com/in/jonathan-sampaio-107333328/
+| Camada                  | Tecnologia                                                       |
+| :---------------------- | :--------------------------------------------------------------- |
+| **Front-end**           | HTML5, CSS3, JavaScript                                          |
+| **Back-end**            | Java                                                             |
+| **Banco de Dados**      | Firebase                     |
+| **Integrações**         | Correios API (para envio de atividades), sistema de login e chat |
+| **Hospedagem / Deploy** | (ex: Vercel, Render, ou servidor local)                          |
+
+---
+
+## 🔒 Regras de Negócio
+
+1. Usuário Free possui acesso limitado e visualiza anúncios.
+2. Usuário Pro tem acesso ilimitado e livre de anúncios.
+3. Usuário Premium recebe, além do conteúdo digital, **atividades impressas via correios**.
+4. Cada criança possui um perfil vinculado a um responsável.
+5. O progresso deve ser salvo e exibido em tempo real.
+6. Apenas usuários autenticados podem acessar jogos e quizzes.
+7. O chat de suporte está disponível apenas para planos Pro e Premium.
+
+---
+
+## 🧾 Licença e Uso
+
+Projeto desenvolvido para fins **acadêmicos** (TCC).
+Uso, modificação e redistribuição autorizados mediante citação do autor.
+
+---
+
+## 👩‍💻 Autoria
+
+**Autores:** Suellen Alves, Ana Rios, João Soares, Auri Sampaio, Kerlon Neves, José Miranda.
+**Curso:** Desenvolvimento de Sistemas
+**Instituição:** [SENAI-FSA]
+**Ano:** 2025
+
+---
+
+> 💬 *“Aprender brincando é o primeiro passo para amar o conhecimento.” — Zupi Team*
