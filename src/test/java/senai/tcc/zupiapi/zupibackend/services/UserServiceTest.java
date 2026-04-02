@@ -1,4 +1,296 @@
 package senai.tcc.zupiapi.zupibackend.services;
 
-public class UserServiceTest {
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import senai.tcc.zupiapi.zupibackend.dto.LoginDTO;
+import senai.tcc.zupiapi.zupibackend.dto.mapper.UserMapper;
+import senai.tcc.zupiapi.zupibackend.dto.request.UserRequest;
+import senai.tcc.zupiapi.zupibackend.dto.response.UserResponse;
+import senai.tcc.zupiapi.zupibackend.exceptions.ResourceNotFoundException;
+import senai.tcc.zupiapi.zupibackend.model.User;
+import senai.tcc.zupiapi.zupibackend.repositories.UserRepository;
+
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
+/*Autor: Suellen
+Data: 02/04/2026 */
+
+@ExtendWith(MockitoExtension.class)
+class UserServiceTest {
+
+    @Mock
+    private UserRepository userRepository;
+
+    @Mock
+    private UserMapper userMapper;
+
+    @InjectMocks
+    private UserService userService;
+
+    private User user;
+    private UserResponse userResponse;
+
+    @BeforeEach
+    void setup() {
+        user = new User();
+        user.setId(1L);
+        user.setEmail("teste@email.com");
+        user.setPassword("123");
+
+        userResponse = mock(UserResponse.class);
+    }
+
+    // 1
+    @Test
+    void shouldReturnAllUsers() {
+        when(userRepository.findAll()).thenReturn(List.of(user));
+        when(userMapper.toResponseList(any())).thenReturn(List.of(userResponse));
+
+        List<UserResponse> result = userService.findAll();
+
+        assertEquals(1, result.size());
+    }
+
+    // 2
+    @Test
+    void shouldReturnEmptyListWhenNoUsers() {
+        when(userRepository.findAll()).thenReturn(List.of());
+        when(userMapper.toResponseList(any())).thenReturn(List.of());
+
+        List<UserResponse> result = userService.findAll();
+
+        assertTrue(result.isEmpty());
+    }
+
+    // 3
+    @Test
+    void shouldFindUserById() {
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(userMapper.toResponse(user)).thenReturn(userResponse);
+
+        UserResponse result = userService.findById(1L);
+
+        assertNotNull(result);
+    }
+
+    // 4
+    @Test
+    void shouldThrowExceptionWhenUserNotFoundById() {
+        when(userRepository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class,
+                () -> userService.findById(1L));
+    }
+
+    // 5
+    @Test
+    void shouldFindUserByEmail() {
+        when(userRepository.findByEmail("teste@email.com")).thenReturn(Optional.of(user));
+        when(userMapper.toResponse(user)).thenReturn(userResponse);
+
+        UserResponse result = userService.findByEmail("teste@email.com");
+
+        assertNotNull(result);
+    }
+
+    // 6
+    @Test
+    void shouldThrowExceptionWhenUserNotFoundByEmail() {
+        when(userRepository.findByEmail("x")).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class,
+                () -> userService.findByEmail("x"));
+    }
+
+    // 7
+    @Test
+    void shouldSaveUser() {
+        UserRequest request = mock(UserRequest.class);
+        when(request.password()).thenReturn("123");
+
+        when(userMapper.toEntity(request)).thenReturn(user);
+        when(userRepository.save(any())).thenReturn(user);
+        when(userMapper.toResponse(user)).thenReturn(userResponse);
+
+        UserResponse result = userService.save(request);
+        
+        assertNotNull(result);
+    }
+
+    // 8
+    @Test
+    void shouldEncodePasswordOnSave() {
+        UserRequest request = mock(UserRequest.class);
+        when(request.password()).thenReturn("123");
+
+        when(userMapper.toEntity(request)).thenReturn(user);
+        when(userRepository.save(any())).thenReturn(user);
+        when(userMapper.toResponse(any())).thenReturn(userResponse);
+
+        userService.save(request);
+
+        assertNotEquals("123", user.getPassword());
+    }
+
+    // 9
+    @Test
+    void shouldCallRepositorySave() {
+        UserRequest request = mock(UserRequest.class);
+        when(request.password()).thenReturn("123");
+
+        when(userMapper.toEntity(request)).thenReturn(user);
+        when(userRepository.save(any())).thenReturn(user);
+        when(userMapper.toResponse(any())).thenReturn(userResponse);
+
+        userService.save(request);
+
+        verify(userRepository, times(1)).save(any());
+    }
+
+    // 10
+    @Test
+    void shouldValidatePasswordCorrectly() {
+        LoginDTO login = new LoginDTO("teste@email.com", "123");
+
+        PasswordEncoder encoder = new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder();
+        user.setPassword(encoder.encode("123"));
+
+        when(userRepository.findByEmail(login.email())).thenReturn(Optional.of(user));
+
+        Boolean result = userService.validationPassword(login);
+
+        assertTrue(result);
+    }
+
+    // 11
+    @Test
+    void shouldReturnFalseForWrongPassword() {
+        LoginDTO login = new LoginDTO("teste@email.com", "wrong");
+
+        PasswordEncoder encoder = new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder();
+        user.setPassword(encoder.encode("123"));
+
+        when(userRepository.findByEmail(login.email())).thenReturn(Optional.of(user));
+
+        Boolean result = userService.validationPassword(login);
+
+        assertFalse(result);
+    }
+
+    // 12
+    @Test
+    void shouldThrowExceptionWhenValidatingPasswordUserNotFound() {
+        LoginDTO login = new LoginDTO("x", "123");
+
+        when(userRepository.findByEmail(login.email())).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class,
+                () -> userService.validationPassword(login));
+    }
+
+    // 13
+    @Test
+    void shouldCallMapperOnFindAll() {
+        userService.findAll();
+
+        verify(userMapper).toResponseList(any());
+    }
+
+    // 14
+    @Test
+    void shouldCallMapperOnFindById() {
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(userMapper.toResponse(user)).thenReturn(userResponse);
+
+        userService.findById(1L);
+
+        verify(userMapper).toResponse(user);
+    }
+
+    // 15
+    @Test
+    void shouldCallMapperOnFindByEmail() {
+        when(userRepository.findByEmail("teste@email.com")).thenReturn(Optional.of(user));
+        when(userMapper.toResponse(user)).thenReturn(userResponse);
+
+        userService.findByEmail("teste@email.com");
+
+        verify(userMapper).toResponse(user);
+    }
+
+    // 16
+    @Test
+    void shouldCallMapperOnSave() {
+        UserRequest request = mock(UserRequest.class);
+        when(request.password()).thenReturn("123");
+
+        when(userMapper.toEntity(request)).thenReturn(user);
+        when(userRepository.save(any())).thenReturn(user);
+        when(userMapper.toResponse(any())).thenReturn(userResponse);
+
+        userService.save(request);
+
+        verify(userMapper).toResponse(any());
+    }
+
+    // 17
+    @Test
+    void shouldCallRepositoryFindByEmailOnValidation() {
+        LoginDTO login = new LoginDTO("teste@email.com", "123");
+
+        when(userRepository.findByEmail(login.email())).thenReturn(Optional.of(user));
+
+        userService.validationPassword(login);
+
+        verify(userRepository).findByEmail(login.email());
+    }
+
+    // 18
+    @Test
+    void shouldReturnEmptyListWhenRepositoryReturnsNull() {
+        when(userRepository.findAll()).thenReturn(null);
+        when(userMapper.toResponseList(null)).thenReturn(null);
+
+        List<UserResponse> result = userService.findAll();
+
+        assertNull(result);
+    }
+
+    // 19
+    @Test
+    void shouldThrowExceptionWhenPasswordIsNull() {
+        UserRequest request = mock(UserRequest.class);
+        when(request.password()).thenReturn(null);
+
+        when(userMapper.toEntity(request)).thenReturn(user);
+
+        assertThrows(IllegalArgumentException.class,
+                () -> userService.save(request));
+    }
+
+    // 20
+    @Test
+    void shouldReturnMappedResponseAfterSave() {
+        UserRequest request = mock(UserRequest.class);
+
+        when(request.password()).thenReturn("123");
+
+        when(userMapper.toEntity(request)).thenReturn(user);
+        when(userRepository.save(any())).thenReturn(user);
+        when(userMapper.toResponse(user)).thenReturn(userResponse);
+
+        UserResponse result = userService.save(request);
+
+        assertEquals(userResponse, result);
+    }
 }
