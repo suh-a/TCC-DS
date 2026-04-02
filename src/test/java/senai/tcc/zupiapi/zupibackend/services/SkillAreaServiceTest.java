@@ -19,6 +19,9 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+/*Autor: Kerlon Neves
+Data: 02/04/2026 */
+
 
 @ExtendWith(org.mockito.junit.jupiter.MockitoExtension.class)
 class SkillAreaServiceTest {
