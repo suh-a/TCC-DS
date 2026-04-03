@@ -3,12 +3,11 @@ package senai.tcc.zupiapi.zupibackend.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import senai.tcc.zupiapi.zupibackend.dto.response.ChildReportResponse;
 import senai.tcc.zupiapi.zupibackend.dto.request.ChildReportRequest;
-import senai.tcc.zupiapi.zupibackend.dto.ChildScoresAvaregesByAreaDTO;
+import senai.tcc.zupiapi.zupibackend.dto.ChildScoresAveragesByAreaDTO;
 import senai.tcc.zupiapi.zupibackend.services.ChildReportService;
 
 import java.net.URI;
@@ -30,11 +29,11 @@ public class ChildReportController {
     }
 
     @GetMapping(value = "/avg")
-    public ResponseEntity<List<ChildScoresAvaregesByAreaDTO>> getAllAverage(
+    public ResponseEntity<List<ChildScoresAveragesByAreaDTO>> getAllAverage(
             @PathVariable Long childId
     ) {
 
-        return ResponseEntity.ok().body(childReportService.getChildScoresAreaAvareges(childId));
+        return ResponseEntity.ok().body(childReportService.getChildScoresAreaAverages(childId));
     }
 
     @PostMapping()

@@ -3,10 +3,10 @@ package senai.tcc.zupiapi.zupibackend.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import senai.tcc.zupiapi.zupibackend.dto.ChildScoresAveragesByAreaDTO;
 import senai.tcc.zupiapi.zupibackend.dto.mapper.ChildReportMapper;
-import senai.tcc.zupiapi.zupibackend.dto.response.ChildReportResponse;
 import senai.tcc.zupiapi.zupibackend.dto.request.ChildReportRequest;
-import senai.tcc.zupiapi.zupibackend.dto.ChildScoresAvaregesByAreaDTO;
+import senai.tcc.zupiapi.zupibackend.dto.response.ChildReportResponse;
 import senai.tcc.zupiapi.zupibackend.exceptions.ResourceNotFoundException;
 import senai.tcc.zupiapi.zupibackend.model.Child;
 import senai.tcc.zupiapi.zupibackend.model.ChildReport;
@@ -45,8 +45,8 @@ public class ChildReportService {
 
     }
 
-    public List<ChildScoresAvaregesByAreaDTO> getChildScoresAreaAvareges(Long id) {
-        return childReportRepository.findChildScoresAreaAvareges(id);
+    public List<ChildScoresAveragesByAreaDTO> getChildScoresAreaAverages(Long id) {
+        return childReportRepository.findChildScoresAreaAverages(id);
     }
 
     public ChildReportResponse saveChildReportByChildId(ChildReportRequest childReport, Long childId) {
@@ -84,6 +84,8 @@ public class ChildReportService {
                     report.getScores().add(score);
                 }
         );
+
+        childReportRepository.save(report);
 
         return reportMapper.toResponse(report);
     }
