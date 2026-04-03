@@ -52,7 +52,7 @@ public class ChildReportService {
     public ChildReportResponse saveChildReportByChildId(ChildReportRequest childReport, Long childId) {
 
         Child child = childRepository.findById(childId)
-                .orElseThrow(()-> new RuntimeException("Child Not Found"));
+                .orElseThrow(()-> new ResourceNotFoundException("Child Not Found"));
 
         ChildReport report = reportMapper.toEntity(childReport);
 
@@ -70,7 +70,10 @@ public class ChildReportService {
         return reportMapper.toResponse(report);
     }
 
-    public ChildReportResponse updateChildReport(ChildReportRequest reportScores,Long reportId ,Long childId) {
+    public ChildReportResponse updateChildReport(
+            ChildReportRequest reportScores,
+            Long reportId ,
+            Long childId) {
 
         ChildReport report = childReportRepository.findByIdAndChildId(reportId,childId)
                 .orElseThrow(()-> new ResourceNotFoundException("ChildReport Not Found"));

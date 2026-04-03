@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import senai.tcc.zupiapi.zupibackend.dto.mapper.SkillAreaMapper;
 import senai.tcc.zupiapi.zupibackend.dto.request.SkillAreaRequest;
 import senai.tcc.zupiapi.zupibackend.dto.response.SkillAreaResponse;
@@ -23,7 +24,7 @@ import static org.mockito.Mockito.*;
 Data: 02/04/2026 */
 
 
-@ExtendWith(org.mockito.junit.jupiter.MockitoExtension.class)
+@ExtendWith(MockitoExtension.class)
 class SkillAreaServiceTest {
 
     @InjectMocks
