@@ -210,7 +210,9 @@ class ChildServiceTest {
 
         service.save(childRequest);
 
-        verify(childMapper, times(2)).toResponse(any()); no, verify(childMapper).toEntity(childRequest);
+        verify(childMapper, times(1))
+                .toResponse(any());
+        verify(childMapper).toEntity(childRequest);
         verify(childMapper).toResponse(child);
     }
 

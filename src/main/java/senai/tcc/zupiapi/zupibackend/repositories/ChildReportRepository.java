@@ -13,7 +13,7 @@ public interface ChildReportRepository extends JpaRepository<ChildReport, Long> 
     List<ChildReport>  findAllByChildIdAndDateAfter(Long child_id, Instant date);
 
     @Query("""
-        SELECT new senai.tcc.zupiapi.zupibackend.dto.ChildScoresAvaregesByAreaDTO(
+        SELECT new senai.tcc.zupiapi.zupibackend.dto.ChildScoresAveragesByAreaDTO(
             s.skillArea,
             AVG(s.score)
         )

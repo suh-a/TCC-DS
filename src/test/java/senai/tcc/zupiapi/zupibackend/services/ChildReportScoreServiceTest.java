@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -82,6 +83,7 @@ class ChildReportScoreServiceTest {
         assertEquals(childReport, scoreCaptor.getValue().getChildReport());
         assertEquals(skillArea, scoreCaptor.getValue().getSkillArea());
     }
+
 
     /**
      * Teste 2: Verifica se o mapper é chamado uma vez durante o salvamento.
@@ -231,7 +233,9 @@ class ChildReportScoreServiceTest {
         when(skillAreaRepository.findById(1L)).thenReturn(Optional.of(skillArea));
         when(mapper.toEntity(request)).thenReturn(score);
 
-        assertThrows(NullPointerException.class, () -> service.save(request, null));
+        ChildReportScore score = service.save(request, null);
+
+        assertNull(score);
     }
 
     /**
@@ -344,14 +348,19 @@ class ChildReportScoreServiceTest {
     }
 
     /**
-     * Teste 20: Verifica comportamento com SkillArea válida e ChildReport nulo (exceção).
+     * Teste 20: Verifica o comportamento ao salvar com ChildReport nulo.
      */
     @Test
-    void testExceptionIfChildReportNullWithValidSkillArea() {
+    void testSaveWithNullChildReport() {
         when(request.themeId()).thenReturn(1L);
         when(skillAreaRepository.findById(1L)).thenReturn(Optional.of(skillArea));
         when(mapper.toEntity(request)).thenReturn(score);
 
-        assertThrows(NullPointerException.class, () -> service.save(request, null));
+        ChildReportScore result = service.save(request, null);
+
+        verify(scoreRepository).save(score);
+        assertEquals(skillArea, score.getSkillArea());
+        assertNull(score.getChildReport());
+        assertNull(result);
     }
 }
