@@ -1,3 +1,7 @@
+ # Boa John Sampa, agr tu q deixou a credencial aqui tlgd, o mundo da voltas, um dia é o caçador, no outro é a caça.
+
+ # Aq tu tomou tá
+
 # 🧩 Zupi — Aplicativo de Desenvolvimento Infantil
 
 **Zupi** é um site/aplicativo voltado ao **desenvolvimento de crianças neurodivergentes**, com foco em aprendizado dinâmico e inclusivo.
