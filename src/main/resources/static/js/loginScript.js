@@ -13,6 +13,10 @@ async function loginUser(event) {
     const email = document.getElementById('email').value;
     const password = document.getElementById('senha').value;
 
+    const erroLogin = document.getElementById('erroLogin');
+
+    erroLogin.style.display = "none";
+
     const loginData = {
         email: email,
         password: password
@@ -27,16 +31,28 @@ async function loginUser(event) {
             body: JSON.stringify(loginData)
         });
 
-        if (response.ok) {
-            alert('Login realizado com sucesso!');
-            const responseData = await response.json();
-            localStorage.setItem('userId', responseData.id);
-            localStorage.removeItem('dailyReportId');
-            window.location.href = '/dashboard';
+        if (!response.ok) {
+            if (response.status === 401) {
+                erroLogin.textContent = "Email ou senha inválidos!";
+            } else {
+                erroLogin.textContent = "Erro ao realizar login.";
+            }
+
+            erroLogin.style.display = "block";
+            return;
         }
+
+        const responseData = await response.json();
+
+        alert('Login realizado com sucesso!');
+        localStorage.setItem('userId', responseData.id);
+        localStorage.removeItem('dailyReportId');
+        window.location.href = '/dashboard';
 
     } catch (error) {
         console.error('Erro ao fazer login:', error);
-    }
 
+        erroLogin.textContent = "Erro de conexão com o servidor.";
+        erroLogin.style.display = "block";
+    }
 }

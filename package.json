@@ -1,0 +1,27 @@
+{
+  "name": "tcc-ds",
+  "version": "1.0.0",
+  "description": "**Zupi** é um site/aplicativo voltado ao **desenvolvimento de crianças neurodivergentes**, com foco em aprendizado dinâmico e inclusivo.\r A plataforma utiliza **jogos e quizzes interativos** para estimular habilidades cognitivas, motoras e emocionais de forma divertida.",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/suh-a/TCC-DS.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/suh-a/TCC-DS/issues"
+  },
+  "homepage": "https://github.com/suh-a/TCC-DS#readme",
+  "dependencies": {
+    "jest": "^30.3.0"
+  },
+  "devDependencies": {
+    "jest-environment-jsdom": "^30.3.0"
+  }
+}

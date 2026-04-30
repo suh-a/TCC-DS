@@ -78,6 +78,9 @@
               <div class="mb-3">
                 <label for="email" class="form-label">E-mail</label>
                 <input type="email" class="form-control" id="email" name="email" placeholder="Digite seu e-mail" required aria-required="true">
+
+                <!-- mensagem de erro -->
+                <p id="erroEmail" class="text-danger mt-1" style="display: none;"></p>
               </div>
 
               <div class="mb-3">
@@ -88,6 +91,9 @@
               <div class="mb-3">
                 <label for="senhaConfirm" class="form-label">Confirmar Senha</label>
                 <input type="password" class="form-control" id="senhaConfirm" name="senhaConfirm" placeholder="Confirme a senha" required aria-required="true">
+
+                <!-- mensagem de erro -->
+                <p id="erroSenha" class="text-danger mt-1" style="display: none;"></p>
               </div>
 
               <button type="submit" class="btn btn-primary w-100 mb-3">Cadastrar</button>
