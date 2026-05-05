@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Pega a Estrela - Zupi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/zupi-jogos.css">
+  <style>
+    .ga{position:fixed;inset:0;top:58px;overflow:hidden;}
+    .alvo{position:absolute;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:50%;animation:alvoIn .3s cubic-bezier(.34,1.56,.64,1);transition:transform .1s;}
+    @keyframes alvoIn{from{transform:scale(0)}to{transform:scale(1)}}
+    .alvo:hover{transform:scale(1.1);}
+    .alvo:active{transform:scale(.88);}
+    .alvo.saindo{animation:alvoOut .25s ease-in forwards;}
+    @keyframes alvoOut{to{transform:scale(0);opacity:0}}
+    .abarra{position:absolute;bottom:-6px;left:0;right:0;height:4px;border-radius:4px;background:rgba(255,255,255,.35);overflow:hidden;}
+    .abarra-fill{height:100%;background:rgba(255,255,255,.8);border-radius:4px;}
+    .mpart{position:fixed;pointer-events:none;z-index:600;animation:zjPop .55s ease-out forwards;font-size:1rem;}
+    @keyframes mPartFly{0%{transform:translate(0,0) scale(1);opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(0);opacity:0}}
+  </style>
+</head>
+<body class="zj-body">
+<div id="zj-sky" class="zj-sky"></div>
+<nav class="zj-nav">
+  <a href="/menuJogos" class="zj-brand">&#x1F43E; Zupi</a>
+  <div class="zj-stats">
+    <div class="zj-pill">&#x2B50; <span id="p">0</span></div>
+    <div class="zj-pill">&#x274C; <span id="e">0</span>/3</div>
+    <div class="zj-pill">&#x23F1; <span id="t">30</span>s</div>
+  </div>
+</nav>
+<div id="ga" class="ga"></div>
+<div class="zj-timebar"><div class="zj-timebar-fill" id="tb" style="width:100%"></div></div>
+<div class="zj-overlay" id="oi">
+  <div class="zj-modal">
+    <span class="zj-modal-emoji">&#x2B50;</span>
+    <div class="zj-modal-title">Pega a Estrela!</div>
+    <div class="zj-modal-sub">Toque nos alvos antes que desaparecam! Nao erre mais de 3 vezes!</div>
+    <button class="zj-btn zj-btn-main" onclick="iniciar()">&#x1F680; Jogar!</button><br>
+    <a href="/menuJogos" class="zj-btn zj-btn-ghost" style="margin-top:.5rem">&#x2B05; Menu</a>
+  </div>
+</div>
+<div class="zj-overlay" id="of" style="display:none">
+  <div class="zj-modal">
+    <span class="zj-modal-emoji" id="fe">&#x1F3C6;</span>
+    <div class="zj-modal-title" id="ft">Fim!</div>
+    <div class="zj-modal-sub" id="fs"></div>
+    <button class="zj-btn zj-btn-main" onclick="reiniciar()">&#x1F504; Jogar novamente</button><br>
+    <a href="/menuJogos" class="zj-btn zj-btn-ghost" style="margin-top:.5rem">&#x2B05; Menu</a>
+  </div>
+</div>
+<script src="/js/zupi-sky.js"></script>
+<script th:inline="none">
+zupiSky();
+var ALVOS=[
+  {e:'&#x2B50;',g:'linear-gradient(135deg,#FFE66D,#FFB980)',pts:10,t:65},
+  {e:'&#x1F48E;',g:'linear-gradient(135deg,#7EC8E6,#C8B8F0)',pts:20,t:52},
+  {e:'&#x1F338;',g:'linear-gradient(135deg,#F9C6D0,#C8B8F0)',pts:15,t:60},
+  {e:'&#x1F340;',g:'linear-gradient(135deg,#A8D5BA,#7EC8E6)',pts:25,t:45},
+  {e:'&#x1F98B;',g:'linear-gradient(135deg,#C8B8F0,#F9C6D0)',pts:30,t:40}
+];
+var pts=0,erros=0,tempo=30,rodando=false,nivel=1;
+var spInt,tmInt;
+var ga=document.getElementById('ga');
+function iniciar(){
+  document.getElementById('oi').style.display='none';
+  pts=0;erros=0;tempo=30;rodando=true;nivel=1;
+  atuHud(); ga.innerHTML='';
+  clearInterval(spInt);clearInterval(tmInt);
+  spInt=setInterval(spawn,Math.max(600,1400-nivel*80));
+  tmInt=setInterval(function(){
+    tempo--;document.getElementById('t').textContent=tempo;
+    document.getElementById('tb').style.width=(tempo/30*100)+'%';
+    if(tempo<=0) fimDeJogo();
+  },1000);
+  for(var i=0;i<3;i++) setTimeout(spawn,i*250);
+}
+function spawn(){
+  if(!rodando) return;
+  var cfg=ALVOS[Math.floor(Math.random()*ALVOS.length)];
+  var tam=cfg.t-Math.min(nivel*2,18);
+  var vida=Math.max(900,2800-nivel*160);
+  var el=document.createElement('div');el.className='alvo';
+  el.style.cssText='left:'+(5+Math.random()*85)+'%;top:'+(5+Math.random()*80)+'%;width:'+tam+'px;height:'+tam+'px;font-size:'+(tam*.5)+'px;background:'+cfg.g+';box-shadow:0 4px 14px rgba(0,0,0,.12);';
+  el.innerHTML=cfg.e+'<div class="abarra"><div class="abarra-fill" style="width:100%;transition:width '+vida+'ms linear"></div></div>';
+  el.onclick=el.ontouchstart=function(e){e.preventDefault();clicar(el,cfg);};
+  ga.appendChild(el);
+  setTimeout(function(){if(el.parentNode) el.querySelector('.abarra-fill').style.width='0%';},30);
+  setTimeout(function(){
+    if(el.parentNode){el.classList.add('saindo');setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);},260);
+    if(rodando){erros++;atuHud();if(erros>=3) fimDeJogo();}}
+  },vida);
+}
+function clicar(el,cfg){
+  if(!el.parentNode||!rodando) return;
+  var r=el.getBoundingClientRect();var cx=r.left+r.width/2,cy=r.top+r.height/2;
+  el.classList.add('saindo');setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);},260);
+  zupiTone(400+cfg.pts*5,'sine',.15);setTimeout(function(){zupiTone(600+cfg.pts*5,'sine',.12);},80);
+  pts+=cfg.pts+Math.floor(nivel*1.5);atuHud();
+  zupiFloat(cx,cy,'+'+cfg.pts,'#A8D5BA');
+  zupiParts(cx,cy,'#FFE66D');
+  if(pts>0&&pts%100===0){nivel++;clearInterval(spInt);spInt=setInterval(spawn,Math.max(600,1400-nivel*80));}
+}
+function atuHud(){document.getElementById('p').textContent=pts;document.getElementById('e').textContent=erros;}
+function fimDeJogo(){
+  rodando=false;clearInterval(spInt);clearInterval(tmInt);ga.innerHTML='';
+  document.getElementById('fe').innerHTML=pts>400?'&#x1F3C6;':pts>200?'&#x2B50;':'&#x1F3AF;';
+  document.getElementById('ft').textContent=pts>400?'Lendario!!':pts>200?'Incrivel!':'Bom jogo!';
+  document.getElementById('fs').textContent='Pontuacao: '+pts+' pts! Nivel '+nivel+'!';
+  document.getElementById('of').style.display='flex';
+  if(pts>150) zupiConfete();
+}
+function reiniciar(){document.getElementById('of').style.display='none';ga.innerHTML='';iniciar();}
+</script>
+</body>
+</html>

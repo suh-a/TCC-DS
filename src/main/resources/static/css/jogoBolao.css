@@ -1,0 +1,7 @@
+body { overflow: hidden; }
+#bowling-canvas { position: fixed; top: 60px; left: 0; width: 100%; height: calc(100vh - 60px - 110px); }
+.bowling-controls { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 2px solid rgba(126,200,230,.25); padding: .75rem 1rem; display: flex; align-items: center; gap: 1rem; z-index: 100; box-shadow: 0 -4px 16px rgba(0,0,0,.07); flex-wrap: wrap; justify-content: center; }
+.mira-wrap,.forca-wrap { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.mira-label { font-size: .7rem; font-weight: 600; color: #7a8ea0; text-transform: uppercase; letter-spacing: 1px; }
+.mira-slider { width: 120px; accent-color: var(--z-blue); }
+.mira-disp { font-size: 1.2rem; font-weight: 700; }

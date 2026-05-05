@@ -1,0 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Nunito:wght@700;800&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Baloo 2',sans-serif;background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;color:white;overflow-x:hidden}
+
+.hud{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-around;padding:.6rem;background:rgba(0,0,0,.4);backdrop-filter:blur(10px);z-index:100;border-bottom:1px solid rgba(255,255,255,.1)}
+.hud-s{text-align:center}
+.hud-l{font-size:.65rem;opacity:.6;text-transform:uppercase;letter-spacing:1px}
+.hud-v{font-size:1.4rem;font-weight:800}
+
+/* PICTO */
+.picto-area{text-align:center;margin:5rem 1rem 1rem}
+.picto-emoji{font-size:6rem;display:block;animation:pictoFloat 2s ease-in-out infinite alternate;filter:drop-shadow(0 0 20px rgba(255,255,255,.3))}
+@keyframes pictoFloat{from{transform:translateY(0) rotate(-3deg)}to{transform:translateY(-15px) rotate(3deg)}}
+.picto-dica{font-size:.9rem;opacity:.6;margin:.5rem 0 0;letter-spacing:1px}
+
+/* RESPOSTA */
+.resposta-area{display:flex;justify-content:center;gap:8px;margin:1rem;flex-wrap:wrap;min-height:65px;align-items:center}
+.slot{width:52px;height:55px;border:3px dashed rgba(255,255,255,.3);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;font-weight:800;cursor:pointer;transition:all .2s;background:rgba(255,255,255,.05)}
+.slot.preenchido{border-style:solid;border-color:#FFD93D;background:rgba(255,217,61,.15);box-shadow:0 0 12px rgba(255,217,61,.3);animation:slotPop .25s cubic-bezier(.34,1.56,.64,1)}
+@keyframes slotPop{from{transform:scale(.7)}to{transform:scale(1)}}
+.slot.correto{border-color:#6BCB77!important;background:rgba(107,203,119,.2)!important;box-shadow:0 0 15px rgba(107,203,119,.5)!important}
+.slot.errado{animation:shake .4s ease;border-color:#FF6B6B!important}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+
+/* LETRAS EMBARALHADAS */
+.letras-area{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:1rem;max-width:420px}
+.letra-btn{width:52px;height:52px;border:none;border-radius:12px;font-family:'Baloo 2',sans-serif;font-size:1.5rem;font-weight:800;cursor:pointer;transition:all .25s cubic-bezier(.34,1.56,.64,1);color:#111;position:relative;overflow:hidden}
+.letra-btn::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,.3);opacity:0;transition:opacity .15s}
+.letra-btn:hover{transform:scale(1.12) translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,.3)}
+.letra-btn:hover::after{opacity:1}
+.letra-btn.usada{opacity:.2;pointer-events:none;transform:scale(.85)}
+.letra-btn:active{transform:scale(.9)}
+
+/* CONTROLES */
+.controles{display:flex;gap:.5rem;margin:.5rem;justify-content:center;flex-wrap:wrap}
+.btn-c{padding:.6rem 1.5rem;border-radius:50px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.95rem;border:none;cursor:pointer;transition:all .3s}
+.btn-apagar{background:rgba(255,107,107,.25);color:#FF6B6B;border:2px solid #FF6B6B}
+.btn-apagar:hover{background:#FF6B6B;color:white}
+.btn-verificar{background:linear-gradient(135deg,#6BCB77,#4D96FF);color:white;box-shadow:0 4px 15px rgba(107,203,119,.4)}
+.btn-verificar:hover{transform:scale(1.05);box-shadow:0 8px 25px rgba(107,203,119,.6)}
+.btn-dica{background:rgba(255,217,61,.15);color:#FFD93D;border:2px solid #FFD93D}
+.btn-dica:hover{background:#FFD93D;color:#111}
+
+/* STREAK */
+.streak-bar{display:flex;gap:4px;justify-content:center;margin:.5rem}
+.streak-dot{width:14px;height:14px;border-radius:50%;background:rgba(255,255,255,.15);transition:all .3s}
+.streak-dot.ativo{background:#FFD93D;box-shadow:0 0 8px #FFD93D}
+
+/* PARABÉNS */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;z-index:200;backdrop-filter:blur(8px)}
+.card-ov{background:rgba(255,255,255,.07);border:2px solid rgba(255,255,255,.2);border-radius:28px;padding:2.5rem 2rem;text-align:center;animation:popIn .5s cubic-bezier(.34,1.56,.64,1);max-width:380px;width:90%}
+@keyframes popIn{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+.big-e{font-size:5rem;animation:pulseBig 1s infinite alternate}
+@keyframes pulseBig{from{transform:scale(1)}to{transform:scale(1.15)}}
+.ov-titulo{font-size:2rem;font-weight:800;background:linear-gradient(90deg,#FFD93D,#FF6B6B,#C77DFF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin:.5rem 0}
+.ov-sub{color:rgba(255,255,255,.7);margin-bottom:1.2rem}
+.btn-j{display:inline-block;padding:.75rem 2rem;background:linear-gradient(135deg,#FFD93D,#FF6B6B);color:#111;font-family:'Baloo 2',sans-serif;font-weight:800;border:none;border-radius:50px;cursor:pointer;transition:all .3s;margin:.3rem}
+.btn-j:hover{transform:scale(1.08);box-shadow:0 8px 25px rgba(255,107,107,.5)}
+.btn-js{background:rgba(255,255,255,.1);color:white;border:2px solid rgba(255,255,255,.3);text-decoration:none}
+.btn-js:hover{background:rgba(255,255,255,.2);color:white}
+
+/* Partícula confete */
+.confete-p{position:fixed;pointer-events:none;z-index:300;animation:confeteQueda linear forwards}
+@keyframes confeteQueda{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}

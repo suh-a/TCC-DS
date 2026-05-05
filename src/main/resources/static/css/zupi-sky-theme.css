@@ -1,0 +1,301 @@
+/* =============================================================
+   ZUPI SKY THEME — Céu Encantado
+   Paleta oficial: #7EC8E6 · #A8D5BA · #FFE66D · #FFB980
+   Fonte: Poppins | Fundo: Gradiente céu dia suave
+   ============================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,600;0,700;0,800;0,900;1,700&display=swap');
+
+/* ── TOKENS ──────────────────────────────────────────────── */
+:root {
+  --sky-blue:    #7EC8E6;
+  --sky-green:   #A8D5BA;
+  --sky-yellow:  #FFE66D;
+  --sky-orange:  #FFB980;
+  --sky-pink:    #F9C6D0;
+  --sky-purple:  #C8B8F0;
+  --sky-dark:    #2D3748;
+  --sky-mid:     #5A7FA0;
+  --sky-white:   #FFFFFF;
+
+  /* Gradientes de céu */
+  --sky-bg:      linear-gradient(180deg, #C9EAF8 0%, #DCF0E8 45%, #FFF9E0 100%);
+  --sky-bg-dusk: linear-gradient(180deg, #B8D4F0 0%, #C8E8D8 50%, #FFE8C0 100%);
+  --sky-grad-main:  linear-gradient(135deg, #7EC8E6 0%, #A8D5BA 100%);
+  --sky-grad-warm:  linear-gradient(135deg, #FFE66D 0%, #FFB980 100%);
+  --sky-grad-soft:  linear-gradient(135deg, #F9C6D0 0%, #C8B8F0 100%);
+  --sky-grad-full:  linear-gradient(135deg, #7EC8E6 0%, #A8D5BA 40%, #FFE66D 80%, #FFB980 100%);
+
+  /* Sombras */
+  --sky-shadow-sm:  0 2px 10px rgba(126,200,230,.22);
+  --sky-shadow-md:  0 6px 24px rgba(126,200,230,.28);
+  --sky-shadow-lg:  0 14px 44px rgba(126,200,230,.32);
+  --sky-shadow-card:0 6px 28px rgba(45,55,72,.09);
+
+  /* Raios */
+  --r-sm: 14px;  --r-md: 22px;  --r-lg: 32px;  --r-xl: 48px;
+
+  /* Fontes */
+  --font: 'Poppins', sans-serif;
+}
+
+/* ── RESET GAMES ─────────────────────────────────────────── */
+.g-root *, .g-root *::before, .g-root *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── BODY ────────────────────────────────────────────────── */
+.g-body {
+  font-family: var(--font);
+  background: var(--sky-bg);
+  min-height: 100vh;
+  color: var(--sky-dark);
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ── CÉU ENCANTADO — CAMADAS DE FUNDO ───────────────────── */
+.sky-canvas {
+  position: fixed; inset: 0; z-index: 0;
+  pointer-events: none; overflow: hidden;
+}
+
+/* Nuvens flutuantes */
+.sky-cloud {
+  position: absolute;
+  background: rgba(255,255,255,.75);
+  border-radius: 50px;
+  filter: blur(2px);
+  animation: cloudDrift linear infinite;
+}
+.sky-cloud::before, .sky-cloud::after {
+  content: ''; position: absolute;
+  background: rgba(255,255,255,.75);
+  border-radius: 50%;
+}
+@keyframes cloudDrift {
+  from { transform: translateX(-120%); }
+  to   { transform: translateX(120vw); }
+}
+
+/* Estrelinhas/brilhos */
+.sky-sparkle {
+  position: absolute;
+  width: 6px; height: 6px;
+  background: var(--sky-yellow);
+  border-radius: 50%;
+  animation: sparklePulse ease-in-out infinite alternate;
+  filter: blur(.5px);
+}
+@keyframes sparklePulse {
+  from { transform: scale(.6); opacity: .4; }
+  to   { transform: scale(1.4); opacity: 1; }
+}
+
+/* Arco-íris decorativo */
+.sky-rainbow {
+  position: absolute;
+  border-radius: 50%;
+  border: 18px solid transparent;
+  animation: rainbowAppear 8s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+@keyframes rainbowAppear {
+  from { opacity: .08; transform: scale(.95); }
+  to   { opacity: .18; transform: scale(1.05); }
+}
+
+/* Passarinhos */
+.sky-bird {
+  position: absolute;
+  font-size: 1.2rem;
+  animation: birdFly linear infinite;
+  opacity: .55;
+}
+@keyframes birdFly {
+  0%   { transform: translateX(-80px) translateY(0); }
+  25%  { transform: translateX(25vw)  translateY(-18px); }
+  50%  { transform: translateX(50vw)  translateY(4px); }
+  75%  { transform: translateX(75vw)  translateY(-12px); }
+  100% { transform: translateX(110vw) translateY(2px); }
+}
+
+/* Balões */
+.sky-balloon {
+  position: absolute;
+  font-size: 2rem;
+  animation: balloonFloat ease-in-out infinite alternate;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,.12));
+}
+@keyframes balloonFloat {
+  from { transform: translateY(0) rotate(-4deg); }
+  to   { transform: translateY(-22px) rotate(4deg); }
+}
+
+/* ── NAVBAR ──────────────────────────────────────────────── */
+.sky-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+  background: rgba(255,255,255,.88);
+  backdrop-filter: blur(16px);
+  border-bottom: 2px solid rgba(126,200,230,.2);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: .5rem 1.4rem;
+  box-shadow: 0 2px 16px rgba(126,200,230,.15);
+  height: 58px;
+}
+
+.sky-nav-brand {
+  font-weight: 900; font-size: 1.35rem; text-decoration: none;
+  background: var(--sky-grad-main);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  display: flex; align-items: center; gap: .35rem;
+  letter-spacing: -.3px;
+}
+
+.sky-nav-stats { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
+
+.sky-pill {
+  display: flex; align-items: center; gap: .3rem;
+  background: rgba(126,200,230,.1);
+  border: 1.5px solid rgba(126,200,230,.3);
+  border-radius: 50px;
+  padding: .2rem .8rem;
+  font-weight: 700; font-size: .82rem; color: var(--sky-dark);
+  box-shadow: var(--sky-shadow-sm);
+}
+
+/* ── MAIN WRAPPER ────────────────────────────────────────── */
+.sky-main {
+  position: relative; z-index: 1;
+  padding-top: 66px;
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding-bottom: 1.5rem;
+}
+
+/* ── CARDS ───────────────────────────────────────────────── */
+.sky-card {
+  background: rgba(255,255,255,.88);
+  border: 2px solid rgba(126,200,230,.22);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sky-shadow-card);
+  backdrop-filter: blur(10px);
+  padding: 1.75rem 1.5rem;
+  width: 92%; max-width: 500px;
+}
+
+/* ── TÍTULO ARCO-ÍRIS ────────────────────────────────────── */
+.sky-title {
+  font-family: var(--font); font-weight: 900;
+  font-size: clamp(1.6rem, 5vw, 2.6rem);
+  background: var(--sky-grad-full);
+  background-size: 300%;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  animation: titleRainbow 5s linear infinite;
+  line-height: 1.15; letter-spacing: -.5px;
+}
+@keyframes titleRainbow { 0%{background-position:0%} 100%{background-position:300%} }
+
+/* ── BOTÕES ──────────────────────────────────────────────── */
+.sky-btn {
+  font-family: var(--font); font-weight: 700;
+  padding: .72rem 1.9rem; border: none; border-radius: 50px;
+  cursor: pointer; display: inline-flex; align-items: center; gap: .4rem;
+  font-size: .97rem; text-decoration: none;
+  transition: all .3s cubic-bezier(.34,1.56,.64,1);
+}
+.sky-btn-main {
+  background: var(--sky-grad-main); color: #2D3748;
+  box-shadow: 0 6px 20px rgba(126,200,230,.38);
+}
+.sky-btn-main:hover { transform: scale(1.07) translateY(-3px); box-shadow: 0 12px 30px rgba(126,200,230,.5); color: #2D3748; }
+.sky-btn-warm {
+  background: var(--sky-grad-warm); color: #2D3748;
+  box-shadow: 0 6px 20px rgba(255,185,128,.38);
+}
+.sky-btn-warm:hover { transform: scale(1.07) translateY(-3px); box-shadow: 0 12px 30px rgba(255,185,128,.5); color: #2D3748; }
+.sky-btn-ghost {
+  background: rgba(126,200,230,.1); color: var(--sky-dark);
+  border: 2px solid rgba(126,200,230,.35);
+}
+.sky-btn-ghost:hover { background: rgba(126,200,230,.22); transform: scale(1.04); color: var(--sky-dark); }
+
+/* ── OVERLAY / MODAL ─────────────────────────────────────── */
+.sky-overlay {
+  position: fixed; inset: 0; z-index: 900;
+  background: rgba(45,55,72,.42);
+  backdrop-filter: blur(10px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 1rem;
+}
+.sky-modal {
+  background: rgba(255,255,255,.97);
+  border-radius: var(--r-lg); padding: 2.4rem 2rem;
+  text-align: center; max-width: 420px; width: 100%;
+  box-shadow: 0 28px 70px rgba(45,55,72,.18);
+  border: 2.5px solid rgba(126,200,230,.28);
+  animation: modalPop .5s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes modalPop { from{transform:scale(.72) translateY(30px);opacity:0} to{transform:scale(1) translateY(0);opacity:1} }
+
+.modal-emoji { font-size: 5rem; display:block; animation: emojiBounce 1.2s ease-in-out infinite alternate; }
+@keyframes emojiBounce { from{transform:scale(1) rotate(-5deg)} to{transform:scale(1.14) rotate(5deg)} }
+.modal-title {
+  font-weight:900; font-size:1.9rem; margin:.6rem 0 .35rem;
+  background: var(--sky-grad-main);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+.modal-sub { color:#6B7280; font-size:.95rem; margin-bottom:1.5rem; line-height:1.5; }
+
+/* ── PROGRESSO ───────────────────────────────────────────── */
+.sky-progress { width:100%; height:10px; border-radius:10px; background:rgba(126,200,230,.15); overflow:hidden; margin:.4rem 0; }
+.sky-progress-fill { height:100%; background:var(--sky-grad-main); border-radius:10px; transition:width .45s ease; }
+
+/* ── FLOAT TEXT ──────────────────────────────────────────── */
+.sky-float {
+  position:fixed; pointer-events:none; z-index:800;
+  font-family:var(--font); font-weight:800; font-size:1.5rem;
+  transform:translateX(-50%);
+  animation: skyFloatUp .9s ease-out forwards;
+}
+@keyframes skyFloatUp {
+  0%  {transform:translateX(-50%) translateY(0) scale(1); opacity:1;}
+  100%{transform:translateX(-50%) translateY(-72px) scale(1.2); opacity:0;}
+}
+
+/* ── CONFETE ─────────────────────────────────────────────── */
+.sky-confete {
+  position:fixed; pointer-events:none; z-index:850;
+  animation: skyConfete linear forwards;
+}
+@keyframes skyConfete {
+  0%  {transform:translateY(-20px) rotate(0deg) scale(1); opacity:1;}
+  100%{transform:translateY(110vh)  rotate(600deg) scale(.6); opacity:0;}
+}
+
+/* ── PARTÍCULAS ESTRELA ──────────────────────────────────── */
+.sky-star-part {
+  position:fixed; pointer-events:none; z-index:800;
+  animation: starPart .7s ease-out forwards;
+}
+@keyframes starPart {
+  0%  {transform:translate(0,0) scale(1); opacity:1;}
+  100%{transform:translate(var(--dx),var(--dy)) scale(0); opacity:0;}
+}
+
+/* ── SHAKE / PULSE ───────────────────────────────────────── */
+@keyframes skyShake {
+  0%,100%{transform:translateX(0)}
+  25%{transform:translateX(-10px)}
+  75%{transform:translateX(10px)}
+}
+@keyframes skyPop {
+  0%{transform:scale(1)} 50%{transform:scale(1.12)} 100%{transform:scale(1)}
+}
+
+/* ── RESPONSIVO ──────────────────────────────────────────── */
+@media (max-width:480px) {
+  .sky-nav { padding: .4rem .9rem; height:52px; }
+  .sky-nav-brand { font-size:1.1rem; }
+  .sky-pill { font-size:.72rem; padding:.15rem .6rem; }
+  .sky-card { padding:1.2rem; border-radius:var(--r-md); }
+  .sky-main { padding-top:60px; }
+}

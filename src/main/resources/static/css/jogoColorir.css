@@ -1,0 +1,107 @@
+body { background: var(--z-grad-sky); }
+
+.colorir-wrap {
+  display: flex;
+  gap: 1rem;
+  padding: 4.5rem 1rem 1rem;
+  height: 100vh;
+  max-width: 900px;
+  margin: 0 auto;
+  align-items: flex-start;
+}
+
+/* PALETA */
+.paleta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 1rem .75rem;
+  background: white;
+  border-radius: 20px;
+  box-shadow: var(--z-shadow-card);
+  border: 2px solid rgba(126,200,230,.2);
+  flex-shrink: 0;
+  overflow-y: auto;
+  max-height: calc(100vh - 6rem);
+}
+
+.cor-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 3px solid rgba(0,0,0,.08);
+  transition: all .2s cubic-bezier(.34,1.56,.64,1);
+  box-shadow: 0 2px 6px rgba(0,0,0,.12);
+}
+.cor-btn:hover { transform: scale(1.2); box-shadow: 0 4px 12px rgba(0,0,0,.2); }
+.cor-btn.selecionada { transform: scale(1.25); border-color: #2D3748; box-shadow: 0 0 0 3px rgba(126,200,230,.5); }
+
+/* ÁREA DESENHO */
+.desenho-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+  min-width: 0;
+}
+
+.desenho-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: white;
+  border-radius: 16px;
+  padding: .75rem 1.2rem;
+  box-shadow: var(--z-shadow-card);
+  border: 2px solid rgba(126,200,230,.2);
+}
+.desenho-titulo { font-weight: 700; font-size: 1.1rem; }
+.desenho-nav { display: flex; align-items: center; gap: .5rem; font-size: .9rem; color: #7a8ea0; }
+.nav-btn {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--z-blue);
+  background: white;
+  color: var(--z-text);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all .2s;
+  display: flex; align-items: center; justify-content: center;
+}
+.nav-btn:hover { background: var(--z-blue); color: white; }
+
+.svg-container {
+  flex: 1;
+  background: white;
+  border-radius: 20px;
+  box-shadow: var(--z-shadow-card);
+  border: 2px solid rgba(126,200,230,.2);
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  min-height: 0;
+}
+.svg-container svg {
+  width: 100%;
+  height: 100%;
+  max-height: calc(100vh - 18rem);
+  object-fit: contain;
+}
+.svg-container .colorivel { cursor: pointer; transition: fill .25s; }
+.svg-container .colorivel:hover { opacity: .85; }
+
+.desenho-controles {
+  display: flex;
+  gap: .5rem;
+  justify-content: center;
+}
+
+@media(max-width:600px) {
+  .colorir-wrap { flex-direction: column; padding-top: 4rem; height: auto; min-height: 100vh; }
+  .paleta { flex-direction: row; flex-wrap: wrap; max-height: none; width: 100%; justify-content: center; }
+  .cor-btn { width: 32px; height: 32px; }
+  .svg-container { min-height: 55vw; }
+}

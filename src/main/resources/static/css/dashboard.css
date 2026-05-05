@@ -107,3 +107,134 @@
   }
 }
 
+
+/* ===================================================
+   SEÇÃO HERO DO DASHBOARD — Mascote como fundo
+   =================================================== */
+.dash-hero {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+}
+
+.dash-hero-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: right center;
+  z-index: 0;
+  user-select: none;
+  pointer-events: none;
+  border-radius: 20px;
+}
+
+.dash-hero-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  background: linear-gradient(
+    90deg,
+    rgba(126,200,230,.90) 0%,
+    rgba(168,213,186,.75) 42%,
+    rgba(168,213,186,.25) 65%,
+    transparent 100%
+  );
+  z-index: 1;
+}
+
+.dash-hero-content {
+  position: relative;
+  z-index: 2;
+  padding: 2rem 2.2rem;
+  max-width: 420px;
+}
+
+.dash-hero-content h2 {
+  font-family: 'Poppins', sans-serif;
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
+  font-weight: 900;
+  color: #fff;
+  text-shadow: 0 2px 10px rgba(45,55,72,.2);
+  margin-bottom: .5rem;
+  animation: dhFadeLeft .6s cubic-bezier(.34,1.56,.64,1) both;
+}
+
+.dash-hero-content p {
+  color: rgba(255,255,255,.9);
+  font-size: .97rem;
+  margin-bottom: 1.3rem;
+  text-shadow: 0 1px 4px rgba(45,55,72,.15);
+  animation: dhFadeLeft .6s cubic-bezier(.34,1.56,.64,1) .12s both;
+}
+
+.dash-hero-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .72rem 1.9rem;
+  background: #FFB980;
+  color: #2D3748;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: .97rem;
+  border: none;
+  border-radius: 50px;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(255,185,128,.5);
+  transition: all .3s cubic-bezier(.34,1.56,.64,1);
+  animation: dhFadeLeft .6s cubic-bezier(.34,1.56,.64,1) .24s both;
+}
+.dash-hero-btn:hover {
+  transform: scale(1.07) translateY(-3px);
+  box-shadow: 0 12px 30px rgba(255,185,128,.65);
+  color: #2D3748;
+  text-decoration: none;
+}
+
+/* Estrelinhas flutuantes decorativas */
+.dash-hero-star {
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+  font-size: 1.4rem;
+  opacity: .55;
+  animation: dhStarFloat ease-in-out infinite alternate;
+}
+
+@keyframes dhFadeLeft {
+  from { opacity: 0; transform: translateX(-28px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes dhStarFloat {
+  from { transform: translateY(0) rotate(-6deg); }
+  to   { transform: translateY(-14px) rotate(6deg); }
+}
+
+/* Animação do botão (pulso suave) */
+@keyframes dhBtnPulse {
+  from { box-shadow: 0 6px 20px rgba(255,185,128,.5); }
+  to   { box-shadow: 0 10px 30px rgba(255,185,128,.7); }
+}
+.dash-hero-btn { animation: dhFadeLeft .6s cubic-bezier(.34,1.56,.64,1) .24s both, dhBtnPulse 2s ease-in-out .8s infinite alternate; }
+
+@media (max-width: 575.98px) {
+  .dash-hero { min-height: 180px; }
+  .dash-hero-content { padding: 1.4rem 1.2rem; max-width: 100%; }
+  .dash-hero-content h2 { font-size: 1.3rem; }
+  .dash-hero-overlay {
+    background: linear-gradient(
+      90deg,
+      rgba(126,200,230,.93) 0%,
+      rgba(168,213,186,.80) 55%,
+      rgba(168,213,186,.3) 80%,
+      transparent 100%
+    );
+  }
+  .dash-hero-btn { padding: .6rem 1.4rem; font-size: .88rem; }
+}

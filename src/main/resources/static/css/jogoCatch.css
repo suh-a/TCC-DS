@@ -1,0 +1,7 @@
+body { overflow: hidden; }
+#game-canvas { position: fixed; top: 60px; left: 0; right: 0; width: 100%; height: calc(100vh - 60px); }
+.touch-area { position: fixed; bottom: 0; left: 0; right: 0; display: flex; z-index: 100; pointer-events: auto; }
+.touch-btn { flex: 1; height: 80px; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; background: rgba(126,200,230,.35); backdrop-filter: blur(4px); border: none; cursor: pointer; user-select: none; font-family: 'Poppins',sans-serif; color: var(--z-text); transition: background .15s; border-top: 2px solid rgba(126,200,230,.3); }
+.touch-btn:active { background: rgba(126,200,230,.6); }
+#t-left { border-right: 1px solid rgba(126,200,230,.3); border-radius: 0 0 0 0; }
+@media(min-width:769px){ .touch-area { display: none; } }

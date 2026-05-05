@@ -1,0 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Nunito:wght@700;800&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Baloo 2',sans-serif;background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;color:white;overflow:hidden;user-select:none}
+
+.status-bar{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-around;align-items:center;padding:.6rem 1rem;background:rgba(0,0,0,.4);backdrop-filter:blur(10px);z-index:100;border-bottom:1px solid rgba(255,255,255,.1)}
+.stat{text-align:center}
+.stat-label{font-size:.65rem;opacity:.6;text-transform:uppercase;letter-spacing:1px}
+.stat-value{font-size:1.5rem;font-weight:800}
+
+/* GRADE DE BOTÕES */
+.simon-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:1rem 0}
+.simon-btn{width:140px;height:140px;border-radius:24px;border:4px solid rgba(255,255,255,.15);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:3rem;transition:all .15s;position:relative;overflow:hidden;filter:brightness(0.6)}
+.simon-btn::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,.2);opacity:0;transition:opacity .1s;border-radius:inherit}
+.simon-btn.ativo{filter:brightness(1.2)!important;transform:scale(0.94);box-shadow:0 0 40px var(--cor),0 0 80px var(--cor)!important}
+.simon-btn.ativo::after{opacity:1}
+
+#btn-verde{background:rgba(107,203,119,.5);box-shadow:0 0 20px rgba(107,203,119,.4);--cor:#6BCB77;border-color:#6BCB77}
+#btn-vermelho{background:rgba(255,107,107,.5);box-shadow:0 0 20px rgba(255,107,107,.4);--cor:#FF6B6B;border-color:#FF6B6B}
+#btn-azul{background:rgba(77,150,255,.5);box-shadow:0 0 20px rgba(77,150,255,.4);--cor:#4D96FF;border-color:#4D96FF}
+#btn-amarelo{background:rgba(255,217,61,.5);box-shadow:0 0 20px rgba(255,217,61,.4);--cor:#FFD93D;border-color:#FFD93D}
+
+.centro-info{text-align:center;margin:1rem 0}
+.round-display{font-size:1rem;opacity:.7;letter-spacing:2px;text-transform:uppercase}
+.instrucao{font-size:1.3rem;font-weight:700;margin:.3rem 0;min-height:2rem}
+.instrucao.assistindo{color:#FFD93D;animation:pulseText 1s infinite alternate}
+.instrucao.sua-vez{color:#6BCB77;animation:none}
+@keyframes pulseText{from{opacity:.7}to{opacity:1}}
+
+.btn-start{padding:.8rem 2.5rem;background:linear-gradient(135deg,#FFD93D,#FF6B6B);color:#111;font-family:'Baloo 2',sans-serif;font-weight:800;font-size:1.1rem;border:none;border-radius:50px;cursor:pointer;transition:all .3s cubic-bezier(.34,1.56,.64,1);box-shadow:0 8px 20px rgba(255,107,107,.4);margin:.4rem}
+.btn-start:hover{transform:scale(1.08) translateY(-3px);box-shadow:0 12px 30px rgba(255,107,107,.6)}
+.btn-sec{background:rgba(255,255,255,.1);color:white;border:2px solid rgba(255,255,255,.3);box-shadow:none;text-decoration:none;display:inline-block}
+.btn-sec:hover{background:rgba(255,255,255,.2);transform:scale(1.05);color:white}
+
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;z-index:200;backdrop-filter:blur(8px)}
+.card-overlay{background:rgba(255,255,255,.07);border:2px solid rgba(255,255,255,.2);border-radius:28px;padding:2.5rem 2rem;text-align:center;animation:popIn .5s cubic-bezier(.34,1.56,.64,1);max-width:380px;width:90%}
+@keyframes popIn{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+.big-emoji{font-size:5rem;animation:bounce 1s infinite alternate}
+@keyframes bounce{from{transform:translateY(0)}to{transform:translateY(-12px)}}
+.card-titulo{font-size:2rem;font-weight:800;background:linear-gradient(90deg,#FFD93D,#FF6B6B,#C77DFF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin:.5rem 0}
+.card-sub{color:rgba(255,255,255,.7);margin-bottom:1.2rem}
+
+@media(max-width:480px){.simon-btn{width:110px;height:110px;font-size:2.5rem}.simon-grid{gap:10px}}

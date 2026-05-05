@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎳 Boliche Divertido — Zupi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/zupi-games-theme.css">
+  <link rel="stylesheet" href="/css/jogoBolao.css">
+</head>
+<body>
+<a href="/menuJogos" class="z-back-btn">⬅ Menu</a>
+<div class="z-hud">
+  <div class="z-hud-item"><div class="z-hud-label">⭐ Pontos</div><div class="z-hud-value" id="pts" style="color:var(--z-blue)">0</div></div>
+  <div class="z-hud-item"><div class="z-hud-label">🎳 Rodada</div><div class="z-hud-value" id="rodada" style="color:var(--z-green)">1/5</div></div>
+  <div class="z-hud-item"><div class="z-hud-label">🎯 Pinos</div><div class="z-hud-value" id="pinos-info" style="color:var(--z-coral)">10</div></div>
+</div>
+
+<canvas id="bowling-canvas"></canvas>
+
+<div class="bowling-controls" id="controls">
+  <div class="mira-wrap">
+    <div class="mira-label">Direcione</div>
+    <input type="range" id="angulo" min="-40" max="40" value="0" class="mira-slider">
+    <div class="mira-disp" id="mira-disp">→</div>
+  </div>
+  <div class="forca-wrap">
+    <div class="mira-label">Força</div>
+    <input type="range" id="forca" min="20" max="100" value="60" class="mira-slider">
+    <div class="mira-disp" id="forca-disp">60%</div>
+  </div>
+  <button class="z-btn z-btn-warm" id="btn-lancar" onclick="lancar()">🎳 Lançar!</button>
+</div>
+
+<div class="z-overlay" id="ov-inicio">
+  <div class="z-overlay-card">
+    <div style="font-size:5rem;animation:zBounce 1s infinite alternate">🎳</div>
+    <h2 style="font-weight:800;margin:.5rem 0">Boliche Divertido!</h2>
+    <p style="color:#7a8ea0;margin-bottom:1.5rem">Ajuste o ângulo e a força e tente derrubar todos os pinos! Você tem 5 rodadas! 🏆</p>
+    <button class="z-btn z-btn-primary" onclick="iniciar()">🚀 Jogar!</button>
+  </div>
+</div>
+<div class="z-overlay" id="ov-rodada" style="display:none">
+  <div class="z-overlay-card">
+    <div style="font-size:4rem" id="rd-e">🎳</div>
+    <h2 style="font-weight:800;margin:.5rem 0" id="rd-t">Rodada!</h2>
+    <p style="color:#7a8ea0;margin-bottom:1.2rem" id="rd-s">Pinos derrubados!</p>
+    <button class="z-btn z-btn-primary" onclick="proximaRodada()">➡ Continuar</button>
+  </div>
+</div>
+<div class="z-overlay" id="ov-fim" style="display:none">
+  <div class="z-overlay-card">
+    <div style="font-size:5rem;animation:zBounce 1s infinite alternate" id="fim-e">🏆</div>
+    <h2 style="font-weight:800;margin:.5rem 0" id="fim-t">Fim!</h2>
+    <p style="color:#7a8ea0;margin-bottom:1.5rem" id="fim-s"></p>
+    <button class="z-btn z-btn-primary" onclick="reiniciar()">🔄 Jogar Novamente</button>
+    <a href="/menuJogos" class="z-btn z-btn-ghost" style="margin-top:.5rem;display:block">⬅ Menu</a>
+  </div>
+</div>
+
+<script th:inline="none">
+/*<![CDATA[*/
+
+const canvas=document.getElementById('bowling-canvas');
+const ctx=canvas.getContext('2d');
+let W,H;
+function resize(){ W=canvas.width=window.innerWidth; H=canvas.height=window.innerHeight-60-100; }
+window.addEventListener('resize',resize);
+
+// Estado
+let pinos=[],bola=null,animando=false,pts=0,rodada=1,totalRodadas=5,pinosRodada=0;
+
+const PINOS_POS=[
+  // linha 1
+  {x:0,y:0},{x:1,y:0},{x:2,y:0},{x:3,y:0},
+  // linha 2
+  {x:.5,y:1},{x:1.5,y:1},{x:2.5,y:1},
+  // linha 3
+  {x:1,y:2},{x:2,y:2},
+  // linha 4
+  {x:1.5,y:3},
+];
+
+function criarPinos(){
+  pinos=PINOS_POS.map((p,i)=>({
+    id:i,x:0,y:0,vx:0,vy:0,derrubado:false,
+    off:p,cor:['#7EC8E6','#A8D5BA','#FFE66D','#FFB980','#C5A8D5'][i%5]
+  }));
+  posicionarPinos();
+}
+
+function posicionarPinos(){
+  const cx=W/2, py=H*0.18, espaco=38;
+  pinos.forEach(p=>{
+    p.x=cx+(p.off.x-1.5)*espaco;
+    p.y=py+p.off.y*espaco;
+    p.vx=0; p.vy=0; p.animDerrubado=0;
+  });
+}
+
+function iniciar(){
+  document.getElementById('ov-inicio').style.display='none';
+  document.getElementById('controls').style.display='flex';
+  resize();
+  pts=0;rodada=1;
+  criarPinos();
+  atualizarHUD();
+  draw();
+}
+
+function lancar(){
+  if(animando) return;
+  const ang=parseInt(document.getElementById('angulo').value);
+  const forca=parseInt(document.getElementById('forca').value);
+  const rad=ang*Math.PI/180;
+  bola={x:W/2,y:H-30,r:18,vx:Math.sin(rad)*(forca/100)*10,vy:-(forca/100)*14,spin:0,cor:'#C4956A'};
+  animando=true;
+  document.getElementById('btn-lancar').disabled=true;
+  somLancar();
+  animar();
+}
+
+function animar(){
+  ctx.clearRect(0,0,W,H);
+  desenharPista();
+  if(bola){
+    bola.x+=bola.vx; bola.y+=bola.vy; bola.vy+=0.35;
+    // Colisão pinos
+    pinos.forEach(p=>{
+      if(p.derrubado) return;
+      const dx=bola.x-p.x, dy=bola.y-p.y;
+      if(Math.sqrt(dx*dx+dy*dy)<bola.r+14){
+        p.derrubado=true; p.vx=(dx/3)+bola.vx*0.5; p.vy=-3; p.animDerrubado=0;
+        pinosRodada++; pts+=10; atualizarHUD();
+        somBatida(); spawnEstrelas(p.x,p.y);
+      }
+    });
+    // Pinos derrubados voam
+    pinos.forEach(p=>{ if(p.derrubado&&p.animDerrubado<60){ p.x+=p.vx; p.y+=p.vy; p.vy+=.5; p.animDerrubado++; } });
+    desenharPinos();
+    desenharBola(bola.x,bola.y,bola.r,bola.cor);
+    if(bola.y<-50||bola.y>H+50||(bola.y>H-60&&Math.abs(bola.vy)<2)){
+      bola=null; animando=false;
+      setTimeout(()=>mostrarResultadoRodada(),500);
+      return;
+    }
+  } else { desenharPinos(); }
+  requestAnimationFrame(animar);
+}
+
+function desenharPista(){
+  const grd=ctx.createLinearGradient(0,0,0,H);
+  grd.addColorStop(0,'#D4EEFF'); grd.addColorStop(1,'#E8F8F0');
+  ctx.fillStyle=grd; ctx.fillRect(0,0,W,H);
+  // Pista
+  const pw=120,px=W/2-pw/2;
+  ctx.fillStyle='rgba(200,180,150,.3)';
+  ctx.beginPath(); ctx.roundRect(px,0,pw,H,10); ctx.fill();
+  // Linhas guia
+  ctx.strokeStyle='rgba(200,180,150,.5)'; ctx.lineWidth=1;
+  ctx.setLineDash([10,10]);
+  ctx.beginPath(); ctx.moveTo(W/2,0); ctx.lineTo(W/2,H); ctx.stroke();
+  ctx.setLineDash([]);
+  // Zona de lançamento
+  ctx.fillStyle='rgba(126,200,230,.15)';
+  ctx.beginPath(); ctx.roundRect(px,H-50,pw,40,8); ctx.fill();
+}
+
+function desenharPinos(){
+  pinos.forEach(p=>{
+    if(p.derrubado&&p.animDerrubado>=60) return;
+    ctx.save();
+    if(p.derrubado){ ctx.globalAlpha=Math.max(0,1-p.animDerrubado/60); ctx.translate(p.x,p.y); ctx.rotate(p.animDerrubado*0.15); }
+    else ctx.translate(p.x,p.y);
+    // Corpo do pino
+    ctx.beginPath();
+    ctx.ellipse(0,8,8,12,0,0,Math.PI*2);
+    ctx.fillStyle=p.cor; ctx.fill();
+    ctx.strokeStyle='rgba(0,0,0,.15)'; ctx.lineWidth=1.5; ctx.stroke();
+    // Cabeça
+    ctx.beginPath();
+    ctx.arc(0,-6,6,0,Math.PI*2);
+    ctx.fillStyle=p.cor; ctx.fill();
+    ctx.strokeStyle='rgba(0,0,0,.12)'; ctx.lineWidth=1; ctx.stroke();
+    // Brilho
+    ctx.beginPath();
+    ctx.arc(-2,-8,2,0,Math.PI*2);
+    ctx.fillStyle='rgba(255,255,255,.5)'; ctx.fill();
+    ctx.restore();
+  });
+}
+
+function desenharBola(x,y,r,cor){
+  ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2);
+  const grd=ctx.createRadialGradient(x-r*.3,y-r*.3,r*.1,x,y,r);
+  grd.addColorStop(0,'#fff'); grd.addColorStop(0.3,cor); grd.addColorStop(1,'rgba(0,0,0,.3)');
+  ctx.fillStyle=grd; ctx.fill();
+  ctx.strokeStyle='rgba(0,0,0,.15)'; ctx.lineWidth=2; ctx.stroke();
+  // Furos
+  [[-.3,-.2],[.15,-.35],[.3,.1]].forEach(([dx,dy])=>{
+    ctx.beginPath(); ctx.arc(x+dx*r,y+dy*r,r*.12,0,Math.PI*2);
+    ctx.fillStyle='rgba(0,0,0,.3)'; ctx.fill();
+  });
+}
+
+let estrelas=[];
+function spawnEstrelas(x,y){
+  for(let i=0;i<8;i++){
+    const a=Math.random()*Math.PI*2;
+    estrelas.push({x,y,vx:Math.cos(a)*3,vy:Math.sin(a)*3-2,emoji:'⭐',t:0});
+  }
+}
+
+function atualizarHUD(){
+  document.getElementById('pts').textContent=pts;
+  document.getElementById('rodada').textContent=`${rodada}/${totalRodadas}`;
+  document.getElementById('pinos-info').textContent=pinos.filter(p=>!p.derrubado).length;
+  document.getElementById('angulo').addEventListener('input',()=>{
+    const v=parseInt(document.getElementById('angulo').value);
+    document.getElementById('mira-disp').textContent=v<-10?'◀':v>10?'▶':'→';
+  });
+  document.getElementById('forca').addEventListener('input',()=>{
+    document.getElementById('forca-disp').textContent=document.getElementById('forca').value+'%';
+  });
+}
+
+function mostrarResultadoRodada(){
+  const derrubados=pinos.filter(p=>p.derrubado).length;
+  const ov=document.getElementById('ov-rodada');
+  let emoji='🎳',msg='';
+  if(derrubados===10){emoji='🏆';msg='STRIKE! Derrubou tudo! Incrível!!';}
+  else if(derrubados>=7){emoji='🌟';msg=`${derrubados} pinos! Ótimo lançamento!`;}
+  else if(derrubados>=4){emoji='👍';msg=`${derrubados} pinos! Bom lançamento!`;}
+  else{emoji='😅';msg=`${derrubados} pinos. Continue tentando!`;}
+  document.getElementById('rd-e').textContent=emoji;
+  document.getElementById('rd-t').textContent=derrubados===10?'STRIKE!':derrubados>0?'Bom lançamento!':'Ih...';
+  document.getElementById('rd-s').textContent=msg;
+  ov.style.display='flex';
+  if(derrubados>=7) lancarConfete();
+  pinosRodada=0;
+}
+
+function proximaRodada(){
+  document.getElementById('ov-rodada').style.display='none';
+  rodada++;
+  if(rodada>totalRodadas){ fimDeJogo(); return; }
+  criarPinos(); atualizarHUD();
+  document.getElementById('btn-lancar').disabled=false;
+  draw();
+}
+
+function fimDeJogo(){
+  document.getElementById('controls').style.display='none';
+  document.getElementById('fim-e').textContent=pts>=300?'🏆':pts>=150?'⭐':'🎳';
+  document.getElementById('fim-t').textContent=pts>=300?'Campeão!':pts>=150?'Muito bom!':'Boa tentativa!';
+  document.getElementById('fim-s').textContent=`Pontuação total: ${pts} pts em ${totalRodadas} rodadas!`;
+  document.getElementById('ov-fim').style.display='flex';
+  if(pts>=150) lancarConfete();
+}
+
+function reiniciar(){
+  document.getElementById('ov-fim').style.display='none';
+  document.getElementById('controls').style.display='flex';
+  document.getElementById('btn-lancar').disabled=false;
+  pts=0;rodada=1;criarPinos();atualizarHUD();draw();
+}
+
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  desenharPista(); desenharPinos();
+}
+
+function lancarConfete(){
+  const cores=['#7EC8E6','#A8D5BA','#FFE66D','#FFB980','#C5A8D5'];
+  for(let i=0;i<40;i++){
+    const c=document.createElement('div');c.className='z-confete';
+    c.style.cssText=`left:${Math.random()*100}vw;top:-20px;width:${7+Math.random()*10}px;height:${7+Math.random()*10}px;background:${cores[Math.floor(Math.random()*cores.length)]};animation-duration:${1.4+Math.random()*2}s;animation-delay:${Math.random()*0.6}s;border-radius:${Math.random()>.5?'50%':'3px'}`;
+    document.body.appendChild(c);setTimeout(()=>c.remove(),4000);
+  }
+}
+
+let actx;
+function getAC(){if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();return actx;}
+function somLancar(){try{const c=getAC(),t=c.currentTime;const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.setValueAtTime(300,t);o.frequency.exponentialRampToValueAtTime(100,t+.15);o.type='sine';g.gain.setValueAtTime(.2,t);g.gain.exponentialRampToValueAtTime(.001,t+.2);o.start(t);o.stop(t+.2);}catch(e){}}
+function somBatida(){try{const c=getAC(),t=c.currentTime;const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=120;o.type='triangle';g.gain.setValueAtTime(.3,t);g.gain.exponentialRampToValueAtTime(.001,t+.25);o.start(t);o.stop(t+.25);}catch(e){}}
+
+/*]]>*/
+</script>
+</body>
+</html>

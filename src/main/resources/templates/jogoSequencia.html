@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Sequencia Magica - Zupi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/zupi-jogos.css">
+  <style>
+    .sg{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:1rem 0;}
+    .sb{width:130px;height:130px;border-radius:22px;border:3px solid rgba(255,255,255,.4);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:2.8rem;transition:all .15s;filter:brightness(.58);box-shadow:0 4px 14px rgba(0,0,0,.1);}
+    .sb:hover{filter:brightness(.72);}
+    .sb.on{filter:brightness(1.2)!important;transform:scale(.93)!important;box-shadow:0 0 38px var(--sc),0 0 70px var(--sc)!important;}
+    #sv{background:linear-gradient(135deg,#A8D5BA,#7EC8E6);--sc:#A8D5BA;}
+    #sr{background:linear-gradient(135deg,#F9C6D0,#FFB980);--sc:#F9C6D0;}
+    #sa{background:linear-gradient(135deg,#7EC8E6,#C8B8F0);--sc:#7EC8E6;}
+    #sam{background:linear-gradient(135deg,#FFE66D,#FFB980);--sc:#FFE66D;}
+    .inst{font-family:'Poppins',sans-serif;font-size:1rem;font-weight:700;color:#6B7280;margin:.4rem 0;min-height:1.5rem;}
+    .inst.a{color:#FFE66D;}
+    .inst.j{color:#A8D5BA;}
+    .rod{font-size:.75rem;letter-spacing:2px;text-transform:uppercase;color:#9CA3AF;font-family:'Poppins',sans-serif;}
+    @media(max-width:480px){.sb{width:105px;height:105px;font-size:2.2rem;}}
+  </style>
+</head>
+<body class="zj-body">
+<div id="zj-sky" class="zj-sky"></div>
+<nav class="zj-nav">
+  <a href="/menuJogos" class="zj-brand">&#x1F43E; Zupi</a>
+  <div class="zj-stats">
+    <div class="zj-pill">&#x1F3C6; Recorde: <span id="rec">0</span></div>
+    <div class="zj-pill">Rodada <span id="rod">-</span></div>
+  </div>
+</nav>
+<div class="zj-main">
+  <div style="text-align:center;position:relative;z-index:1">
+    <div class="rod" id="rlabel">Pronto para comecar?</div>
+    <div class="inst" id="inst"></div>
+  </div>
+  <div class="sg">
+    <div class="sb" id="sv" data-cor="v">&#x1F7E2;</div>
+    <div class="sb" id="sr" data-cor="r">&#x1F7E3;</div>
+    <div class="sb" id="sa" data-cor="a">&#x1F535;</div>
+    <div class="sb" id="sam" data-cor="m">&#x1F7E1;</div>
+  </div>
+</div>
+
+<div class="zj-overlay" id="oi">
+  <div class="zj-modal">
+    <span class="zj-modal-emoji">&#x1F308;</span>
+    <div class="zj-modal-title">Sequencia Magica!</div>
+    <div class="zj-modal-sub">Observe a sequencia de cores com sons e repita! Cada rodada fica mais rapida!</div>
+    <button class="zj-btn zj-btn-main" onclick="iniciarJogo()">&#x1F680; Jogar!</button><br>
+    <a href="/menuJogos" class="zj-btn zj-btn-ghost" style="margin-top:.5rem">&#x2B05; Menu</a>
+  </div>
+</div>
+<div class="zj-overlay" id="of" style="display:none">
+  <div class="zj-modal">
+    <span class="zj-modal-emoji" id="fe">&#x1F62D;</span>
+    <div class="zj-modal-title" id="ft">Errou!</div>
+    <div class="zj-modal-sub" id="fs"></div>
+    <button class="zj-btn zj-btn-main" onclick="reiniciar()">&#x1F504; Tentar novamente</button><br>
+    <a href="/menuJogos" class="zj-btn zj-btn-ghost" style="margin-top:.5rem">&#x2B05; Menu</a>
+  </div>
+</div>
+
+<script src="/js/zupi-sky.js"></script>
+<script th:inline="none">
+zupiSky();
+var TONS={v:329.63,r:261.63,a:392,m:523.25};
+var seq=[],jSeq=[],rodada=0,recorde=0,aceitando=false;
+
+function sleep(ms){return new Promise(function(r){setTimeout(r,ms);});}
+function acender(id,dur){
+  return new Promise(function(res){
+    var b=document.getElementById('s'+id); b.classList.add('on');
+    zupiTone(TONS[id],'sine',dur/1000,.3);
+    setTimeout(function(){b.classList.remove('on');res();},dur);
+  });
+}
+function setInst(txt,cls){var el=document.getElementById('inst');el.textContent=txt;el.className='inst'+(cls?' '+cls:'');}
+function iniciarJogo(){document.getElementById('oi').style.display='none';seq=[];rodada=0;jSeq=[];proximaRodada();}
+async function proximaRodada(){
+  rodada++;jSeq=[];
+  var ids=['v','r','a','m'];
+  seq.push(ids[Math.floor(Math.random()*4)]);
+  document.getElementById('rod').textContent=rodada;
+  document.getElementById('rlabel').textContent='RODADA '+rodada;
+  setInst('Observe!','a'); await sleep(700);
+  var vel=Math.max(220,580-rodada*28);
+  for(var i=0;i<seq.length;i++){await acender(seq[i],vel);await sleep(vel*.45);}
+  await sleep(300);
+  setInst('Sua vez!','j'); aceitando=true;
+}
+function clicar(id){
+  if(!aceitando) return;
+  acender(id,200); jSeq.push(id);
+  var idx=jSeq.length-1;
+  if(jSeq[idx]!==seq[idx]){aceitando=false;zupiWrong();setTimeout(gameOver,350);return;}
+  if(jSeq.length===seq.length){aceitando=false;setInst('Correto!!','j');if(rodada>recorde){recorde=rodada;document.getElementById('rec').textContent=recorde;}zupiRight();setTimeout(proximaRodada,1000);}
+}
+function gameOver(){
+  document.getElementById('fe').innerHTML=rodada>10?'&#x1F3C6;':rodada>5?'&#x2B50;':'&#x1F62D;';
+  document.getElementById('ft').textContent=rodada>10?'Incrivel!!':rodada>5?'Muito bom!':'Continue tentando!';
+  document.getElementById('fs').textContent='Voce chegou na rodada '+rodada+'! Recorde: '+recorde;
+  document.getElementById('of').style.display='flex';
+}
+function reiniciar(){document.getElementById('of').style.display='none';seq=[];rodada=0;jSeq=[];proximaRodada();}
+['sv','sr','sa','sam'].forEach(function(id,i){
+  var cor=['v','r','a','m'][i];
+  document.getElementById(id).addEventListener('click',function(){clicar(cor);});
+  document.getElementById(id).addEventListener('touchstart',function(e){e.preventDefault();clicar(cor);},{passive:false});
+});
+</script>
+</body>
+</html>
