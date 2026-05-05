@@ -1,9 +1,11 @@
 package senai.tcc.zupiapi.zupibackend.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import senai.tcc.zupiapi.zupibackend.dto.LoginDTO;
 import senai.tcc.zupiapi.zupibackend.dto.mapper.UserMapper;
 import senai.tcc.zupiapi.zupibackend.dto.request.UserRequest;
@@ -46,6 +48,14 @@ public class UserService {
     }
 
     public UserResponse save(UserRequest user) {
+
+        if (userRepository.existsByEmail(user.email())) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Email já cadastrado"
+            );
+        }
+
         User userEntity = userMapper.toEntity(user);
 
         userEntity.setPassword(passwordEncoder.encode(user.password()));
@@ -54,10 +64,22 @@ public class UserService {
         return userMapper.toResponse(userEntity);
     }
 
-    public Boolean validationPassword(LoginDTO user) {
-       User userEntity = userRepository.findByEmail(user.email())
-               .orElseThrow(()->new ResourceNotFoundException("User not found with email " + user.email())) ;
+    public UserResponse login(LoginDTO user) {
+        try {
+            User userEntity = userRepository.findByEmail(user.email())
+                    .orElseThrow(() -> new RuntimeException());
 
-       return passwordEncoder.matches(user.password(), userEntity.getPassword());
+            if (!passwordEncoder.matches(user.password(), userEntity.getPassword())) {
+                throw new RuntimeException();
+            }
+
+            return userMapper.toResponse(userEntity);
+
+        } catch (Exception e) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    "Email ou senha inválidos"
+            );
+        }
     }
 }

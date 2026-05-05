@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import senai.tcc.zupiapi.zupibackend.dto.mapper.ChildMapper;
 import senai.tcc.zupiapi.zupibackend.dto.request.ChildRequest;
 import senai.tcc.zupiapi.zupibackend.dto.response.ChildResponse;
+import senai.tcc.zupiapi.zupibackend.exceptions.BusinessExceptions;
 import senai.tcc.zupiapi.zupibackend.exceptions.DataBaseExceptions;
 import senai.tcc.zupiapi.zupibackend.exceptions.ResourceNotFoundException;
 import senai.tcc.zupiapi.zupibackend.model.Child;
@@ -14,6 +15,8 @@ import senai.tcc.zupiapi.zupibackend.model.User;
 import senai.tcc.zupiapi.zupibackend.repositories.ChildRepository;
 import senai.tcc.zupiapi.zupibackend.repositories.UserRepository;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 
 @Service
@@ -39,11 +42,21 @@ public class ChildService {
         return childMapper.toResponse(child);
     }
 
+    public void validateAgeChild(Child child) {
+        int age = Period.between(child.getBirthDate(), LocalDate.now()).getYears();
+
+        if (age < 6) {
+            throw new BusinessExceptions("Criança deve ter pelo menos 6 anos");
+        }
+    }
+
     public ChildResponse save(ChildRequest childRequest) {
         User user = userRepository.findById(childRequest.responsibleId())
                 .orElseThrow(()-> new ResourceNotFoundException("User not found"));
 
         Child child = childMapper.toEntity(childRequest);
+
+        validateAgeChild(child);
 
         child.setResponsible(user);
 
