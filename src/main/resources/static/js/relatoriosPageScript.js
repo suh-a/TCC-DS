@@ -9,13 +9,19 @@ document.addEventListener('DOMContentLoaded', async function () {
   setupScoresUI();
   createCardeSkillAverage(await getSkillAverage());
 
-  const childId = localStorage.getItem('childId');
+  const childId = getQueryParam('childId') || localStorage.getItem('childId');
   if (childId) {
+    localStorage.setItem('childId', childId);
     dailyReportsData = await getRecentsReports();
     if (dailyReportsData.length !== 0) {
       renderDailyReports(dailyReportsData);
     }
   }
+
+function getQueryParam(name) {
+  const params = new URLSearchParams(window.location.search);
+  return params.get(name);
+}
 
 });
 

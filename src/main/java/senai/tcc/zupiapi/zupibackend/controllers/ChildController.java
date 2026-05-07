@@ -30,6 +30,11 @@ public class ChildController {
         return ResponseEntity.ok().body(childService.findByResponsibleId(id));
     }
 
+    @GetMapping(value = "/details/{id}")
+    public ResponseEntity<ChildResponse> findById(@PathVariable Long id) {
+        return ResponseEntity.ok().body(childService.findById(id));
+    }
+
     @PostMapping
     public ResponseEntity<ChildResponse> save(@RequestBody ChildRequest child) {
 

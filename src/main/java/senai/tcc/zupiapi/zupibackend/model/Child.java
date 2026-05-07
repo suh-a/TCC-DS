@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -94,13 +95,14 @@ public class Child {
     }
 
     public Integer getAge() {
-        setAge();
-        return age;
+        if (birthDate == null) {
+            return null;
+        }
+        return Period.between(birthDate, LocalDate.now()).getYears();
     }
 
-    public void setAge() {
-        LocalDate date = LocalDate.now();
-        this.age = date.compareTo(birthDate);
+    public void setAge(Integer age) {
+        this.age = age;
     }
 
     @JsonIgnore

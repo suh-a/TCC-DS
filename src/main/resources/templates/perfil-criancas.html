@@ -104,159 +104,56 @@
         <header class="mb-4">
           <div class="row align-items-center mb-4">
             <div class="col-auto">
-              <img src="../assets/img/logokids1.png" alt="Lucas" class="rounded-circle" style="width: 120px; height: 120px; object-fit: cover;">
-              <div class="badge bg-success mt-2">Ativo • Última atualização: 2025-10-28</div>
+              <img src="/img/logokids1.png" alt="Foto do perfil" class="rounded-circle perfil-avatar">
+              <div class="badge bg-success mt-2" id="profileStatus">Ativo</div>
             </div>
             <div class="col">
-              <h1 class="h2 mb-2">Lucas <span class="text-muted">— 5 anos</span></h1>
-              <p class="mb-2">Condição: <strong>TDAH</strong> • Terapeuta: <strong>Dra. Marina Silva</strong></p>
-              <div class="d-flex gap-3 mb-3">
-                <div><strong>ID:</strong> ZP-0042</div>
-                <div><strong>Turma:</strong> Pré I</div>
-                <div><strong>Entrada no Zupi:</strong> 2024-02-12</div>
+              <h1 class="h2 mb-2" id="childName">Carregando perfil...</h1>
+              <p class="mb-2">Data de nascimento: <strong id="childBirthDate">--</strong> • Neurodivergência: <strong id="childCondition">--</strong></p>
+              <div class="d-flex flex-wrap gap-3 mb-3">
+                <div><strong>Ano Escolar:</strong> <span id="childSchoolClass">--</span></div>
+                <div><strong>Idade:</strong> <span id="childAge">--</span></div>
+                <div><strong>Relatórios:</strong> <span id="childReportCount">0</span></div>
               </div>
               <div class="d-flex gap-2">
-                <a href="relatorios.html" class="btn btn-primary">Ver relatório completo</a>
-                <a href="#" class="btn btn-outline-primary">Enviar mensagem ao terapeuta</a>
+                <a id="viewReportButton" href="#" class="btn btn-primary">Ver relatórios</a>
+                <a href="/selecao-perfil" class="btn btn-outline-primary">Voltar à seleção</a>
               </div>
             </div>
           </div>
         </header>
 
-        <!-- Painel de indicadores -->
-        <section class="mb-5">
-          <div class="row g-4">
-            <div class="col-md-4">
-              <div class="card text-center">
-                <div class="card-body">
-                  <div class="display-4 mb-3 text-zupi-primary">85%</div>
-                  <h3 class="card-title h5">Concentração</h3>
-                  <p class="card-text text-muted small">Média últimos 30 dias</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="card text-center">
-                <div class="card-body">
-                  <div class="display-4 mb-3 text-zupi-accent">92%</div>
-                  <h3 class="card-title h5">Interação Social</h3>
-                  <p class="card-text text-muted small">Participação em atividades</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="card text-center">
-                <div class="card-body">
-                  <div class="display-4 mb-3 text-zupi-highlight">78%</div>
-                  <h3 class="card-title h5">Compreensão</h3>
-                  <p class="card-text text-muted small">Comandos e instruções</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Progresso por área -->
         <section class="mb-5">
           <div class="card">
             <div class="card-body">
-              <h2 class="card-title h4 mb-4">Progresso por área (últimos 6 meses)</h2>
-              <div class="mb-3">
-                <div class="d-flex justify-content-between mb-2">
-                  <span><strong>Concentração</strong></span>
-                  <span class="text-muted">Mai → Out</span>
-                </div>
-                <div class="progress mb-3" style="height: 20px;">
-                  <div class="progress-bar bg-zupi-primary" role="progressbar" style="width: 85%">85%</div>
-                </div>
-              </div>
-              <div class="mb-3">
-                <div class="d-flex justify-content-between mb-2">
-                  <span><strong>Interação</strong></span>
-                  <span class="text-muted">Mai → Out</span>
-                </div>
-                <div class="progress mb-3" style="height: 20px;">
-                  <div class="progress-bar bg-zupi-accent" role="progressbar" style="width: 92%">92%</div>
-                </div>
-              </div>
-              <div class="mb-3">
-                <div class="d-flex justify-content-between mb-2">
-                  <span><strong>Compreensão</strong></span>
-                  <span class="text-muted">Mai → Out</span>
-                </div>
-                <div class="progress mb-3" style="height: 20px;">
-                  <div class="progress-bar bg-zupi-highlight" role="progressbar" style="width: 78%">78%</div>
-                </div>
-              </div>
-              <p class="text-muted small">Observação: valores gerados a partir das atividades e avaliações semanais.</p>
-            </div>
-          </div>
-        </section>
-
-        <!-- Atividades recentes e Observações -->
-        <section class="mb-5">
-          <div class="row g-4">
-            <div class="col-lg-8">
-              <div class="card">
-                <div class="card-body">
-                  <h2 class="card-title h5 mb-4">Atividades recentes</h2>
-                  <div class="table-responsive">
-                    <table class="table table-hover">
-                      <thead>
-                        <tr>
-                          <th>Data</th>
-                          <th>Atividade</th>
-                          <th>Resultado</th>
-                          <th>Observação</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>2025-10-28</td>
-                          <td>Jogo de atenção (nível 3)</td>
-                          <td>Bom (85%)</td>
-                          <td>Melhor foco nas últimas rodadas.</td>
-                        </tr>
-                        <tr>
-                          <td>2025-10-22</td>
-                          <td>Atividade em grupo</td>
-                          <td>Ótimo (92%)</td>
-                          <td>Interagiu bem com 2 pares.</td>
-                        </tr>
-                        <tr>
-                          <td>2025-10-10</td>
-                          <td>Exercícios de compreensão</td>
-                          <td>Médio (78%)</td>
-                          <td>Precisa de apoio na leitura de instruções.</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                  <div class="d-flex gap-2 mt-3">
-                    <a href="atividades-lucas.html" class="btn btn-primary">Ver todas as atividades</a>
-                    <a href="export-atividades-lucas.csv" class="btn btn-outline-secondary">Exportar CSV</a>
+              <h2 class="card-title h4 mb-4">Resumo do perfil</h2>
+              <p class="text-muted">Os dados exibidos são carregados diretamente do cadastro da criança. Não há conteúdo fixo ou mockado nesta página.</p>
+              <div class="row g-4">
+                <div class="col-md-4">
+                  <div class="card indicador-card">
+                    <div class="card-body">
+                      <div class="display-4 mb-3 text-zupi-primary">0</div>
+                      <h3 class="card-title h5">Relatórios</h3>
+                      <p class="card-text text-muted small">Iniciam zerados para cada perfil</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-            <div class="col-lg-4">
-              <div class="card">
-                <div class="card-body">
-                  <h2 class="card-title h5 mb-4">Observações pedagógicas</h2>
-                  <div class="mb-4">
-                    <h3 class="h6">Resumo semanal — 2025-10-20 a 2025-10-28</h3>
-                    <p class="small">Lucas apresentou melhora consistente em autorregulação durante sessões de 1:1. Recomendamos introduzir atividades com duração progressiva (10 → 20 min) e reforços visuais para instruções.</p>
-                    <p class="small"><strong>Ações sugeridas:</strong> 1) Sessões adicionais de leitura guiada; 2) Estratégia de pausa ativa a cada 12 minutos; 3) Reforço positivo imediato.</p>
+                <div class="col-md-4">
+                  <div class="card indicador-card">
+                    <div class="card-body">
+                      <div class="display-4 mb-3 text-zupi-accent">0</div>
+                      <h3 class="card-title h5">Atividades</h3>
+                      <p class="card-text text-muted small">Sem atividades registradas ainda</p>
+                    </div>
                   </div>
-                  <h3 class="h6 mb-3">Recomendações do terapeuta</h3>
-                  <ul class="small">
-                    <li>Manter rotina previsível em casa.</li>
-                    <li>Utilizar timers visuais para tarefas.</li>
-                    <li>Reunião mensal com família para alinhar progresso.</li>
-                  </ul>
-                  <div class="d-flex flex-column gap-2 mt-3">
-                    <a href="mensagem-terapeuta.html" class="btn btn-outline-primary btn-sm">Solicitar reunião</a>
-                    <a href="anexos-lucas.html" class="btn btn-outline-secondary btn-sm">Ver anexos</a>
+                </div>
+                <div class="col-md-4">
+                  <div class="card indicador-card">
+                    <div class="card-body">
+                      <div class="display-4 mb-3 text-zupi-highlight">0</div>
+                      <h3 class="card-title h5">Progresso</h3>
+                      <p class="card-text text-muted small">Será atualizado conforme o uso</p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -264,46 +161,21 @@
           </div>
         </section>
 
-        <!-- Histórico de relatórios -->
         <section class="mb-5">
           <div class="card">
             <div class="card-body">
-              <h2 class="card-title h5 mb-4">Histórico de relatórios</h2>
-              <div class="row g-3">
-                <div class="col-md-4">
-                  <div class="card">
-                    <div class="card-body">
-                      <p class="card-text mb-2"><strong>Relatório — Set/2025</strong></p>
-                      <div class="d-flex gap-2">
-                        <a href="relatorio-set-2025.html" class="btn btn-primary btn-sm">Visualizar</a>
-                        <a href="relatorio-set-2025.pdf" class="btn btn-outline-secondary btn-sm">PDF</a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="card">
-                    <div class="card-body">
-                      <p class="card-text mb-2"><strong>Relatório — Jul/2025</strong></p>
-                      <div class="d-flex gap-2">
-                        <a href="relatorio-jul-2025.html" class="btn btn-primary btn-sm">Visualizar</a>
-                        <a href="relatorio-jul-2025.pdf" class="btn btn-outline-secondary btn-sm">PDF</a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="card">
-                    <div class="card-body">
-                      <p class="card-text mb-2"><strong>Relatório — Mai/2025</strong></p>
-                      <div class="d-flex gap-2">
-                        <a href="relatorio-mai-2025.html" class="btn btn-primary btn-sm">Visualizar</a>
-                        <a href="relatorio-mai-2025.pdf" class="btn btn-outline-secondary btn-sm">PDF</a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <h2 class="card-title h5 mb-4">Relatórios</h2>
+              <p class="text-muted" id="profileReportsMessage">Os relatórios começam zerados para este perfil. Acompanhe o progresso depois de gerar o primeiro relatório.</p>
+              <div class="alert alert-info mb-0">Nenhum relatório registrado ainda.</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="mb-5">
+          <div class="card">
+            <div class="card-body">
+              <h2 class="card-title h5 mb-4">Atividades recentes</h2>
+              <p class="text-muted">Não há atividades registradas para este perfil. Elas aparecerão automaticamente quando a criança interagir com os jogos ou relatórios.</p>
             </div>
           </div>
         </section>
@@ -328,6 +200,6 @@
   <script src="/js/main.js"></script>
 
   <!-- Script Perfil de Crianças -->
-  <script src="/js/perfilCriancasScript.js"></script>
+  <script src="/js/perfilPageScript.js"></script>
 </body>
 </html>
