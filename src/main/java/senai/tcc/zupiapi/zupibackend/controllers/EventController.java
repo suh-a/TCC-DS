@@ -19,7 +19,7 @@ public class    EventController {
     @Autowired
     private EventService eventService;
 
-    @GetMapping("")
+    @GetMapping()
     public ResponseEntity<List<EventResponse>> findAll(@PathVariable Long userId) {
         List<EventResponse> events = eventService.findAll(userId);
 

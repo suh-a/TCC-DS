@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
 async function  findAllEvents() {
     const userId = localStorage.getItem('userId');
 
-    const response = await fetch(`${API_BASE}/${userId}/events/`, {
+    const response = await fetch(`${API_BASE}/${userId}/events`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -176,12 +176,12 @@ async function salveEvent() {
                 return;
             }
 
-            const formData = {
+            const formData = {  
                 title: document.getElementById('eventTitle').value,
                 date: data.toISOString(),
                 finish: finishTimeDate.toISOString(),   
                 childId: parseInt(childIdValue),
-                skillArea: parseInt(skillAreaValue),
+                skillAreaId: parseInt(skillAreaValue),
                 userId: parseInt(userIdValue)
             };
 

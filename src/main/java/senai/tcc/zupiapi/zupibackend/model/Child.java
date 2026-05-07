@@ -26,6 +26,7 @@ public class Child {
     private Integer age;
 
     @OneToMany(mappedBy = "child")
+    @JsonIgnore
     private List<Event> activits = new ArrayList<>();
 
     @ManyToOne

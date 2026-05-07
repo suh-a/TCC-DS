@@ -25,9 +25,9 @@ public class ChildController {
         return ResponseEntity.ok().body(childService.findAll());
     }
 
-    @GetMapping(value = "/{id}")
-    public ResponseEntity< List<ChildResponse>> findByResponsibleId(@PathVariable Long id) {
-        return ResponseEntity.ok().body(childService.findByResponsibleId(id));
+    @GetMapping(value = "/{userId}")
+    public ResponseEntity< List<ChildResponse>> findByResponsibleId(@PathVariable Long userId) {
+        return ResponseEntity.ok().body(childService.findByResponsibleId(userId));
     }
 
     @GetMapping(value = "/details/{id}")

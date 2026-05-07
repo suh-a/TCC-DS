@@ -12,6 +12,6 @@ public record EventResponse(
         Instant date,
         Instant finish,
         SkillArea skillArea,
-        Child child
+        ChildResponse child
 ) {
 }

@@ -20,6 +20,7 @@ import senai.tcc.zupiapi.zupibackend.repositories.ChildRepository;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.chrono.ChronoLocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -76,11 +77,10 @@ public class ChildReportServiceTest {
 
         childReport = new ChildReport();
         childReport.setId(1L);
-        childReport.setDate(Instant.parse("2025-03-20T00:00:00Z"));
+        childReport.setDate(LocalDate.from(Instant.parse("2025-03-20T00:00:00Z")));
         childReport.setChild(child);
 
         childReportRequest = new ChildReportRequest(
-                Instant.parse("2025-03-20T00:00:00Z"),
                 List.of(new ChildReportScoreRequest(1L, 99))
         );
 
@@ -103,13 +103,13 @@ public class ChildReportServiceTest {
         childReportService.getChildLast3DaysReports(1L);
 
         verify(childReportRepository, times(1))
-                .findAllByChildIdAndDateAfter(anyLong(), any(Instant.class));
+                .findAllByChildIdAndDateAfter(anyLong(), any(LocalDate.class));
     }
 
     // 2
     @Test
     void shouldRequestReportsFromLast3Days() {
-        when(childReportRepository.findAllByChildIdAndDateAfter(anyLong(), any(Instant.class)))
+        when(childReportRepository.findAllByChildIdAndDateAfter(anyLong(), any(LocalDate.class)))
                 .thenReturn(List.of(childReport));
         when(reportMapper.toResponseList(any()))
                 .thenReturn(List.of(childReportResponse));
@@ -121,14 +121,14 @@ public class ChildReportServiceTest {
                         anyLong(),
                         argThat(date ->
                                 date != null &&
-                                        date.isBefore(Instant.now()))
+                                        date.isBefore(ChronoLocalDate.from(Instant.now())))
                 );
     }
 
     // 3
     @Test
     void shouldReturnChildReportResponseList() {
-        when(childReportRepository.findAllByChildIdAndDateAfter(anyLong(), any(Instant.class)))
+        when(childReportRepository.findAllByChildIdAndDateAfter(anyLong(), any(LocalDate.class)))
                 .thenReturn(List.of(childReport));
         when(reportMapper.toResponseList(any()))
                 .thenReturn(List.of(childReportResponse));
@@ -142,7 +142,7 @@ public class ChildReportServiceTest {
     // 4
     @Test
     void shouldReturnListEmpty() {
-        when(childReportRepository.findAllByChildIdAndDateAfter(anyLong(), any(Instant.class)))
+        when(childReportRepository.findAllByChildIdAndDateAfter(anyLong(), any(LocalDate.class)))
                 .thenReturn(List.of());
         when(reportMapper.toResponseList(any()))
                 .thenReturn(List.of());
@@ -156,7 +156,7 @@ public class ChildReportServiceTest {
     // 5
     @Test
     void shouldCallMapperToGetChildLast3DaysReports() {
-        when(childReportRepository.findAllByChildIdAndDateAfter(anyLong(), any(Instant.class)))
+        when(childReportRepository.findAllByChildIdAndDateAfter(anyLong(), any(LocalDate.class)))
                 .thenReturn(List.of(childReport));
         when(reportMapper.toResponseList(any()))
                 .thenReturn(List.of(childReportResponse));
@@ -207,7 +207,6 @@ public class ChildReportServiceTest {
     @Test
     void shouldCallFindByIdWithCorrectId() {
         when(childRepository.findById(anyLong())).thenReturn(Optional.of(child));
-        when(reportMapper.toEntity(any())).thenReturn(childReport);
 
         childReportService.saveChildReportByChildId(childReportRequest, child.getId());
 
@@ -220,7 +219,6 @@ public class ChildReportServiceTest {
     @Test
     void shouldAddScoreToChildReport() {
         when(childRepository.findById(anyLong())).thenReturn(Optional.of(child));
-        when(reportMapper.toEntity(any())).thenReturn(childReport);
         when(reportMapper.toResponse(any())).thenReturn(childReportResponse);
         when(childReportScoreService.save(any(), any())).thenReturn(childReportScore);
         when(childReportRepository.save(any())).thenReturn(childReport);
@@ -234,7 +232,6 @@ public class ChildReportServiceTest {
     @Test
     void shouldSetChildInChildReport() {
         when(childRepository.findById(anyLong())).thenReturn(Optional.of(child));
-        when(reportMapper.toEntity(any())).thenReturn(childReport);
 
         childReportService.saveChildReportByChildId(childReportRequest, 1L);
 
@@ -246,12 +243,10 @@ public class ChildReportServiceTest {
     @Test
     void shouldSaveChildReportWithoutScores() {
         childReportRequest = new ChildReportRequest(
-                Instant.now(),
                 List.of()
         );
 
         when(childRepository.findById(anyLong())).thenReturn(Optional.of(child));
-        when(reportMapper.toEntity(any())).thenReturn(childReport);
         when(childReportRepository.save(any())).thenReturn(childReport);
 
         childReportService.saveChildReportByChildId(childReportRequest, 1L);
@@ -263,7 +258,6 @@ public class ChildReportServiceTest {
     @Test
     void shouldReturnChildReportMappedToResponse() {
         when(childRepository.findById(anyLong())).thenReturn(Optional.of(child));
-        when(reportMapper.toEntity(any())).thenReturn(childReport);
         when(childReportRepository.save(any())).thenReturn(childReport);
         when(childReportScoreService.save(any(), any())).thenReturn(childReportScore);
         when(reportMapper.toResponse(any())).thenReturn(childReportResponse);
@@ -290,7 +284,6 @@ public class ChildReportServiceTest {
     @Test
     void shouldNotThrowResourceNotFoundException() {
         when(childRepository.findById(anyLong())).thenReturn(Optional.of(child));
-        when(reportMapper.toEntity(any())).thenReturn(childReport);
         when(childReportRepository.save(any())).thenReturn(childReport);
         when(childReportScoreService.save(any(), any())).thenReturn(new ChildReportScore());
         when(reportMapper.toResponse(any())).thenReturn(childReportResponse);
@@ -317,7 +310,6 @@ public class ChildReportServiceTest {
     @Test
     void shouldBeSameScoresQuantityInChildReport() {
         childReportRequest = new ChildReportRequest(
-                Instant.now(),
                 List.of(
                         new ChildReportScoreRequest(1L, 99),
                         new ChildReportScoreRequest(1L, 99),
@@ -337,7 +329,6 @@ public class ChildReportServiceTest {
     @Test
     void shouldReturnListEmptyWhenChildReportRequestScoresIsEmpty() {
         childReportRequest = new ChildReportRequest(
-                Instant.now(),
                 List.of()
         );
 

@@ -8,7 +8,7 @@ import senai.tcc.zupiapi.zupibackend.model.Event;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring",uses = ChildMapper.class)
 public interface EventMapper {
 
     EventResponse toResponse(Event event);
