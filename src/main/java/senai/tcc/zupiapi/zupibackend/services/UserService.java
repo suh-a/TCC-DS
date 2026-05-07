@@ -10,6 +10,7 @@ import senai.tcc.zupiapi.zupibackend.dto.LoginDTO;
 import senai.tcc.zupiapi.zupibackend.dto.mapper.UserMapper;
 import senai.tcc.zupiapi.zupibackend.dto.request.UserRequest;
 import senai.tcc.zupiapi.zupibackend.dto.response.UserResponse;
+import senai.tcc.zupiapi.zupibackend.exceptions.BusinessException;
 import senai.tcc.zupiapi.zupibackend.exceptions.ResourceNotFoundException;
 import senai.tcc.zupiapi.zupibackend.model.User;
 import senai.tcc.zupiapi.zupibackend.repositories.UserRepository;
@@ -34,15 +35,14 @@ public class UserService {
 
     public UserResponse findById(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(()->new ResourceNotFoundException("User not found with id " + id));
-
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id " + id));
 
         return userMapper.toResponse(user);
     }
 
     public UserResponse findByEmail(String email) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(()->new ResourceNotFoundException("User not found with email " + email));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with email " + email));
 
         return userMapper.toResponse(user);
     }
@@ -59,6 +59,22 @@ public class UserService {
         User userEntity = userMapper.toEntity(user);
 
         userEntity.setPassword(passwordEncoder.encode(user.password()));
+        userEntity = userRepository.save(userEntity);
+
+        return userMapper.toResponse(userEntity);
+    }
+
+    public UserResponse update(Long id, UserRequest user) {
+        User userEntity = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
+
+        if(!user.password().isEmpty())
+            userEntity.setPassword(passwordEncoder.encode(user.password()));
+        if(!user.email().isEmpty())
+            userEntity.setEmail(user.email());
+        if (!user.name().isEmpty())
+            userEntity.setName(user.name());
+
         userEntity = userRepository.save(userEntity);
 
         return userMapper.toResponse(userEntity);

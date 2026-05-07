@@ -46,6 +46,16 @@ public class UserController {
         return ResponseEntity.created(uri).body(userResponse);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<UserResponse> update(
+            @PathVariable Long id,
+            @RequestBody UserRequest user
+    ) {
+        UserResponse response = userService.update(id,user);
+
+        return ResponseEntity.ok().body(response);
+    }
+
     @PostMapping(value = "/login")
     public ResponseEntity<UserResponse> login(@RequestBody LoginDTO user) {
         UserResponse userResponse = userService.login(user);

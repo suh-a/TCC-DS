@@ -2,12 +2,11 @@ package senai.tcc.zupiapi.zupibackend.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import senai.tcc.zupiapi.zupibackend.dto.mapper.ChildMapper;
 import senai.tcc.zupiapi.zupibackend.dto.request.ChildRequest;
 import senai.tcc.zupiapi.zupibackend.dto.response.ChildResponse;
-import senai.tcc.zupiapi.zupibackend.exceptions.BusinessExceptions;
+import senai.tcc.zupiapi.zupibackend.exceptions.BusinessException;
 import senai.tcc.zupiapi.zupibackend.exceptions.DataBaseExceptions;
 import senai.tcc.zupiapi.zupibackend.exceptions.ResourceNotFoundException;
 import senai.tcc.zupiapi.zupibackend.model.Child;
@@ -46,7 +45,7 @@ public class ChildService {
         int age = Period.between(child.getBirthDate(), LocalDate.now()).getYears();
 
         if (age < 6) {
-            throw new BusinessExceptions("Criança deve ter pelo menos 6 anos");
+            throw new BusinessException("Criança deve ter pelo menos 6 anos");
         }
     }
 
