@@ -26,7 +26,10 @@ public class ChildReportScoreService {
     private ChildReportScoreMapper scoreMapper;
 
 
-    public ChildReportScore save(ChildReportScoreRequest scoreRequest, ChildReport childReport) {
+    public ChildReportScore save(
+            ChildReportScoreRequest scoreRequest,
+            ChildReport childReport
+    ) {
 
         SkillArea skillArea = skillAreaRepository.findById(scoreRequest.themeId())
                 .orElseThrow(() -> new ResourceNotFoundException("skill area not found"));

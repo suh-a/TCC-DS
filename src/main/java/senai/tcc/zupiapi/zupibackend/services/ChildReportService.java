@@ -14,9 +14,7 @@ import senai.tcc.zupiapi.zupibackend.model.ChildReportScore;
 import senai.tcc.zupiapi.zupibackend.repositories.ChildReportRepository;
 import senai.tcc.zupiapi.zupibackend.repositories.ChildRepository;
 
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.List;
 
 @Service
@@ -34,11 +32,15 @@ public class ChildReportService {
     @Autowired
     private ChildReportMapper reportMapper;
 
+    public List<ChildReportResponse> findAll() {
+        List<ChildReport> childReports = childReportRepository.findAll();
+
+        return reportMapper.toResponseList(childReports);
+    }
+
     public List<ChildReportResponse> getChildLast3DaysReports(Long childId) {
-        Instant daysBefore3 = LocalDate.now()
-                .minusDays(3)
-                .atStartOfDay(ZoneId.systemDefault())
-                .toInstant();
+        LocalDate daysBefore3 = LocalDate.now()
+                .minusDays(3);
 
         return reportMapper.toResponseList(
                 childReportRepository.findAllByChildIdAndDateAfter(childId, daysBefore3));
@@ -49,14 +51,21 @@ public class ChildReportService {
         return childReportRepository.findChildScoresAreaAverages(id);
     }
 
-    public ChildReportResponse saveChildReportByChildId(ChildReportRequest childReport, Long childId) {
+    public ChildReportResponse saveChildReportByChildId(
+            ChildReportRequest childReport,
+            Long childId
+    ) {
 
         Child child = childRepository.findById(childId)
-                .orElseThrow(()-> new ResourceNotFoundException("Child Not Found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Child Not Found"));
 
-        ChildReport report = reportMapper.toEntity(childReport);
+        ChildReport report = childReportRepository.findReportTodayByChildId(child)
+                .orElse(new ChildReport());
 
-        report.setChild(child);
+        if (report.getChild() == null) {
+            report.setChild(child);
+            report.setDate(LocalDate.now());
+        }
 
         childReportRepository.save(report);
 
@@ -67,16 +76,16 @@ public class ChildReportService {
                 }
         );
 
-        return reportMapper.toResponse(report);
+        return reportMapper.toResponse(childReportRepository.save(report));
     }
 
     public ChildReportResponse updateChildReport(
             ChildReportRequest reportScores,
-            Long reportId ,
+            Long reportId,
             Long childId) {
 
-        ChildReport report = childReportRepository.findByIdAndChildId(reportId,childId)
-                .orElseThrow(()-> new ResourceNotFoundException("ChildReport Not Found"));
+        ChildReport report = childReportRepository.findByIdAndChildId(reportId, childId)
+                .orElseThrow(() -> new ResourceNotFoundException("ChildReport Not Found"));
 
         reportScores.scores().forEach(
                 childReportScoreDTO -> {

@@ -4,6 +4,7 @@ import senai.tcc.zupiapi.zupibackend.model.Child;
 import senai.tcc.zupiapi.zupibackend.model.SkillArea;
 
 import java.time.Instant;
+import java.time.LocalDate;
 
 public record EventResponse(
         Long id,

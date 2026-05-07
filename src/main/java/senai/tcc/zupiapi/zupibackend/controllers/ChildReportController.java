@@ -21,6 +21,11 @@ public class ChildReportController {
     @Autowired
     private ChildReportService childReportService;
 
+    @GetMapping
+    public ResponseEntity<List<ChildReportResponse>> findAll(@PathVariable int childId) {
+        return ResponseEntity.ok(childReportService.findAll());
+    }
+
     @GetMapping(value = "/lasted")
     public ResponseEntity<List<ChildReportResponse>> getLast3daysReports(
             @PathVariable Long childId
@@ -32,7 +37,6 @@ public class ChildReportController {
     public ResponseEntity<List<ChildScoresAveragesByAreaDTO>> getAllAverage(
             @PathVariable Long childId
     ) {
-
         return ResponseEntity.ok().body(childReportService.getChildScoresAreaAverages(childId));
     }
 

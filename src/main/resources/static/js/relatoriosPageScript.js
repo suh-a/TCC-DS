@@ -6,8 +6,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   await loadSkillThemes();
   loadChildrenToSelect();
   setupReportSaveButton();
-  setupScoresUI();  
-  setTodayDate();
+  setupScoresUI();
   createCardeSkillAverage(await getSkillAverage());
 
   const childId = localStorage.getItem('childId');
@@ -51,7 +50,7 @@ async function getRecentsReports() {
   try {
     const childId = localStorage.getItem('childId');
 
-    const response = await fetch(`${API_BASE}/reports/lasted/${childId}`, {
+    const response = await fetch(`${API_BASE}/child/${childId}/reports/lasted`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -71,11 +70,11 @@ function openDailyReportDetails(reportId) {
   const report = dailyReportsData.find(r => r.id === reportId);
   if (!report) return;
 
-    const formattedDate = new Date(report.date).toLocaleDateString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
-    });
+  const formattedDate = new Date(report.date).toLocaleDateString('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+  });
 
   document.getElementById('report-details-section').style.display = 'block';
   document.getElementById('report-title').textContent = `Detalhes - Relatório de ${formattedDate}`;
@@ -93,7 +92,7 @@ function renderScores(scores) {
     col.innerHTML = `
           <div class="card h-100">
             <div class="card-body">
-              <h4 class="card-title h5">${score.theme}</h4>
+              <h4 class="card-title h5">${score.theme.name}</h4>
               <p class="card-text">Desempenho: <strong>${score.score}%</strong></p>
               <div class="progress">
                 <div class="progress-bar bg-zupi-primary" role="progressbar" style="width: ${score.score}%" aria-valuenow="${score.score}" aria-valuemin="0" aria-valuemax="100"></div>
@@ -110,12 +109,6 @@ if (closeDetailsBtn) {
   closeDetailsBtn.addEventListener('click', function () {
     document.getElementById('report-details-section').style.display = 'none';
   });
-}
-
-
-function setTodayDate() {
-  const today = new Date().toISOString().split('T')[0];
-  document.getElementById('reportDate').value = today;
 }
 
 function setupScoresUI() {
@@ -251,13 +244,11 @@ function setupReportSaveButton() {
 
       themeSelects.forEach((select, index) => {
         const themeId = select.value;
-        const themeName = select.options[select.selectedIndex]?.dataset.name || select.options[select.selectedIndex]?.text;
         const score = parseInt(scoreValues[index].value);
 
-        if (themeId && !isNaN(score) && themeName) {
+        if (themeId && !isNaN(score)) {
           scores.push({
-            skillAreaId: parseInt(themeId),
-            theme: themeName,
+            themeId: parseInt(themeId),
             score: score
           });
         }
@@ -265,57 +256,28 @@ function setupReportSaveButton() {
 
       if (scores.length === 0) {
         alert('Adicione pelo menos um score com tema e pontuação!');
-        return;''
+        return; ''
       }
-
-      const daylyReport = localStorage.getItem('dailyReportId');
-
-      const reportId = daylyReport ? parseInt(daylyReport) : null;
 
       try {
         const childId = document.getElementById('reportChild').value;
 
         let response;
+        const reportData = {
+          scores: scores
+        };
 
-        if (!reportId) {
+        console.log(reportData);
 
-          const reportData = {
-            date: new Date(document.getElementById('reportDate').value).toISOString(),
-            scores: scores
-          };
+        response = await fetch(`${API_BASE}/child/${childId}/reports`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(reportData)
 
-          console.log(reportData);
+        });
 
-          response = await fetch(`${API_BASE}/reports/${childId}`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(reportData)
-          });
-
-            const responseData = await response.json();
-            await criateDailyReportId(responseData);
-
-        } else {
-
-          const reportData = {
-            id: reportId,
-            date: new Date(document.getElementById('reportDate').value).toISOString(),
-            scores: scores
-          };
-
-          console.log(reportData);
-
-          response = await fetch(`${API_BASE}/reports/${childId}`, {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(reportData)
-
-          });
-        }
 
         if (response.ok) {
           alert('Relatório salvo com sucesso!');
@@ -323,16 +285,17 @@ function setupReportSaveButton() {
           // Reseta os scores
           document.getElementById('scoresContainer').innerHTML = '';
           setupScoresUI();
-          setTodayDate();
           const modal = bootstrap.Modal.getInstance(document.getElementById('saveReportModal'));
           if (modal) {
             modal.hide()
           };
           location.reload();
         } else {
+          console.log("deu erro no response");
           alert('Erro ao salvar relatório.');
         }
       } catch (error) {
+        console.log("deu erro no try");
         console.error('Erro:', error);
         alert('Erro ao salvar relatório.');
       }
@@ -344,21 +307,14 @@ function setupReportSaveButton() {
   }
 }
 
-async function criateDailyReportId(responseData) {
-  
-  localStorage.setItem('dailyReportId', responseData.id);
-  console.log(localStorage.getItem('dailyReportId'));
-
-}
-
-async function getSkillAverage(){
+async function getSkillAverage() {
 
   try {
     const childId = localStorage.getItem('childId');
 
-    const response = await fetch(`${API_BASE}/reports/avg/${childId}`, {
+    const response = await fetch(`${API_BASE}/child/${childId}/reports/avg`, {
       method: 'GET',
-      headers: { 
+      headers: {
         'Content-Type': 'application/json'
       }
     });
@@ -370,12 +326,12 @@ async function getSkillAverage(){
   }
 }
 
-function createCardeSkillAverage(averages){
-    
-    const container = document.getElementById('avg');
-    averages.forEach(avg => {
+function createCardeSkillAverage(averages) {
 
-      const cardHTML = `
+  const container = document.getElementById('avg');
+  averages.forEach(avg => {
+
+    const cardHTML = `
             <div class="col-md-6 col-lg-4">
             <div class="card h-100">
               <div class="card-body">
@@ -389,6 +345,6 @@ function createCardeSkillAverage(averages){
             </div>
           </div>
           `;
-      container.insertAdjacentHTML('beforeend', cardHTML);
-    });
+    container.insertAdjacentHTML('beforeend', cardHTML);
+  });
 }

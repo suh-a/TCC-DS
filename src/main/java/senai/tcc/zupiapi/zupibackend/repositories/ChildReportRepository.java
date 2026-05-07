@@ -2,15 +2,17 @@ package senai.tcc.zupiapi.zupibackend.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import senai.tcc.zupiapi.zupibackend.dto.ChildScoresAveragesByAreaDTO;
+import senai.tcc.zupiapi.zupibackend.model.Child;
 import senai.tcc.zupiapi.zupibackend.model.ChildReport;
 
-import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 public interface ChildReportRepository extends JpaRepository<ChildReport, Long> {
-    List<ChildReport>  findAllByChildIdAndDateAfter(Long child_id, Instant date);
+    List<ChildReport> findAllByChildIdAndDateAfter(Long child_id, LocalDate date);
 
     @Query("""
         SELECT new senai.tcc.zupiapi.zupibackend.dto.ChildScoresAveragesByAreaDTO(
@@ -25,4 +27,14 @@ public interface ChildReportRepository extends JpaRepository<ChildReport, Long> 
     List<ChildScoresAveragesByAreaDTO> findChildScoresAreaAverages(Long childId);
 
     Optional<ChildReport> findByIdAndChildId(Long id, Long childId);
+
+
+    @Query("""
+        SELECT r FROM ChildReport r
+        WHERE(r.date = CURRENT_DATE)
+        AND(r.child = :child)
+    """)
+    Optional<ChildReport> findReportTodayByChildId(
+        @Param("child") Child child
+    );
 }

@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
 async function  findAllEvents() {
     const userId = localStorage.getItem('userId');
 
-    const response = await fetch(`${API_BASE}/events/${userId}`, {
+    const response = await fetch(`${API_BASE}/${userId}/events/`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -152,11 +152,14 @@ function createEventCard(event) {
 }
 
 async function salveEvent() {
-            const data = createDate(document.getElementById('eventDate').value,document.getElementById('eventTime').value);
-            
-
-            const finishTimeDate = createDate(document.getElementById('eventDate').value,document.getElementById('eventEnd').value);
-            
+            const data = createDate(
+                document.getElementById('eventDate').value,
+                document.getElementById('eventTime').value
+            );
+            const finishTimeDate = createDate(
+                document.getElementById('eventDate').value,
+                document.getElementById('eventEnd').value
+            );
 
             const childIdValue = document.getElementById('eventChild').value;
             const skillAreaValue = document.getElementById('eventCategory').value;
@@ -185,7 +188,7 @@ async function salveEvent() {
             console.log('FormData enviado:', formData);
 
             try {   
-                const response = await fetch(`${API_BASE}/events`, {
+                const response = await fetch(`${API_BASE}/${userIdValue}/events`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -194,7 +197,7 @@ async function salveEvent() {
                 });
 
                 if (response.ok) {
-                    //alert('Atividade salva com sucesso!');
+                    alert('Atividade salva com sucesso!');
                     eventForm.reset();
                     // Fecha o modal
                     const modal = bootstrap.Modal.getInstance(document.getElementById('formModal'));

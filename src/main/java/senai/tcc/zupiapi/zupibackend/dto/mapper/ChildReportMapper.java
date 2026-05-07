@@ -11,11 +11,6 @@ import java.util.List;
 @Mapper(componentModel = "spring",uses = ChildReportScoreMapper.class)
 public interface ChildReportMapper {
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "child", ignore = true)
-    @Mapping(target = "scores", ignore = true)
-    ChildReport toEntity(ChildReportRequest request);
-
     ChildReportResponse toResponse(ChildReport childReport);
 
     List<ChildReportResponse> toResponseList(List<ChildReport> childReports);

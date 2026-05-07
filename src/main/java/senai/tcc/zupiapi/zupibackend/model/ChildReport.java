@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -17,7 +18,7 @@ public class ChildReport {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Instant date;
+    private LocalDate date;
 
     @ManyToOne
     @JsonIgnore
@@ -29,7 +30,7 @@ public class ChildReport {
 
     public ChildReport() {}
 
-    public ChildReport(Long id, Instant date, Child child) {
+    public ChildReport(Long id, LocalDate date, Child child) {
         this.id = id;
         this.date = date;
         this.child = child;
@@ -43,11 +44,11 @@ public class ChildReport {
         this.id = id;
     }
 
-    public Instant getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Instant date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
