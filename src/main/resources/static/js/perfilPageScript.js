@@ -9,4 +9,6 @@ const childData = await fetch(`${API_BASE}/child/${childId}`, {
     }
 });
 
+const childData = await response.json();
+
 document.getElementById('childName').textContent = childData.name;

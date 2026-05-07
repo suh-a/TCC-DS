@@ -1,0 +1,223 @@
+/* ============================================================
+   ZUPI GAMES THEME — Design System completo para todos os jogos
+   Cores: Azul claro #7EC8E6 | Verde #A8D5BA | Amarelo #FFE66D | Laranja #FFB980
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&family=Roboto:wght@400;500&display=swap');
+
+:root {
+  /* Paleta Zupi */
+  --z-blue:    #7EC8E6;
+  --z-green:   #A8D5BA;
+  --z-yellow:  #FFE66D;
+  --z-orange:  #FFB980;
+  --z-pink:    #F9A8D4;
+  --z-purple:  #C4B5FD;
+  --z-bg:      #F5F7FA;
+  --z-dark:    #2D3748;
+  --z-white:   #FFFFFF;
+
+  /* Gradientes */
+  --z-grad-main:   linear-gradient(135deg, #7EC8E6 0%, #A8D5BA 100%);
+  --z-grad-warm:   linear-gradient(135deg, #FFE66D 0%, #FFB980 100%);
+  --z-grad-cool:   linear-gradient(135deg, #C4B5FD 0%, #7EC8E6 100%);
+  --z-grad-fun:    linear-gradient(135deg, #F9A8D4 0%, #FFB980 100%);
+  --z-grad-sky:    linear-gradient(160deg, #e0f4fb 0%, #d0efdf 50%, #fff9d6 100%);
+
+  /* Sombras */
+  --z-shadow-sm:  0 2px 8px rgba(126,200,230,.25);
+  --z-shadow-md:  0 6px 20px rgba(126,200,230,.3);
+  --z-shadow-lg:  0 12px 40px rgba(126,200,230,.35);
+  --z-shadow-card:0 8px 32px rgba(45,55,72,.08);
+
+  /* Fontes */
+  --z-font-title: 'Poppins', sans-serif;
+  --z-font-body:  'Roboto', sans-serif;
+
+  /* Bordas */
+  --z-radius-sm: 12px;
+  --z-radius-md: 20px;
+  --z-radius-lg: 28px;
+  --z-radius-xl: 40px;
+}
+
+/* ===== RESET GAMES ===== */
+.z-game-root *, .z-game-root *::before, .z-game-root *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ===== BODY PADRÃO DOS JOGOS ===== */
+.z-game-body {
+  font-family: var(--z-font-title);
+  background: var(--z-grad-sky);
+  min-height: 100vh;
+  color: var(--z-dark);
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ===== FORMAS DECORATIVAS DE FUNDO ===== */
+.z-bg-shapes { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.z-shape {
+  position: absolute;
+  border-radius: 50%;
+  opacity: .13;
+  animation: zShapeFloat ease-in-out infinite alternate;
+}
+@keyframes zShapeFloat { from { transform: translateY(0) scale(1) rotate(0deg); } to { transform: translateY(-30px) scale(1.08) rotate(15deg); } }
+
+/* ===== NAVBAR JOGOS ===== */
+.z-navbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  background: rgba(255,255,255,.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 2px solid rgba(126,200,230,.25);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: .55rem 1.5rem;
+  box-shadow: 0 2px 12px rgba(126,200,230,.18);
+}
+.z-navbar-brand {
+  font-family: var(--z-font-title); font-weight: 800; font-size: 1.5rem;
+  background: var(--z-grad-main); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  text-decoration: none; display: flex; align-items: center; gap: .4rem;
+}
+.z-navbar-stats {
+  display: flex; gap: .8rem; align-items: center;
+}
+.z-stat-pill {
+  background: var(--z-grad-sky); border: 2px solid rgba(126,200,230,.35);
+  border-radius: 50px; padding: .25rem .85rem;
+  font-weight: 700; font-size: .88rem; color: var(--z-dark);
+  display: flex; align-items: center; gap: .3rem;
+  box-shadow: var(--z-shadow-sm);
+}
+.z-stat-pill span { font-size: 1rem; }
+
+/* ===== CONTEÚDO PRINCIPAL ===== */
+.z-game-main {
+  position: relative; z-index: 1;
+  padding-top: 68px;
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+
+/* ===== CARDS ===== */
+.z-card {
+  background: rgba(255,255,255,.92);
+  border: 2px solid rgba(126,200,230,.25);
+  border-radius: var(--z-radius-lg);
+  box-shadow: var(--z-shadow-card);
+  backdrop-filter: blur(8px);
+  padding: 2rem 1.75rem;
+  width: 90%; max-width: 480px;
+}
+
+/* ===== TÍTULO ARCO-ÍRIS ===== */
+.z-rainbow-title {
+  font-family: var(--z-font-title); font-weight: 900;
+  background: linear-gradient(90deg, #7EC8E6, #A8D5BA, #FFE66D, #FFB980, #F9A8D4, #C4B5FD);
+  background-size: 300%;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  animation: zRainbow 5s linear infinite;
+}
+@keyframes zRainbow { 0%{background-position:0%} 100%{background-position:300%} }
+
+/* ===== BOTÕES ===== */
+.z-btn {
+  font-family: var(--z-font-title); font-weight: 700; font-size: 1rem;
+  padding: .75rem 2rem; border: none; border-radius: 50px; cursor: pointer;
+  transition: all .3s cubic-bezier(.34,1.56,.64,1);
+  display: inline-flex; align-items: center; gap: .4rem;
+  text-decoration: none;
+}
+.z-btn-primary {
+  background: var(--z-grad-main); color: white;
+  box-shadow: 0 6px 18px rgba(126,200,230,.45);
+}
+.z-btn-primary:hover { transform: scale(1.07) translateY(-3px); box-shadow: 0 10px 28px rgba(126,200,230,.55); color: white; }
+
+.z-btn-warm {
+  background: var(--z-grad-warm); color: var(--z-dark);
+  box-shadow: 0 6px 18px rgba(255,185,128,.4);
+}
+.z-btn-warm:hover { transform: scale(1.07) translateY(-3px); box-shadow: 0 10px 28px rgba(255,185,128,.55); }
+
+.z-btn-ghost {
+  background: rgba(126,200,230,.1); color: var(--z-dark);
+  border: 2px solid rgba(126,200,230,.4);
+}
+.z-btn-ghost:hover { background: rgba(126,200,230,.2); transform: scale(1.05); }
+
+/* ===== OVERLAY / MODAL ===== */
+.z-overlay {
+  position: fixed; inset: 0; z-index: 300;
+  background: rgba(45,55,72,.55);
+  backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center;
+}
+.z-overlay-card {
+  background: white; border-radius: var(--z-radius-lg);
+  padding: 2.5rem 2rem; text-align: center;
+  max-width: 400px; width: 90%;
+  box-shadow: 0 24px 64px rgba(45,55,72,.18);
+  animation: zCardPop .5s cubic-bezier(.34,1.56,.64,1);
+  border: 3px solid rgba(126,200,230,.3);
+}
+@keyframes zCardPop { from{transform:scale(.75);opacity:0} to{transform:scale(1);opacity:1} }
+
+.z-overlay-emoji { font-size: 5rem; display: block; animation: zBounce 1s ease-in-out infinite alternate; }
+@keyframes zBounce { from{transform:scale(1) rotate(-5deg)} to{transform:scale(1.15) rotate(5deg)} }
+
+.z-overlay-title {
+  font-family: var(--z-font-title); font-weight: 800; font-size: 2rem;
+  background: var(--z-grad-main); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  margin: .6rem 0 .4rem;
+}
+.z-overlay-sub { color: #6B7280; font-size: .97rem; margin-bottom: 1.5rem; }
+
+/* ===== BARRA DE PROGRESSO ===== */
+.z-progress-bar {
+  width: 100%; height: 10px; border-radius: 10px;
+  background: rgba(126,200,230,.15);
+  overflow: hidden; margin: .5rem 0;
+}
+.z-progress-fill {
+  height: 100%;
+  background: var(--z-grad-main);
+  border-radius: 10px;
+  transition: width .4s ease;
+}
+
+/* ===== FEEDBACK FLOAT ===== */
+.z-float-text {
+  position: fixed; pointer-events: none; z-index: 400;
+  font-family: var(--z-font-title); font-weight: 800; font-size: 1.6rem;
+  animation: zFloatUp .9s ease-out forwards;
+  transform: translateX(-50%);
+  text-shadow: 0 2px 8px rgba(0,0,0,.12);
+}
+@keyframes zFloatUp { 0%{transform:translateX(-50%) translateY(0) scale(1);opacity:1} 100%{transform:translateX(-50%) translateY(-70px) scale(1.2);opacity:0} }
+
+/* ===== CONFETE ===== */
+.z-confete {
+  position: fixed; pointer-events: none; z-index: 500;
+  animation: zConfeteFall linear forwards;
+}
+@keyframes zConfeteFall { 0%{transform:translateY(-20px) rotate(0deg);opacity:1} 100%{transform:translateY(110vh) rotate(720deg);opacity:0} }
+
+/* ===== STREAK BADGE ===== */
+.z-streak-badge {
+  display: inline-flex; align-items: center; gap: .3rem;
+  background: var(--z-grad-warm); color: var(--z-dark);
+  padding: .2rem .75rem; border-radius: 50px;
+  font-weight: 700; font-size: .85rem;
+  box-shadow: var(--z-shadow-sm);
+  animation: zStreakPulse .5s ease;
+}
+@keyframes zStreakPulse { 0%{transform:scale(.9)} 60%{transform:scale(1.1)} 100%{transform:scale(1)} }
+
+/* ===== RESPONSIVO ===== */
+@media (max-width: 480px) {
+  .z-navbar { padding: .4rem 1rem; }
+  .z-navbar-brand { font-size: 1.2rem; }
+  .z-stat-pill { font-size: .75rem; padding: .2rem .6rem; }
+  .z-card { padding: 1.25rem; }
+}

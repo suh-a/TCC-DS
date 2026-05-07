@@ -1,0 +1,16 @@
+.letra-main { display:flex; flex-direction:column; align-items:center; padding:5rem 1rem 2rem; min-height:100vh; }
+.letra-card { background:white; border-radius:24px; padding:2rem 2.5rem; text-align:center; box-shadow:var(--z-shadow-blue); border:3px solid rgba(126,200,230,.3); margin-bottom:.75rem; animation:zPop .4s cubic-bezier(.34,1.56,.64,1); min-width:200px; }
+.letra-display { font-size:6rem; font-weight:800; background:var(--z-grad-main); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; line-height:1; }
+.letra-exemplo { font-size:1.1rem; color:#7a8ea0; margin-top:.5rem; font-weight:500; }
+.ouvir-btn { padding:.7rem 2rem; background:var(--z-grad-warm); border:none; border-radius:50px; font-family:'Poppins',sans-serif; font-weight:700; font-size:1rem; cursor:pointer; margin:.5rem 0; color:var(--z-text); box-shadow:var(--z-shadow-warm); transition:all .25s cubic-bezier(.34,1.56,.64,1); }
+.ouvir-btn:hover { transform:scale(1.08); }
+.letra-pergunta { font-size:1.1rem; font-weight:600; color:var(--z-text); margin:.5rem 0 1rem; }
+.opcoes-letras { display:grid; grid-template-columns:1fr 1fr; gap:.8rem; width:100%; max-width:380px; }
+.opcao-letra-btn { padding:1.2rem; border:3px solid rgba(0,0,0,.07); border-radius:18px; font-family:'Poppins',sans-serif; font-size:2rem; font-weight:800; cursor:pointer; transition:all .25s cubic-bezier(.34,1.56,.64,1); color:var(--z-text); box-shadow:0 3px 10px rgba(0,0,0,.1); }
+.opcao-letra-btn:hover { transform:scale(1.08) translateY(-3px); }
+.opcao-letra-btn.correta { border-color:#A8D5BA!important; box-shadow:0 0 20px rgba(168,213,186,.6)!important; animation:zPop .35s cubic-bezier(.34,1.56,.64,1); }
+.opcao-letra-btn.errada { animation:zShake .4s ease; border-color:#FFB3B3!important; }
+.modo-select { display:flex; gap:.5rem; justify-content:center; margin-top:.75rem; flex-wrap:wrap; }
+.modo-btn { padding:.5rem 1rem; border-radius:12px; border:2px solid rgba(126,200,230,.3); background:white; cursor:pointer; font-family:'Poppins',sans-serif; font-size:.85rem; font-weight:600; color:var(--z-text); transition:all .2s; text-align:center; min-width:90px; }
+.modo-btn:hover { border-color:var(--z-blue); }
+.modo-btn.ativo { background:var(--z-grad-main); color:white; border-color:transparent; }

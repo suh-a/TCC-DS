@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Ordem Crescente - Zupi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/zupi-jogos.css">
+  <style>
+    .ngrid{display:flex;flex-wrap:wrap;justify-content:center;gap:.6rem;margin:1rem 0;}
+    .nb{width:70px;height:70px;border-radius:16px;border:2.5px solid rgba(126,200,230,.3);background:rgba(255,255,255,.85);font-family:'Poppins',sans-serif;font-size:1.7rem;font-weight:800;color:#2D3748;cursor:pointer;transition:all .25s cubic-bezier(.34,1.56,.64,1);box-shadow:0 3px 10px rgba(126,200,230,.12);}
+    .nb:hover:not(:disabled){transform:scale(1.1) translateY(-4px);border-color:#7EC8E6;box-shadow:0 8px 20px rgba(126,200,230,.28);}
+    .nb.ok{background:linear-gradient(135deg,#A8D5BA,#7EC8E6);color:white;border-color:transparent;pointer-events:none;animation:zjPop .4s;}
+    .nb.no{background:rgba(249,198,208,.25);border-color:#F9C6D0;animation:zjShake .35s;}
+    .seq{display:flex;gap:.4rem;justify-content:center;flex-wrap:wrap;min-height:50px;align-items:center;margin:.5rem 0;}
+    .sslot{width:46px;height:46px;border-radius:10px;background:linear-gradient(135deg,#7EC8E6,#A8D5BA);color:white;font-weight:800;font-size:1.15rem;display:flex;align-items:center;justify-content:center;animation:zjPop .3s cubic-bezier(.34,1.56,.64,1);font-family:'Poppins',sans-serif;}
+    .oinst{font-family:'Poppins',sans-serif;font-weight:700;font-size:1rem;background:linear-gradient(135deg,#7EC8E6,#A8D5BA);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.5rem;}
+    .omsg{font-size:.85rem;color:#9CA3AF;font-family:'Poppins',sans-serif;min-height:1.3rem;}
+  </style>
+</head>
+<body class="zj-body">
+<div id="zj-sky" class="zj-sky"></div>
+<nav class="zj-nav">
+  <a href="/menuJogos" class="zj-brand">&#x1F43E; Zupi</a>
+  <div class="zj-stats">
+    <div class="zj-pill">&#x2B50; <span id="p">0</span></div>
+    <div class="zj-pill">Nivel <span id="nv">1</span></div>
+  </div>
+</nav>
+<div class="zj-main">
+  <div class="zj-card" id="jcard" style="display:none">
+    <div class="zj-prog"><div class="zj-prog-fill" id="pf" style="width:0%"></div></div>
+    <div class="oinst">Toque nos numeros do menor ao maior!</div>
+    <div class="seq" id="seq"></div>
+    <div class="ngrid" id="ngrid"></div>
+    <div class="omsg" id="omsg"></div>
+  </div>
+</div>
+<div class="zj-overlay" id="oi">
+  <div class="zj-modal">
+    <span class="zj-modal-emoji">&#x2B06;&#xFE0F;</span>
+    <div class="zj-modal-title">Ordem Crescente!</div>
+    <div class="zj-modal-sub">Toque nos numeros do menor para o maior! Cada fase fica mais dificil!</div>
+    <button class="zj-btn zj-btn-main" onclick="iniciar()">&#x1F680; Jogar!</button><br>
+    <a href="/menuJogos" class="zj-btn zj-btn-ghost" style="margin-top:.5rem">&#x2B05; Menu</a>
+  </div>
+</div>
+<div class="zj-overlay" id="of" style="display:none">
+  <div class="zj-modal">
+    <span class="zj-modal-emoji" id="fe">&#x1F3C6;</span>
+    <div class="zj-modal-title" id="ft">Fim!</div>
+    <div class="zj-modal-sub" id="fs"></div>
+    <button class="zj-btn zj-btn-main" onclick="reiniciar()">&#x1F504; Jogar novamente</button><br>
+    <a href="/menuJogos" class="zj-btn zj-btn-ghost" style="margin-top:.5rem">&#x2B05; Menu</a>
+  </div>
+</div>
+<script src="/js/zupi-sky.js"></script>
+<script th:inline="none">
+zupiSky();
+var pts=0,nivel=1,rodada=0,total=12,seq=[],prox=0,resp=false;
+function rnd(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
+function shuffle(a){return a.sort(function(){return Math.random()-.5;});}
+function iniciar(){document.getElementById('oi').style.display='none';document.getElementById('jcard').style.display='';pts=0;nivel=1;rodada=0;gerarRodada();}
+function gerarRodada(){
+  resp=false;prox=0;
+  var qtd=nivel<=2?4:nivel<=4?5:6;
+  var maxN=nivel<=2?10:nivel<=4?20:30;
+  var nums=[];
+  while(nums.length<qtd){var n=rnd(1,maxN);if(nums.indexOf(n)<0)nums.push(n);}
+  seq=nums.slice().sort(function(a,b){return a-b;});
+  var emb=shuffle(nums.slice());
+  document.getElementById('seq').innerHTML='';
+  document.getElementById('omsg').textContent='';
+  var grid=document.getElementById('ngrid');grid.innerHTML='';
+  emb.forEach(function(n){
+    var b=document.createElement('button');b.className='nb';b.textContent=n;
+    b.onclick=function(){clicar(b,n);};
+    grid.appendChild(b);
+  });
+  rodada++; document.getElementById('pf').style.width=(rodada/total*100)+'%';
+  document.getElementById('nv').textContent=nivel;
+}
+function clicar(btn,n){
+  if(resp||btn.classList.contains('ok')) return;
+  if(n===seq[prox]){
+    btn.classList.add('ok'); zupiTone(400+prox*60,'sine',.18);
+    var s=document.createElement('div');s.className='sslot';s.textContent=n;
+    document.getElementById('seq').appendChild(s);
+    var r=btn.getBoundingClientRect();
+    zupiFloat(r.left+35,r.top,'+5','#A8D5BA');
+    pts+=5; document.getElementById('p').textContent=pts;
+    prox++;
+    if(prox===seq.length){
+      resp=true; zupiLevelUp(); zupiConfete(18);
+      document.getElementById('omsg').textContent='Perfeito! Sequencia completa!';
+      if(rodada%3===0) nivel=Math.min(nivel+1,6);
+      if(rodada>=total) setTimeout(fimDeJogo,800);
+      else setTimeout(gerarRodada,1200);
+    }
+  } else {
+    btn.classList.add('no'); zupiWrong();
+    document.getElementById('omsg').textContent='Ops! Tente a ordem certa!';
+    setTimeout(function(){btn.classList.remove('no');document.getElementById('omsg').textContent='';},650);
+  }
+}
+function fimDeJogo(){
+  document.getElementById('fe').innerHTML=pts>80?'&#x1F3C6;':pts>40?'&#x2B50;':'&#x1F3AF;';
+  document.getElementById('ft').textContent=pts>80?'Genio!':pts>40?'Muito bom!':'Bom jogo!';
+  document.getElementById('fs').textContent='Pontuacao: '+pts+' pontos! Nivel '+nivel+'!';
+  document.getElementById('of').style.display='flex'; zupiConfete(30);
+}
+function reiniciar(){document.getElementById('of').style.display='none';pts=0;nivel=1;rodada=0;gerarRodada();}
+</script>
+</body>
+</html>

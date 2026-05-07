@@ -1,0 +1,209 @@
+/* =============================================================
+   ZUPI JOGOS — CSS unificado para todos os jogos
+   Paleta: #7EC8E6 (azul) · #A8D5BA (verde) · #FFE66D (amarelo)
+            #FFB980 (laranja) · #F5F7FA (fundo) · #2D3748 (texto)
+   Fonte: Poppins (títulos) · Roboto (corpo)
+   ============================================================= */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&family=Roboto:wght@400;500&display=swap');
+
+/* ── TOKENS ─────────────────────────────────────────────────── */
+:root{
+  --zp:   #7EC8E6;   /* primary azul */
+  --zg:   #A8D5BA;   /* green */
+  --zy:   #FFE66D;   /* yellow */
+  --zo:   #FFB980;   /* orange */
+  --zpk:  #F9C6D0;   /* pink */
+  --zpu:  #C8B8F0;   /* purple */
+  --zbg:  #F5F7FA;   /* page bg */
+  --ztx:  #2D3748;   /* text dark */
+  --zwh:  #FFFFFF;
+  --zsh:  0 4px 18px rgba(126,200,230,.22);
+  --zsh2: 0 10px 36px rgba(126,200,230,.3);
+  --zgm:  linear-gradient(135deg,#7EC8E6 0%,#A8D5BA 100%); /* main grad */
+  --zgw:  linear-gradient(135deg,#FFE66D 0%,#FFB980 100%); /* warm grad */
+  --zbody:linear-gradient(160deg,#daf1fb 0%,#d4eddf 45%,#fdf8e1 100%);
+  --zr:   16px;
+  --font-t:'Poppins',sans-serif;
+  --font-b:'Roboto',sans-serif;
+}
+
+/* ── RESET ───────────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+/* ── BODY ────────────────────────────────────────────────────── */
+.zj-body{
+  font-family:var(--font-b);
+  background:var(--zbody);
+  min-height:100vh;
+  color:var(--ztx);
+  overflow-x:hidden;
+  position:relative;
+}
+
+/* ── FUNDO ANIMADO (nuvens + brilhos) ───────────────────────── */
+.zj-sky{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+
+.zj-cloud{
+  position:absolute;background:rgba(255,255,255,.72);
+  border-radius:60px;animation:cloudMove linear infinite;
+}
+@keyframes cloudMove{from{transform:translateX(-150%)}to{transform:translateX(115vw)}}
+
+.zj-sparkle{
+  position:absolute;border-radius:50%;
+  animation:sparklePop ease-in-out infinite alternate;
+}
+@keyframes sparklePop{from{transform:scale(.5);opacity:.3}to{transform:scale(1.5);opacity:1}}
+
+.zj-bird{position:absolute;animation:birdFly linear infinite;font-size:1rem;opacity:.5;}
+@keyframes birdFly{
+  0%{transform:translateX(-60px) translateY(0) scaleX(1)}
+  49%{transform:translateX(50vw) translateY(-12px) scaleX(1)}
+  50%{transform:translateX(50vw) translateY(-12px) scaleX(-1)}
+  100%{transform:translateX(110vw) translateY(2px) scaleX(-1)}
+}
+
+/* ── NAVBAR ──────────────────────────────────────────────────── */
+.zj-nav{
+  position:fixed;top:0;left:0;right:0;z-index:400;
+  background:rgba(255,255,255,.93);
+  backdrop-filter:blur(14px);
+  border-bottom:2px solid rgba(126,200,230,.2);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.5rem 1.4rem;height:58px;
+  box-shadow:0 2px 14px rgba(126,200,230,.14);
+}
+.zj-brand{
+  font-family:var(--font-t);font-weight:900;font-size:1.3rem;
+  text-decoration:none;
+  background:var(--zgm);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  display:flex;align-items:center;gap:.3rem;
+}
+.zj-stats{display:flex;gap:.45rem;flex-wrap:wrap;align-items:center;}
+.zj-pill{
+  display:flex;align-items:center;gap:.25rem;
+  background:rgba(126,200,230,.1);
+  border:1.5px solid rgba(126,200,230,.3);
+  border-radius:50px;padding:.18rem .75rem;
+  font-family:var(--font-t);font-weight:700;font-size:.8rem;color:var(--ztx);
+}
+
+/* ── MAIN WRAPPER ────────────────────────────────────────────── */
+.zj-main{
+  position:relative;z-index:1;
+  padding-top:66px;
+  min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding-bottom:1.5rem;
+  padding-left:.75rem;padding-right:.75rem;
+}
+
+/* ── CARD CENTRAL ────────────────────────────────────────────── */
+.zj-card{
+  background:rgba(255,255,255,.92);
+  border:2px solid rgba(126,200,230,.22);
+  border-radius:28px;
+  box-shadow:var(--zsh);
+  padding:1.75rem 1.5rem;
+  width:100%;max-width:500px;
+  text-align:center;
+}
+
+/* ── TÍTULO GRADIENTE ────────────────────────────────────────── */
+.zj-title{
+  font-family:var(--font-t);font-weight:900;
+  font-size:clamp(1.7rem,5vw,2.5rem);
+  background:linear-gradient(90deg,#7EC8E6,#A8D5BA,#FFE66D,#FFB980);
+  background-size:250%;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  animation:titleShift 5s linear infinite;
+  line-height:1.15;letter-spacing:-.3px;
+}
+@keyframes titleShift{0%{background-position:0%}100%{background-position:250%}}
+
+/* ── BOTÕES ──────────────────────────────────────────────────── */
+.zj-btn{
+  font-family:var(--font-t);font-weight:700;
+  padding:.72rem 1.9rem;border:none;border-radius:50px;
+  cursor:pointer;display:inline-flex;align-items:center;gap:.4rem;
+  font-size:.97rem;text-decoration:none;
+  transition:all .3s cubic-bezier(.34,1.56,.64,1);
+}
+.zj-btn-main{
+  background:var(--zgm);color:var(--zwh);
+  box-shadow:0 6px 20px rgba(126,200,230,.38);
+}
+.zj-btn-main:hover{transform:scale(1.07) translateY(-3px);box-shadow:var(--zsh2);color:var(--zwh);}
+.zj-btn-warm{
+  background:var(--zgw);color:var(--ztx);
+  box-shadow:0 6px 20px rgba(255,185,128,.38);
+}
+.zj-btn-warm:hover{transform:scale(1.07) translateY(-3px);color:var(--ztx);}
+.zj-btn-ghost{
+  background:rgba(126,200,230,.1);color:var(--ztx);
+  border:2px solid rgba(126,200,230,.35);
+}
+.zj-btn-ghost:hover{background:rgba(126,200,230,.22);transform:scale(1.04);color:var(--ztx);}
+
+/* ── OVERLAY / MODAL ─────────────────────────────────────────── */
+.zj-overlay{
+  position:fixed;inset:0;z-index:800;
+  background:rgba(45,55,72,.45);backdrop-filter:blur(10px);
+  display:flex;align-items:center;justify-content:center;padding:1rem;
+}
+.zj-modal{
+  background:rgba(255,255,255,.97);
+  border-radius:28px;padding:2.4rem 2rem;
+  text-align:center;max-width:420px;width:100%;
+  box-shadow:0 28px 70px rgba(45,55,72,.16);
+  border:2.5px solid rgba(126,200,230,.25);
+  animation:modalPop .5s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes modalPop{from{transform:scale(.72) translateY(30px);opacity:0}to{transform:scale(1);opacity:1}}
+.zj-modal-emoji{font-size:5rem;display:block;animation:emojiBounce 1.2s ease-in-out infinite alternate;}
+@keyframes emojiBounce{from{transform:scale(1) rotate(-5deg)}to{transform:scale(1.14) rotate(5deg)}}
+.zj-modal-title{
+  font-family:var(--font-t);font-weight:900;font-size:1.85rem;margin:.6rem 0 .35rem;
+  background:var(--zgm);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.zj-modal-sub{color:#6B7280;font-size:.93rem;margin-bottom:1.5rem;line-height:1.5;}
+
+/* ── BARRA DE PROGRESSO ──────────────────────────────────────── */
+.zj-prog{width:100%;height:10px;border-radius:10px;background:rgba(126,200,230,.15);overflow:hidden;margin:.4rem 0;}
+.zj-prog-fill{height:100%;background:var(--zgm);border-radius:10px;transition:width .45s ease;}
+
+/* ── FLOAT TEXT ──────────────────────────────────────────────── */
+.zj-float{
+  position:fixed;pointer-events:none;z-index:700;
+  font-family:var(--font-t);font-weight:800;font-size:1.5rem;
+  transform:translateX(-50%);
+  animation:floatUp .9s ease-out forwards;
+}
+@keyframes floatUp{0%{transform:translateX(-50%) translateY(0) scale(1);opacity:1}100%{transform:translateX(-50%) translateY(-72px) scale(1.2);opacity:0}}
+
+/* ── CONFETE ─────────────────────────────────────────────────── */
+.zj-confete{position:fixed;pointer-events:none;z-index:750;animation:confeteFall linear forwards;}
+@keyframes confeteFall{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(110vh) rotate(600deg);opacity:0}}
+
+/* ── PARTÍCULAS ──────────────────────────────────────────────── */
+.zj-part{position:fixed;pointer-events:none;z-index:700;animation:partFly .7s ease-out forwards;}
+@keyframes partFly{0%{transform:translate(0,0) scale(1);opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(0);opacity:0}}
+
+/* ── SHAKE / POP ─────────────────────────────────────────────── */
+@keyframes zjShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-9px)}75%{transform:translateX(9px)}}
+@keyframes zjPop{0%{transform:scale(1)}50%{transform:scale(1.13)}100%{transform:scale(1)}}
+
+/* ── TEMPO BARRA INFERIOR ────────────────────────────────────── */
+.zj-timebar{position:fixed;bottom:0;left:0;right:0;height:7px;background:rgba(126,200,230,.12);z-index:300;}
+.zj-timebar-fill{height:100%;background:var(--zgm);border-radius:0 4px 4px 0;transition:width .8s linear;}
+
+/* ── RESPONSIVO ──────────────────────────────────────────────── */
+@media(max-width:480px){
+  .zj-nav{padding:.4rem .9rem;height:52px;}
+  .zj-brand{font-size:1.1rem;}
+  .zj-pill{font-size:.7rem;padding:.15rem .55rem;}
+  .zj-card{padding:1.25rem;border-radius:22px;}
+  .zj-main{padding-top:60px;}
+  .zj-btn{padding:.6rem 1.4rem;font-size:.88rem;}
+}

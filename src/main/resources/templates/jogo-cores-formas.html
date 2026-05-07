@@ -1,52 +1,134 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zupi - Jogo de Cores e Formas</title>
-    <link rel="stylesheet" href="/css/jogo-cores-formas.css" />
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Cores e Formas - Zupi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/zupi-jogos.css">
+  <style>
+    .falvo{width:130px;height:130px;margin:.8rem auto;animation:emojiBounce 2s ease-in-out infinite alternate;filter:drop-shadow(0 6px 14px rgba(126,200,230,.3));}
+    .fmode{font-family:'Poppins',sans-serif;font-weight:700;font-size:1.05rem;margin:.4rem 0;background:linear-gradient(135deg,#7EC8E6,#A8D5BA);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .fopts{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;margin:.7rem 0;}
+    .fopt{padding:.9rem .5rem;border:2.5px solid rgba(126,200,230,.22);border-radius:16px;background:rgba(255,255,255,.85);cursor:pointer;transition:all .25s cubic-bezier(.34,1.56,.64,1);font-family:'Poppins',sans-serif;font-size:.9rem;font-weight:700;color:#2D3748;display:flex;flex-direction:column;align-items:center;gap:.35rem;}
+    .fopt svg{width:44px;height:44px;}
+    .fopt:hover{transform:scale(1.07) translateY(-3px);border-color:#7EC8E6;box-shadow:0 6px 16px rgba(126,200,230,.28);}
+    .fopt.ok{background:linear-gradient(135deg,rgba(168,213,186,.2),rgba(126,200,230,.2));border-color:#A8D5BA;animation:zjPop .4s cubic-bezier(.34,1.56,.64,1);}
+    .fopt.no{background:rgba(249,198,208,.15);border-color:#F9C6D0;animation:zjShake .35s;}
+    .fmsg{font-size:.85rem;color:#9CA3AF;font-family:'Poppins',sans-serif;min-height:1.3rem;}
+  </style>
 </head>
-<body>
-    <header>
-        <div class="logo-container">
-            <div class="logo-shape logo-circle"></div>
-            <div class="logo-shape logo-pentagon"></div>
-            <div class="logo-shape logo-rectangle"></div>
-            <div class="logo-shape logo-pentagon-blue"></div>
-        </div>
-        <h1>🎨 Zupi - Cores e Formas</h1>
-        <div id="level-indicator">Fase 1 de 5</div>
-        <div id="score">Pontos: 0</div>
-    </header>
-
-    <main>
-        <div id="instruction-container">
-            <p id="instruction-text">Clique no círculo vermelho</p>
-        </div>
-
-        <div id="game-area">
-            <!-- As formas serão geradas dinamicamente pelo JavaScript -->
-        </div>
-
-        <div id="feedback" class="hidden">
-            <span id="feedback-text"></span>
-        </div>
-    </main>
-
-    <!-- Modal de Vitória -->
-    <div id="modal-overlay" class="hidden">
-        <div class="modal-content">
-            <span class="modal-emoji" id="modal-icon">🌟</span>
-            <h2 id="modal-title">Parabéns!</h2>
-            <p id="modal-message">Você completou todas as fases!</p>
-            <div class="modal-buttons">
-                <button class="btn-action" id="btn-restart">Jogar Novamente</button>
-                <button class="btn-action" id="btn-menu">Voltar ao Menu</button>
-            </div>
-        </div>
-    </div>
-
-    <script src="/js/jogo-cores-formas.js"></script>
+<body class="zj-body">
+<div id="zj-sky" class="zj-sky"></div>
+<nav class="zj-nav">
+  <a href="/menuJogos" class="zj-brand">&#x1F43E; Zupi</a>
+  <div class="zj-stats">
+    <div class="zj-pill">&#x2B50; <span id="p">0</span></div>
+    <div class="zj-pill">&#x1F522; <span id="q">1/15</span></div>
+    <div class="zj-pill">&#x1F525; <span id="st">0</span></div>
+  </div>
+</nav>
+<div class="zj-main">
+  <div class="zj-card" id="jcard" style="display:none">
+    <div class="zj-prog"><div class="zj-prog-fill" id="pf" style="width:0%"></div></div>
+    <div class="fmode" id="fmode">Que cor e essa?</div>
+    <div id="falvo" class="falvo"></div>
+    <div class="fopts" id="fopts"></div>
+    <div class="fmsg" id="fmsg"></div>
+  </div>
+</div>
+<div class="zj-overlay" id="oi">
+  <div class="zj-modal">
+    <span class="zj-modal-emoji">&#x1F534;</span>
+    <div class="zj-modal-title">Cores e Formas!</div>
+    <div class="zj-modal-sub">Identifique cores, formas e tamanhos! Aprenda brincando!</div>
+    <button class="zj-btn zj-btn-main" onclick="iniciar()">&#x1F680; Jogar!</button><br>
+    <a href="/menuJogos" class="zj-btn zj-btn-ghost" style="margin-top:.5rem">&#x2B05; Menu</a>
+  </div>
+</div>
+<div class="zj-overlay" id="of" style="display:none">
+  <div class="zj-modal">
+    <span class="zj-modal-emoji" id="fe">&#x1F3C6;</span>
+    <div class="zj-modal-title" id="ft">Fim!</div>
+    <div class="zj-modal-sub" id="fs"></div>
+    <button class="zj-btn zj-btn-main" onclick="reiniciar()">&#x1F504; Jogar novamente</button><br>
+    <a href="/menuJogos" class="zj-btn zj-btn-ghost" style="margin-top:.5rem">&#x2B05; Menu</a>
+  </div>
+</div>
+<script src="/js/zupi-sky.js"></script>
+<script th:inline="none">
+zupiSky();
+var CORES=[{n:'Vermelho',h:'#FF6B6B'},{n:'Azul',h:'#7EC8E6'},{n:'Verde',h:'#A8D5BA'},{n:'Amarelo',h:'#FFE66D'},{n:'Roxo',h:'#C8B8F0'},{n:'Laranja',h:'#FFB980'},{n:'Rosa',h:'#F9C6D0'}];
+var FORMAS=['circulo','quadrado','triangulo','estrela','diamante'];
+var TAMS=[{n:'Grande',v:1},{n:'Medio',v:.72},{n:'Pequeno',v:.48}];
+var MODOS=['cor','forma','tamanho'];
+var pts=0,streak=0,q=0,total=15,resp=false;
+function shuffle(a){return a.sort(function(){return Math.random()-.5;});}
+function svgForma(forma,cor,scale){
+  scale=scale||1;var s=scale;
+  if(forma==='circulo') return '<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="'+(36*s)+'" fill="'+cor+'"/></svg>';
+  if(forma==='quadrado') return '<svg viewBox="0 0 100 100"><rect x="'+(50-32*s)+'" y="'+(50-32*s)+'" width="'+(64*s)+'" height="'+(64*s)+'" fill="'+cor+'" rx="6"/></svg>';
+  if(forma==='triangulo') return '<svg viewBox="0 0 100 100"><polygon points="50,'+(10+8*(1-s))+' '+(10+8*(1-s))+','+(90-8*(1-s))+' '+(90-8*(1-s))+','+(90-8*(1-s))+'" fill="'+cor+'"/></svg>';
+  if(forma==='estrela') return '<svg viewBox="0 0 100 100"><polygon points="50,'+(18-4*(1-s))+' '+(62*s+19*(1-s))+','+(38-4*(1-s))+' 85,'+(40-4*(1-s))+' '+(68*s+16*(1-s))+','+(58-4*(1-s))+' '+(74*s+13*(1-s))+',82 50,'+(70-4*(1-s))+' '+(26*s+37*(1-s))+',82 '+(32*s+35*(1-s))+','+(58-4*(1-s))+' 15,'+(40-4*(1-s))+' '+(38*s+29*(1-s))+','+(38-4*(1-s))+'" fill="'+cor+'"/></svg>';
+  return '<svg viewBox="0 0 100 100"><polygon points="50,'+(15-4*(1-s))+' '+(80+4*(1-s))+',50 50,'+(85+4*(1-s))+' '+(20-4*(1-s))+',50" fill="'+cor+'"/></svg>';
+}
+function iniciar(){document.getElementById('oi').style.display='none';document.getElementById('jcard').style.display='';pts=0;streak=0;q=0;gerarQ();}
+function gerarQ(){
+  resp=false;document.getElementById('fmsg').textContent='';
+  var modo=MODOS[Math.floor(Math.random()*MODOS.length)];
+  var cor=CORES[Math.floor(Math.random()*CORES.length)];
+  var forma=FORMAS[Math.floor(Math.random()*FORMAS.length)];
+  var tam=TAMS[Math.floor(Math.random()*TAMS.length)];
+  var alvoEl=document.getElementById('falvo');
+  alvoEl.innerHTML=svgForma(forma,cor.h,tam.v);
+  var opts=[],correta='';
+  if(modo==='cor'){
+    document.getElementById('fmode').textContent='Que COR e essa?';
+    var erradas=shuffle(CORES.filter(function(c){return c.n!==cor.n;})).slice(0,3);
+    opts=shuffle([cor].concat(erradas)).map(function(c){return {label:c.n,certa:c.n===cor.n,svg:'<div style="width:32px;height:32px;border-radius:50%;background:'+c.h+';border:2px solid rgba(0,0,0,.08)"></div>'};});
+    correta=cor.n;
+  } else if(modo==='forma'){
+    document.getElementById('fmode').textContent='Que FORMA e essa?';
+    var erradas=shuffle(FORMAS.filter(function(f){return f!==forma;})).slice(0,3);
+    opts=shuffle([forma].concat(erradas)).map(function(f){return {label:f,certa:f===forma,svg:svgForma(f,'#7EC8E6',.7)};});
+    correta=forma;
+  } else {
+    document.getElementById('fmode').textContent='Que TAMANHO e esse?';
+    opts=shuffle(TAMS).map(function(t){return {label:t.n,certa:t.n===tam.n,svg:svgForma(forma,cor.h,t.v)};});
+    correta=tam.n;
+  }
+  var fopts=document.getElementById('fopts');fopts.innerHTML='';
+  opts.forEach(function(o){
+    var b=document.createElement('button');b.className='fopt';
+    b.innerHTML='<div>'+o.svg+'</div><span>'+o.label+'</span>';
+    b.onclick=function(){responder(b,o.certa);};
+    fopts.appendChild(b);
+  });
+  q++;document.getElementById('q').textContent=q+'/'+total;
+  document.getElementById('pf').style.width=((q-1)/total*100)+'%';
+}
+function responder(btn,certa){
+  if(resp) return; resp=true;
+  if(certa){
+    btn.classList.add('ok');zupiRight();streak++;
+    var bonus=Math.floor(streak/3)*5;pts+=10+bonus;
+    document.getElementById('p').textContent=pts;document.getElementById('st').textContent=streak;
+    document.getElementById('fmsg').textContent=streak>=3?'Sequencia de '+streak+'! +'+bonus+' bonus!':'';
+    zupiConfete(15);
+    if(q>=total) setTimeout(fimDeJogo,800);
+    else setTimeout(gerarQ,950);
+  } else {
+    btn.classList.add('no');zupiWrong();streak=0;document.getElementById('st').textContent=0;
+    document.getElementById('fmsg').textContent='Ops! Tente outra opcao!';
+    setTimeout(function(){btn.classList.remove('no');resp=false;},750);
+  }
+}
+function fimDeJogo(){
+  document.getElementById('fe').innerHTML=pts>=120?'&#x1F3C6;':pts>=70?'&#x2B50;':'&#x1F534;';
+  document.getElementById('ft').textContent=pts>=120?'Especialista em Formas!':pts>=70?'Muito bom!':'Continue praticando!';
+  document.getElementById('fs').textContent='Pontuacao: '+pts+' pontos!';
+  document.getElementById('of').style.display='flex';zupiConfete(30);
+}
+function reiniciar(){document.getElementById('of').style.display='none';pts=0;streak=0;q=0;gerarQ();}
+</script>
 </body>
 </html>
-

@@ -33,6 +33,7 @@ public class UserController {
         return ResponseEntity.ok().body(userService.findById(id));
     }
 
+
     @PostMapping(value = "/register")
     public ResponseEntity<UserResponse> register(@RequestBody UserRequest user) {
         UserResponse userResponse  = userService.save(user);
@@ -47,13 +48,8 @@ public class UserController {
 
     @PostMapping(value = "/login")
     public ResponseEntity<UserResponse> login(@RequestBody LoginDTO user) {
-        Boolean validPassword = userService.validationPassword(user);
-
-        if (!validPassword) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        return ResponseEntity.ok().body(userService.findByEmail(user.email()));
+        UserResponse userResponse = userService.login(user);
+        return ResponseEntity.ok(userResponse);
     }
 
 }

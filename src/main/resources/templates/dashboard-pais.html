@@ -138,14 +138,35 @@
           </div>
         </header>
 
-        <!-- CHAMADO PARA JOGOS -->
+        <!-- CHAMADO PARA JOGOS — HERO COM MASCOTE -->
         <section class="mb-5">
-          <div class="card bg-zupi-primary text-white">
-            <div class="card-body text-center py-5">
-              <h2 class="card-title mb-3">Vamos jogar!</h2>
-              <p class="card-text mb-4">Toque aqui para acessar os jogos divertidos!</p>
-              <a href="/menuJogos" class="btn btn-warning btn-lg" role="button">🎮 Jogar Agora</a>
+          <div class="dash-hero">
+
+            <!-- Mascote como fundo -->
+            <img
+              src="/img/mascote-hero.png"
+              alt="Mascote Zupi com brinquedos"
+              class="dash-hero-img"
+              draggable="false"
+            />
+
+            <!-- Gradiente para legibilidade -->
+            <div class="dash-hero-overlay"></div>
+
+            <!-- Estrelinhas decorativas flutuantes -->
+            <span class="dash-hero-star" style="top:14%;right:28%;animation-duration:3s;">&#x2B50;</span>
+            <span class="dash-hero-star" style="bottom:18%;right:14%;animation-duration:4s;animation-delay:.8s;font-size:1.1rem;">&#x2728;</span>
+            <span class="dash-hero-star" style="top:38%;right:8%;animation-duration:2.5s;animation-delay:.4s;font-size:1rem;">&#x1F4AB;</span>
+
+            <!-- Conteúdo — lado esquerdo -->
+            <div class="dash-hero-content">
+              <h2>Vamos jogar!</h2>
+              <p>Toque aqui para acessar os jogos divertidos!</p>
+              <a href="/menuJogos" class="dash-hero-btn" role="button">
+                &#x1F3AE; Jogar Agora
+              </a>
             </div>
+
           </div>
         </section>
 
