@@ -1,0 +1,20 @@
+/**
+ * Estilos da página: jogoBomba.html
+ * Gerado/extraído do HTML — manter HTML e CSS separados.
+ */
+
+.game-area{position:fixed;inset:0;top:58px;overflow:hidden;}
+    .item{position:absolute;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:50%;animation:itemDrop linear forwards;user-select:none;transition:transform .1s;}
+    @keyframes itemDrop{0%{top:-90px;opacity:0}5%{opacity:1}95%{opacity:1}100%{top:105%;opacity:0}}
+    .item:hover{transform:scale(1.12);}
+    .item.bom{background:radial-gradient(circle at 38% 35%,rgba(255,255,255,.8),var(--ic) 60%);box-shadow:0 6px 22px var(--is),inset 0 -4px 10px rgba(0,0,0,.08);}
+    .item.mau{background:radial-gradient(circle at 38% 35%,rgba(255,200,200,.6),rgba(220,80,80,.7) 60%);box-shadow:0 6px 22px rgba(220,80,80,.4);}
+    .item-shake{animation:itemDrop linear forwards,itmShk .4s ease!important;}
+    @keyframes itmShk{0%,100%{margin-left:0}25%{margin-left:-10px}75%{margin-left:10px}}
+    .burst{position:fixed;pointer-events:none;border-radius:50%;animation:burstA .45s ease-out forwards;z-index:600;}
+    @keyframes burstA{0%{transform:scale(.2);opacity:1}100%{transform:scale(4);opacity:0}}
+    .drop-gota{position:fixed;pointer-events:none;border-radius:50%;animation:gotaDrop .6s ease-out forwards;z-index:600;}
+    @keyframes gotaDrop{0%{transform:translate(0,0) scale(1);opacity:1}100%{transform:translate(var(--gx),var(--gy)) scale(0);opacity:0}}
+    #exp-overlay{position:fixed;inset:0;z-index:700;background:rgba(255,100,100,.35);pointer-events:none;display:none;animation:expFlash .35s ease-out;}
+    @keyframes expFlash{0%{opacity:1}100%{opacity:0}}
+    .sky-nav{height:58px;}

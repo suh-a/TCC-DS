@@ -1,0 +1,14 @@
+/**
+ * Estilos da página: jogoOrdem.html
+ * Gerado/extraído do HTML — manter HTML e CSS separados.
+ */
+
+.ngrid{display:flex;flex-wrap:wrap;justify-content:center;gap:.6rem;margin:1rem 0;}
+    .nb{width:70px;height:70px;border-radius:16px;border:2.5px solid rgba(126,200,230,.3);background:rgba(255,255,255,.85);font-family:'Poppins',sans-serif;font-size:1.7rem;font-weight:800;color:#2D3748;cursor:pointer;transition:all .25s cubic-bezier(.34,1.56,.64,1);box-shadow:0 3px 10px rgba(126,200,230,.12);}
+    .nb:hover:not(:disabled){transform:scale(1.1) translateY(-4px);border-color:#7EC8E6;box-shadow:0 8px 20px rgba(126,200,230,.28);}
+    .nb.ok{background:linear-gradient(135deg,#A8D5BA,#7EC8E6);color:white;border-color:transparent;pointer-events:none;animation:zjPop .4s;}
+    .nb.no{background:rgba(249,198,208,.25);border-color:#F9C6D0;animation:zjShake .35s;}
+    .seq{display:flex;gap:.4rem;justify-content:center;flex-wrap:wrap;min-height:50px;align-items:center;margin:.5rem 0;}
+    .sslot{width:46px;height:46px;border-radius:10px;background:linear-gradient(135deg,#7EC8E6,#A8D5BA);color:white;font-weight:800;font-size:1.15rem;display:flex;align-items:center;justify-content:center;animation:zjPop .3s cubic-bezier(.34,1.56,.64,1);font-family:'Poppins',sans-serif;}
+    .oinst{font-family:'Poppins',sans-serif;font-weight:700;font-size:1rem;background:linear-gradient(135deg,#7EC8E6,#A8D5BA);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.5rem;}
+    .omsg{font-size:.85rem;color:#9CA3AF;font-family:'Poppins',sans-serif;min-height:1.3rem;}

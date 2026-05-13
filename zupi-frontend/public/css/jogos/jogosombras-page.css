@@ -1,0 +1,13 @@
+/**
+ * Estilos da página: jogoSombras.html
+ * Gerado/extraído do HTML — manter HTML e CSS separados.
+ */
+
+.salvo{font-size:.7rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#7EC8E6;margin-bottom:.4rem;font-family:'Poppins',sans-serif;}
+    .salvo-e{font-size:5.5rem;display:block;animation:emojiBounce 2s ease-in-out infinite alternate;}
+    .sgrid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin:.8rem 0;}
+    .sbtn{padding:1rem;border:2.5px solid rgba(126,200,230,.22);border-radius:18px;background:rgba(255,255,255,.85);cursor:pointer;font-size:4rem;filter:grayscale(1) brightness(0.12) contrast(2);transition:all .25s cubic-bezier(.34,1.56,.64,1);}
+    .sbtn:hover{transform:scale(1.07) translateY(-4px);border-color:#7EC8E6;filter:grayscale(1) brightness(0.2) contrast(2);}
+    .sbtn.ok{filter:none!important;background:linear-gradient(135deg,rgba(168,213,186,.18),rgba(126,200,230,.18))!important;border-color:#A8D5BA!important;box-shadow:0 0 18px rgba(168,213,186,.5)!important;animation:zjPop .4s cubic-bezier(.34,1.56,.64,1)!important;}
+    .sbtn.no{filter:grayscale(1) brightness(.15)!important;background:rgba(249,198,208,.1)!important;border-color:#F9C6D0!important;animation:zjShake .35s!important;}
+    .smsg{font-size:.85rem;color:#9CA3AF;font-family:'Poppins',sans-serif;margin-top:.5rem;min-height:1.3rem;}

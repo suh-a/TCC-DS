@@ -1,0 +1,15 @@
+{
+  "name": "zupi-frontend",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "extract-game-css": "node scripts/extract-inline-game-css.mjs"
+  },
+  "devDependencies": {
+    "vite": "^6.0.3"
+  }
+}

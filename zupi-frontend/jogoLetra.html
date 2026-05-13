@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🔤 Qual a Letra? — Zupi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/zupi-games-theme.css">
+  <link rel="stylesheet" href="/css/jogoLetra.css">
+</head>
+<body class="zj-body">
+<a href="/menuJogos" class="z-back-btn">⬅ Menu</a>
+<div class="z-hud">
+  <div class="z-hud-item"><div class="z-hud-label">⭐ Pontos</div><div class="z-hud-value" id="pts" style="color:var(--z-blue)">0</div></div>
+  <div class="z-hud-item"><div class="z-hud-label">📊 Questão</div><div class="z-hud-value" id="qn" style="color:var(--z-green)">1/15</div></div>
+  <div class="z-hud-item"><div class="z-hud-label">🔥 Seguidas</div><div class="z-hud-value" id="str" style="color:var(--z-coral)">0</div></div>
+</div>
+
+<div class="letra-main">
+  <div class="z-progress" style="max-width:500px;margin:.5rem auto 1rem"><div class="z-progress-fill" id="prog" style="width:0%"></div></div>
+
+  <!-- CARD DA LETRA -->
+  <div class="letra-card" id="letra-card">
+    <div class="letra-display" id="letra-disp">A</div>
+    <div class="letra-exemplo" id="letra-ex">🍎 Abacaxi</div>
+  </div>
+
+  <!-- BTN OUVIR -->
+  <button class="ouvir-btn" id="ouvir-btn" onclick="falarLetra()">
+    🔊 Ouvir
+  </button>
+
+  <!-- PERGUNTA -->
+  <div class="letra-pergunta" id="pergunta">Qual é essa letra?</div>
+
+  <!-- OPÇÕES -->
+  <div class="opcoes-letras" id="opcoes"></div>
+</div>
+
+<!-- OVERLAYS -->
+<div class="z-overlay" id="ov-inicio">
+  <div class="z-overlay-card">
+    <div style="font-size:5rem;animation:zBounce 1s infinite alternate">🔤</div>
+    <h2 style="font-weight:800;margin:.5rem 0">Qual a Letra?</h2>
+    <p style="color:#7a8ea0;margin-bottom:.8rem">Clique em <b>Ouvir</b> para escutar a letra e então toque na letra certa! 🎵</p>
+    <div class="modo-select">
+      <div class="modo-btn ativo" id="m-nome" onclick="setModo('nome')">🔤 Nome<br><small>Ex: "A"</small></div>
+      <div class="modo-btn" id="m-som" onclick="setModo('som')">🎵 Som<br><small>Ex: "Ã"</small></div>
+      <div class="modo-btn" id="m-palavra" onclick="setModo('palavra')">📖 Palavra<br><small>Ex: "Abacaxi"</small></div>
+    </div>
+    <button class="z-btn z-btn-primary" onclick="iniciar()" style="margin-top:1rem">🚀 Jogar!</button>
+  </div>
+</div>
+<div class="z-overlay" id="ov-fim" style="display:none">
+  <div class="z-overlay-card">
+    <div style="font-size:5rem;animation:zBounce 1s infinite alternate" id="fim-e">🏆</div>
+    <h2 style="font-weight:800;margin:.5rem 0" id="fim-t">Muito bom!</h2>
+    <p style="color:#7a8ea0;margin-bottom:1.5rem" id="fim-s">Pontuação: 0</p>
+    <button class="z-btn z-btn-primary" onclick="reiniciar()">🔄 Jogar Novamente</button>
+    <a href="/menuJogos" class="z-btn z-btn-ghost" style="margin-top:.5rem;display:block">⬅ Menu</a>
+  </div>
+</div>
+
+<script>
+/*<![CDATA[*/
+
+const LETRAS = [
+  {l:'A',ex:'🍎 Abacaxi',  som:'a',  nome:'Á'},
+  {l:'B',ex:'🎈 Bola',     som:'bê', nome:'Bê'},
+  {l:'C',ex:'🏠 Casa',     som:'sê', nome:'Cê'},
+  {l:'D',ex:'🦷 Dente',    som:'dê', nome:'Dê'},
+  {l:'E',ex:'🐘 Elefante', som:'ê',  nome:'Ê'},
+  {l:'F',ex:'🌸 Flor',     som:'efe',nome:'Efe'},
+  {l:'G',ex:'🐱 Gato',     som:'gê', nome:'Gê'},
+  {l:'H',ex:'🌿 Horta',    som:'agá',nome:'Agá'},
+  {l:'I',ex:'🏝️ Ilha',    som:'i',  nome:'I'},
+  {l:'J',ex:'🕹️ Jogo',    som:'jota',nome:'Jota'},
+  {l:'L',ex:'🌙 Lua',      som:'ele',nome:'Ele'},
+  {l:'M',ex:'🍄 Mato',     som:'eme',nome:'Eme'},
+  {l:'N',ex:'🌊 Nuvem',    som:'ene',nome:'Ene'},
+  {l:'O',ex:'🐑 Ovelha',   som:'ó',  nome:'Ó'},
+  {l:'P',ex:'🐟 Peixe',    som:'pê', nome:'Pê'},
+  {l:'R',ex:'🐸 Rato',     som:'erre',nome:'Erre'},
+  {l:'S',ex:'🐍 Sapo',     som:'esse',nome:'Esse'},
+  {l:'T',ex:'🐢 Tartaruga',som:'tê', nome:'Tê'},
+  {l:'U',ex:'🦄 Unicórnio',som:'u',  nome:'U'},
+  {l:'V',ex:'🌬️ Vento',   som:'vê', nome:'Vê'},
+];
+
+const CORES = ['#7EC8E6','#A8D5BA','#FFE66D','#FFB980','#C5A8D5','#F4B8C8'];
+let pts=0,streak=0,qIdx=0,totalQ=15,modo='nome',synth=null;
+let listaQ=[],respondendo=false;
+
+function setModo(m){
+  modo=m;
+  ['nome','som','palavra'].forEach(x=>document.getElementById('m-'+x).classList.remove('ativo'));
+  document.getElementById('m-'+m).classList.add('ativo');
+}
+
+function iniciar(){
+  document.getElementById('ov-inicio').style.display='none';
+  listaQ=shuffle([...LETRAS]).slice(0,totalQ);
+  pts=0;streak=0;qIdx=0;
+  carregarQuestao();
+}
+
+function carregarQuestao(){
+  respondendo=false;
+  const q=listaQ[qIdx];
+  document.getElementById('letra-disp').textContent=q.l;
+  document.getElementById('letra-ex').textContent=q.ex;
+  document.getElementById('qn').textContent=`${qIdx+1}/${totalQ}`;
+  document.getElementById('prog').style.width=(qIdx/totalQ*100)+'%';
+  document.getElementById('pts').textContent=pts;
+  document.getElementById('str').textContent=streak;
+
+  // Animação na carta
+  const card=document.getElementById('letra-card');
+  card.style.animation='none'; void card.offsetWidth;
+  card.style.animation='zPop .4s cubic-bezier(.34,1.56,.64,1)';
+
+  // Pergunta
+  const pergs={nome:'Qual é o NOME dessa letra?',som:'Qual é o SOM dessa letra?',palavra:'Qual letra começa essa palavra?'};
+  document.getElementById('pergunta').textContent=pergs[modo];
+
+  // Opções (4)
+  const erradas=shuffle(LETRAS.filter(x=>x.l!==q.l)).slice(0,3);
+  const opts=shuffle([q,...erradas]);
+  const grid=document.getElementById('opcoes');
+  grid.innerHTML='';
+  opts.forEach((op,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opcao-letra-btn';
+    btn.style.background=CORES[i%CORES.length];
+    if(modo==='nome') btn.textContent=op.l;
+    else if(modo==='som') btn.textContent=op.nome;
+    else btn.textContent=op.l;
+    btn.onclick=()=>responder(btn,op.l===q.l);
+    grid.appendChild(btn);
+  });
+  // Falar automaticamente
+  setTimeout(()=>falarLetra(),300);
+}
+
+function falarLetra(){
+  const q=listaQ[qIdx];
+  const btn=document.getElementById('ouvir-btn');
+  btn.style.animation='zPulse .3s ease';
+  setTimeout(()=>btn.style.animation='',300);
+  let fala='';
+  if(modo==='nome') fala=q.nome||q.l;
+  else if(modo==='som') fala=q.som||q.l;
+  else fala=q.ex.split(' ')[1]||q.ex;
+  try{
+    if('speechSynthesis' in window){
+      window.speechSynthesis.cancel();
+      const u=new SpeechSynthesisUtterance(fala);
+      u.lang='pt-BR'; u.rate=0.85; u.pitch=1.2; u.volume=1;
+      window.speechSynthesis.speak(u);
+    }
+  }catch(e){ somFala(q.l.charCodeAt(0)); }
+}
+
+function responder(btn,correto){
+  if(respondendo) return;
+  respondendo=true;
+  if(correto){
+    btn.classList.add('correta');
+    streak++; pts+=10+Math.floor(streak/3)*5;
+    somAcerto();
+    lancarEstrelinha(btn);
+    setTimeout(()=>{ qIdx++; if(qIdx>=totalQ) fimDeJogo(); else carregarQuestao(); },700);
+  } else {
+    btn.classList.add('errada');
+    streak=0;
+    somErro();
+    setTimeout(()=>{ respondendo=false; },800);
+  }
+  document.getElementById('pts').textContent=pts;
+  document.getElementById('str').textContent=streak;
+}
+
+function lancarEstrelinha(btn){
+  const r=btn.getBoundingClientRect();
+  for(let i=0;i<8;i++){
+    const s=document.createElement('div');
+    const angle=Math.random()*Math.PI*2, dist=30+Math.random()*40;
+    s.style.cssText=`position:fixed;left:${r.left+r.width/2}px;top:${r.top+r.height/2}px;font-size:1.2rem;pointer-events:none;z-index:700;animation:gotaVoa .6s ease-out forwards;--tx:${Math.cos(angle)*dist}px;--ty:${Math.sin(angle)*dist}px;margin:-10px 0 0 -10px;`;
+    s.textContent='⭐';
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(),700);
+  }
+}
+
+function fimDeJogo(){
+  document.getElementById('fim-e').textContent=pts>=120?'🏆':pts>=70?'⭐':'💪';
+  document.getElementById('fim-t').textContent=pts>=120?'Parabéns!':pts>=70?'Muito bom!':'Continue praticando!';
+  document.getElementById('fim-s').textContent=`${pts} pontos 🎯 | ${qIdx} letras!`;
+  document.getElementById('ov-fim').style.display='flex';
+  if(pts>=70) lancarConfete();
+}
+function reiniciar(){ document.getElementById('ov-fim').style.display='none'; iniciar(); }
+
+function lancarConfete(){
+  const cores=['#7EC8E6','#A8D5BA','#FFE66D','#FFB980','#C5A8D5'];
+  for(let i=0;i<40;i++){
+    const c=document.createElement('div');c.className='z-confete';
+    c.style.cssText=`left:${Math.random()*100}vw;top:-20px;width:${7+Math.random()*10}px;height:${7+Math.random()*10}px;background:${cores[Math.floor(Math.random()*cores.length)]};animation-duration:${1.4+Math.random()*2}s;animation-delay:${Math.random()*0.6}s;border-radius:${Math.random()>.5?'50%':'3px'}`;
+    document.body.appendChild(c);setTimeout(()=>c.remove(),4000);
+  }
+}
+function shuffle(a){return a.sort(()=>Math.random()-.5);}
+
+let actx;
+function getAC(){if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();return actx;}
+function somAcerto(){try{const c=getAC(),t=c.currentTime;[523,659].forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=f;o.type='sine';g.gain.setValueAtTime(.2,t+i*.1);g.gain.exponentialRampToValueAtTime(.001,t+i*.1+.15);o.start(t+i*.1);o.stop(t+i*.1+.15);});}catch(e){}}
+function somErro(){try{const c=getAC(),t=c.currentTime;const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=180;o.type='sawtooth';g.gain.setValueAtTime(.15,t);g.gain.exponentialRampToValueAtTime(.001,t+.35);o.start(t);o.stop(t+.35);}catch(e){}}
+function somFala(code){try{const c=getAC(),t=c.currentTime;const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=200+code*3;o.type='sine';g.gain.setValueAtTime(.2,t);g.gain.exponentialRampToValueAtTime(.001,t+.3);o.start(t);o.stop(t+.3);}catch(e){}}
+
+const st=document.createElement('style');
+st.textContent=`@keyframes gotaVoa{0%{transform:translate(0,0) scale(1);opacity:1}100%{transform:translate(var(--tx),var(--ty)) scale(0);opacity:0}}`;
+document.head.appendChild(st);
+
+/*]]>*/
+</script>
+</body>
+</html>

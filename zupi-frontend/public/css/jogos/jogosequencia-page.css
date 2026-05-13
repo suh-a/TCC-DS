@@ -1,0 +1,18 @@
+/**
+ * Estilos da página: jogoSequencia.html
+ * Gerado/extraído do HTML — manter HTML e CSS separados.
+ */
+
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:1rem 0;}
+    .sb{width:130px;height:130px;border-radius:22px;border:3px solid rgba(255,255,255,.4);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:2.8rem;transition:all .15s;filter:brightness(.58);box-shadow:0 4px 14px rgba(0,0,0,.1);}
+    .sb:hover{filter:brightness(.72);}
+    .sb.on{filter:brightness(1.2)!important;transform:scale(.93)!important;box-shadow:0 0 38px var(--sc),0 0 70px var(--sc)!important;}
+    #sv{background:linear-gradient(135deg,#A8D5BA,#7EC8E6);--sc:#A8D5BA;}
+    #sr{background:linear-gradient(135deg,#F9C6D0,#FFB980);--sc:#F9C6D0;}
+    #sa{background:linear-gradient(135deg,#7EC8E6,#C8B8F0);--sc:#7EC8E6;}
+    #sam{background:linear-gradient(135deg,#FFE66D,#FFB980);--sc:#FFE66D;}
+    .inst{font-family:'Poppins',sans-serif;font-size:1rem;font-weight:700;color:#6B7280;margin:.4rem 0;min-height:1.5rem;}
+    .inst.a{color:#FFE66D;}
+    .inst.j{color:#A8D5BA;}
+    .rod{font-size:.75rem;letter-spacing:2px;text-transform:uppercase;color:#9CA3AF;font-family:'Poppins',sans-serif;}
+    @media(max-width:480px){.sb{width:105px;height:105px;font-size:2.2rem;}}

@@ -1,0 +1,15 @@
+/**
+ * Estilos da página: jogoContagem.html
+ * Gerado/extraído do HTML — manter HTML e CSS separados.
+ */
+
+.cobj{display:flex;flex-wrap:wrap;justify-content:center;gap:5px;padding:.75rem;background:rgba(126,200,230,.06);border-radius:16px;min-height:90px;font-size:2.3rem;margin:.7rem 0;}
+    .co{display:inline-block;animation:coIn .35s cubic-bezier(.34,1.56,.64,1) both;}
+    @keyframes coIn{from{transform:scale(0) rotate(-20deg);opacity:0}to{transform:scale(1);opacity:1}}
+    .cops{display:grid;grid-template-columns:repeat(4,1fr);gap:.55rem;margin:.5rem 0;}
+    .cb{padding:.85rem .4rem;border:2.5px solid rgba(126,200,230,.25);border-radius:14px;background:rgba(255,255,255,.85);color:#2D3748;font-family:'Poppins',sans-serif;font-size:1.5rem;font-weight:800;cursor:pointer;transition:all .25s cubic-bezier(.34,1.56,.64,1);}
+    .cb:hover{transform:scale(1.08) translateY(-3px);border-color:#7EC8E6;box-shadow:0 6px 16px rgba(126,200,230,.28);}
+    .cb.ok{background:linear-gradient(135deg,#A8D5BA,#7EC8E6);border-color:transparent;color:white;animation:zjPop .4s;}
+    .cb.no{background:rgba(249,198,208,.25);border-color:#F9C6D0;animation:zjShake .35s;}
+    .cperg{font-family:'Poppins',sans-serif;font-weight:700;font-size:1.05rem;color:#2D3748;margin:.4rem 0;}
+    .cst{font-size:.85rem;color:#FFB980;font-family:'Poppins',sans-serif;font-weight:700;min-height:1.3rem;}

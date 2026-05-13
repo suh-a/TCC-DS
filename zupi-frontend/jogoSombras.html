@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Acha a Sombra - Zupi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/zupi-jogos.css">
+  
+  <link rel="stylesheet" href="/css/jogos/jogosombras-page.css" />
+</head>
+<body class="zj-body">
+<div id="zj-sky" class="zj-sky"></div>
+<nav class="zj-nav">
+  <a href="/menuJogos" class="zj-brand">&#x1F43E; Zupi</a>
+  <div class="zj-stats">
+    <div class="zj-pill">&#x2B50; <span id="p">0</span></div>
+    <div class="zj-pill">&#x1F522; <span id="q">1/12</span></div>
+  </div>
+</nav>
+<div class="zj-main">
+  <div class="zj-card" id="jcard" style="display:none">
+    <div class="zj-prog"><div class="zj-prog-fill" id="pf" style="width:0%"></div></div>
+    <div class="salvo">Encontre a sombra de:</div>
+    <span class="salvo-e" id="alvo">&#x1F981;</span>
+    <div class="sgrid" id="sgrid"></div>
+    <div class="smsg" id="smsg"></div>
+  </div>
+</div>
+<div class="zj-overlay" id="oi">
+  <div class="zj-modal">
+    <span class="zj-modal-emoji">&#x1F311;</span>
+    <div class="zj-modal-title">Acha a Sombra!</div>
+    <div class="zj-modal-sub">Veja o objeto e encontre sua sombra correta entre as opcoes!</div>
+    <button class="zj-btn zj-btn-main" onclick="iniciar()">&#x1F680; Jogar!</button><br>
+    <a href="/menuJogos" class="zj-btn zj-btn-ghost" style="margin-top:.5rem">&#x2B05; Menu</a>
+  </div>
+</div>
+<div class="zj-overlay" id="of" style="display:none">
+  <div class="zj-modal">
+    <span class="zj-modal-emoji" id="fe">&#x1F3C6;</span>
+    <div class="zj-modal-title" id="ft">Fim!</div>
+    <div class="zj-modal-sub" id="fs"></div>
+    <button class="zj-btn zj-btn-main" onclick="reiniciar()">&#x1F504; Jogar novamente</button><br>
+    <a href="/menuJogos" class="zj-btn zj-btn-ghost" style="margin-top:.5rem">&#x2B05; Menu</a>
+  </div>
+</div>
+<script src="/js/zupi-sky.js"></script>
+<script>
+zupiSky();
+var GRUPOS=[
+  ['&#x1F981;','&#x1F42F;','&#x1F43B;','&#x1F43C;'],
+  ['&#x1F436;','&#x1F431;','&#x1F430;','&#x1F439;'],
+  ['&#x1F34E;','&#x1F34A;','&#x1F34B;','&#x1F347;'],
+  ['&#x1F680;','&#x2708;&#xFE0F;','&#x1F682;','&#x1F6F8;'],
+  ['&#x1F338;','&#x1F33A;','&#x1F33B;','&#x1F339;'],
+  ['&#x1F382;','&#x1F381;','&#x1F388;','&#x1F389;'],
+  ['&#x1F98B;','&#x1F41D;','&#x1F41E;','&#x1F997;'],
+  ['&#x1F433;','&#x1F42C;','&#x1F988;','&#x1F419;'],
+  ['&#x1F3E0;','&#x1F3F0;','&#x26FA;&#xFE0F;','&#x1F3E2;'],
+  ['&#x1F3B8;','&#x1F3B9;','&#x1F3BA;','&#x1F941;']
+];
+var pts=0,q=0,total=12,resp=false,alvoE='';
+function shuffle(a){return a.sort(function(){return Math.random()-.5;});}
+function iniciar(){document.getElementById('oi').style.display='none';document.getElementById('jcard').style.display='';pts=0;q=0;gerarQ();}
+function gerarQ(){
+  resp=false; document.getElementById('smsg').textContent='';
+  var g=GRUPOS[Math.floor(Math.random()*GRUPOS.length)];
+  var emb=shuffle(g.slice());
+  alvoE=emb[0];
+  document.getElementById('alvo').innerHTML=alvoE;
+  var grid=document.getElementById('sgrid'); grid.innerHTML='';
+  emb.forEach(function(e){
+    var b=document.createElement('button'); b.className='sbtn';
+    b.innerHTML=e;
+    b.onclick=function(){responder(b,e===alvoE);};
+    grid.appendChild(b);
+  });
+  q++; document.getElementById('q').textContent=q+'/'+total;
+  document.getElementById('pf').style.width=((q-1)/total*100)+'%';
+}
+function responder(btn,certa){
+  if(resp) return; resp=true;
+  if(certa){
+    btn.classList.add('ok'); zupiRight(); pts+=10;
+    document.getElementById('p').textContent=pts;
+    document.getElementById('smsg').textContent='Correto! Que olho bom!';
+    zupiConfete(18);
+    if(q>=total) setTimeout(fimDeJogo,900);
+    else setTimeout(gerarQ,1000);
+  } else {
+    btn.classList.add('no'); zupiWrong();
+    document.getElementById('smsg').textContent='Nao e essa! Tente outra!';
+    setTimeout(function(){btn.classList.remove('no');resp=false;},700);
+  }
+}
+function fimDeJogo(){
+  document.getElementById('fe').innerHTML=pts>=100?'&#x1F3C6;':pts>=60?'&#x2B50;':'&#x1F311;';
+  document.getElementById('ft').textContent=pts>=100?'Detetive das Sombras!!':pts>=60?'Muito bem!':'Continue praticando!';
+  document.getElementById('fs').textContent='Pontuacao: '+pts+' pontos!';
+  document.getElementById('of').style.display='flex'; zupiConfete(30);
+}
+function reiniciar(){document.getElementById('of').style.display='none';pts=0;q=0;gerarQ();}
+</script>
+</body>
+</html>

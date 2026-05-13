@@ -1,0 +1,19 @@
+/**
+ * Estilos da página: jogoPintura.html
+ * Gerado/extraído do HTML — manter HTML e CSS separados.
+ */
+
+.mres{width:100px;height:100px;border-radius:50%;margin:.6rem auto;border:3px solid rgba(126,200,230,.3);transition:background .5s cubic-bezier(.34,1.56,.64,1);box-shadow:0 6px 22px rgba(0,0,0,.1);animation:emojiBounce 2.5s ease-in-out infinite alternate;}
+    .mresn{font-family:'Poppins',sans-serif;font-weight:800;font-size:1.1rem;min-height:1.5rem;transition:color .4s;margin-bottom:.4rem;}
+    .mperg{font-size:.95rem;color:#6B7280;font-family:'Poppins',sans-serif;margin-bottom:.8rem;}
+    .msels{display:flex;justify-content:center;gap:.5rem;align-items:center;min-height:56px;margin:.5rem 0;}
+    .msel{width:50px;height:50px;border-radius:50%;border:3px solid rgba(126,200,230,.3);box-shadow:0 3px 10px rgba(0,0,0,.1);transition:background .3s;animation:zjPop .3s cubic-bezier(.34,1.56,.64,1);}
+    .mop{font-size:1.4rem;font-weight:800;color:#A8D5BA;}
+    .mig{font-size:1.4rem;font-weight:800;color:#FFB980;}
+    .mbaldes{display:flex;justify-content:center;gap:.7rem;flex-wrap:wrap;margin:.8rem 0;}
+    .mbalde{width:76px;height:84px;border-radius:14px 14px 18px 18px;cursor:pointer;position:relative;border:3px solid rgba(255,255,255,.45);transition:all .3s cubic-bezier(.34,1.56,.64,1);display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:.4rem;box-shadow:0 5px 16px rgba(0,0,0,.1);}
+    .mbalde::before{content:'🪣';font-size:2rem;position:absolute;top:-16px;left:50%;transform:translateX(-50%);}
+    .mbalde:hover{transform:scale(1.1) translateY(-5px);box-shadow:0 10px 26px rgba(0,0,0,.16);}
+    .mbalde:active{transform:scale(.93);}
+    .mbalde.sel{outline:3px solid rgba(255,255,255,.75);transform:scale(1.12) translateY(-7px);}
+    .mbn{font-size:.7rem;font-weight:700;color:white;text-shadow:0 1px 3px rgba(0,0,0,.4);font-family:'Poppins',sans-serif;}

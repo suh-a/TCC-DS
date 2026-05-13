@@ -1,0 +1,19 @@
+/**
+ * Estilos da página: jogoBalao.html
+ * Gerado/extraído do HTML — manter HTML e CSS separados.
+ */
+
+.ga{position:fixed;inset:0;top:58px;bottom:72px;overflow:hidden;}
+    .bol{position:absolute;border-radius:50%;cursor:pointer;animation:bolSobe linear forwards;}
+    .bol::before{content:'';position:absolute;top:14%;left:18%;width:32%;height:18%;background:rgba(255,255,255,.68);border-radius:50%;transform:rotate(-25deg);}
+    .bol::after{content:'';position:absolute;bottom:10%;right:12%;width:16%;height:9%;background:rgba(255,255,255,.4);border-radius:50%;}
+    @keyframes bolSobe{0%{bottom:-110px;opacity:0;transform:translateX(0)}5%{opacity:1}30%{transform:translateX(12px)}60%{transform:translateX(-10px)}85%{transform:translateX(8px)}95%{opacity:1}100%{bottom:108%;opacity:0}}
+    .alvo-bar{position:fixed;bottom:0;left:0;right:0;height:68px;background:rgba(255,255,255,.93);backdrop-filter:blur(12px);border-top:2px solid rgba(126,200,230,.2);display:flex;align-items:center;justify-content:center;gap:1rem;z-index:300;}
+    .al-label{font-family:'Poppins',sans-serif;font-weight:700;font-size:.88rem;color:#6B7280;}
+    .al-circ{width:44px;height:44px;border-radius:50%;border:3px solid rgba(0,0,0,.1);box-shadow:0 4px 12px rgba(0,0,0,.12);animation:glowPulse 1s ease-in-out infinite alternate;}
+    @keyframes glowPulse{from{box-shadow:0 0 6px var(--gc,#7EC8E6)}to{box-shadow:0 0 20px var(--gc,#7EC8E6),0 0 36px var(--gc,#7EC8E6)}}
+    .al-nome{font-family:'Poppins',sans-serif;font-weight:800;font-size:1.05rem;}
+    .anel{position:fixed;pointer-events:none;border-radius:50%;animation:anelE .45s ease-out forwards;z-index:400;}
+    @keyframes anelE{0%{transform:scale(.25);opacity:.9}100%{transform:scale(3.5);opacity:0}}
+    .gota{position:fixed;pointer-events:none;border-radius:50%;animation:gotaV .65s ease-out forwards;z-index:400;}
+    @keyframes gotaV{0%{transform:translate(0,0);opacity:.9}100%{transform:translate(var(--gx),var(--gy)) scale(0);opacity:0}}

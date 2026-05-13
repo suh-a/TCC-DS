@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Salva os Baloes - Zupi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/zupi-jogos.css">
+  
+  <link rel="stylesheet" href="/css/jogos/jogobalao-page.css" />
+</head>
+<body class="zj-body">
+<div id="zj-sky" class="zj-sky"></div>
+<nav class="zj-nav">
+  <a href="/menuJogos" class="zj-brand">&#x1F43E; Zupi</a>
+  <div class="zj-stats">
+    <div class="zj-pill">&#x2B50; <span id="p">0</span></div>
+    <div class="zj-pill">&#x2764;&#xFE0F; <span id="v">3</span></div>
+    <div class="zj-pill">&#x1F525; <span id="st">0</span></div>
+  </div>
+</nav>
+<div id="ga" class="ga"></div>
+<div class="alvo-bar" id="abar" style="display:none">
+  <div class="al-label">Estoure apenas:</div>
+  <div class="al-circ" id="acirc" style="--gc:#7EC8E6;background:#7EC8E6"></div>
+  <div class="al-nome" id="anome" style="color:#7EC8E6">Azul</div>
+</div>
+<div class="zj-overlay" id="oi">
+  <div class="zj-modal">
+    <span class="zj-modal-emoji">&#x1F388;</span>
+    <div class="zj-modal-title">Salva os Baloes!</div>
+    <div class="zj-modal-sub">Estoure apenas os baloes da cor indicada em baixo! Acertar errado tira vida!</div>
+    <button class="zj-btn zj-btn-main" onclick="iniciar()">&#x1F680; Jogar!</button><br>
+    <a href="/menuJogos" class="zj-btn zj-btn-ghost" style="margin-top:.5rem">&#x2B05; Menu</a>
+  </div>
+</div>
+<div class="zj-overlay" id="of" style="display:none">
+  <div class="zj-modal">
+    <span class="zj-modal-emoji" id="fe">&#x1F3C6;</span>
+    <div class="zj-modal-title" id="ft">Fim!</div>
+    <div class="zj-modal-sub" id="fs"></div>
+    <button class="zj-btn zj-btn-main" onclick="reiniciar()">&#x1F504; Jogar novamente</button><br>
+    <a href="/menuJogos" class="zj-btn zj-btn-ghost" style="margin-top:.5rem">&#x2B05; Menu</a>
+  </div>
+</div>
+<script src="/js/zupi-sky.js"></script>
+<script>
+zupiSky();
+var CORES=[
+  {n:'Azul',   h:'#7EC8E6',g:'#b3dff2'},{n:'Verde',  h:'#A8D5BA',g:'#c8e8d4'},
+  {n:'Amarelo',h:'#FFE66D',g:'#fff0a0'},{n:'Laranja',h:'#FFB980',g:'#ffd5a8'},
+  {n:'Rosa',   h:'#F9C6D0',g:'#fcc8e6'},{n:'Roxo',   h:'#C8B8F0',g:'#dbd0fe'}
+];
+var pts=0,vidas=3,streak=0,rodando=false,nivel=1,corAlvo;
+var spInt,mudaInt;
+var ga=document.getElementById('ga');
+function sortear(){return CORES[Math.floor(Math.random()*CORES.length)];}
+function iniciar(){
+  document.getElementById('oi').style.display='none';
+  document.getElementById('abar').style.display='flex';
+  pts=0;vidas=3;streak=0;nivel=1;rodando=true;atuHud();ga.innerHTML='';
+  trocarAlvo();
+  spInt=setInterval(spawnBol,Math.max(500,1200-nivel*60));
+  mudaInt=setInterval(function(){nivel++;trocarAlvo();clearInterval(spInt);spInt=setInterval(spawnBol,Math.max(500,1200-nivel*60));},12000);
+  for(var i=0;i<3;i++) setTimeout(spawnBol,i*280);
+}
+function trocarAlvo(){
+  corAlvo=sortear();
+  var circ=document.getElementById('acirc');
+  circ.style.background=corAlvo.h;circ.style.setProperty('--gc',corAlvo.h);
+  document.getElementById('anome').textContent=corAlvo.n;
+  document.getElementById('anome').style.color=corAlvo.h;
+}
+function spawnBol(){
+  if(!rodando) return;
+  var c=CORES[Math.floor(Math.random()*CORES.length)];
+  var tam=52+Math.random()*52,vida=Math.max(2200,5000-nivel*250);
+  var b=document.createElement('div');b.className='bol';
+  var op=.52+Math.random()*.28;
+  b.style.cssText='width:'+tam+'px;height:'+tam+'px;left:'+(4+Math.random()*88)+'%;background:radial-gradient(circle at 40% 35%,rgba(255,255,255,.6) 0%,'+c.h+Math.round(op*99).toString(16)+' 50%,rgba(255,255,255,.05) 100%);border:1.5px solid '+c.h+'66;box-shadow:0 0 '+(tam*.25)+'px '+c.h+'44;animation-duration:'+vida+'ms';
+  b._c=c;
+  b.addEventListener('click',function(e){e.stopPropagation();estouro(b,c);});
+  b.addEventListener('touchstart',function(e){e.preventDefault();estouro(b,c);},{passive:false});
+  b.addEventListener('animationend',function(){
+    if(b.parentNode){b.parentNode.removeChild(b);
+    if(rodando&&c.n===corAlvo.n){vidas--;atuHud();if(vidas<=0) fimDeJogo();}}
+  });
+  ga.appendChild(b);
+}
+function estouro(b,c){
+  if(!b.parentNode||!rodando) return;
+  var r=b.getBoundingClientRect();var cx=r.left+r.width/2,cy=r.top+r.height/2,tam=r.width;
+  if(b.parentNode) b.parentNode.removeChild(b);
+  if(c.n===corAlvo.n){
+    zupiPop(tam);streak++;
+    var bonus=streak>=3?Math.floor(streak/3)*5:0;
+    pts+=10+bonus+Math.floor(nivel*1.5);atuHud();
+    var ag=document.createElement('div');ag.className='anel';
+    ag.style.cssText='position:fixed;left:'+cx+'px;top:'+cy+'px;width:'+tam+'px;height:'+tam+'px;margin:'+(-tam/2)+'px 0 0 '+(-tam/2)+'px;border:3px solid '+c.h+';background:transparent';
+    document.body.appendChild(ag);setTimeout(function(){if(ag.parentNode)ag.parentNode.removeChild(ag);},500);
+    for(var i=0;i<9;i++){(function(idx){
+      var g=document.createElement('div');g.className='gota';
+      var ang=(idx/9)*Math.PI*2,d=28+Math.random()*45;
+      g.style.cssText='position:fixed;left:'+cx+'px;top:'+cy+'px;width:'+(5+Math.random()*7)+'px;height:'+(5+Math.random()*7)+'px;background:'+c.g+';margin:-3px 0 0 -3px';
+      g.style.setProperty('--gx',Math.cos(ang)*d+'px');g.style.setProperty('--gy',Math.sin(ang)*d+'px');
+      document.body.appendChild(g);setTimeout(function(){if(g.parentNode)g.parentNode.removeChild(g);},700);
+    })(i);}
+    zupiFloat(cx,cy,'+'+pts,c.h);
+    if(streak>=3) zupiFloat(cx,cy-40,'x'+streak+'!','#FFB980');
+  } else {
+    zupiWrong();streak=0;vidas--;atuHud();
+    zupiFloat(cx,cy,'X','#F9C6D0');
+    if(vidas<=0) fimDeJogo();
+  }
+}
+function atuHud(){
+  document.getElementById('p').textContent=pts;
+  document.getElementById('v').textContent='❤️'.repeat(Math.max(0,vidas));
+  document.getElementById('st').textContent=streak;
+}
+function fimDeJogo(){
+  rodando=false;clearInterval(spInt);clearInterval(mudaInt);ga.innerHTML='';
+  document.getElementById('abar').style.display='none';
+  document.getElementById('fe').innerHTML=pts>250?'&#x1F3C6;':pts>120?'&#x2B50;':'&#x1F388;';
+  document.getElementById('ft').textContent=pts>250?'Mestre das Cores!!':pts>120?'Muito bom!':'Continue tentando!';
+  document.getElementById('fs').textContent=pts+' pontos! Nivel '+nivel+'!';
+  document.getElementById('of').style.display='flex';
+  if(pts>100) zupiConfete();
+}
+function reiniciar(){document.getElementById('of').style.display='none';ga.innerHTML='';iniciar();}
+</script>
+</body>
+</html>

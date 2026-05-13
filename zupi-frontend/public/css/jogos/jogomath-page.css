@@ -1,0 +1,18 @@
+/**
+ * Estilos da página: JogoMath.html
+ * Gerado/extraído do HTML — manter HTML e CSS separados.
+ */
+
+.prob{font-family:'Poppins',sans-serif;font-size:2.8rem;font-weight:900;margin:.5rem 0;line-height:1.2;}
+    .n1{color:#7EC8E6;}.op{color:#FFB980;margin:0 .35rem;}.n2{color:#A8D5BA;}.eq{color:#9CA3AF;margin:0 .3rem;}.qm{color:#C8B8F0;animation:qPulse 1s infinite alternate;}
+    @keyframes qPulse{from{transform:scale(1)}to{transform:scale(1.12)}}
+    .objs{display:flex;flex-wrap:wrap;justify-content:center;gap:4px;padding:.6rem;background:rgba(126,200,230,.07);border-radius:14px;min-height:56px;font-size:2rem;margin:.5rem 0;}
+    .obj{display:inline-block;animation:objIn .3s cubic-bezier(.34,1.56,.64,1) both;}
+    @keyframes objIn{from{transform:scale(0) rotate(-20deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+    .opts{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;margin:.8rem 0;}
+    .obt{padding:.9rem;border:2.5px solid rgba(126,200,230,.25);border-radius:16px;background:rgba(255,255,255,.85);color:#2D3748;font-family:'Poppins',sans-serif;font-size:1.5rem;font-weight:800;cursor:pointer;transition:all .25s cubic-bezier(.34,1.56,.64,1);}
+    .obt:hover{transform:scale(1.07) translateY(-3px);border-color:#7EC8E6;box-shadow:0 6px 18px rgba(126,200,230,.3);}
+    .obt.ok{background:linear-gradient(135deg,#A8D5BA,#7EC8E6);border-color:transparent;color:white;animation:zjPop .4s cubic-bezier(.34,1.56,.64,1);}
+    .obt.no{background:rgba(249,198,208,.3);border-color:#F9C6D0;animation:zjShake .35s ease;}
+    .nvbadge{display:inline-block;padding:.2rem .8rem;border-radius:50px;font-size:.78rem;font-weight:700;margin:.3rem 0;font-family:'Poppins',sans-serif;}
+    .streakm{font-size:.85rem;color:#FFB980;font-family:'Poppins',sans-serif;min-height:1.4rem;font-weight:700;}
