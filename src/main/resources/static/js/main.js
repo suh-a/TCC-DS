@@ -5,6 +5,7 @@
 
 // Inicialização quando o DOM estiver pronto
 document.addEventListener('DOMContentLoaded', function() {
+    if (window.ZupiTheme) window.ZupiTheme.initTheme();
     // Inicializar tooltips do Bootstrap (se necessário)
     const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
     tooltipTriggerList.map(function (tooltipTriggerEl) {
@@ -101,4 +102,5 @@ if (document.readyState === 'loading') {
 } else {
     highlightActiveNavLink();
 }
+
 

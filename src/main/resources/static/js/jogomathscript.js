@@ -207,3 +207,4 @@ const feedEl2=document.getElementById('feedback');
 Object.assign(window,{qEl:qEl2,objEl:objEl2,feedEl:feedEl2,ptsEl:document.getElementById('m-pts'),streakEl:document.getElementById('m-streak'),nivelEl:document.getElementById('m-level'),streakDisp:document.getElementById('streak-display'),progressBar:document.getElementById('progress-bar')});
 
 gerarPergunta();
+

@@ -8,7 +8,10 @@ public record ChildResponse(
         LocalDate birthDate,
         String schoolClass,
         String condition,
-        Integer age
+        Integer age,
+        String cpf,
+        String profilePhotoUrl,
+        boolean onboardingCompleted
 ) {
 
 }

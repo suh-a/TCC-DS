@@ -13,7 +13,10 @@ import java.util.List;
 public interface UserMapper {
 
     @Mapping(target = "children", ignore = true)
-    @Mapping(target = "events",ignore = true)
+    @Mapping(target = "events", ignore = true)
+    @Mapping(target = "twoFactorEnabled", ignore = true)
+    @Mapping(target = "profilePhotoUrl", ignore = true)
+    @Mapping(target = "birthDate", ignore = true)
     User toEntity(UserRequest userRequest);
 
     UserResponse toResponse(User user);

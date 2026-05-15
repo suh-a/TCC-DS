@@ -71,3 +71,4 @@ function displayProfileError(message) {
     mainContent.innerHTML = `<div class="alert alert-danger">${message}</div>`;
   }
 }
+

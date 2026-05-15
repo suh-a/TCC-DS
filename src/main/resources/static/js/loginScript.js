@@ -44,10 +44,14 @@ async function loginUser(event) {
 
         const responseData = await response.json();
 
-        alert('Login realizado com sucesso!');
         localStorage.setItem('userId', responseData.id);
+        localStorage.setItem('userType', responseData.userType || 'PESSOA_FISICA');
         localStorage.removeItem('dailyReportId');
-        window.location.href = '/dashboard';
+        if (responseData.userType === 'PESSOA_JURIDICA') {
+            window.location.href = '/dashboard-escola';
+        } else {
+            window.location.href = '/dashboard';
+        }
 
     } catch (error) {
         console.error('Erro ao fazer login:', error);

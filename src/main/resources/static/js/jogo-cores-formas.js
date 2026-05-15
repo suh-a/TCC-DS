@@ -283,3 +283,4 @@ function reiniciarJogo() {
 
 // Estilos já estão no CSS, não precisamos adicionar dinamicamente
 
+

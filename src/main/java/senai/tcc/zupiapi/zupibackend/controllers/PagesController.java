@@ -1,7 +1,9 @@
 package senai.tcc.zupiapi.zupibackend.controllers;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class PagesController {
@@ -20,7 +22,24 @@ public class PagesController {
     @GetMapping("/planos") public String planos() { return "planos"; }
     @GetMapping("/contatos") public String contatos() { return "contato"; }
     @GetMapping("/configuracoes") public String configuracoes() { return "configuracoes"; }
-    @GetMapping("/videos") public String videos() { return "videos"; }
+    @GetMapping("/atividades-interativas") public String atividades() { return "atividades-interativas"; }
+    @GetMapping("/guia-casa") public String guiaCasa() { return "guia-casa"; }
+    @GetMapping("/desafios-semanais") public String desafios() { return "desafios-semanais"; }
+    @GetMapping("/dicas-inclusao") public String dicas() { return "dicas-inclusao"; }
+    @GetMapping("/biblioteca") public String biblioteca() { return "biblioteca"; }
+    @GetMapping("/feed") public String feed() { return "feed"; }
+    @GetMapping("/redefinir-senha") public String redefinirSenha() { return "redefinir-senha"; }
+    @GetMapping("/esqueci-senha") public String esqueciSenha() { return "esqueci-senha"; }
+    @GetMapping("/cadastro-escola") public String cadastroEscola() { return "cadastro-escola"; }
+    @GetMapping("/dashboard-escola") public String dashboardEscola() { return "dashboard-escola"; }
+    @GetMapping("/onboarding-crianca") public String onboarding(@RequestParam(required = false) Long childId, Model model) {
+        model.addAttribute("childId", childId);
+        return "onboarding-crianca";
+    }
+    @GetMapping("/pagamento") public String pagamento(@RequestParam(required = false) String plano, Model model) {
+        model.addAttribute("plano", plano != null ? plano : "pessoa-fisica");
+        return "pagamento";
+    }
     // JOGOS
     @GetMapping("/menuJogos") public String menuJogos() { return "menuJogos"; }
     @GetMapping("/jogoMemoria") public String jogoMemoria() { return "jogoMemoria"; }

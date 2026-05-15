@@ -12,10 +12,15 @@ import senai.tcc.zupiapi.zupibackend.dto.request.UserRequest;
 import senai.tcc.zupiapi.zupibackend.dto.response.UserResponse;
 import senai.tcc.zupiapi.zupibackend.exceptions.BusinessException;
 import senai.tcc.zupiapi.zupibackend.exceptions.ResourceNotFoundException;
+import senai.tcc.zupiapi.zupibackend.model.School;
 import senai.tcc.zupiapi.zupibackend.model.User;
+import senai.tcc.zupiapi.zupibackend.model.enums.UserType;
+import senai.tcc.zupiapi.zupibackend.repositories.SchoolRepository;
 import senai.tcc.zupiapi.zupibackend.repositories.UserRepository;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 
 @Service
@@ -26,6 +31,9 @@ public class UserService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private SchoolRepository schoolRepository;
 
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -56,10 +64,41 @@ public class UserService {
             );
         }
 
-        User userEntity = userMapper.toEntity(user);
+        UserType type = user.userType() != null ? user.userType() : UserType.PESSOA_FISICA;
 
+        User userEntity = userMapper.toEntity(user);
         userEntity.setPassword(passwordEncoder.encode(user.password()));
-        userEntity = userRepository.save(userEntity);
+        userEntity.setUserType(type);
+
+        if (type == UserType.PESSOA_JURIDICA) {
+            String cnpj = onlyDigits(user.cnpj());
+            if (cnpj.length() != 14) {
+                throw new BusinessException("CNPJ inválido");
+            }
+            if (schoolRepository.existsByCnpj(cnpj)) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "CNPJ já cadastrado");
+            }
+            userEntity.setCpf(null);
+            userEntity = userRepository.save(userEntity);
+
+            School school = new School();
+            school.setName(user.name());
+            school.setCnpj(cnpj);
+            school.setEmail(user.email());
+            school.setAccount(userEntity);
+            schoolRepository.save(school);
+        } else {
+            String cpf = onlyDigits(user.cpf());
+            if (cpf.length() != 11) {
+                throw new BusinessException("CPF inválido");
+            }
+            userEntity.setCpf(cpf);
+            userEntity.setBirthDate(user.birthDate());
+            if (userEntity.getBirthDate() == null) {
+                throw new BusinessException("Data de nascimento é obrigatória");
+            }
+            userEntity = userRepository.save(userEntity);
+        }
 
         return userMapper.toResponse(userEntity);
     }
@@ -68,16 +107,58 @@ public class UserService {
         User userEntity = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
 
-        if(!user.password().isEmpty())
+        if (user.password() != null && !user.password().isBlank() && !user.password().startsWith("*")) {
             userEntity.setPassword(passwordEncoder.encode(user.password()));
-        if(!user.email().isEmpty())
+        }
+        if (user.email() != null && !user.email().isBlank()) {
             userEntity.setEmail(user.email());
-        if (!user.name().isEmpty())
+        }
+        if (user.name() != null && !user.name().isBlank()) {
             userEntity.setName(user.name());
+        }
+        if (user.cpf() != null && !user.cpf().isBlank()) {
+            userEntity.setCpf(user.cpf());
+        }
+        if (user.userType() != null) {
+            userEntity.setUserType(user.userType());
+        }
 
         userEntity = userRepository.save(userEntity);
 
         return userMapper.toResponse(userEntity);
+    }
+
+    public UserResponse updateEmail(Long id, String newEmail) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
+        if (userRepository.existsByEmail(newEmail) && !Objects.equals(user.getEmail(), newEmail)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "E-mail já cadastrado");
+        }
+        user.setEmail(newEmail);
+        return userMapper.toResponse(userRepository.save(user));
+    }
+
+    public void updatePassword(Long id, String currentPassword, String newPassword) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Senha atual incorreta");
+        }
+        resetPasswordDirect(id, newPassword);
+    }
+
+    public void resetPasswordDirect(Long id, String newPassword) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
+
+    public UserResponse setTwoFactor(Long id, boolean enabled) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
+        user.setTwoFactorEnabled(enabled);
+        return userMapper.toResponse(userRepository.save(user));
     }
 
     public UserResponse login(LoginDTO user) {
@@ -89,7 +170,8 @@ public class UserService {
                 throw new RuntimeException();
             }
 
-            return userMapper.toResponse(userEntity);
+            UserResponse response = userMapper.toResponse(userEntity);
+            return response;
 
         } catch (Exception e) {
             throw new ResponseStatusException(
@@ -97,5 +179,10 @@ public class UserService {
                     "Email ou senha inválidos"
             );
         }
+    }
+
+    private static String onlyDigits(String value) {
+        if (value == null) return "";
+        return value.replaceAll("\\D", "");
     }
 }

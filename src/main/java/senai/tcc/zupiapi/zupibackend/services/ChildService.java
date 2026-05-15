@@ -42,10 +42,30 @@ public class ChildService {
     }
 
     public void validateAgeChild(Child child) {
-        int age = Period.between(child.getBirthDate(), LocalDate.now()).getYears();
+        Integer age = child.getAge();
+        if (age == null && child.getBirthDate() != null) {
+            age = Period.between(child.getBirthDate(), LocalDate.now()).getYears();
+            child.setAge(age);
+        }
+        if (age == null) {
+            throw new BusinessException("Informe a idade da criança");
+        }
+        if (age < 5 || age > 25) {
+            throw new BusinessException("A idade deve estar entre 5 e 25 anos");
+        }
+    }
 
-        if (age < 6) {
-            throw new BusinessException("Criança deve ter pelo menos 6 anos");
+    private String normalizeCpf(String cpf) {
+        if (cpf == null) return null;
+        return cpf.replaceAll("\\D", "");
+    }
+
+    private void validateCpf(String cpf) {
+        if (cpf == null || cpf.isBlank()) {
+            throw new BusinessException("CPF é obrigatório");
+        }
+        if (cpf.length() != 11) {
+            throw new BusinessException("CPF inválido");
         }
     }
 
@@ -54,7 +74,13 @@ public class ChildService {
                 .orElseThrow(()-> new ResourceNotFoundException("User not found"));
 
         Child child = childMapper.toEntity(childRequest);
-
+        if (childRequest.age() != null) {
+            child.setAge(childRequest.age());
+        }
+        if (childRequest.cpf() != null) {
+            child.setCpf(normalizeCpf(childRequest.cpf()));
+        }
+        validateCpf(child.getCpf());
         validateAgeChild(child);
 
         child.setResponsible(user);
@@ -67,9 +93,17 @@ public class ChildService {
                 .orElseThrow(()-> new ResourceNotFoundException("Child not found"));
 
         child.setName(childRequest.name());
+        if (childRequest.age() != null) {
+            child.setAge(childRequest.age());
+        }
+        if (childRequest.cpf() != null) {
+            child.setCpf(childRequest.cpf());
+            validateCpf(child.getCpf());
+        }
         child.setBirthDate(childRequest.birthDate());
         child.setSchoolClass(childRequest.schoolClass());
         child.setCondition(childRequest.condition());
+        validateAgeChild(child);
 
         return childMapper.toResponse(childRepository.save(child));
     }

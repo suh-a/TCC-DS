@@ -6,6 +6,8 @@ import java.time.LocalDate;
 
 public record ChildRequest(
         String name,
+        Integer age,
+        String cpf,
         LocalDate birthDate,
         String schoolClass,
         String condition,

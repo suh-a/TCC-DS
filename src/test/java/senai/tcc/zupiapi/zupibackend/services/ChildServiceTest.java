@@ -67,9 +67,9 @@ class ChildServiceTest {
         user.setId(1L);
         user.setName("Pai");
 
-        childRequest = new ChildRequest("João", LocalDate.of(2020, 1, 1), "1º Ano", "Normal", 1L);
+        childRequest = new ChildRequest("João", 8, "12345678901", LocalDate.of(2016, 1, 1), "1º Ano", "Normal", 1L);
 
-        childResponse = new ChildResponse(1L, "João", LocalDate.of(2020, 1, 1), "1º Ano", "Normal", 4);
+        childResponse = new ChildResponse(1L, "João", LocalDate.of(2020, 1, 1), "1º Ano", "Normal", 8, "12345678901", null, false);
 
         childrenList = Arrays.asList(child);
         responsesList = Arrays.asList(childResponse);
@@ -193,7 +193,7 @@ class ChildServiceTest {
     void testSaveUserNotFound() {
         when(userRepository.findById(99L)).thenReturn(Optional.empty());
 
-        childRequest = new ChildRequest("João", LocalDate.now(), "1º", "Normal", 99L);
+        childRequest = new ChildRequest("João", 8, "12345678901", LocalDate.now(), "1º", "Normal", 99L);
 
         assertThrows(ResourceNotFoundException.class, () -> service.save(childRequest));
     }

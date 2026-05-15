@@ -17,6 +17,7 @@
   <!-- Custom CSS -->
   <link rel="stylesheet" href="/css/main.css" />
   <link rel="stylesheet" href="/css/dashboard.css" />
+  <link rel="stylesheet" href="/css/dark-mode.css" />
 
   <link rel="icon" href="../assets/img/favicon.png" type="image/png">
 </head>
@@ -57,13 +58,16 @@
               <a class="nav-link text-white" href="/dashboard">Dashboard</a>
             </li>
             <li class="nav-item mb-2">
-              <a class="nav-link text-white" href="/selecao-perfil">Perfis-Relatórios</a>
+              <a class="nav-link text-white" href="/selecao-perfil">Relatórios-Criança</a>
             </li>
             <li class="nav-item mb-2">
               <a class="nav-link text-white" href="/agenda">Agenda</a>
             </li>
             <li class="nav-item mb-2">
-              <a class="nav-link text-white" href="/videos">Vídeos</a>
+              <a class="nav-link text-white" href="/biblioteca">Biblioteca</a>
+            </li>
+            <li class="nav-item mb-2">
+              <a class="nav-link text-white" href="/feed">Feed</a>
             </li>
             <li class="nav-item mb-2">
               <a class="nav-link text-white" href="/configuracoes">Configurações</a>
@@ -89,13 +93,16 @@
                 <a class="nav-link text-white active" aria-current="page" href="/dashboard">Dashboard</a>
               </li>
               <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/selecao-perfil">Perfis-Relatórios</a>
+                <a class="nav-link text-white" href="/selecao-perfil">Relatórios-Criança</a>
               </li>
               <li class="nav-item mb-2">
                 <a class="nav-link text-white" href="/agenda">Agenda</a>
               </li>
               <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/videos">Vídeos</a>
+                <a class="nav-link text-white" href="/biblioteca">Biblioteca</a>
+              </li>
+              <li class="nav-item mb-2">
+                <a class="nav-link text-white" href="/feed">Feed</a>
               </li>
               <li class="nav-item mb-2">
                 <a class="nav-link text-white" href="/configuracoes">Configurações</a>
@@ -245,8 +252,16 @@
                       <input type="text" class="form-control" id="childName" placeholder="Digite o nome" required>
                     </div>
                     <div class="mb-3">
-                      <label for="childBirthdate" class="form-label fw-600">Data de Aniversário</label>
-                      <input type="date" class="form-control" id="childBirthdate" required>
+                      <label for="childAge" class="form-label fw-600">Idade (5 a 25 anos)</label>
+                      <input type="number" class="form-control" id="childAge" min="5" max="25" required>
+                    </div>
+                    <div class="mb-3">
+                      <label for="childCpf" class="form-label fw-600">CPF</label>
+                      <input type="text" class="form-control" id="childCpf" placeholder="000.000.000-00" required maxlength="14">
+                    </div>
+                    <div class="mb-3">
+                      <label for="childBirthdate" class="form-label fw-600">Data de Nascimento (opcional)</label>
+                      <input type="date" class="form-control" id="childBirthdate">
                     </div>
                     <div class="mb-3">
                       <label for="childGrade" class="form-label fw-600">Ano Escolar</label>
@@ -275,7 +290,7 @@
                 </div>
                 <div class="modal-footer border-top pt-3">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                  <button type="button" class="btn btn-primary" id="addChildButton" data-bs-dismiss="modal" onclick="cadastrarCrianca()">Adicionar Criança</button>
+                  <button type="button" class="btn btn-primary" id="addChildButton">Adicionar Criança</button>
                 </div>
               </div>
             </div>
@@ -318,8 +333,8 @@
             <div class="col-md-6 col-lg-4">
               <div class="card h-100">
                 <div class="card-body text-center">
-                  <h3 class="card-title h5">Vídeos Educativos</h3>
-                  <a href="/videos" class="btn btn-primary">Assistir</a>
+                  <h3 class="card-title h5">Feed Personalizado</h3>
+                  <a href="/feed" class="btn btn-primary">Ver Feed</a>
                 </div>
               </div>
             </div>
@@ -327,7 +342,7 @@
               <div class="card h-100">
                 <div class="card-body text-center">
                   <h3 class="card-title h5">Guias para Casa</h3>
-                  <a  class="btn btn-primary">Ver Guias</a>
+                  <a href="/guia-casa" class="btn btn-primary">Ver Guias</a>
                 </div>
               </div>
             </div>
@@ -335,7 +350,7 @@
               <div class="card h-100">
                 <div class="card-body text-center">
                   <h3 class="card-title h5">Dicas de Inclusão</h3>
-                  <a class="btn btn-primary">Ler Dicas</a>
+                  <a href="/dicas-inclusao" class="btn btn-primary">Ler Dicas</a>
                 </div>
               </div>
             </div>
@@ -343,7 +358,7 @@
               <div class="card h-100">
                 <div class="card-body text-center">
                   <h3 class="card-title h5">Atividades Interativas</h3>
-                  <a class="btn btn-primary">Explorar</a>
+                  <a href="/atividades-interativas" class="btn btn-primary">Explorar</a>
                 </div>
               </div>
             </div>
@@ -351,7 +366,7 @@
               <div class="card h-100">
                 <div class="card-body text-center">
                   <h3 class="card-title h5">Desafios Semanais</h3>
-                  <a class="btn btn-primary">Participar</a>
+                  <a href="/desafios-semanais" class="btn btn-primary">Participar</a>
                 </div>
               </div>
             </div>
@@ -367,6 +382,8 @@
     crossorigin="anonymous"></script>
   <!-- Custom JS -->
   <script src="/js/main.js"></script>
+  <script src="/js/theme.js"></script>
+  <script src="/js/game-score.js"></script>
   <!-- Script Dashboard -->
   <script src="/js/dashboardScript.js"></script>
 </body>

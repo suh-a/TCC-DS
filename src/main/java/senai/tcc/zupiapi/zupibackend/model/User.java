@@ -1,13 +1,8 @@
 package senai.tcc.zupiapi.zupibackend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import senai.tcc.zupiapi.zupibackend.model.enums.UserType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +22,18 @@ public class User {
     private String email;
 
     private String password;
+
+    @Column(unique = true)
+    private String cpf;
+
+    private java.time.LocalDate birthDate;
+
+    @Enumerated(EnumType.STRING)
+    private UserType userType = UserType.PESSOA_FISICA;
+
+    private boolean twoFactorEnabled;
+
+    private String profilePhotoUrl;
 
     @OneToMany(mappedBy = "responsible")
     private List<Child> children = new ArrayList<>();
@@ -73,6 +80,46 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public java.time.LocalDate getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(java.time.LocalDate birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType = userType;
+    }
+
+    public boolean isTwoFactorEnabled() {
+        return twoFactorEnabled;
+    }
+
+    public void setTwoFactorEnabled(boolean twoFactorEnabled) {
+        this.twoFactorEnabled = twoFactorEnabled;
+    }
+
+    public String getProfilePhotoUrl() {
+        return profilePhotoUrl;
+    }
+
+    public void setProfilePhotoUrl(String profilePhotoUrl) {
+        this.profilePhotoUrl = profilePhotoUrl;
     }
 
     public List<Child> getChildren() {

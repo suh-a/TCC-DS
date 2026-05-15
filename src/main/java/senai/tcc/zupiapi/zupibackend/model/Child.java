@@ -25,6 +25,13 @@ public class Child {
     private String condition;
     private Integer age;
 
+    @Column(unique = true)
+    private String cpf;
+
+    private String profilePhotoUrl;
+    private String medicalReportUrl;
+    private boolean onboardingCompleted;
+
     @OneToMany(mappedBy = "child")
     @JsonIgnore
     private List<Event> activits = new ArrayList<>();
@@ -96,6 +103,9 @@ public class Child {
     }
 
     public Integer getAge() {
+        if (age != null) {
+            return age;
+        }
         if (birthDate == null) {
             return null;
         }
@@ -104,6 +114,38 @@ public class Child {
 
     public void setAge(Integer age) {
         this.age = age;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public String getProfilePhotoUrl() {
+        return profilePhotoUrl;
+    }
+
+    public void setProfilePhotoUrl(String profilePhotoUrl) {
+        this.profilePhotoUrl = profilePhotoUrl;
+    }
+
+    public String getMedicalReportUrl() {
+        return medicalReportUrl;
+    }
+
+    public void setMedicalReportUrl(String medicalReportUrl) {
+        this.medicalReportUrl = medicalReportUrl;
+    }
+
+    public boolean isOnboardingCompleted() {
+        return onboardingCompleted;
+    }
+
+    public void setOnboardingCompleted(boolean onboardingCompleted) {
+        this.onboardingCompleted = onboardingCompleted;
     }
 
     @JsonIgnore

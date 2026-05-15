@@ -27,7 +27,11 @@ public class SecurityConfig {
                     "/planos", "/contatos", "/erro",
                     // Todas as páginas do site
                     "/dashboard", "/selecao-perfil", "/relatorios",
-                    "/perfil", "/agenda", "/configuracoes", "/videos",
+                    "/perfil", "/agenda", "/configuracoes",
+                    "/atividades-interativas", "/guia-casa", "/desafios-semanais",
+                    "/dicas-inclusao", "/biblioteca", "/feed", "/esqueci-senha",
+                    "/redefinir-senha", "/cadastro-escola", "/dashboard-escola",
+                    "/onboarding-crianca", "/pagamento",
                     // Menu e todos os jogos
                     "/menuJogos",
                     "/jogoMemoria", "/JogoLigarObjetos", "/jogoCoresFormas",

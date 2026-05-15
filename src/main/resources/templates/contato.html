@@ -169,17 +169,29 @@
       btn.disabled = true;
       btn.textContent = 'Enviando...';
 
-      // Simula envio
-      setTimeout(() => {
-        feedback.innerHTML = '<div class="alert alert-success"><strong>Mensagem enviada!</strong> Obrigado pelo contato.</div>';
+      fetch(window.location.origin + '/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: document.getElementById('nome').value,
+          email: document.getElementById('email').value,
+          subject: document.getElementById('assunto').value,
+          message: document.getElementById('mensagem').value
+        })
+      }).then(res => {
+        feedback.innerHTML = res.ok
+          ? '<div class="alert alert-success"><strong>Mensagem enviada!</strong> Nossa equipe (equipezupi@gmail.com) responderá em breve.</div>'
+          : '<div class="alert alert-danger">Não foi possível enviar. Tente novamente.</div>';
+        if (res.ok) e.target.reset();
         btn.disabled = false;
         btn.textContent = 'Enviar';
-        e.target.reset();
-        setTimeout(() => {
-          feedback.innerHTML = '';
-        }, 6000);
-      }, 1000);
+      }).catch(() => {
+        feedback.innerHTML = '<div class="alert alert-danger">Erro de conexão.</div>';
+        btn.disabled = false;
+        btn.textContent = 'Enviar';
+      });
     }
   </script>
 </body>
 </html>
+

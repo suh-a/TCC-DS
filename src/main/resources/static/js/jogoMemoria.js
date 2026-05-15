@@ -262,3 +262,4 @@ function reiniciarFase(){
 }
 
 function shuffle(arr){ return arr.sort(()=>Math.random()-.5); }
+

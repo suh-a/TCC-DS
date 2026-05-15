@@ -1,0 +1,35 @@
+[data-theme="dark"] {
+  --zupi-bg: #1a202c;
+  --zupi-text: #e2e8f0;
+  --zupi-white: #2d3748;
+  --zupi-primary-solid: #63b3ed;
+}
+
+[data-theme="dark"] body {
+  background-color: var(--zupi-bg);
+  color: var(--zupi-text);
+}
+
+[data-theme="dark"] .navbar,
+[data-theme="dark"] .card,
+[data-theme="dark"] .modal-content,
+[data-theme="dark"] .offcanvas {
+  background-color: #2d3748 !important;
+  color: var(--zupi-text);
+}
+
+[data-theme="dark"] .form-control,
+[data-theme="dark"] .form-select {
+  background-color: #1a202c;
+  border-color: #4a5568;
+  color: var(--zupi-text);
+}
+
+[data-theme="dark"] .dashboard-sidebar,
+[data-theme="dark"] .dashboard-offcanvas {
+  background: linear-gradient(180deg, #2c5282 0%, #1a365d 100%) !important;
+}
+
+[data-theme="dark"] .text-muted {
+  color: #a0aec0 !important;
+}
