@@ -77,7 +77,7 @@ public class ChildReportServiceTest {
 
         childReport = new ChildReport();
         childReport.setId(1L);
-        childReport.setDate(LocalDate.from(Instant.parse("2025-03-20T00:00:00Z")));
+        childReport.setDate(LocalDate.parse("2025-03-20"));
         childReport.setChild(child);
 
         childReportRequest = new ChildReportRequest(
@@ -121,7 +121,7 @@ public class ChildReportServiceTest {
                         anyLong(),
                         argThat(date ->
                                 date != null &&
-                                        date.isBefore(ChronoLocalDate.from(Instant.now())))
+                                        date.isBefore(LocalDate.now()))
                 );
     }
 
@@ -219,13 +219,15 @@ public class ChildReportServiceTest {
     @Test
     void shouldAddScoreToChildReport() {
         when(childRepository.findById(anyLong())).thenReturn(Optional.of(child));
+        when(childReportRepository.findReportTodayByChildId(any())).thenReturn(Optional.empty());
         when(reportMapper.toResponse(any())).thenReturn(childReportResponse);
         when(childReportScoreService.save(any(), any())).thenReturn(childReportScore);
-        when(childReportRepository.save(any())).thenReturn(childReport);
+        when(childReportRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
         childReportService.saveChildReportByChildId(childReportRequest, 1L);
 
-        assertEquals(1, childReport.getScores().size());
+        verify(childReportScoreService, times(1)).save(any(), any());
+        verify(childReportRepository, times(2)).save(any());
     }
 
     // 10

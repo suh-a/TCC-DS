@@ -17,6 +17,20 @@ document.addEventListener('DOMContentLoaded', function() {
     popoverTriggerList.map(function (popoverTriggerEl) {
         return new bootstrap.Popover(popoverTriggerEl);
     });
+
+    // Inicializar logout buttons
+    document.querySelectorAll('[data-action="logout"]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (typeof ZupiAPI !== 'undefined') {
+                ZupiAPI.logout();
+            } else {
+                localStorage.clear();
+                document.cookie = 'zupiToken=; path=/; max-age=0';
+                window.location.href = '/login';
+            }
+        });
+    });
     
     // Inicializar funcionalidade de swipe para sidebar
     initSwipeSidebar();

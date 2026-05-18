@@ -11,6 +11,8 @@ public record ChildRequest(
         LocalDate birthDate,
         String schoolClass,
         String condition,
-        Long responsibleId
+        Long responsibleId,
+        boolean schoolLinked,
+        String schoolName
 ) {
 }

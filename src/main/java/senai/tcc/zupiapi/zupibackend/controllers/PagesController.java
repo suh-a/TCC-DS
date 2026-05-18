@@ -14,7 +14,15 @@ public class PagesController {
     @GetMapping("/login") public String login() { return "login"; }
     @GetMapping("/cadastro") public String cadastro() { return "cadastro"; }
     @GetMapping("/dashboard") public String dashboard() { return "dashboard-pais"; }
+    @GetMapping("/dashboard-crianca") public String dashboardCrianca() { return "dashboard-crianca"; }
+    @GetMapping("/dashboard-aluno") public String dashboardAluno() { return "dashboard-crianca"; }
+    @GetMapping("/cadastro-dependentes") public String cadastroDependentes() { return "cadastro-dependentes"; }
+    @GetMapping("/perfil-responsavel") public String perfilResponsavel() { return "perfil-responsavel"; }
+    @GetMapping("/perfil-crianca") public String perfilCrianca() { return "perfil-crianca"; }
+    @GetMapping("/ajuda") public String ajuda() { return "ajuda"; }
+    @GetMapping("/recompensas") public String recompensas() { return "recompensas"; }
     @GetMapping("/selecao-perfil") public String selecaoPerfil() { return "selecao-perfil"; }
+    @GetMapping("/selecao-relatorios") public String selecaoRelatorios() { return "selecao-relatorios"; }
     @GetMapping("/relatorios") public String relatorios() { return "relatorios"; }
     @GetMapping("/perfil") public String perfil() { return "perfil-criancas"; }
     @GetMapping("/agenda") public String agenda() { return "agenda"; }
@@ -32,6 +40,8 @@ public class PagesController {
     @GetMapping("/esqueci-senha") public String esqueciSenha() { return "esqueci-senha"; }
     @GetMapping("/cadastro-escola") public String cadastroEscola() { return "cadastro-escola"; }
     @GetMapping("/dashboard-escola") public String dashboardEscola() { return "dashboard-escola"; }
+    @GetMapping("/dashboard-docente") public String dashboardDocente() { return "dashboard-docente"; }
+    @GetMapping("/dashboard-admin") public String dashboardAdmin() { return "dashboard-admin"; }
     @GetMapping("/onboarding-crianca") public String onboarding(@RequestParam(required = false) Long childId, Model model) {
         model.addAttribute("childId", childId);
         return "onboarding-crianca";

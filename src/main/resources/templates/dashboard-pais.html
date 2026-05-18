@@ -58,22 +58,25 @@
               <a class="nav-link text-white" href="/dashboard">Dashboard</a>
             </li>
             <li class="nav-item mb-2">
-              <a class="nav-link text-white" href="/selecao-perfil">Relatórios-Criança</a>
+              <a class="nav-link text-white" href="/selecao-relatorios">Relatórios</a>
+            </li>
+            <li class="nav-item mb-2">
+              <a class="nav-link text-white" href="/cadastro-dependentes">Cadastro de dependentes</a>
             </li>
             <li class="nav-item mb-2">
               <a class="nav-link text-white" href="/agenda">Agenda</a>
             </li>
             <li class="nav-item mb-2">
-              <a class="nav-link text-white" href="/biblioteca">Biblioteca</a>
+              <a class="nav-link text-white" href="/ajuda">Ajuda?</a>
             </li>
             <li class="nav-item mb-2">
-              <a class="nav-link text-white" href="/feed">Feed</a>
+              <a class="nav-link text-white" href="/perfil-responsavel">Perfil</a>
             </li>
             <li class="nav-item mb-2">
               <a class="nav-link text-white" href="/configuracoes">Configurações</a>
             </li>
             <li class="nav-item mt-auto">
-              <a class="nav-link text-white" href="/">Sair</a>
+              <a class="nav-link text-white" href="#" data-action="logout">Sair</a>
             </li>
           </ul>
         </div>
@@ -93,22 +96,25 @@
                 <a class="nav-link text-white active" aria-current="page" href="/dashboard">Dashboard</a>
               </li>
               <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/selecao-perfil">Relatórios-Criança</a>
+                <a class="nav-link text-white" href="/selecao-relatorios">Relatórios</a>
+              </li>
+              <li class="nav-item mb-2">
+                <a class="nav-link text-white" href="/cadastro-dependentes">Cadastro de dependentes</a>
               </li>
               <li class="nav-item mb-2">
                 <a class="nav-link text-white" href="/agenda">Agenda</a>
               </li>
               <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/biblioteca">Biblioteca</a>
+                <a class="nav-link text-white" href="/ajuda">Ajuda?</a>
               </li>
               <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/feed">Feed</a>
+                <a class="nav-link text-white" href="/perfil-responsavel">Perfil</a>
               </li>
               <li class="nav-item mb-2">
                 <a class="nav-link text-white" href="/configuracoes">Configurações</a>
               </li>
               <li class="nav-item mt-auto">
-                <a class="nav-link text-white" href="/">Sair</a>
+                <a class="nav-link text-white" href="#" data-action="logout">Sair</a>
               </li>
             </ul>
           </nav>
@@ -144,6 +150,45 @@
             </div>
           </div>
         </header>
+
+        <!-- CARROSSEL (wireframe responsável) -->
+        <section class="mb-4">
+          <div id="dashCarousel" class="carousel slide dash-carousel" data-bs-ride="carousel">
+            <div class="carousel-inner">
+              <div class="carousel-item active">
+                <p class="mb-0 fs-5 fw-semibold">Bem-vindo ao painel Zupi — acompanhe o desenvolvimento das crianças</p>
+              </div>
+              <div class="carousel-item">
+                <p class="mb-0 fs-5 fw-semibold">Novidades: atividades personalizadas e relatórios atualizados</p>
+              </div>
+              <DIV class="carousel-item">
+                <p class="mb-0 fs-5 fw-semibold">Dicas de inclusão e guias para casa disponíveis no menu</p>
+              </DIV>
+            </DIV>
+            <button class="carousel-control-prev" type="button" data-bs-target="#dashCarousel" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#dashCarousel" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            </button>
+          </DIV>
+        </section>
+
+        <!-- ATALHO CADASTRAR + GRADE DE AÇÕES -->
+        <section class="mb-5">
+          <div class="row g-3 mb-3">
+            <div class="col-md-3">
+              <a href="/cadastro-dependentes" class="dash-add-card" aria-label="Cadastrar dependente">+</a>
+            </DIV>
+          </DIV>
+          <div class="row g-3 dash-quick-grid">
+            <div class="col-md-4"><a href="/guia-casa" class="dash-quick-btn">Guias para casa</a></div>
+            <div class="col-md-4"><a href="/dicas-inclusao" class="dash-quick-btn">Dicas de inclusão</a></div>
+            <div class="col-md-4"><a href="/relatorios" class="dash-quick-btn">Relatórios rápidos</a></div>
+            <div class="col-md-4"><a href="#" class="dash-quick-btn">Anotações</a></div>
+            <div class="col-md-4"><a href="/selecao-perfil" class="dash-quick-btn">Alternar entre perfis</a></div>
+          </DIV>
+        </section>
 
         <!-- CHAMADO PARA JOGOS — HERO COM MASCOTE -->
         <section class="mb-5">
@@ -195,7 +240,7 @@
                 <div class="card-body text-center">
                   <h3 class="card-title h5">Relatórios rápidos</h3>
                   <p class="card-text">
-                    <a href="/selecao-perfil" class="btn btn-primary">Ver relatórios</a>
+                    <a href="/selecao-relatorios" class="btn btn-primary">Ver relatórios</a>
                   </p>
                 </div>
               </div>
@@ -265,26 +310,29 @@
                     </div>
                     <div class="mb-3">
                       <label for="childGrade" class="form-label fw-600">Ano Escolar</label>
-                      <select class="form-select" id="childGrade" required>
-                        <option value="">Selecionar ano escolar</option>
-                        <option value="pre">Pré-escolar</option>
-                        <option value="1">1º Ano</option>
-                        <option value="2">2º Ano</option>
-                        <option value="3">3º Ano</option>
-                        <option value="4">4º Ano</option>
-                        <option value="5">5º Ano</option>
+                      <input type="text" class="form-control" id="childGrade" placeholder="Ex: 3º Ano, Pré-escolar" required>
+                    </div>
+                    <div class="mb-3">
+                      <label for="childCondition" class="form-label fw-600">Condição/Diagnóstico</label>
+                      <select class="form-select" id="childCondition" required>
+                        <option value="">Selecione uma condição</option>
+                        <option value="Autismo">Autismo (TEA)</option>
+                        <option value="TDAH">TDAH</option>
+                        <option value="Dislexia">Dislexia</option>
+                        <option value="Discalculia">Discalculia</option>
+                        <option value="Dispraxia">Dispraxia</option>
+                        <option value="Altas Habilidades">Altas Habilidades/Superdotação</option>
+                        <option value="Deficiência Auditiva">Deficiência Auditiva</option>
+                        <option value="Deficiência Visual">Deficiência Visual</option>
+                        <option value="Deficiência Motora">Deficiência Motora</option>
+                        <option value="Múltiplas">Múltiplas Deficiências</option>
+                        <option value="Outro">Outro</option>
                       </select>
                     </div>
                     <div class="mb-3">
-                      <label for="childCondition" class="form-label fw-600">Condição</label>
-                      <select class="form-select" id="childCondition" required>
-                        <option value="">Selecionar condição</option>
-                        <option value="typical">Desenvolvimento Típico</option>
-                        <option value="tdah">TDAH</option>
-                        <option value="autismo">Autismo</option>
-                        <option value="dislexia">Dislexia</option>
-                        <option value="outro">Outro</option>
-                      </select>
+                      <label for="childMedicalReport" class="form-label fw-600">Laudo Médico (Opcional)</label>
+                      <input type="file" class="form-control" id="childMedicalReport" accept=".pdf,.doc,.docx,.jpg,.png">
+                      <small class="form-text text-muted">Formatos aceitos: PDF, DOC, DOCX, JPG, PNG</small>
                     </div>
                   </form>
                 </div>
@@ -328,13 +376,14 @@
 
         <!-- RECURSOS E ATIVIDADES -->
         <section class="mb-5">
-          <h2 class="h4 mb-4">Recursos & Atividades</h2>
+          <h2 class="h4 mb-4">Recursos para Responsáveis</h2>
           <div class="row g-4">
             <div class="col-md-6 col-lg-4">
               <div class="card h-100">
                 <div class="card-body text-center">
                   <h3 class="card-title h5">Feed Personalizado</h3>
-                  <a href="/feed" class="btn btn-primary">Ver Feed</a>
+                  <p class="card-text small text-muted">Conteúdos sobre neurodivergência e desenvolvimento</p>
+                  <a href="/feed" class="btn btn-primary btn-sm">Ver Feed</a>
                 </div>
               </div>
             </div>
@@ -342,7 +391,8 @@
               <div class="card h-100">
                 <div class="card-body text-center">
                   <h3 class="card-title h5">Guias para Casa</h3>
-                  <a href="/guia-casa" class="btn btn-primary">Ver Guias</a>
+                  <p class="card-text small text-muted">Estratégias práticas para o dia a dia</p>
+                  <a href="/guia-casa" class="btn btn-primary btn-sm">Ver Guias</a>
                 </div>
               </div>
             </div>
@@ -350,23 +400,8 @@
               <div class="card h-100">
                 <div class="card-body text-center">
                   <h3 class="card-title h5">Dicas de Inclusão</h3>
-                  <a href="/dicas-inclusao" class="btn btn-primary">Ler Dicas</a>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-              <div class="card h-100">
-                <div class="card-body text-center">
-                  <h3 class="card-title h5">Atividades Interativas</h3>
-                  <a href="/atividades-interativas" class="btn btn-primary">Explorar</a>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-              <div class="card h-100">
-                <div class="card-body text-center">
-                  <h3 class="card-title h5">Desafios Semanais</h3>
-                  <a href="/desafios-semanais" class="btn btn-primary">Participar</a>
+                  <p class="card-text small text-muted">Apoio na inclusão das crianças</p>
+                  <a href="/dicas-inclusao" class="btn btn-primary btn-sm">Ler Dicas</a>
                 </div>
               </div>
             </div>
@@ -381,6 +416,7 @@
     integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
     crossorigin="anonymous"></script>
   <!-- Custom JS -->
+  <script src="/js/api.js"></script>
   <script src="/js/main.js"></script>
   <script src="/js/theme.js"></script>
   <script src="/js/game-score.js"></script>

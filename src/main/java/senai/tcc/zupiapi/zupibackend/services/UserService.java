@@ -7,7 +7,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import senai.tcc.zupiapi.zupibackend.dto.LoginDTO;
+import senai.tcc.zupiapi.zupibackend.dto.LoginResponse;
 import senai.tcc.zupiapi.zupibackend.dto.mapper.UserMapper;
+import senai.tcc.zupiapi.zupibackend.security.JwtUtil;
 import senai.tcc.zupiapi.zupibackend.dto.request.UserRequest;
 import senai.tcc.zupiapi.zupibackend.dto.response.UserResponse;
 import senai.tcc.zupiapi.zupibackend.exceptions.BusinessException;
@@ -34,6 +36,9 @@ public class UserService {
 
     @Autowired
     private SchoolRepository schoolRepository;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -64,13 +69,15 @@ public class UserService {
             );
         }
 
-        UserType type = user.userType() != null ? user.userType() : UserType.PESSOA_FISICA;
+        UserType type = user.userType() != null ? user.userType() : UserType.RESPONSAVEL;
 
         User userEntity = userMapper.toEntity(user);
         userEntity.setPassword(passwordEncoder.encode(user.password()));
         userEntity.setUserType(type);
+        userEntity.setPhone(user.phone());
+        userEntity.setAddress(user.address());
 
-        if (type == UserType.PESSOA_JURIDICA) {
+        if (type == UserType.ESCOLA) {
             String cnpj = onlyDigits(user.cnpj());
             if (cnpj.length() != 14) {
                 throw new BusinessException("CNPJ inválido");
@@ -101,6 +108,49 @@ public class UserService {
         }
 
         return userMapper.toResponse(userEntity);
+    }
+
+    public LoginResponse login(LoginDTO user) {
+        try {
+            User userEntity = userRepository.findByEmail(user.email())
+                    .orElseThrow(() -> new RuntimeException());
+
+            if (!passwordEncoder.matches(user.password(), userEntity.getPassword())) {
+                throw new RuntimeException();
+            }
+
+            UserResponse response = userMapper.toResponse(userEntity);
+            String token = jwtUtil.generateToken(userEntity.getEmail(), userEntity.getId(), userEntity.getUserType());
+            return new LoginResponse(token, response);
+
+        } catch (Exception e) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    "Email ou senha inválidos"
+            );
+        }
+    }
+
+    public LoginResponse loginWithGoogle(UserRequest user) {
+        if (user.googleToken() == null || user.googleToken().isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Token do Google é obrigatório");
+        }
+
+        User existing = userRepository.findByEmail(user.email()).orElse(null);
+        if (existing != null) {
+            String token = jwtUtil.generateToken(existing.getEmail(), existing.getId(), existing.getUserType());
+            return new LoginResponse(token, userMapper.toResponse(existing));
+        }
+
+        user.userType();
+        User newUser = userMapper.toEntity(user);
+        newUser.setPassword(passwordEncoder.encode("GoogleAuth123!"));
+        newUser.setUserType(user.userType() != null ? user.userType() : UserType.RESPONSAVEL);
+        newUser.setPhone(user.phone());
+        newUser.setAddress(user.address());
+        newUser = userRepository.save(newUser);
+        String token = jwtUtil.generateToken(newUser.getEmail(), newUser.getId(), newUser.getUserType());
+        return new LoginResponse(token, userMapper.toResponse(newUser));
     }
 
     public UserResponse update(Long id, UserRequest user) {
@@ -159,26 +209,6 @@ public class UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
         user.setTwoFactorEnabled(enabled);
         return userMapper.toResponse(userRepository.save(user));
-    }
-
-    public UserResponse login(LoginDTO user) {
-        try {
-            User userEntity = userRepository.findByEmail(user.email())
-                    .orElseThrow(() -> new RuntimeException());
-
-            if (!passwordEncoder.matches(user.password(), userEntity.getPassword())) {
-                throw new RuntimeException();
-            }
-
-            UserResponse response = userMapper.toResponse(userEntity);
-            return response;
-
-        } catch (Exception e) {
-            throw new ResponseStatusException(
-                    HttpStatus.UNAUTHORIZED,
-                    "Email ou senha inválidos"
-            );
-        }
     }
 
     private static String onlyDigits(String value) {

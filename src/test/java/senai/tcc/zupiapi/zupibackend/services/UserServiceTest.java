@@ -9,13 +9,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.server.ResponseStatusException;
 import senai.tcc.zupiapi.zupibackend.dto.LoginDTO;
+import senai.tcc.zupiapi.zupibackend.dto.LoginResponse;
 import senai.tcc.zupiapi.zupibackend.dto.mapper.UserMapper;
+import senai.tcc.zupiapi.zupibackend.security.JwtUtil;
 import senai.tcc.zupiapi.zupibackend.dto.request.UserRequest;
 import senai.tcc.zupiapi.zupibackend.dto.response.UserResponse;
 import senai.tcc.zupiapi.zupibackend.exceptions.ResourceNotFoundException;
 import senai.tcc.zupiapi.zupibackend.model.User;
 import senai.tcc.zupiapi.zupibackend.repositories.UserRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,6 +38,9 @@ class UserServiceTest {
     @Mock
     private UserMapper userMapper;
 
+    @Mock
+    private JwtUtil jwtUtil;
+
     @InjectMocks
     private UserService userService;
 
@@ -49,6 +55,12 @@ class UserServiceTest {
         user.setPassword("123");
 
         userResponse = mock(UserResponse.class);
+    }
+
+    private void mockValidUserRequest(UserRequest request) {
+        when(request.password()).thenReturn("123");
+        when(request.cpf()).thenReturn("12345678901");
+        when(request.birthDate()).thenReturn(LocalDate.of(1990, 1, 1));
     }
 
     // 1
@@ -117,7 +129,7 @@ class UserServiceTest {
     @Test
     void shouldSaveUser() {
         UserRequest request = mock(UserRequest.class);
-        when(request.password()).thenReturn("123");
+        mockValidUserRequest(request);
 
         when(userMapper.toEntity(request)).thenReturn(user);
         when(userRepository.save(any())).thenReturn(user);
@@ -132,7 +144,7 @@ class UserServiceTest {
     @Test
     void shouldEncodePasswordOnSave() {
         UserRequest request = mock(UserRequest.class);
-        when(request.password()).thenReturn("123");
+        mockValidUserRequest(request);
 
         when(userMapper.toEntity(request)).thenReturn(user);
         when(userRepository.save(any())).thenReturn(user);
@@ -147,7 +159,7 @@ class UserServiceTest {
     @Test
     void shouldCallRepositorySave() {
         UserRequest request = mock(UserRequest.class);
-        when(request.password()).thenReturn("123");
+        mockValidUserRequest(request);
 
         when(userMapper.toEntity(request)).thenReturn(user);
         when(userRepository.save(any())).thenReturn(user);
@@ -166,11 +178,14 @@ class UserServiceTest {
         PasswordEncoder encoder = new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder();
         user.setPassword(encoder.encode("123"));
 
+        when(userRepository.findByEmail(login.email())).thenReturn(Optional.of(user));
         when(userMapper.toResponse(user)).thenReturn(userResponse);
+        when(jwtUtil.generateToken(any())).thenReturn("token");
 
-        UserResponse result = userService.login(login);
+        LoginResponse result = userService.login(login);
 
         assertNotNull(result);
+        assertNotNull(result.token());
     }
 
     // 11
@@ -235,7 +250,7 @@ class UserServiceTest {
         @Test
         void shouldCallMapperOnSave () {
             UserRequest request = mock(UserRequest.class);
-            when(request.password()).thenReturn("123");
+            mockValidUserRequest(request);
 
             when(userMapper.toEntity(request)).thenReturn(user);
             when(userRepository.save(any())).thenReturn(user);
@@ -251,7 +266,12 @@ class UserServiceTest {
         void shouldCallRepositoryFindByEmailOnValidation () {
             LoginDTO login = new LoginDTO("teste@email.com", "123");
 
+            PasswordEncoder encoder = new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder();
+            user.setPassword(encoder.encode("123"));
+
             when(userRepository.findByEmail(login.email())).thenReturn(Optional.of(user));
+            when(userMapper.toResponse(user)).thenReturn(userResponse);
+            when(jwtUtil.generateToken(any())).thenReturn("token");
 
             try {
                 userService.login(login);
@@ -290,8 +310,7 @@ class UserServiceTest {
         @Test
         void shouldReturnMappedResponseAfterSave () {
             UserRequest request = mock(UserRequest.class);
-
-            when(request.password()).thenReturn("123");
+            mockValidUserRequest(request);
 
             when(userMapper.toEntity(request)).thenReturn(user);
             when(userRepository.save(any())).thenReturn(user);

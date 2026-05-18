@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import senai.tcc.zupiapi.zupibackend.dto.ChildRegistrationResponse;
 import senai.tcc.zupiapi.zupibackend.dto.request.ChildRequest;
 import senai.tcc.zupiapi.zupibackend.dto.response.ChildResponse;
 import senai.tcc.zupiapi.zupibackend.model.Child;
@@ -36,14 +37,14 @@ public class ChildController {
     }
 
     @PostMapping
-    public ResponseEntity<ChildResponse> save(@RequestBody ChildRequest child) {
+    public ResponseEntity<ChildRegistrationResponse> save(@RequestBody ChildRequest child) {
 
-        ChildResponse savedChild = childService.save(child);
+        ChildRegistrationResponse savedChild = childService.save(child);
 
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(savedChild.id())
+                .buildAndExpand(savedChild.child().id())
                 .toUri();
 
         return ResponseEntity.created(uri).body(savedChild);

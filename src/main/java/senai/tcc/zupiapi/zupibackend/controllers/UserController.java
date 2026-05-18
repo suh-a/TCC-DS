@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import jakarta.validation.Valid;
+import senai.tcc.zupiapi.zupibackend.dto.LoginResponse;
 import senai.tcc.zupiapi.zupibackend.dto.LoginDTO;
 import senai.tcc.zupiapi.zupibackend.dto.request.*;
 import senai.tcc.zupiapi.zupibackend.dto.response.UserResponse;
@@ -62,9 +63,15 @@ public class UserController {
     }
 
     @PostMapping(value = "/login")
-    public ResponseEntity<UserResponse> login(@RequestBody LoginDTO user) {
-        UserResponse userResponse = userService.login(user);
-        return ResponseEntity.ok(userResponse);
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginDTO user) {
+        LoginResponse loginResponse = userService.login(user);
+        return ResponseEntity.ok(loginResponse);
+    }
+
+    @PostMapping(value = "/google")
+    public ResponseEntity<LoginResponse> loginWithGoogle(@RequestBody UserRequest user) {
+        LoginResponse loginResponse = userService.loginWithGoogle(user);
+        return ResponseEntity.ok(loginResponse);
     }
 
     @PostMapping("/forgot-password")

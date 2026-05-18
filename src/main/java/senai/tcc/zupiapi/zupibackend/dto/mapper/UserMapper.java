@@ -16,7 +16,7 @@ public interface UserMapper {
     @Mapping(target = "events", ignore = true)
     @Mapping(target = "twoFactorEnabled", ignore = true)
     @Mapping(target = "profilePhotoUrl", ignore = true)
-    @Mapping(target = "birthDate", ignore = true)
+    @Mapping(target = "active", ignore = true)
     User toEntity(UserRequest userRequest);
 
     UserResponse toResponse(User user);

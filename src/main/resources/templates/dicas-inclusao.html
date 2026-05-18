@@ -1,24 +1,257 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Dicas de Inclusão — Zupi</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap"
+    rel="stylesheet">
+
+  <!-- Custom CSS -->
   <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/dashboard.css" />
   <link rel="stylesheet" href="/css/dark-mode.css" />
+
+  <link rel="icon" href="../assets/img/favicon.png" type="image/png">
+
+  <style>
+    .tips-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+
+    .tip-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      border-left: 4px solid var(--zupi-primary);
+    }
+
+    .tip-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .tip-card-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .tip-card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--zupi-text);
+      margin-bottom: 0.75rem;
+    }
+
+    .tip-card-text {
+      font-size: 0.9rem;
+      color: #666;
+      line-height: 1.6;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .tip-card {
+        background: #1e1e1e;
+      }
+
+      .tip-card-title {
+        color: white;
+      }
+
+      .tip-card-text {
+        color: #ccc;
+      }
+    }
+  </style>
 </head>
+
 <body>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  <main class="container py-5">
-    <h1 class="text-zupi-primary mb-2">Dicas de Inclusão</h1>
-    <p class="text-muted mb-4">Conteúdos sobre neurodivergência, inclusão e estratégias educacionais.</p>
-    <div id="dicasList" class="row g-3"></div>
-  </main>
-  <script src="/js/page-nav.js"></script>
-  <script src="/js/content-pages.js"></script>
+
+  <!-- FUNDO DECORATIVO -->
+  <div class="background-decor" aria-hidden="true">
+    <span class="decor-shape decor-circle"
+      style="width: 180px; height: 180px; top: 10%; left: 5%; background: var(--zupi-accent);"></span>
+    <span class="decor-shape decor-circle"
+      style="width: 240px; height: 240px; bottom: 8%; right: 10%; background: var(--zupi-highlight);"></span>
+    <span class="decor-shape decor-square"
+      style="width: 100px; height: 100px; top: 20%; right: 25%; background: var(--zupi-secondary); transform: rotate(25deg);"></span>
+  </div>
+
+  <!-- BOTÃO HAMBURGER PARA MOBILE -->
+  <button class="menu-toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#dashboardOffcanvas"
+    aria-controls="dashboardOffcanvas" aria-label="Abrir menu">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </button>
+
+  <div class="container-fluid">
+    <div class="row">
+      <!-- SIDEBAR FIXA (DESKTOP) -->
+      <nav class="col-lg-2 dashboard-sidebar p-0 position-fixed vh-100 d-none d-lg-block" role="navigation"
+        aria-label="Navegação">
+        <div class="d-flex flex-column p-4 h-100">
+          <div class="navbar-brand text-white mb-4 fs-3 fw-bold">Zupi</div>
+          <ul class="nav nav-pills flex-column">
+            <li class="nav-item mb-2">
+              <a class="nav-link text-white" href="/dashboard">Dashboard</a>
+            </li>
+            <li class="nav-item mb-2">
+              <a class="nav-link text-white" href="/selecao-relatorios">Relatórios</a>
+            </li>
+            <li class="nav-item mb-2">
+              <a class="nav-link text-white" href="/cadastro-dependentes">Cadastro de dependentes</a>
+            </li>
+            <li class="nav-item mb-2">
+              <a class="nav-link text-white" href="/agenda">Agenda</a>
+            </li>
+            <li class="nav-item mb-2">
+              <a class="nav-link text-white" href="/ajuda">Ajuda?</a>
+            </li>
+            <li class="nav-item mb-2">
+              <a class="nav-link text-white" href="/perfil-responsavel">Perfil</a>
+            </li>
+            <li class="nav-item mb-2">
+              <a class="nav-link text-white" href="/configuracoes">Configurações</a>
+            </li>
+            <li class="nav-item mt-auto">
+              <a class="nav-link text-white active" href="/dicas-inclusao" aria-current="page">Dicas de Inclusão</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+      <!-- SIDEBAR OFFCANVAS (MOBILE/TABLET) -->
+      <div class="offcanvas offcanvas-start dashboard-offcanvas" tabindex="-1" id="dashboardOffcanvas"
+        aria-labelledby="dashboardOffcanvasLabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="dashboardOffcanvasLabel">Zupi</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Fechar"></button>
+        </div>
+        <div class="offcanvas-body p-0">
+          <nav role="navigation" aria-label="Navegação do dashboard">
+            <ul class="nav nav-pills flex-column p-4">
+              <li class="nav-item mb-2">
+                <a class="nav-link text-white" href="/dashboard">Dashboard</a>
+              </li>
+              <li class="nav-item mb-2">
+                <a class="nav-link text-white" href="/selecao-relatorios">Relatórios</a>
+              </li>
+              <li class="nav-item mb-2">
+                <a class="nav-link text-white" href="/cadastro-dependentes">Cadastro de dependentes</a>
+              </li>
+              <li class="nav-item mb-2">
+                <a class="nav-link text-white" href="/agenda">Agenda</a>
+              </li>
+              <li class="nav-item mb-2">
+                <a class="nav-link text-white" href="/ajuda">Ajuda?</a>
+              </li>
+              <li class="nav-item mb-2">
+                <a class="nav-link text-white" href="/perfil-responsavel">Perfil</a>
+              </li>
+              <li class="nav-item mb-2">
+                <a class="nav-link text-white" href="/configuracoes">Configurações</a>
+              </li>
+              <li class="nav-item mt-auto">
+                <a class="nav-link text-white active" href="/dicas-inclusao" aria-current="page">Dicas de Inclusão</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+
+      <!-- CONTEÚDO PRINCIPAL -->
+      <main class="col-12 col-lg-10 ms-lg-auto dashboard-main-content px-3 px-lg-4 py-4">
+        <header class="mb-5">
+          <h1 class="text-zupi-primary mb-2">Dicas de Inclusão</h1>
+          <p class="text-muted">Conteúdos sobre neurodivergência, inclusão e estratégias educacionais para apoiar o desenvolvimento das crianças.</p>
+        </header>
+
+        <!-- GRADE DE DICAS -->
+        <section class="tips-grid">
+          <!-- Dica 1 -->
+          <article class="tip-card">
+            <div class="tip-card-icon">🧠</div>
+            <h3 class="tip-card-title">Entendendo Diferentes Estilos de Aprendizagem</h3>
+            <p class="tip-card-text">Cada criança aprende de forma diferente. Entenda os estilos visuais, auditivos e cinestésicos para adaptar atividades.</p>
+          </article>
+
+          <!-- Dica 2 -->
+          <article class="tip-card">
+            <div class="tip-card-icon">🎯</div>
+            <h3 class="tip-card-title">Comunicação Clara e Estruturada</h3>
+            <p class="tip-card-text">Use instruções simples, passo a passo. Evite múltiplas tarefas simultâneas. Deixe clara a expectativa de cada atividade.</p>
+          </article>
+
+          <!-- Dica 3 -->
+          <article class="tip-card">
+            <div class="tip-card-icon">🏡</div>
+            <h3 class="tip-card-title">Ambiente Seguro e Organizado</h3>
+            <p class="tip-card-text">Crie espaços previsíveis com rotinas consistentes. Isso reduz ansiedade e aumenta a sensação de segurança.</p>
+          </article>
+
+          <!-- Dica 4 -->
+          <article class="tip-card">
+            <div class="tip-card-icon">⭐</div>
+            <h3 class="tip-card-title">Reconhecer e Valorizar Pontos Fortes</h3>
+            <p class="tip-card-text">Foque no que a criança faz bem. Celebrate pequenas vitórias e progressos para aumentar confiança e autoestima.</p>
+          </article>
+
+          <!-- Dica 5 -->
+          <article class="tip-card">
+            <div class="tip-card-icon">😊</div>
+            <h3 class="tip-card-title">Senibilidade Emocional</h3>
+            <p class="tip-card-text">Muitas crianças neurodivergentes são mais sensíveis emocionalmente. Validar sentimentos é fundamental.</p>
+          </article>
+
+          <!-- Dica 6 -->
+          <article class="tip-card">
+            <div class="tip-card-icon">🤝</div>
+            <h3 class="tip-card-title">Parcerias Escola-Casa-Saúde</h3>
+            <p class="tip-card-text">Comunicação contínua entre familiares, educadores e profissionais de saúde potencializa o apoio à criança.</p>
+          </article>
+
+          <!-- Dica 7 -->
+          <article class="tip-card">
+            <div class="tip-card-icon">⏰</div>
+            <h3 class="tip-card-title">Pausas e Autorregulação</h3>
+            <p class="tip-card-text">Permita momentos de pausa para descanso. Ensine técnicas de autorregulação como respiração profunda e mindfulness.</p>
+          </article>
+
+          <!-- Dica 8 -->
+          <article class="tip-card">
+            <div class="tip-card-icon">🎨</div>
+            <h3 class="tip-card-title">Múltiplas Formas de Expressão</h3>
+            <p class="tip-card-text">Nem todas as crianças expressam aprendizado da mesma forma. Ofereça desenho, movimento, fala ou escrita.</p>
+          </article>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Bootstrap 5 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
+
+  <!-- Custom JS -->
+  <script src="/js/api.js"></script>
+  <script src="/js/main.js"></script>
   <script src="/js/theme.js"></script>
-  <script>ContentPages.loadDicas();</script>
 </body>
+
 </html>
 

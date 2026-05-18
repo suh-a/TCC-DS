@@ -7,7 +7,10 @@ public record UserResponse(
         String name,
         String email,
         String cpf,
+        String phone,
+        String address,
         UserType userType,
+        boolean active,
         boolean twoFactorEnabled,
         String profilePhotoUrl
 ) {

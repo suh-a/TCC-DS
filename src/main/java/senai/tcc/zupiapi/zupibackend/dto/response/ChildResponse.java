@@ -11,7 +11,10 @@ public record ChildResponse(
         Integer age,
         String cpf,
         String profilePhotoUrl,
-        boolean onboardingCompleted
+        boolean onboardingCompleted,
+        String childLoginEmail,
+        boolean schoolLinked,
+        String schoolName
 ) {
 
 }

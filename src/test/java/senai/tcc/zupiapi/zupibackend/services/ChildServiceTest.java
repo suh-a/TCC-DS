@@ -11,6 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import senai.tcc.zupiapi.zupibackend.dto.mapper.ChildMapper;
+import senai.tcc.zupiapi.zupibackend.dto.ChildRegistrationResponse;
 import senai.tcc.zupiapi.zupibackend.dto.request.ChildRequest;
 import senai.tcc.zupiapi.zupibackend.dto.response.ChildResponse;
 import senai.tcc.zupiapi.zupibackend.exceptions.DataBaseExceptions;
@@ -67,9 +68,9 @@ class ChildServiceTest {
         user.setId(1L);
         user.setName("Pai");
 
-        childRequest = new ChildRequest("João", 8, "12345678901", LocalDate.of(2016, 1, 1), "1º Ano", "Normal", 1L);
+        childRequest = new ChildRequest("João", 8, "12345678901", LocalDate.of(2016, 1, 1), "1º Ano", "Normal", 1L, false, null);
 
-        childResponse = new ChildResponse(1L, "João", LocalDate.of(2020, 1, 1), "1º Ano", "Normal", 8, "12345678901", null, false);
+        childResponse = new ChildResponse(1L, "João", LocalDate.of(2020, 1, 1), "1º Ano", "Normal", 8, "12345678901", null, false, null, false, null);
 
         childrenList = Arrays.asList(child);
         responsesList = Arrays.asList(childResponse);
@@ -179,7 +180,7 @@ class ChildServiceTest {
         when(childRepository.save(child)).thenReturn(child);
         when(childMapper.toResponse(child)).thenReturn(childResponse);
 
-        ChildResponse result = service.save(childRequest);
+        ChildRegistrationResponse result = service.save(childRequest);
 
         assertNotNull(result);
         verify(childRepository).save(childCaptor.capture());
@@ -193,7 +194,7 @@ class ChildServiceTest {
     void testSaveUserNotFound() {
         when(userRepository.findById(99L)).thenReturn(Optional.empty());
 
-        childRequest = new ChildRequest("João", 8, "12345678901", LocalDate.now(), "1º", "Normal", 99L);
+        childRequest = new ChildRequest("João", 8, "12345678901", LocalDate.now(), "1º", "Normal", 99L, false, null);
 
         assertThrows(ResourceNotFoundException.class, () -> service.save(childRequest));
     }

@@ -1,36 +1,44 @@
-const API_BASE = window.API_BASE_URL || window.location.origin;
-
+/**
+ * Dashboard Script — Usa ZupiAPI para todas as chamadas autenticadas.
+ * Requer: /js/api.js carregado antes deste script.
+ */
 document.addEventListener('DOMContentLoaded', function () {
+    if (!ZupiAPI.requireAuth()) return;
+
     const cpfInput = document.getElementById('childCpf');
     if (cpfInput) {
         cpfInput.addEventListener('input', function () {
             this.value = formatCpf(this.value);
         });
     }
+
     const addBtn = document.getElementById('addChildButton');
     if (addBtn) {
         addBtn.addEventListener('click', cadastrarCrianca);
     }
+
+    // Logout buttons
+    document.querySelectorAll('[data-action="logout"]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            ZupiAPI.logout();
+        });
+    });
+
     dashboardLoad();
 });
 
 async function getUserData() {
-    const userId = localStorage.getItem('userId');
-    const response = await fetch(`${API_BASE}/auth/${userId}`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
-    });
-    if (!response.ok) throw new Error('Usuário não encontrado');
+    const userId = ZupiAPI.getUser().id;
+    const response = await ZupiAPI.get(`/auth/${userId}`);
+    if (!response || !response.ok) throw new Error('Usuário não encontrado');
     return await response.json();
 }
 
 async function getChildData() {
-    const userId = localStorage.getItem('userId');
-    const response = await fetch(`${API_BASE}/child/${userId}`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
-    });
-    if (!response.ok) return [];
+    const userId = ZupiAPI.getUser().id;
+    const response = await ZupiAPI.get(`/child/${userId}`);
+    if (!response || !response.ok) return [];
     return await response.json();
 }
 
@@ -53,8 +61,7 @@ async function cadastrarCrianca() {
     const cpf = onlyDigits(document.getElementById('childCpf').value);
     const birthInput = document.getElementById('childBirthdate').value;
     const childGrade = document.getElementById('childGrade').value;
-    const childCondition = document.getElementById('childCondition').value;
-    const userId = localStorage.getItem('userId');
+    const userId = ZupiAPI.getUser().id;
 
     if (!name || !cpf || cpf.length !== 11) {
         alert('Preencha nome e CPF válido (11 dígitos).');
@@ -64,8 +71,8 @@ async function cadastrarCrianca() {
         alert('A idade deve estar entre 5 e 25 anos.');
         return;
     }
-    if (!childGrade || !childCondition) {
-        alert('Selecione ano escolar e condição.');
+    if (!childGrade) {
+        alert('Informe o ano escolar.');
         return;
     }
 
@@ -75,7 +82,7 @@ async function cadastrarCrianca() {
         cpf,
         birthDate: birthInput || null,
         schoolClass: childGrade,
-        condition: childCondition,
+        condition: null,
         responsibleId: parseInt(userId, 10)
     };
 
@@ -83,19 +90,29 @@ async function cadastrarCrianca() {
     btn.textContent = 'Salvando...';
 
     try {
-        const response = await fetch(`${API_BASE}/child`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(childData)
-        });
+        const response = await ZupiAPI.post('/child', childData);
+        if (!response) return;
+
         const text = await response.text();
         if (response.ok) {
             const created = JSON.parse(text);
-            localStorage.setItem('activeChildId', created.id);
+            const childData = created.child || created;
+            const generatedPassword = created.generatedPassword;
+
+            localStorage.setItem('activeChildId', childData.id);
+
+            // Close modal
             const modalEl = document.getElementById('addChildModal');
             const modal = bootstrap.Modal.getInstance(modalEl);
             if (modal) modal.hide();
-            window.location.reload();
+
+            // Show credentials if available
+            if (generatedPassword) {
+                alert(`Criança cadastrada!\n\nLogin: ${childData.childLoginEmail || 'Gerado automaticamente'}\nSenha: ${generatedPassword}\n\nAnote estas credenciais!`);
+            }
+
+            // Redirect to quiz
+            window.location.href = `/onboarding-crianca?childId=${childData.id}`;
         } else {
             alert(text || 'Erro ao cadastrar criança.');
         }
@@ -109,28 +126,31 @@ async function cadastrarCrianca() {
 }
 
 async function dashboardLoad() {
-    const userId = localStorage.getItem('userId');
-    if (!userId) {
-        window.location.href = '/login';
-        return;
-    }
-
     try {
         const user = await getUserData();
-        if (user.userType === 'PESSOA_JURIDICA') {
+
+        // Redirect if wrong dashboard
+        if (user.userType === 'ESCOLA') {
             window.location.href = '/dashboard-escola';
             return;
         }
 
         const children = await getChildData();
-        document.getElementById('title').textContent = `Olá, ${user.name}`;
+
+        const titleEl = document.getElementById('title');
+        if (titleEl) {
+            titleEl.textContent = `Olá, ${user.name}`;
+        }
+
         const container = document.getElementById('perfil-criancas');
-        children.forEach(child => {
-            container.insertAdjacentHTML('beforeend', createChildCard(child));
-        });
+        if (container) {
+            children.forEach(child => {
+                container.insertAdjacentHTML('beforeend', createChildCard(child));
+            });
+        }
     } catch (e) {
         console.error(e);
-        window.location.href = '/login';
+        ZupiAPI.logout();
     }
 }
 
@@ -148,4 +168,3 @@ function createChildCard(child) {
         </div>
       </div>`;
 }
-

@@ -1,79 +1,120 @@
-const API_BASE = window.API_BASE_URL || window.location.origin;
-
-document.addEventListener('DOMContentLoaded', function() {
-  loadChildrenProfiles();
+/**
+ * Seleção de Perfil Script — Estilo Netflix.
+ * Requer: /js/api.js carregado antes deste script.
+ */
+document.addEventListener('DOMContentLoaded', function () {
+    if (!ZupiAPI.requireAuth()) return;
+    loadProfileSelection();
 });
 
-async function loadChildrenProfiles() {
-  const userId = localStorage.getItem('userId');
-
-  if (!userId) {
-    console.error('ID de usuário não encontrado');
-    const container = document.getElementById('childrenProfiles');
-    if (container) {
-      container.innerHTML = '<div class="col-12"><p class="text-center text-danger">Usuário não autenticado. Faça login novamente.</p></div>';
-    }
-    return;
-  }
-
-  try {
-    const response = await fetch(`${API_BASE}/child/${userId}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error('Erro ao buscar perfis das crianças');
-    }
-
-    const children = await response.json();
+async function loadProfileSelection() {
+    const user = ZupiAPI.getUser();
     const container = document.getElementById('childrenProfiles');
 
     if (!container) return;
 
-    if (!Array.isArray(children) || children.length === 0) {
-      container.innerHTML = '<div class="col-12"><p class="text-center text-muted">Nenhuma criança cadastrada. Vá para o Dashboard para adicionar.</p></div>';
-      return;
+    if (!user.id) {
+        container.innerHTML = '<div class="col-12"><p class="text-center text-danger">Usuário não autenticado. Faça login novamente.</p></div>';
+        return;
     }
 
-    children.forEach(child => {
-      const cardHTML = createChildProfileCard(child);
-      container.insertAdjacentHTML('beforeend', cardHTML);
-    });
+    try {
+        const response = await ZupiAPI.get(`/child/${user.id}`);
+        if (!response || !response.ok) throw new Error('Erro ao buscar perfis');
 
-  } catch (error) {
-    console.error('Erro ao carregar perfis:', error);
-    const container = document.getElementById('childrenProfiles');
-    if (container) {
-      container.innerHTML = '<div class="col-12"><p class="text-center text-danger">Erro ao carregar perfis das crianças.</p></div>';
+        const children = await response.json();
+
+        container.innerHTML = '';
+
+        // Card do Responsável (sempre primeiro)
+        container.insertAdjacentHTML('beforeend', createResponsibleCard(user));
+
+        // Cards das crianças
+        if (Array.isArray(children) && children.length > 0) {
+            children.forEach(child => {
+                container.insertAdjacentHTML('beforeend', createChildProfileCard(child));
+            });
+        }
+
+        // Card de adicionar
+        container.insertAdjacentHTML('beforeend', createAddCard());
+
+    } catch (error) {
+        console.error('Erro ao carregar perfis:', error);
+        container.innerHTML = '<div class="col-12"><p class="text-center text-danger">Erro ao carregar perfis.</p></div>';
     }
-  }
 }
 
-function storeChildId(id) {
-  localStorage.setItem('childId', id);
+function createResponsibleCard(user) {
+    return `
+    <div class="col-md-4 col-lg-3">
+      <div class="card h-100 profile-card profile-card--responsible" role="button"
+           onclick="selectResponsibleProfile()" style="cursor:pointer;">
+        <div class="card-body text-center d-flex flex-column align-items-center justify-content-center" style="min-height:220px;">
+          <div class="profile-avatar mb-3" style="width:80px;height:80px;border-radius:50%;background:var(--zupi-primary,#6C63FF);display:flex;align-items:center;justify-content:center;">
+            <span style="font-size:2rem;color:white;">👤</span>
+          </div>
+          <h3 class="card-title h5 mb-1">${user.name || 'Responsável'}</h3>
+          <p class="card-text text-muted small">Perfil do Responsável</p>
+          <span class="badge bg-primary mt-2">Acessar</span>
+        </div>
+      </div>
+    </div>`;
 }
 
 function createChildProfileCard(child) {
-  return `
-    <div class="col-md-6 col-lg-4">
-      <div class="card h-100">
-        <div class="card-body text-center d-flex flex-column">
-          <div class="display-4 mb-3">👦</div>
-          <h3 class="card-title h5">${child.name}</h3>
-          <p class="card-text text-muted"><strong>Idade:</strong> ${child.age ?? 'Não informado'} anos</p>
-          <p class="card-text text-muted small"><strong>Ano Escolar:</strong> ${child.schoolClass || 'Não informado'}</p>
-          <p class="card-text text-muted small"><strong>Condição:</strong> ${child.condition || 'Não informado'}</p>
-          <div class="mt-auto d-grid gap-2">
-            <a href="/menuJogos?childId=${child.id}" class="btn btn-primary btn-sm">Acessar Jogos</a>
-            <a href="/perfil?childId=${child.id}" class="btn btn-primary btn-sm" onclick="storeChildId(${child.id})">Perfil</a>
-            <a href="/relatorios?childId=${child.id}" class="btn btn-outline-primary btn-sm" onclick="storeChildId(${child.id})">Ver Relatório</a>
+    const photo = child.profilePhotoUrl;
+    const avatarContent = photo
+        ? `<img src="${photo}" alt="" class="rounded-circle" style="width:80px;height:80px;object-fit:cover;">`
+        : `<div style="width:80px;height:80px;border-radius:50%;background:var(--zupi-highlight,#FFB677);display:flex;align-items:center;justify-content:center;">
+             <span style="font-size:2rem;">🧒</span>
+           </div>`;
+
+    return `
+    <div class="col-md-4 col-lg-3">
+      <div class="card h-100 profile-card profile-card--child" role="button"
+           onclick="selectChildProfile(${child.id})" style="cursor:pointer;">
+        <div class="card-body text-center d-flex flex-column align-items-center justify-content-center" style="min-height:220px;">
+          <div class="profile-avatar mb-3">
+            ${avatarContent}
           </div>
+          <h3 class="card-title h5 mb-1">${child.name}</h3>
+          <p class="card-text text-muted small">Idade: ${child.age ?? 'N/A'} anos</p>
+          <p class="card-text text-muted small">${child.schoolClass || ''}</p>
+          <span class="badge bg-success mt-2">Jogar</span>
         </div>
       </div>
-    </div>
-  `;
+    </div>`;
 }
-  
+
+function createAddCard() {
+    return `
+    <div class="col-md-4 col-lg-3">
+      <div class="card h-100 profile-card profile-card--add" role="button"
+           onclick="window.location.href='/dashboard'" style="cursor:pointer;border:2px dashed #ccc;">
+        <div class="card-body text-center d-flex flex-column align-items-center justify-content-center" style="min-height:220px;">
+          <div style="width:80px;height:80px;border-radius:50%;background:#f0f0f0;display:flex;align-items:center;justify-content:center;">
+            <span style="font-size:2.5rem;color:#999;">+</span>
+          </div>
+          <h3 class="card-title h6 mt-3">Adicionar Criança</h3>
+        </div>
+      </div>
+    </div>`;
+}
+
+function selectResponsibleProfile() {
+    localStorage.setItem('activeProfile', 'RESPONSAVEL');
+    localStorage.removeItem('activeChildId');
+    window.location.href = '/dashboard';
+}
+
+function selectChildProfile(childId) {
+    localStorage.setItem('activeProfile', 'CRIANCA');
+    localStorage.setItem('activeChildId', childId);
+    window.location.href = `/dashboard-crianca?childId=${childId}`;
+}
+
+function selectChildForReports(childId) {
+    localStorage.setItem('activeChildId', childId);
+    window.location.href = `/relatorios?childId=${childId}`;
+}

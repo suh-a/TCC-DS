@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cadastro de Dependente — Zupi</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap"
+    rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/dashboard.css" />
+  <link rel="stylesheet" href="/css/dark-mode.css" />
+
+  <link rel="icon" href="../assets/img/favicon.png" type="image/png">
+</head>
+
+<body>
+
+  <!-- FUNDO DECORATIVO -->
+  <div class="background-decor" aria-hidden="true">
+    <span class="decor-shape decor-circle"
+      style="width: 180px; height: 180px; top: 10%; left: 5%; background: var(--zupi-accent);"></span>
+    <span class="decor-shape decor-circle"
+      style="width: 240px; height: 240px; bottom: 8%; right: 10%; background: var(--zupi-highlight);"></span>
+    <span class="decor-shape decor-square"
+      style="width: 100px; height: 100px; top: 20%; right: 25%; background: var(--zupi-secondary); transform: rotate(25deg);"></span>
+    <span class="decor-shape decor-square"
+      style="width: 80px; height: 80px; bottom: 20%; left: 10%; background: var(--zupi-primary); transform: rotate(15deg);"></span>
+  </div>
+
+  <!-- BOTÃO HAMBURGER PARA MOBILE -->
+  <button class="menu-toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#dashboardOffcanvas"
+    aria-controls="dashboardOffcanvas" aria-label="Abrir menu">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </button>
+
+  <div class="container-fluid">
+    <div class="row">
+      <!-- SIDEBAR FIXA (DESKTOP) -->
+      <nav class="col-lg-2 dashboard-sidebar p-0 position-fixed vh-100 d-none d-lg-block" role="navigation"
+        aria-label="Navegação">
+        <div class="d-flex flex-column p-4 h-100">
+          <div class="navbar-brand text-white mb-4 fs-3 fw-bold">Zupi</div>
+          <ul class="nav nav-pills flex-column">
+            <li class="nav-item mb-2">
+              <a class="nav-link text-white" href="/dashboard">Dashboard</a>
+            </li>
+            <li class="nav-item mb-2">
+              <a class="nav-link text-white" href="/relatorios">Relatórios</a>
+            </li>
+            <li class="nav-item mb-2">
+              <a class="nav-link text-white active" href="/cadastro-dependentes">Cadastro de dependentes</a>
+            </li>
+            <li class="nav-item mb-2">
+              <a class="nav-link text-white" href="/agenda">Agenda</a>
+            </li>
+            <li class="nav-item mb-2">
+              <a class="nav-link text-white" href="/ajuda">Ajuda?</a>
+            </li>
+            <li class="nav-item mb-2">
+              <a class="nav-link text-white" href="/atividades-interativas">Atividades</a>
+            </li>
+            <li class="nav-item mb-2">
+              <a class="nav-link text-white" href="/perfil-responsavel">Perfil</a>
+            </li>
+            <li class="nav-item mb-2">
+              <a class="nav-link text-white" href="/configuracoes">Configurações</a>
+            </li>
+            <li class="nav-item mt-auto">
+              <a class="nav-link text-white" href="#" data-action="logout">Sair</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+      <!-- SIDEBAR OFFCANVAS (MOBILE/TABLET) -->
+      <div class="offcanvas offcanvas-start dashboard-offcanvas" tabindex="-1" id="dashboardOffcanvas"
+        aria-labelledby="dashboardOffcanvasLabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="dashboardOffcanvasLabel">Zupi</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Fechar"></button>
+        </div>
+        <div class="offcanvas-body p-0">
+          <nav role="navigation" aria-label="Navegação do dashboard">
+            <ul class="nav nav-pills flex-column p-4">
+              <li class="nav-item mb-2">
+                <a class="nav-link text-white" href="/dashboard">Dashboard</a>
+              </li>
+              <li class="nav-item mb-2">
+                <a class="nav-link text-white" href="/relatorios">Relatórios</a>
+              </li>
+              <li class="nav-item mb-2">
+                <a class="nav-link text-white active" aria-current="page" href="/cadastro-dependentes">Cadastro de dependentes</a>
+              </li>
+              <li class="nav-item mb-2">
+                <a class="nav-link text-white" href="/agenda">Agenda</a>
+              </li>
+              <li class="nav-item mb-2">
+                <a class="nav-link text-white" href="/ajuda">Ajuda?</a>
+              </li>
+              <li class="nav-item mb-2">
+                <a class="nav-link text-white" href="/atividades-interativas">Atividades</a>
+              </li>
+              <li class="nav-item mb-2">
+                <a class="nav-link text-white" href="/perfil-responsavel">Perfil</a>
+              </li>
+              <li class="nav-item mb-2">
+                <a class="nav-link text-white" href="/configuracoes">Configurações</a>
+              </li>
+              <li class="nav-item mt-auto">
+                <a class="nav-link text-white" href="#" data-action="logout">Sair</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+
+      <!-- CONTEÚDO PRINCIPAL -->
+      <main class="col-12 col-lg-10 ms-lg-auto dashboard-main-content px-3 px-lg-4 py-4">
+        <!-- HEADER -->
+        <header class="mb-4">
+          <h1 class="text-zupi-primary mb-3">Cadastro de Dependente</h1>
+          <p class="text-muted">Preencha os dados para cadastrar uma nova criança</p>
+        </header>
+
+        <!-- FORMULÁRIO DE CADASTRO -->
+        <section class="mb-5">
+          <div class="card">
+            <div class="card-body p-4">
+              <form id="cadastroDependenteForm">
+                
+                <!-- Nome Completo -->
+                <div class="mb-4">
+                  <label for="nomeCompleto" class="form-label fw-bold">Nome Completo</label>
+                  <input 
+                    type="text" 
+                    class="form-control form-control-lg" 
+                    id="nomeCompleto" 
+                    name="nomeCompleto"
+                    placeholder="Digite o nome completo" 
+                    required
+                    autocomplete="off"
+                  >
+                  <small class="text-muted">Campo obrigatório</small>
+                </div>
+
+                <!-- CPF -->
+                <div class="mb-4">
+                  <label for="cpf" class="form-label fw-bold">CPF</label>
+                  <input 
+                    type="text" 
+                    class="form-control form-control-lg" 
+                    id="cpf" 
+                    name="cpf"
+                    placeholder="000.000.000-00" 
+                    maxlength="14"
+                    required
+                    autocomplete="off"
+                  >
+                  <small class="text-muted">Campo obrigatório</small>
+                </div>
+
+                <!-- Data de Nascimento -->
+                <div class="mb-4">
+                  <label for="dataNascimento" class="form-label fw-bold">Data de Nascimento</label>
+                  <div class="input-group">
+                    <input 
+                      type="date" 
+                      class="form-control form-control-lg" 
+                      id="dataNascimento" 
+                      name="dataNascimento"
+                      required
+                    >
+                    <span class="input-group-text">📅</span>
+                  </div>
+                  <small class="text-muted">Campo obrigatório</small>
+                </div>
+
+                <!-- Upload de Laudo Médico -->
+                <div class="mb-4">
+                  <label for="laudoMedico" class="form-label fw-bold">Anexar Laudo Médico</label>
+                  <div class="input-group">
+                    <input 
+                      type="file" 
+                      class="form-control form-control-lg" 
+                      id="laudoMedico" 
+                      name="laudoMedico"
+                      accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                      required
+                    >
+                    <span class="input-group-text">📄</span>
+                  </div>
+                  <small class="text-muted">Formatos aceitos: PDF, DOC, DOCX, JPG, PNG (Máx: 10MB)</small>
+                </div>
+
+                <!-- Botão Cadastrar -->
+                <div class="d-grid gap-2 mt-5">
+                  <button 
+                    type="submit" 
+                    class="btn btn-primary btn-lg fw-bold"
+                    id="submitBtn"
+                  >
+                    Cadastrar
+                  </button>
+                </div>
+
+                <!-- Mensagem de Carregamento -->
+                <div id="loadingMessage" class="alert alert-info mt-3" style="display: none;">
+                  <span class="spinner-border spinner-border-sm me-2"></span>
+                  Processando cadastro...
+                </div>
+
+                <!-- Mensagem de Sucesso -->
+                <div id="successMessage" class="alert alert-success mt-3" style="display: none;">
+                  ✓ Cadastro realizado com sucesso! Redirecionando...
+                </div>
+
+                <!-- Mensagem de Erro -->
+                <div id="errorMessage" class="alert alert-danger mt-3" style="display: none;"></div>
+
+              </form>
+            </div>
+          </div>
+        </section>
+
+        <!-- Seção de Dependentes Já Cadastrados -->
+        <section>
+          <h3 class="h5 text-zupi-primary mb-4">Dependentes Cadastrados</h3>
+          <div class="row g-3" id="dependentesList">
+            <!-- Lista de dependentes será carregada dinamicamente -->
+            <div class="col-12">
+              <p class="text-muted text-center">Carregando dependentes...</p>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Bootstrap 5 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/cadastroDependenteScript.js"></script>
+
+</body>
+
+</html>

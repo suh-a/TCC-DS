@@ -238,3 +238,150 @@
   }
   .dash-hero-btn { padding: .6rem 1.4rem; font-size: .88rem; }
 }
+
+/* Carousel do dashboard responsável */
+.dash-carousel {
+  border-radius: 20px;
+  overflow: hidden;
+  background: var(--zupi-primary-gradient);
+  min-height: 200px;
+}
+.dash-carousel .carousel-item {
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  color: #fff;
+  text-align: center;
+}
+.dash-carousel .carousel-control-prev-icon,
+.dash-carousel .carousel-control-next-icon {
+  filter: invert(1);
+}
+
+/* Card adicionar dependente */
+.dash-add-card {
+  background: #e2e8f0;
+  border-radius: 20px;
+  min-height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  text-decoration: none;
+  color: #fff;
+  font-size: 3rem;
+  transition: var(--zupi-transition);
+}
+.dash-add-card:hover {
+  background: #cbd5e0;
+  color: #fff;
+}
+
+/* Grade de atalhos (wireframe responsável) */
+.dash-quick-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 72px;
+  border-radius: 16px;
+  background: var(--zupi-primary-gradient);
+  color: #fff !important;
+  text-decoration: none;
+  font-weight: 600;
+  text-align: center;
+  padding: 0.75rem 1rem;
+  border: 2px solid #9b59b6;
+  transition: var(--zupi-transition);
+}
+.dash-quick-btn:hover {
+  transform: translateY(-2px);
+  color: #fff !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* Chat Ajuda */
+.ajuda-chat-panel {
+  max-width: 900px;
+  background: var(--zupi-primary-solid, #7ec8e6);
+  border-radius: 24px;
+  padding: 1.5rem;
+}
+.ajuda-chat-messages {
+  max-height: 420px;
+  overflow-y: auto;
+}
+.ajuda-msg {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+.ajuda-msg--out {
+  flex-direction: row-reverse;
+  text-align: right;
+}
+.ajuda-msg-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.ajuda-msg-bubble {
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 16px;
+  padding: 0.6rem 1rem;
+  margin: 0.25rem 0 0;
+}
+.ajuda-chat-input {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 999px;
+  padding: 0.35rem 1rem;
+}
+
+/* Biblioteca infantil — cards wireframe */
+.child-book-card {
+  position: relative;
+  background: var(--zupi-primary-solid, #7ec8e6);
+  border-radius: 16px;
+  min-height: 120px;
+  padding: 1rem;
+  color: #fff;
+  display: flex;
+  align-items: flex-end;
+}
+.child-book-download {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  font-size: 1.1rem;
+}
+
+/* Desafio quiz card */
+.desafio-quiz-card {
+  background: var(--zupi-primary-solid, #4a6fa5);
+  border-radius: 20px;
+  min-height: 160px;
+  max-width: 420px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 1.25rem;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: var(--zupi-transition);
+}
+.desafio-quiz-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}

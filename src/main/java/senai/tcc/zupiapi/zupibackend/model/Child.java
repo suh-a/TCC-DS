@@ -31,6 +31,10 @@ public class Child {
     private String profilePhotoUrl;
     private String medicalReportUrl;
     private boolean onboardingCompleted;
+    private String childLoginEmail;
+    private String childPasswordHash;
+    private boolean schoolLinked;
+    private String schoolName;
 
     @OneToMany(mappedBy = "child")
     @JsonIgnore
@@ -138,6 +142,38 @@ public class Child {
 
     public void setMedicalReportUrl(String medicalReportUrl) {
         this.medicalReportUrl = medicalReportUrl;
+    }
+
+    public String getChildLoginEmail() {
+        return childLoginEmail;
+    }
+
+    public void setChildLoginEmail(String childLoginEmail) {
+        this.childLoginEmail = childLoginEmail;
+    }
+
+    public String getChildPasswordHash() {
+        return childPasswordHash;
+    }
+
+    public void setChildPasswordHash(String childPasswordHash) {
+        this.childPasswordHash = childPasswordHash;
+    }
+
+    public boolean isSchoolLinked() {
+        return schoolLinked;
+    }
+
+    public void setSchoolLinked(boolean schoolLinked) {
+        this.schoolLinked = schoolLinked;
+    }
+
+    public String getSchoolName() {
+        return schoolName;
+    }
+
+    public void setSchoolName(String schoolName) {
+        this.schoolName = schoolName;
     }
 
     public boolean isOnboardingCompleted() {

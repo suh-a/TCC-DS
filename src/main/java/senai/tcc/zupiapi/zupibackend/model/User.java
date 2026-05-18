@@ -2,6 +2,7 @@ package senai.tcc.zupiapi.zupibackend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import senai.tcc.zupiapi.zupibackend.model.enums.PlanType;
 import senai.tcc.zupiapi.zupibackend.model.enums.UserType;
 
 import java.util.ArrayList;
@@ -29,8 +30,14 @@ public class User {
     private java.time.LocalDate birthDate;
 
     @Enumerated(EnumType.STRING)
-    private UserType userType = UserType.PESSOA_FISICA;
+    private UserType userType = UserType.RESPONSAVEL;
 
+    @Enumerated(EnumType.STRING)
+    private PlanType planType;
+
+    private String phone;
+    private String address;
+    private boolean active = true;
     private boolean twoFactorEnabled;
 
     private String profilePhotoUrl;
@@ -106,6 +113,17 @@ public class User {
         this.userType = userType;
     }
 
+    public PlanType getPlanType() {
+        return planType;
+    }
+
+    
+    public void setPlanType(PlanType planType) {
+        this.planType = planType;
+    }
+
+
+
     public boolean isTwoFactorEnabled() {
         return twoFactorEnabled;
     }
@@ -120,6 +138,30 @@ public class User {
 
     public void setProfilePhotoUrl(String profilePhotoUrl) {
         this.profilePhotoUrl = profilePhotoUrl;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public List<Child> getChildren() {
