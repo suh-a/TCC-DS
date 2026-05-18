@@ -6,6 +6,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.server.ResponseStatusException;
 import senai.tcc.zupiapi.zupibackend.dto.LoginDTO;
@@ -24,12 +26,14 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 /*Autor: Suellen
 Data: 02/04/2026 */
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 class UserServiceTest {
 
     @Mock
@@ -41,6 +45,12 @@ class UserServiceTest {
     @Mock
     private JwtUtil jwtUtil;
 
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
+    @Mock
+    private senai.tcc.zupiapi.zupibackend.security.AccessControlService accessControl;
+
     @InjectMocks
     private UserService userService;
 
@@ -49,6 +59,10 @@ class UserServiceTest {
 
     @BeforeEach
     void setup() {
+        doNothing().when(accessControl).requireUserId(anyLong());
+        when(passwordEncoder.encode(any())).thenReturn("encoded");
+        when(passwordEncoder.matches(any(), any())).thenReturn(true);
+
         user = new User();
         user.setId(1L);
         user.setEmail("teste@email.com");
@@ -180,7 +194,7 @@ class UserServiceTest {
 
         when(userRepository.findByEmail(login.email())).thenReturn(Optional.of(user));
         when(userMapper.toResponse(user)).thenReturn(userResponse);
-        when(jwtUtil.generateToken(any())).thenReturn("token");
+        when(jwtUtil.generateToken(any(), any(), any())).thenReturn("token");
 
         LoginResponse result = userService.login(login);
 
@@ -197,6 +211,7 @@ class UserServiceTest {
         user.setPassword(encoder.encode("123"));
 
         when(userRepository.findByEmail(login.email())).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches(any(), any())).thenReturn(false);
 
         assertThrows(ResponseStatusException.class, () -> {
             userService.login(login);
@@ -301,6 +316,7 @@ class UserServiceTest {
             when(request.password()).thenReturn(null);
 
             when(userMapper.toEntity(request)).thenReturn(user);
+            when(passwordEncoder.encode(null)).thenThrow(new IllegalArgumentException("password required"));
 
             assertThrows(IllegalArgumentException.class,
                     () -> userService.save(request));

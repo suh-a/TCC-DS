@@ -14,16 +14,15 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@CrossOrigin("*")
 @RequestMapping(value = "/child")
 public class ChildController {
 
     @Autowired
     private ChildService childService;
 
-    @GetMapping
-    public ResponseEntity<List<ChildResponse>> findAll() {
-        return ResponseEntity.ok().body(childService.findAll());
+    @GetMapping("/me")
+    public ResponseEntity<List<ChildResponse>> me() {
+        return ResponseEntity.ok(childService.findForCurrentResponsible());
     }
 
     @GetMapping(value = "/{userId}")

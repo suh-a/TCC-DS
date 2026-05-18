@@ -2,8 +2,9 @@ package senai.tcc.zupiapi.zupibackend.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import senai.tcc.zupiapi.zupibackend.security.AccessControlService;
+import senai.tcc.zupiapi.zupibackend.security.SecurityUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import senai.tcc.zupiapi.zupibackend.dto.LoginDTO;
@@ -40,17 +41,26 @@ public class UserService {
     @Autowired
     private JwtUtil jwtUtil;
 
-    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private AccessControlService accessControl;
 
     public List<UserResponse> findAll() {
         return userMapper.toResponseList(userRepository.findAll());
     }
 
     public UserResponse findById(Long id) {
+        accessControl.requireUserId(id);
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id " + id));
 
         return userMapper.toResponse(user);
+    }
+
+    public UserResponse getCurrentUser() {
+        return findById(SecurityUtils.getCurrentUserId());
     }
 
     public UserResponse findByEmail(String email) {
@@ -131,29 +141,8 @@ public class UserService {
         }
     }
 
-    public LoginResponse loginWithGoogle(UserRequest user) {
-        if (user.googleToken() == null || user.googleToken().isBlank()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Token do Google é obrigatório");
-        }
-
-        User existing = userRepository.findByEmail(user.email()).orElse(null);
-        if (existing != null) {
-            String token = jwtUtil.generateToken(existing.getEmail(), existing.getId(), existing.getUserType());
-            return new LoginResponse(token, userMapper.toResponse(existing));
-        }
-
-        user.userType();
-        User newUser = userMapper.toEntity(user);
-        newUser.setPassword(passwordEncoder.encode("GoogleAuth123!"));
-        newUser.setUserType(user.userType() != null ? user.userType() : UserType.RESPONSAVEL);
-        newUser.setPhone(user.phone());
-        newUser.setAddress(user.address());
-        newUser = userRepository.save(newUser);
-        String token = jwtUtil.generateToken(newUser.getEmail(), newUser.getId(), newUser.getUserType());
-        return new LoginResponse(token, userMapper.toResponse(newUser));
-    }
-
     public UserResponse update(Long id, UserRequest user) {
+        accessControl.requireUserId(id);
         User userEntity = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
 
@@ -179,6 +168,7 @@ public class UserService {
     }
 
     public UserResponse updateEmail(Long id, String newEmail) {
+        accessControl.requireUserId(id);
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
         if (userRepository.existsByEmail(newEmail) && !Objects.equals(user.getEmail(), newEmail)) {
@@ -189,6 +179,7 @@ public class UserService {
     }
 
     public void updatePassword(Long id, String currentPassword, String newPassword) {
+        accessControl.requireUserId(id);
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
         if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
@@ -205,6 +196,7 @@ public class UserService {
     }
 
     public UserResponse setTwoFactor(Long id, boolean enabled) {
+        accessControl.requireUserId(id);
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
         user.setTwoFactorEnabled(enabled);

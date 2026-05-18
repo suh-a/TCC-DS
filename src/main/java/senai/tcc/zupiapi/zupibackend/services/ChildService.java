@@ -3,8 +3,10 @@ package senai.tcc.zupiapi.zupibackend.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import senai.tcc.zupiapi.zupibackend.model.enums.UserType;
+import senai.tcc.zupiapi.zupibackend.security.AccessControlService;
+import senai.tcc.zupiapi.zupibackend.security.SecurityUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import senai.tcc.zupiapi.zupibackend.dto.ChildLoginResponse;
@@ -42,14 +44,19 @@ public class ChildService {
     @Autowired
     private JwtUtil jwtUtil;
 
-    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private AccessControlService accessControl;
 
     public List<ChildResponse> findAll() {
         return childMapper.toResponseList(childRepository.findAll());
     }
 
     public ChildResponse findById(Long id) {
-        Child child =  childRepository.findById(id)
+        accessControl.ensureCanAccessChild(id);
+        Child child = childRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Child not found"));
 
         return childMapper.toResponse(child);
@@ -63,7 +70,8 @@ public class ChildService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Credenciais infantis inválidas");
         }
 
-        String token = jwtUtil.generateToken(child.getChildLoginEmail());
+        UserType type = child.isSchoolLinked() ? UserType.ALUNO_CREDENCIADO : UserType.CRIANCA;
+        String token = jwtUtil.generateToken(child.getChildLoginEmail(), child.getId(), type);
         return new ChildLoginResponse(token, childMapper.toResponse(child));
     }
 
@@ -96,6 +104,7 @@ public class ChildService {
     }
 
     public ChildRegistrationResponse save(ChildRequest childRequest) {
+        accessControl.requireUserId(childRequest.responsibleId());
         User user = userRepository.findById(childRequest.responsibleId())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
@@ -124,6 +133,7 @@ public class ChildService {
     }
 
     public ChildResponse update(Long id, ChildRequest childRequest) {
+        accessControl.ensureCanAccessChild(id);
         Child child = childRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Child not found"));
 
@@ -169,6 +179,7 @@ public class ChildService {
     }
 
     public void delete(Long id) {
+        accessControl.ensureCanAccessChild(id);
         try {
             childRepository.deleteById(id);
         }catch(DataIntegrityViolationException e){
@@ -177,8 +188,17 @@ public class ChildService {
     }
 
     public List<ChildResponse> findByResponsibleId(Long id) {
+        accessControl.requireUserId(id);
         List<Child> list = childRepository.findByResponsibleId(id);
 
         return childMapper.toResponseList(list);
     }
+
+    public List<ChildResponse> findForCurrentResponsible() {
+        if (SecurityUtils.isChildAccount()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Endpoint disponível apenas para responsáveis");
+        }
+        return findByResponsibleId(SecurityUtils.getCurrentUserId());
+    }
+
 }

@@ -17,7 +17,6 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@CrossOrigin("*")
 @RequestMapping(value = "/auth")
 public class UserController {
 
@@ -33,6 +32,11 @@ public class UserController {
         return ResponseEntity.ok().body(users);
     }
 
+
+    @GetMapping("/me")
+    public ResponseEntity<UserResponse> me() {
+        return ResponseEntity.ok(userService.getCurrentUser());
+    }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<UserResponse> findById(@PathVariable Long id) {
@@ -65,12 +69,6 @@ public class UserController {
     @PostMapping(value = "/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginDTO user) {
         LoginResponse loginResponse = userService.login(user);
-        return ResponseEntity.ok(loginResponse);
-    }
-
-    @PostMapping(value = "/google")
-    public ResponseEntity<LoginResponse> loginWithGoogle(@RequestBody UserRequest user) {
-        LoginResponse loginResponse = userService.loginWithGoogle(user);
         return ResponseEntity.ok(loginResponse);
     }
 

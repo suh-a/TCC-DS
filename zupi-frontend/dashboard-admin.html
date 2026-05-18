@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin — Zupi</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/dashboard.css" />
+  <link rel="stylesheet" href="/css/dark-mode.css" />
+</head>
+<body>
+  <div class="background-decor" aria-hidden="true">
+    <span class="decor-shape decor-circle" style="width:160px;height:160px;top:12%;left:6%;background:var(--zupi-accent);"></span>
+  </div>
+
+  <button class="menu-toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#dashboardOffcanvas">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </button>
+
+  <div class="container-fluid">
+    <div class="row">
+      <nav class="col-lg-2 dashboard-sidebar p-0 position-fixed vh-100 d-none d-lg-block" role="navigation">
+        <div class="d-flex flex-column p-4 h-100">
+          <div class="navbar-brand text-white mb-4 fs-3 fw-bold">Zupi Admin</div>
+          <ul class="nav nav-pills flex-column">
+            <li class="nav-item mb-2"><a class="nav-link text-white active" href="/dashboard-admin">Dashboard</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" href="#" onclick="showSection('usuarios')">Usuários</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" href="#" onclick="showSection('escolas')">Escolas</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" href="#" onclick="showSection('conteudos')">Conteúdos</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" href="#" onclick="showSection('jogos')">Jogos</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" href="#" onclick="showSection('metricas')">Métricas</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" href="#" onclick="showSection('chamados')">Chamados</a></li>
+            <li class="nav-item mt-auto"><a class="nav-link text-white" href="#" data-action="logout">Sair</a></li>
+          </ul>
+        </div>
+      </nav>
+
+      <div class="offcanvas offcanvas-start dashboard-offcanvas" tabindex="-1" id="dashboardOffcanvas">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title">Zupi Admin</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body p-0">
+          <ul class="nav nav-pills flex-column p-4">
+            <li class="nav-item mb-2"><a class="nav-link text-white active" href="/dashboard-admin">Dashboard</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" href="#" onclick="showSection('usuarios')">Usuários</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" href="#" onclick="showSection('escolas')">Escolas</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" href="#" onclick="showSection('conteudos')">Conteúdos</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" href="#" onclick="showSection('jogos')">Jogos</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" href="#" onclick="showSection('metricas')">Métricas</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" href="#" onclick="showSection('chamados')">Chamados</a></li>
+            <li class="nav-item mt-auto"><a class="nav-link text-white" href="#" data-action="logout">Sair</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <main class="col-12 col-lg-10 ms-lg-auto dashboard-main-content px-3 px-lg-4 py-4">
+
+        <!-- DASHBOARD -->
+        <section id="section-dashboard">
+          <h1 class="text-zupi-primary mb-3">Painel Administrativo</h1>
+          <div class="row g-3 mb-4">
+            <div class="col-md-2"><div class="card"><div class="card-body text-center">
+              <p class="small text-muted mb-1">Usuários</p>
+              <h3 id="totalUsers" class="text-zupi-primary mb-0">—</h3>
+            </div></div></div>
+            <div class="col-md-2"><div class="card"><div class="card-body text-center">
+              <p class="small text-muted mb-1">Escolas</p>
+              <h3 id="totalSchools" class="text-zupi-primary mb-0">—</h3>
+            </div></div></div>
+            <div class="col-md-2"><div class="card"><div class="card-body text-center">
+              <p class="small text-muted mb-1">Crianças</p>
+              <h3 id="totalChildren" class="text-zupi-primary mb-0">—</h3>
+            </div></div></div>
+            <div class="col-md-2"><div class="card"><div class="card-body text-center">
+              <p class="small text-muted mb-1">Jogos</p>
+              <h3 class="text-zupi-primary mb-0">15</h3>
+            </div></div></div>
+            <div class="col-md-2"><div class="card"><div class="card-body text-center">
+              <p class="small text-muted mb-1">Chamados</p>
+              <h3 id="totalTickets" class="text-zupi-primary mb-0">—</h3>
+            </div></div></div>
+            <div class="col-md-2"><div class="card bg-zupi-highlight text-white"><div class="card-body text-center">
+              <p class="small mb-1">Ativos Hoje</p>
+              <h3 class="mb-0">—</h3>
+            </div></div></div>
+          </div>
+
+          <div class="row g-4">
+            <div class="col-md-4"><div class="card h-100"><div class="card-body text-center">
+              <h3 class="h5">👥 Usuários</h3>
+              <button class="btn btn-primary btn-sm" onclick="showSection('usuarios')">Gerenciar</button>
+            </div></div></div>
+            <div class="col-md-4"><div class="card h-100"><div class="card-body text-center">
+              <h3 class="h5">🏫 Escolas</h3>
+              <button class="btn btn-primary btn-sm" onclick="showSection('escolas')">Gerenciar</button>
+            </div></div></div>
+            <div class="col-md-4"><div class="card h-100"><div class="card-body text-center">
+              <h3 class="h5">📩 Chamados</h3>
+              <button class="btn btn-primary btn-sm" onclick="showSection('chamados')">Ver</button>
+            </div></div></div>
+          </div>
+        </section>
+
+        <!-- USUARIOS -->
+        <section id="section-usuarios" class="d-none">
+          <button class="btn btn-link ps-0" onclick="showSection('dashboard')">← Voltar</button>
+          <h2 class="h3 text-zupi-primary mb-4">Gerenciar Usuários</h2>
+          <div class="table-responsive"><table class="table table-striped">
+            <thead><tr><th>ID</th><th>Nome</th><th>Email</th><th>Tipo</th><th>Ativo</th></tr></thead>
+            <tbody id="usersTableBody"><tr><td colspan="5" class="text-center text-muted">Carregando...</td></tr></tbody>
+          </table></div>
+        </section>
+
+        <!-- ESCOLAS -->
+        <section id="section-escolas" class="d-none">
+          <button class="btn btn-link ps-0" onclick="showSection('dashboard')">← Voltar</button>
+          <h2 class="h3 text-zupi-primary mb-4">Gerenciar Escolas</h2>
+          <div id="schoolsList"><p class="text-muted text-center">Carregando...</p></div>
+        </section>
+
+        <!-- CONTEUDOS -->
+        <section id="section-conteudos" class="d-none">
+          <button class="btn btn-link ps-0" onclick="showSection('dashboard')">← Voltar</button>
+          <h2 class="h3 text-zupi-primary mb-4">Gerenciar Conteúdos</h2>
+          <div class="card"><div class="card-body">
+            <p class="text-muted">Adicionar e editar: livros, atividades, quizzes, desafios semanais, artigos do feed.</p>
+          </div></div>
+        </section>
+
+        <!-- JOGOS -->
+        <section id="section-jogos" class="d-none">
+          <button class="btn btn-link ps-0" onclick="showSection('dashboard')">← Voltar</button>
+          <h2 class="h3 text-zupi-primary mb-4">Gerenciar Jogos</h2>
+          <div class="card"><div class="card-body">
+            <p class="text-muted">Adicionar, editar e ativar/desativar jogos educativos da plataforma.</p>
+          </div></div>
+        </section>
+
+        <!-- METRICAS -->
+        <section id="section-metricas" class="d-none">
+          <button class="btn btn-link ps-0" onclick="showSection('dashboard')">← Voltar</button>
+          <h2 class="h3 text-zupi-primary mb-4">Métricas</h2>
+          <div class="card"><div class="card-body">
+            <p class="text-muted">Dashboards de uso, engajamento e crescimento da plataforma.</p>
+          </div></div>
+        </section>
+
+        <!-- CHAMADOS -->
+        <section id="section-chamados" class="d-none">
+          <button class="btn btn-link ps-0" onclick="showSection('dashboard')">← Voltar</button>
+          <h2 class="h3 text-zupi-primary mb-4">Chamados de Suporte</h2>
+          <div id="ticketsList"><p class="text-muted text-center">Carregando...</p></div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+  <script src="/js/routes.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/auth-guard.js"></script>
+  <script src="/js/main.js"></script>
+  <script>
+    function showSection(name) {
+      document.querySelectorAll('main > section').forEach(s => s.classList.add('d-none'));
+      const target = document.getElementById('section-' + name);
+      if (target) target.classList.remove('d-none');
+
+      if (name === 'usuarios') loadUsers();
+      if (name === 'chamados') loadTickets();
+    }
+
+    async function loadUsers() {
+      try {
+        const resp = await ZupiAPI.get('/auth');
+        if (!resp || !resp.ok) return;
+        const users = await resp.json();
+        const tbody = document.getElementById('usersTableBody');
+        tbody.innerHTML = users.map(u => `
+          <tr>
+            <td>${u.id}</td>
+            <td>${u.name}</td>
+            <td>${u.email}</td>
+            <td><span class="badge bg-secondary">${u.userType}</span></td>
+            <td>${u.active ? '✅' : '❌'}</td>
+          </tr>
+        `).join('');
+        document.getElementById('totalUsers').textContent = users.length;
+      } catch(e) { console.error(e); }
+    }
+
+    async function loadTickets() {
+      try {
+        const resp = await ZupiAPI.get('/support/ticket');
+        if (!resp || !resp.ok) return;
+        const tickets = await resp.json();
+        const container = document.getElementById('ticketsList');
+        if (tickets.length === 0) {
+          container.innerHTML = '<p class="text-muted text-center">Nenhum chamado.</p>';
+          return;
+        }
+        container.innerHTML = tickets.map(t => `
+          <div class="card mb-2"><div class="card-body">
+            <strong>${t.subject}</strong> <span class="badge bg-info">${t.status}</span>
+            <p class="mb-0 mt-1 text-muted small">${t.message}</p>
+          </div></div>
+        `).join('');
+        document.getElementById('totalTickets').textContent = tickets.length;
+      } catch(e) { console.error(e); }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      if (!ZupiAPI.requireAuth()) return;
+      loadUsers();
+    });
+  </script>
+</body>
+</html>

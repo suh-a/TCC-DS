@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Perfil  | Zupi</title>
+  
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/dashboard.css" />
+  <link rel="stylesheet" href="/css/perfil-criancas.css" />
+  
+  <link rel="icon" href="../assets/img/favicon.png" type="image/png">
+</head>
+<body>
+
+  <!-- FUNDO DECORATIVO -->
+  <div class="background-decor" aria-hidden="true">
+    <span class="decor-shape decor-circle" style="width: 180px; height: 180px; top: 10%; left: 5%; background: var(--zupi-accent);"></span>
+    <span class="decor-shape decor-circle" style="width: 120px; height: 120px; top: 50%; left: 60%; background: var(--zupi-primary);"></span>
+    <span class="decor-shape decor-square" style="width: 100px; height: 100px; top: 20%; right: 25%; background: var(--zupi-secondary); transform: rotate(25deg);"></span>
+  </div>
+
+  <!-- BOTÃO HAMBURGER PARA MOBILE -->
+  <button class="menu-toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#dashboardOffcanvas" aria-controls="dashboardOffcanvas" aria-label="Abrir menu">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </button>
+
+  <div class="container-fluid">
+    <div class="row">
+      <!-- SIDEBAR FIXA (DESKTOP) -->
+      <nav class="col-lg-2 dashboard-sidebar p-0 position-fixed vh-100 d-none d-lg-block" role="navigation"
+        aria-label="Navegação">
+        <div class="d-flex flex-column p-4 h-100">
+          <div class="navbar-brand text-white mb-4 fs-3 fw-bold">Zupi</div>
+          <ul class="nav nav-pills flex-column">
+            <li class="nav-item mb-2">
+              <a class="nav-link text-white" href="/dashboard">Dashboard</a>
+            </li>
+            <li class="nav-item mb-2">
+              <a class="nav-link text-white active" href="/selecao-perfil">Relatórios-Criança</a>
+            </li>
+            <li class="nav-item mb-2">
+              <a class="nav-link text-white" href="/agenda">Agenda</a>
+            </li>
+            <li class="nav-item mb-2">
+              <a class="nav-link text-white" href="/biblioteca">Biblioteca</a>
+            </li>
+            <li class="nav-item mb-2">
+              <a class="nav-link text-white" href="/feed">Feed</a>
+            </li>
+            <li class="nav-item mb-2">
+              <a class="nav-link text-white" href="/configuracoes">Configurações</a>
+            </li>
+            <li class="nav-item mt-auto">
+              <a class="nav-link text-white" href="/">Sair</a>
+            </li>
+          </ul>
+        </div>
+      </nav> 
+
+      <!-- SIDEBAR OFFCANVAS (MOBILE/TABLET) -->
+      <div class="offcanvas offcanvas-start dashboard-offcanvas" tabindex="-1" id="dashboardOffcanvas" aria-labelledby="dashboardOffcanvasLabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="dashboardOffcanvasLabel">Zupi</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Fechar"></button>
+        </div>
+        <div class="offcanvas-body p-0">
+          <nav role="navigation" aria-label="Navegação do dashboard">
+            <ul class="nav nav-pills flex-column p-4">
+              <li class="nav-item mb-2">
+                <a class="nav-link text-white" href="/dashboard">Dashboard</a>
+              </li>
+              <li class="nav-item mb-2">
+                <a class="nav-link text-white active" aria-current="page" href="/selecao-perfil">Relatórios-Criança</a>
+              </li>
+              <li class="nav-item mb-2">
+                <a class="nav-link text-white" href="/agenda">Agenda</a>
+              </li>
+              <li class="nav-item mb-2">
+                <a class="nav-link text-white" href="/biblioteca">Biblioteca</a>
+              </li>
+              <li class="nav-item mb-2">
+                <a class="nav-link text-white" href="/feed">Feed</a>
+              </li>
+              <li class="nav-item mb-2">
+                <a class="nav-link text-white" href="/configuracoes">Configurações</a>
+              </li>
+              <li class="nav-item mt-auto">
+                <a class="nav-link text-white" href="/">Sair</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+
+      <!-- CONTEÚDO PRINCIPAL -->
+      <main class="col-12 col-lg-10 ms-lg-auto dashboard-main-content px-3 px-lg-4 py-4">
+        <!-- Header / resumo superior -->
+        <header class="mb-4">
+          <div class="row align-items-center mb-4">
+            <div class="col-auto">
+              <img src="/img/logokids1.png" alt="Foto do perfil" class="rounded-circle perfil-avatar">
+              <div class="badge bg-success mt-2" id="profileStatus">Ativo</div>
+            </div>
+            <div class="col">
+              <h1 class="h2 mb-2" id="childName">Carregando perfil...</h1>
+              <p class="mb-2">Data de nascimento: <strong id="childBirthDate">--</strong> • Neurodivergência: <strong id="childCondition">--</strong></p>
+              <div class="d-flex flex-wrap gap-3 mb-3">
+                <div><strong>Ano Escolar:</strong> <span id="childSchoolClass">--</span></div>
+                <div><strong>Idade:</strong> <span id="childAge">--</span></div>
+                <div><strong>Relatórios:</strong> <span id="childReportCount">0</span></div>
+              </div>
+              <div class="d-flex gap-2">
+                <a id="viewReportButton" href="#" class="btn btn-primary">Ver relatórios</a>
+                <a href="/selecao-perfil" class="btn btn-outline-primary">Voltar à seleção</a>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <section class="mb-5">
+          <div class="card">
+            <div class="card-body">
+              <h2 class="card-title h4 mb-4">Resumo do perfil</h2>
+              <p class="text-muted">Os dados exibidos são carregados diretamente do cadastro da criança. Não há conteúdo fixo ou mockado nesta página.</p>
+              <div class="row g-4">
+                <div class="col-md-4">
+                  <div class="card indicador-card">
+                    <div class="card-body">
+                      <div class="display-4 mb-3 text-zupi-primary">0</div>
+                      <h3 class="card-title h5">Relatórios</h3>
+                      <p class="card-text text-muted small">Iniciam zerados para cada perfil</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="card indicador-card">
+                    <div class="card-body">
+                      <div class="display-4 mb-3 text-zupi-accent">0</div>
+                      <h3 class="card-title h5">Atividades</h3>
+                      <p class="card-text text-muted small">Sem atividades registradas ainda</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="card indicador-card">
+                    <div class="card-body">
+                      <div class="display-4 mb-3 text-zupi-highlight">0</div>
+                      <h3 class="card-title h5">Progresso</h3>
+                      <p class="card-text text-muted small">Será atualizado conforme o uso</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="mb-5">
+          <div class="card">
+            <div class="card-body">
+              <h2 class="card-title h5 mb-4">Relatórios</h2>
+              <p class="text-muted" id="profileReportsMessage">Os relatórios começam zerados para este perfil. Acompanhe o progresso depois de gerar o primeiro relatório.</p>
+              <div class="alert alert-info mb-0">Nenhum relatório registrado ainda.</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="mb-5">
+          <div class="card">
+            <div class="card-body">
+              <h2 class="card-title h5 mb-4">Atividades recentes</h2>
+              <p class="text-muted">Não há atividades registradas para este perfil. Elas aparecerão automaticamente quando a criança interagir com os jogos ou relatórios.</p>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-12">
+          <p class="mb-0 small">Dados do Zupi • Privacidade e segurança garantidas</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap 5 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  <!-- Custom JS -->
+  <script src="/js/routes.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/auth-guard.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/perfilPageScript.js"></script>
+</body>
+</html>
+
+

@@ -16,6 +16,8 @@ import senai.tcc.zupiapi.zupibackend.repositories.ChildRepository;
 import senai.tcc.zupiapi.zupibackend.repositories.EventRepository;
 import senai.tcc.zupiapi.zupibackend.repositories.SkillAreaRepository;
 import senai.tcc.zupiapi.zupibackend.repositories.UserRepository;
+import senai.tcc.zupiapi.zupibackend.security.AccessControlService;
+import senai.tcc.zupiapi.zupibackend.security.SecurityUtils;
 
 import java.util.List;
 
@@ -37,11 +39,17 @@ public class EventService {
     @Autowired
     private EventMapper eventMapper;
 
+    @Autowired
+    private AccessControlService accessControl;
+
     public List<EventResponse> findAll(Long id) {
+        accessControl.requireUserId(id);
         return eventMapper.toResponseList(eventRepository.findAllByUserId(id));
     }
 
     public EventResponse save(EventRequest event) {
+        accessControl.requireUserId(event.userId());
+        accessControl.ensureCanAccessChild(event.childId());
         User user = userRepository.findById(event.userId())
                 .orElseThrow(() -> new ResourceNotFoundException("user not found"));
         Child child = childRepository.findById(event.childId())
@@ -60,6 +68,11 @@ public class EventService {
     public EventResponse update(EventRequest eventRequest, Long eventId) {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new ResourceNotFoundException("event not found"));
+        if (event.getUser() != null) {
+            accessControl.requireUserId(event.getUser().getId());
+        }
+        accessControl.requireUserId(eventRequest.userId());
+        accessControl.ensureCanAccessChild(eventRequest.childId());
         User user = userRepository.findById(eventRequest.userId())
                 .orElseThrow(() -> new ResourceNotFoundException("user not found"));
         Child child = childRepository.findById(eventRequest.childId())
@@ -79,9 +92,14 @@ public class EventService {
     }
 
     public void delete(Long eventId) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new ResourceNotFoundException("event not found"));
+        if (event.getUser() != null) {
+            accessControl.requireUserId(event.getUser().getId());
+        }
         try {
             eventRepository.deleteById(eventId);
-        }catch (DataIntegrityViolationException e){
+        } catch (DataIntegrityViolationException e) {
             throw new DataBaseExceptions("Not possible to delete event");
         }
     }

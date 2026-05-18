@@ -64,11 +64,23 @@ O Zupi também apoia pais, responsáveis e escolas no acompanhamento do progress
 
 | Camada                  | Tecnologia                                                       |
 | :---------------------- | :--------------------------------------------------------------- |
-| **Front-end**           | HTML5, CSS3, JavaScript                                          |
-| **Back-end**            | Java                                                             |
-| **Banco de Dados**      | Firebase                     |
+| **Front-end**           | HTML5, CSS3, JavaScript, **Vite** (`zupi-frontend/`)             |
+| **Back-end**            | **Java 21**, Spring Boot 3 (API REST + JWT)                      |
+| **Banco de Dados**      | PostgreSQL (dev/prod), H2 (testes)                               |
 | **Integrações**         | Correios API (para envio de atividades), sistema de login e chat |
-| **Hospedagem / Deploy** | (ex: Vercel, Render, ou servidor local)                          |
+| **Hospedagem / Deploy** | Docker (API); frontend estático em `zupi-frontend/dist/`         |
+
+### Executar localmente
+
+```bash
+# API (porta 8080)
+./mvnw spring-boot:run
+
+# Frontend (porta 5173)
+cd zupi-frontend && npm install && npm run dev
+```
+
+Detalhes da arquitetura: [docs/arquitetura.md](docs/arquitetura.md)
 
 ---
 

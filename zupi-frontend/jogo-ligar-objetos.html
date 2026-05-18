@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zupi - Jogo de Fases</title>
+    <link rel="stylesheet" href="/css/jogo-ligar-objetos.css" />
+</head>
+<body class="g-body">
+
+<header>
+    <h1>🧩 Zupi</h1>
+    <div id="level-indicator">Fase 1</div>
+    <p id="instruction-text">Ligue os pares!</p>
+</header>
+
+<div id="game-container">
+    <svg id="connections"></svg>
+    <div class="column" id="col-left"></div>
+    <div class="column" id="col-right"></div>
+</div>
+
+<div id="modal-overlay">
+    <div class="modal-content">
+        <span class="modal-emoji" id="modal-icon">🌟</span>
+        <h2 id="modal-title">Muito bem!</h2>
+        <p id="modal-message">Você completou esta fase.</p>
+        <button class="btn-action" id="modal-btn" onclick="nextAction()">Próxima Fase</button>
+    </div>
+</div>
+
+<script src="../js/jogo-ligar-objetos.js"></script>
+  <script src="/js/routes.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/auth-guard.js"></script>
+
+  <script src="/js/game-guard.js"></script>
+
+  <script src="/js/game-score.js"></script>
+</body>
+</html>

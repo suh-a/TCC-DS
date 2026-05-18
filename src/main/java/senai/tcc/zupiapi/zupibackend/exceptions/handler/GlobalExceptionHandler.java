@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ResponseStatusException;
 import senai.tcc.zupiapi.zupibackend.exceptions.BusinessException;
 import senai.tcc.zupiapi.zupibackend.exceptions.DataBaseExceptions;
 import senai.tcc.zupiapi.zupibackend.exceptions.ResourceNotFoundException;
@@ -41,6 +42,14 @@ public class GlobalExceptionHandler {
         problem.setDetail(resourceNotFoundException.getMessage());
         problem.setProperty("timeStamp", Instant.now());
 
+        return problem;
+    }
+
+    @ExceptionHandler(ResponseStatusException.class)
+    public ProblemDetail responseStatusException(ResponseStatusException ex) {
+        ProblemDetail problem = ProblemDetail.forStatus(ex.getStatusCode());
+        problem.setDetail(ex.getReason());
+        problem.setProperty("timeStamp", Instant.now());
         return problem;
     }
 }

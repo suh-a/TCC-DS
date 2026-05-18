@@ -11,6 +11,7 @@ import senai.tcc.zupiapi.zupibackend.model.SkillArea;
 import senai.tcc.zupiapi.zupibackend.repositories.ChildRepository;
 import senai.tcc.zupiapi.zupibackend.repositories.GameSessionRepository;
 import senai.tcc.zupiapi.zupibackend.repositories.SkillAreaRepository;
+import senai.tcc.zupiapi.zupibackend.security.AccessControlService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -39,8 +40,12 @@ public class GameSessionService {
     @Autowired
     private AutoReportService autoReportService;
 
+    @Autowired
+    private AccessControlService accessControl;
+
     @Transactional
     public GameSession recordSession(Long childId, GameSessionRequest request) {
+        accessControl.ensureCanAccessChild(childId);
         Child child = childRepository.findById(childId)
                 .orElseThrow(() -> new ResourceNotFoundException("Criança não encontrada"));
 
@@ -67,6 +72,7 @@ public class GameSessionService {
     }
 
     public List<GameSession> findByChild(Long childId) {
+        accessControl.ensureCanAccessChild(childId);
         return gameSessionRepository.findByChildIdOrderByPlayedAtDesc(childId);
     }
 }

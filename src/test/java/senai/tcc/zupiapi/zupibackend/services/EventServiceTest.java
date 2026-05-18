@@ -1,10 +1,13 @@
 package senai.tcc.zupiapi.zupibackend.services;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import senai.tcc.zupiapi.zupibackend.dto.mapper.EventMapper;
 import senai.tcc.zupiapi.zupibackend.dto.request.EventRequest;
 import senai.tcc.zupiapi.zupibackend.dto.response.EventResponse;
@@ -12,6 +15,7 @@ import senai.tcc.zupiapi.zupibackend.exceptions.DataBaseExceptions;
 import senai.tcc.zupiapi.zupibackend.exceptions.ResourceNotFoundException;
 import senai.tcc.zupiapi.zupibackend.model.*;
 import senai.tcc.zupiapi.zupibackend.repositories.*;
+import senai.tcc.zupiapi.zupibackend.security.AccessControlService;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 class EventServiceTest {
 
     @Mock
@@ -37,8 +42,17 @@ class EventServiceTest {
     @Mock
     private EventMapper eventMapper;
 
+    @Mock
+    private AccessControlService accessControl;
+
     @InjectMocks
     private EventService eventService;
+
+    @BeforeEach
+    void setUpAccessControl() {
+        doNothing().when(accessControl).requireUserId(anyLong());
+        doNothing().when(accessControl).ensureCanAccessChild(anyLong());
+    }
 
     // =========================
     // FIND ALL (3 TESTES)
@@ -347,7 +361,7 @@ class EventServiceTest {
 
     @Test
     void delete_ShouldDeleteSuccessfully() {
-        // Verifica exclusão sem erros
+        when(eventRepository.findById(1L)).thenReturn(Optional.of(new Event()));
         doNothing().when(eventRepository).deleteById(1L);
 
         assertDoesNotThrow(() -> eventService.delete(1L));
@@ -355,7 +369,7 @@ class EventServiceTest {
 
     @Test
     void delete_ShouldCallRepository() {
-        // Verifica se o método delete é chamado
+        when(eventRepository.findById(1L)).thenReturn(Optional.of(new Event()));
         eventService.delete(1L);
 
         verify(eventRepository).deleteById(1L);
@@ -363,7 +377,7 @@ class EventServiceTest {
 
     @Test
     void delete_ShouldThrowException() {
-        // Verifica tratamento de erro de integridade no banco
+        when(eventRepository.findById(1L)).thenReturn(Optional.of(new Event()));
         doThrow(new org.springframework.dao.DataIntegrityViolationException(""))
                 .when(eventRepository).deleteById(1L);
 

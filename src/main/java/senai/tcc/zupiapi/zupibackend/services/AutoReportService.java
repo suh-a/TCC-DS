@@ -11,6 +11,7 @@ import senai.tcc.zupiapi.zupibackend.model.GameSession;
 import senai.tcc.zupiapi.zupibackend.model.SkillArea;
 import senai.tcc.zupiapi.zupibackend.repositories.ChildReportRepository;
 import senai.tcc.zupiapi.zupibackend.repositories.GameSessionRepository;
+import senai.tcc.zupiapi.zupibackend.security.AccessControlService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -28,6 +29,9 @@ public class AutoReportService {
 
     @Autowired
     private ChildReportScoreService childReportScoreService;
+
+    @Autowired
+    private AccessControlService accessControl;
 
     @Transactional
     public void updateReportFromSessions(Child child) {
@@ -76,6 +80,7 @@ public class AutoReportService {
     }
 
     public Map<String, Object> buildProgressSummary(Long childId) {
+        accessControl.ensureCanAccessChild(childId);
         List<GameSession> recent = gameSessionRepository.findByChildIdOrderByPlayedAtDesc(childId);
         if (recent.isEmpty()) {
             return Map.of(

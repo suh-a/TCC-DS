@@ -8,7 +8,12 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import senai.tcc.zupiapi.zupibackend.security.AccessControlService;
+import senai.tcc.zupiapi.zupibackend.security.JwtUtil;
 
 import senai.tcc.zupiapi.zupibackend.dto.mapper.ChildMapper;
 import senai.tcc.zupiapi.zupibackend.dto.ChildRegistrationResponse;
@@ -28,9 +33,11 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 class ChildServiceTest {
 
     @InjectMocks
@@ -45,6 +52,15 @@ class ChildServiceTest {
     @Mock
     private ChildMapper childMapper;
 
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
+    @Mock
+    private JwtUtil jwtUtil;
+
+    @Mock
+    private AccessControlService accessControl;
+
     @Captor
     private ArgumentCaptor<Child> childCaptor;
 
@@ -57,6 +73,9 @@ class ChildServiceTest {
 
     @BeforeEach
     void setUp() {
+        doNothing().when(accessControl).requireUserId(anyLong());
+        doNothing().when(accessControl).ensureCanAccessChild(anyLong());
+
         child = new Child();
         child.setId(1L);
         child.setName("João");

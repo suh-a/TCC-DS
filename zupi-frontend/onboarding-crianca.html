@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Quiz Inicial — Zupi</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/auth.css" />
+  <style>
+    .quiz-card {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .quiz-progress {
+      height: 8px;
+      border-radius: 4px;
+      background: #e9ecef;
+      margin-bottom: 1.5rem;
+    }
+    .quiz-progress-bar {
+      height: 100%;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--zupi-primary, #6C63FF), var(--zupi-highlight, #FFB677));
+      transition: width 0.3s ease;
+    }
+    .quiz-question {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+    .quiz-option {
+      display: block;
+      width: 100%;
+      padding: 0.75rem 1rem;
+      margin-bottom: 0.5rem;
+      border: 2px solid #e9ecef;
+      border-radius: 10px;
+      background: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: left;
+      font-size: 0.95rem;
+    }
+    .quiz-option:hover {
+      border-color: var(--zupi-primary, #6C63FF);
+      background: #f8f7ff;
+    }
+    .quiz-option.selected {
+      border-color: var(--zupi-primary, #6C63FF);
+      background: #ede9ff;
+      font-weight: 600;
+    }
+    .credentials-box {
+      background: #f0f7ff;
+      border: 2px solid var(--zupi-primary, #6C63FF);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    .credentials-box .credential {
+      background: white;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      margin: 0.5rem 0;
+      font-family: monospace;
+      font-size: 1.1rem;
+      border: 1px solid #e0e0e0;
+    }
+  </style>
+</head>
+<body class="auth-page">
+  <div class="background-decor" aria-hidden="true">
+    <span class="decor-shape decor-circle" style="background-color:#7EBCE6; top:10%; left:15%; width:60px; height:60px;"></span>
+    <span class="decor-shape decor-circle" style="background-color:#A8E6CF; top:70%; left:25%; width:45px; height:45px;"></span>
+  </div>
+
+  <main class="d-flex align-items-center justify-content-center py-5" style="min-height:100vh;">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-12 col-lg-8">
+
+          <!-- STEP: QUIZ -->
+          <div id="quizStep" class="quiz-card">
+            <h1 class="h3 text-center mb-2">🧩 Quiz Inicial</h1>
+            <p class="text-center text-muted mb-4">Ajude-nos a personalizar a experiência da criança</p>
+
+            <div class="quiz-progress">
+              <div class="quiz-progress-bar" id="progressBar" style="width: 10%;"></div>
+            </div>
+
+            <p class="text-muted small text-center mb-3">
+              Pergunta <span id="currentQ">1</span> de <span id="totalQ">10</span>
+            </p>
+
+            <div id="questionContainer">
+              <p class="quiz-question" id="questionText"></p>
+              <div id="optionsContainer"></div>
+            </div>
+
+            <div class="d-flex justify-content-between mt-4">
+              <button class="btn btn-outline-secondary" id="prevBtn" onclick="prevQuestion()" disabled>Anterior</button>
+              <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">Próxima</button>
+            </div>
+          </div>
+
+          <!-- STEP: RESULTADO -->
+          <div id="resultStep" class="quiz-card d-none">
+            <h1 class="h3 text-center mb-2">✅ Quiz Concluído!</h1>
+            <p class="text-center text-muted mb-4" id="quizSummary">Análise gerada com sucesso.</p>
+
+            <div class="credentials-box mb-4">
+              <h5 class="mb-3">🔑 Acesso Infantil Gerado</h5>
+              <p class="text-muted small">Anote as credenciais abaixo para a criança acessar o perfil dela:</p>
+              <div class="credential" id="childEmail">—</div>
+              <div class="credential" id="childPassword">—</div>
+            </div>
+
+            <div class="d-grid gap-2">
+              <a href="/selecao-perfil" class="btn btn-primary btn-lg">Acessar Perfil Infantil</a>
+              <a href="/dashboard" class="btn btn-outline-secondary">Voltar ao Dashboard</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+  <script src="/js/routes.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/auth-guard.js"></script>
+  <script>
+    const QUESTIONS = [
+      {
+        text: "Quais são as principais dificuldades da criança?",
+        options: ["Leitura e escrita", "Atenção e concentração", "Comunicação verbal", "Coordenação motora", "Interação social", "Nenhuma dificuldade aparente"]
+      },
+      {
+        text: "Como é a rotina diária da criança?",
+        options: ["Bem estruturada com horários fixos", "Parcialmente organizada", "Sem rotina definida", "Varia muito dia a dia"]
+      },
+      {
+        text: "Existem sensibilidades sensoriais relevantes?",
+        options: ["Sons altos", "Luzes fortes", "Texturas específicas", "Cheiros fortes", "Múltiplas sensibilidades", "Nenhuma sensibilidade"]
+      },
+      {
+        text: "Como a criança se comunica com outras pessoas?",
+        options: ["Verbalmente sem dificuldade", "Com frases curtas", "Usa gestos ou imagens", "Com dificuldade significativa", "Ainda em desenvolvimento"]
+      },
+      {
+        text: "Quais métodos de aprendizagem funcionam melhor?",
+        options: ["Visual (imagens e vídeos)", "Auditivo (ouvir explicações)", "Prático (fazer atividades)", "Misto", "Ainda descobrindo"]
+      },
+      {
+        text: "Como é o comportamento em ambientes novos?",
+        options: ["Adaptação rápida", "Precisa de tempo para se adaptar", "Fica ansioso ou agitado", "Evita ambientes novos", "Depende do ambiente"]
+      },
+      {
+        text: "Como a criança interage socialmente?",
+        options: ["Facilmente faz amigos", "Prefere brincar sozinha", "Interage com poucos", "Tem dificuldade significativa", "Está aprendendo"]
+      },
+      {
+        text: "Qual o nível de concentração em atividades?",
+        options: ["Boa concentração (30+ min)", "Concentração moderada (15-30 min)", "Concentração curta (5-15 min)", "Muito disperso", "Depende da atividade"]
+      },
+      {
+        text: "Como é a coordenação motora?",
+        options: ["Boa para a idade", "Alguma dificuldade fina (escrita)", "Alguma dificuldade grossa (corrida)", "Dificuldade geral", "Em desenvolvimento"]
+      },
+      {
+        text: "Quais são os interesses/preferências da criança?",
+        options: ["Jogos e tecnologia", "Artes e desenho", "Música", "Esportes", "Natureza e animais", "Leitura"]
+      }
+    ];
+
+    let currentIndex = 0;
+    let answers = {};
+    let childId = null;
+
+    document.addEventListener('DOMContentLoaded', function() {
+      if (!ZupiAPI.requireAuth()) return;
+
+      // Get childId from URL
+      const params = new URLSearchParams(window.location.search);
+      childId = params.get('childId');
+
+      if (!childId) {
+        alert('ID da criança não encontrado.');
+        window.location.href = '/dashboard';
+        return;
+      }
+
+      document.getElementById('totalQ').textContent = QUESTIONS.length;
+      renderQuestion();
+
+      // Create quiz on backend
+      ZupiAPI.post(`/quiz/child/${childId}`).catch(e => console.log('Quiz may already exist'));
+    });
+
+    function renderQuestion() {
+      const q = QUESTIONS[currentIndex];
+      document.getElementById('questionText').textContent = q.text;
+      document.getElementById('currentQ').textContent = currentIndex + 1;
+      document.getElementById('progressBar').style.width = ((currentIndex + 1) / QUESTIONS.length * 100) + '%';
+
+      const container = document.getElementById('optionsContainer');
+      container.innerHTML = '';
+      q.options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'quiz-option';
+        btn.textContent = opt;
+        if (answers[q.text] === opt) btn.classList.add('selected');
+        btn.addEventListener('click', () => selectOption(q.text, opt, btn));
+        container.appendChild(btn);
+      });
+
+      document.getElementById('prevBtn').disabled = currentIndex === 0;
+      document.getElementById('nextBtn').textContent = currentIndex === QUESTIONS.length - 1 ? 'Finalizar' : 'Próxima';
+    }
+
+    function selectOption(question, answer, btn) {
+      answers[question] = answer;
+      document.querySelectorAll('.quiz-option').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+    }
+
+    function nextQuestion() {
+      const q = QUESTIONS[currentIndex];
+      if (!answers[q.text]) {
+        alert('Selecione uma resposta antes de continuar.');
+        return;
+      }
+
+      if (currentIndex < QUESTIONS.length - 1) {
+        currentIndex++;
+        renderQuestion();
+      } else {
+        submitQuiz();
+      }
+    }
+
+    function prevQuestion() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        renderQuestion();
+      }
+    }
+
+    async function submitQuiz() {
+      try {
+        const resp = await ZupiAPI.post('/quiz/complete', {
+          childId: parseInt(childId),
+          answers: answers
+        });
+
+        if (resp && resp.ok) {
+          const data = await resp.json();
+          document.getElementById('quizSummary').textContent = data.summary || 'Perfil gerado com sucesso!';
+        }
+
+        // Get child credentials
+        const childResp = await ZupiAPI.get(`/child/details/${childId}`);
+        if (childResp && childResp.ok) {
+          const child = await childResp.json();
+          document.getElementById('childEmail').textContent = child.childLoginEmail || 'Não gerado';
+        }
+        document.getElementById('childPassword').textContent = '(exibida apenas no momento do cadastro)';
+
+        document.getElementById('quizStep').classList.add('d-none');
+        document.getElementById('resultStep').classList.remove('d-none');
+
+      } catch (e) {
+        console.error('Erro ao enviar quiz:', e);
+        alert('Erro ao enviar quiz. Tente novamente.');
+      }
+    }
+  </script>
+</body>
+</html>

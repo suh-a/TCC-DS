@@ -1,30 +1,45 @@
 package senai.tcc.zupiapi.zupibackend.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import senai.tcc.zupiapi.zupibackend.security.JwtAuthenticationFilter;
+import senai.tcc.zupiapi.zupibackend.security.JsonAccessDeniedHandler;
+import senai.tcc.zupiapi.zupibackend.security.JsonAuthenticationEntryPoint;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @Autowired
+    private JsonAuthenticationEntryPoint authenticationEntryPoint;
+
+    @Autowired
+    private JsonAccessDeniedHandler accessDeniedHandler;
+
+    @Value("${app.cors.allowed-origins:http://localhost:5173,http://127.0.0.1:5173}")
+    private String allowedOrigins;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -39,7 +54,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOriginPatterns(List.of("*"));
+        config.setAllowedOriginPatterns(Arrays.asList(allowedOrigins.split(",")));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
@@ -54,53 +69,30 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(authenticationEntryPoint)
+                        .accessDeniedHandler(accessDeniedHandler))
                 .authorizeHttpRequests(auth -> auth
-                        // Static resources
-                        .requestMatchers(
-                                "/css/**", "/js/**", "/img/**", "/images/**",
-                                "/assets/**", "/static/**", "/webjars/**", "/audio/**",
-                                "/favicon.ico", "/h2-console/**"
+                        .requestMatchers("/", "/auth/login",
+                                "/auth/register",
+                                "/auth/forgot-password",
+                                "/auth/reset-password",
+                                "/auth/child/login",
+                                "/contact",
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/h2-console/**"
                         ).permitAll()
-                        // Public pages and auth endpoints
-                        .requestMatchers(
-                                "/", "/login", "/cadastro", "/sobre",
-                                "/planos", "/contatos", "/erro",
-                                "/esqueci-senha", "/redefinir-senha", "/cadastro-escola",
-                                "/pagamento", "/auth/register", "/auth/login", "/auth/google",
-                                "/auth/forgot-password", "/auth/reset-password",
-                                "/support/**", "/video/**",
-                                "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html"
-                        ).permitAll()
-                        // WebSocket
-                        .requestMatchers("/websocket/**", "/ws/**").permitAll()
-                        // Authenticated API routes
-                        .requestMatchers("/child/**", "/quiz/**", "/content/**", "/skillAreas").authenticated()
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        // Dashboard pages — require authentication
-                        .requestMatchers("/dashboard", "/dashboard-crianca", "/dashboard-aluno",
-                                "/selecao-perfil", "/selecao-relatorios", "/agenda", "/relatorios", "/perfil",
-                                "/perfil-responsavel", "/perfil-crianca", "/configuracoes",
-                                "/cadastro-dependentes", "/ajuda", "/recompensas",
-                                "/biblioteca", "/feed", "/dicas-inclusao",
-                                "/guia-casa", "/atividades-interativas", "/desafios-semanais",
-                                "/onboarding-crianca").authenticated()
-                        .requestMatchers("/dashboard-escola").hasRole("ESCOLA")
-                        .requestMatchers("/dashboard-docente").hasRole("DOCENTE")
-                        .requestMatchers("/dashboard-admin").hasRole("ADMIN")
-                        // Game pages — authenticated
-                        .requestMatchers("/menuJogos", "/jogoMemoria", "/JogoLigarObjetos",
-                                "/jogoCoresFormas", "/jogoMath", "/jogoBolhas",
-                                "/jogoSequencia", "/jogoPalavras", "/jogoColorir",
-                                "/jogoClique", "/jogoContagem", "/jogoOrdem",
-                                "/jogoSombras", "/jogoBomba", "/jogoBalao",
-                                "/jogoPintura").authenticated()
-                        // All other authenticated endpoints
+                        .requestMatchers("/auth").hasRole("ADMIN")
+                        .requestMatchers("/skillAreas").permitAll()
+                        .requestMatchers("/content/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .formLogin(form -> form.disable())
                 .httpBasic(basic -> basic.disable())
-                .headers(headers -> headers.frameOptions(frame -> frame.disable()));
+                .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()));
 
         return http.build();
     }
