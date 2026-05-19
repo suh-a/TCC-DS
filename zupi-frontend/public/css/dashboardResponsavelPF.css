@@ -1,0 +1,199 @@
+/* ===================================================
+   Zupi - Dashboard CSS
+   Estilos específicos para o dashboard do responsável
+   =================================================== */
+
+/* Dashboard Sidebar */
+.dashboard-sidebar {
+    min-height: 100vh;
+    background: var(--zupi-primary-gradient);
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.dashboard-sidebar .nav-link {
+    color: var(--zupi-white) !important;
+    border-radius: 8px;
+    transition: var(--zupi-transition);
+    padding: 0.75rem 1rem;
+}
+
+.dashboard-sidebar .nav-link:hover {
+    background-color: var(--zupi-highlight);
+    transform: translateX(5px);
+}
+
+.dashboard-sidebar .nav-link.active {
+    background-color: var(--zupi-highlight);
+}
+
+/* Botão hamburger para mobile */
+.menu-toggle {
+    display: none;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 1050;
+    background: var(--zupi-primary-gradient);
+    border: none;
+    color: white;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    transition: var(--zupi-transition);
+}
+
+.menu-toggle:hover {
+    background-color: var(--zupi-highlight);
+    transform: scale(1.05);
+}
+
+.menu-toggle:focus {
+    box-shadow: 0 0 0 0.2rem rgba(126, 200, 230, 0.6);
+    outline: none;
+}
+
+.menu-toggle svg {
+    display: block;
+}
+
+/* Responsividade Mobile-First para Dashboard */
+@media (max-width: 991.98px) {
+    .dashboard-sidebar {
+        display: none !important;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    .dashboard-main-content {
+        margin-left: 0 !important;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .offcanvas.dashboard-offcanvas {
+        background: var(--zupi-primary-gradient);
+        width: 280px !important;
+    }
+
+    .offcanvas.dashboard-offcanvas .offcanvas-header {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .offcanvas.dashboard-offcanvas .offcanvas-title {
+        color: var(--zupi-white);
+        font-size: 1.8rem;
+        font-weight: 700;
+    }
+
+    .offcanvas.dashboard-offcanvas .btn-close {
+        filter: invert(1);
+    }
+}
+
+@media (max-width: 575.98px) {
+    .menu-toggle {
+        top: 0.75rem;
+        left: 0.75rem;
+        padding: 0.4rem 0.6rem;
+    }
+}
+
+/* ===================================================
+   Carrossel personalizado (zupi-carousel)
+   =================================================== */
+.zupi-carousel {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    background: var(--zupi-primary-gradient);
+    min-height: 200px;
+}
+
+.zupi-carousel-track {
+    display: flex;
+    transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+}
+
+.zupi-carousel-slide {
+    flex: 0 0 100%;
+    width: 100%;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 5rem;
+    text-align: center;
+    color: #fff;
+}
+
+.zupi-carousel-slide p {
+    color: #fff;
+}
+
+/* Botões prev/next */
+.zupi-carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.25);
+    border: none;
+    color: #fff;
+    font-size: 2rem;
+    line-height: 1;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+    z-index: 10;
+    padding: 0;
+}
+
+.zupi-carousel-btn:hover {
+    background: rgba(255, 255, 255, 0.45);
+}
+
+.zupi-carousel-prev { left: 1rem; }
+.zupi-carousel-next { right: 1rem; }
+
+/* Dots */
+.zupi-carousel-dots {
+    position: absolute;
+    bottom: 0.75rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 0.4rem;
+}
+
+.zupi-carousel-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.45);
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.zupi-carousel-dot.active {
+    background: #fff;
+    transform: scale(1.3);
+}
+
+@media (max-width: 575.98px) {
+    .zupi-carousel-slide {
+        padding: 1.5rem 3.5rem;
+    }
+    .zupi-carousel-slide p {
+        font-size: 0.95rem !important;
+    }
+}
