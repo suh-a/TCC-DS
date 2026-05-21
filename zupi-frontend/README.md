@@ -29,7 +29,8 @@ Copie `.env.example` para `.env` e ajuste se necessário:
 VITE_API_BASE=http://localhost:8080
 ```
 
-Documentação completa: [docs/arquitetura.md](../docs/arquitetura.md)
+Documentação completa: [docs/documentacao-completa-zupi.md](../docs/documentacao-completa-zupi.md)  
+Resumo da arquitetura: [docs/arquitetura.md](../docs/arquitetura.md)
 
 ## Checklist pós-login (responsável)
 

@@ -1,5 +1,8 @@
 # Arquitetura — Frontend (Vite) + Backend (Spring API)
 
+> **Documentação detalhada (rotas, classes Java, arquivos JS, mapa tela↔API):**  
+> [documentacao-completa-zupi.md](./documentacao-completa-zupi.md)
+
 ## Estrutura do repositório
 
 ```
