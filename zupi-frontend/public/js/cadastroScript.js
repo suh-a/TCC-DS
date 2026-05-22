@@ -276,7 +276,8 @@ async function finalizarCadastro() {
 
         const loginResponse = await ZupiAPI.postPublic('/auth/login', {
             email: userData.email,
-            password: userData.password
+            password: userData.password,
+            planType: userData.planType
         });
 
         if (!loginResponse || !loginResponse.ok) {

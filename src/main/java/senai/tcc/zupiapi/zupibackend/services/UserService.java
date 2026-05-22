@@ -4,20 +4,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import senai.tcc.zupiapi.zupibackend.model.Address;
-import senai.tcc.zupiapi.zupibackend.security.AccessControlService;
+import senai.tcc.zupiapi.zupibackend.security.services.AccessControlService;
 import senai.tcc.zupiapi.zupibackend.security.SecurityUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import senai.tcc.zupiapi.zupibackend.dto.LoginDTO;
 import senai.tcc.zupiapi.zupibackend.dto.LoginResponse;
 import senai.tcc.zupiapi.zupibackend.dto.mapper.UserMapper;
-import senai.tcc.zupiapi.zupibackend.security.JwtUtil;
+import senai.tcc.zupiapi.zupibackend.security.jwt.JwtUtil;
 import senai.tcc.zupiapi.zupibackend.dto.request.UserRequest;
 import senai.tcc.zupiapi.zupibackend.dto.response.UserResponse;
 import senai.tcc.zupiapi.zupibackend.exceptions.BusinessException;
 import senai.tcc.zupiapi.zupibackend.exceptions.ResourceNotFoundException;
 import senai.tcc.zupiapi.zupibackend.model.School;
 import senai.tcc.zupiapi.zupibackend.model.User;
+import senai.tcc.zupiapi.zupibackend.model.enums.PlanType;
 import senai.tcc.zupiapi.zupibackend.model.enums.UserType;
 import senai.tcc.zupiapi.zupibackend.repositories.SchoolRepository;
 import senai.tcc.zupiapi.zupibackend.repositories.UserRepository;
@@ -72,19 +73,20 @@ public class UserService {
     }
 
     public UserResponse save(UserRequest user) {
+        UserType type = user.userType() != null ? user.userType() : UserType.RESPONSAVEL;
+        PlanType planType = resolvePlanType(user.planType(), type);
 
-        if (userRepository.existsByEmail(user.email())) {
+        if (userRepository.existsByEmailAndPlanType(user.email(), planType)) {
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT,
-                    "Email já cadastrado"
+                    "Email já cadastrado para este plano"
             );
         }
-
-        UserType type = user.userType() != null ? user.userType() : UserType.RESPONSAVEL;
 
         User userEntity = userMapper.toEntity(user);
         userEntity.setPassword(passwordEncoder.encode(user.password()));
         userEntity.setUserType(type);
+        userEntity.setPlanType(planType);
         userEntity.setPhone(user.phone());
         Address address = new Address();
         address.setCep(user.address().cep());
@@ -130,8 +132,7 @@ public class UserService {
 
     public LoginResponse login(LoginDTO user) {
         try {
-            User userEntity = userRepository.findByEmail(user.email())
-                    .orElseThrow(() -> new RuntimeException());
+            User userEntity = resolveUserForLogin(user.email(), user.planType());
 
             if (!passwordEncoder.matches(user.password(), userEntity.getPassword())) {
                 throw new RuntimeException();
@@ -141,12 +142,32 @@ public class UserService {
             String token = jwtUtil.generateToken(userEntity.getEmail(), userEntity.getId(), userEntity.getUserType());
             return new LoginResponse(token, response);
 
+        } catch (ResponseStatusException e) {
+            throw e;
         } catch (Exception e) {
             throw new ResponseStatusException(
                     HttpStatus.UNAUTHORIZED,
                     "Email ou senha inválidos"
             );
         }
+    }
+
+    private User resolveUserForLogin(String email, PlanType planType) {
+        if (planType != null) {
+            return userRepository.findByEmailAndPlanType(email, planType)
+                    .orElseThrow(() -> new RuntimeException());
+        }
+        List<User> accounts = userRepository.findAllByEmail(email);
+        if (accounts.isEmpty()) {
+            throw new RuntimeException();
+        }
+        if (accounts.size() > 1) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Selecione o tipo de conta (Pessoa Física ou Jurídica)."
+            );
+        }
+        return accounts.get(0);
     }
 
     public UserResponse update(Long id, UserRequest user) {
@@ -179,8 +200,12 @@ public class UserService {
         accessControl.requireUserId(id);
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
-        if (userRepository.existsByEmail(newEmail) && !Objects.equals(user.getEmail(), newEmail)) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "E-mail já cadastrado");
+        PlanType planType = user.getPlanType() != null
+                ? user.getPlanType()
+                : (user.getUserType() == UserType.ESCOLA ? PlanType.PESSOA_JURIDICA : PlanType.PESSOA_FISICA);
+        if (userRepository.existsByEmailAndPlanType(newEmail, planType)
+                && !Objects.equals(user.getEmail(), newEmail)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "E-mail já cadastrado para este plano");
         }
         user.setEmail(newEmail);
         return userMapper.toResponse(userRepository.save(user));
@@ -209,6 +234,13 @@ public class UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
         user.setTwoFactorEnabled(enabled);
         return userMapper.toResponse(userRepository.save(user));
+    }
+
+    static PlanType resolvePlanType(PlanType requestPlanType, UserType userType) {
+        if (requestPlanType != null) {
+            return requestPlanType;
+        }
+        return userType == UserType.ESCOLA ? PlanType.PESSOA_JURIDICA : PlanType.PESSOA_FISICA;
     }
 
     private static String onlyDigits(String value) {

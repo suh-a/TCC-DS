@@ -312,20 +312,70 @@
               </div>
             </div>
             <hr>
-            <h6 class="mb-3">Responsável cadastrado</h6>
-            <p class="text-muted small">Busque um responsável já vinculado à escola ou cadastrado no sistema (nome, e-mail ou CPF).</p>
+            <h6 class="mb-3">Responsável</h6>
+            <p class="text-muted small">Busque por nome ou CPF. Se não encontrar, cadastre um novo responsável.</p>
             <div class="mb-3">
-              <label for="respSearch" class="form-label">Buscar responsável</label>
-              <input type="search" class="form-control" id="respSearch" list="responsiblesDatalist" placeholder="Digite para buscar..." autocomplete="off" required>
+              <label for="respSearch" class="form-label">Buscar responsável (nome ou CPF)</label>
+              <div class="input-group">
+                <input type="search" class="form-control" id="respSearch" list="responsiblesDatalist" placeholder="Nome ou CPF..." autocomplete="off" required>
+                <button type="button" class="btn btn-outline-primary" id="openRegisterResponsibleBtn">Cadastrar usuário</button>
+              </div>
               <datalist id="responsiblesDatalist"></datalist>
               <input type="hidden" id="selectedResponsibleId">
             </div>
             <div id="selectedResponsibleInfo" class="alert alert-light border small d-none"></div>
+            <div id="noResponsibleFound" class="alert alert-warning small d-none">
+              Nenhum responsável encontrado. Use o botão <strong>Cadastrar usuário</strong> para criar um novo.
+            </div>
           </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
           <button type="button" class="btn btn-primary" id="saveStudentBtn">Cadastrar Aluno</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ MODAL: CADASTRAR RESPONSÁVEL ═══ -->
+  <div class="modal fade" id="registerResponsibleModal" tabindex="-1" aria-labelledby="registerResponsibleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-zupi-primary text-white">
+          <h5 class="modal-title" id="registerResponsibleModalLabel">Cadastrar usuário (responsável)</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body p-4">
+          <form id="registerResponsibleForm">
+            <div class="mb-3">
+              <label for="respName" class="form-label">Nome completo</label>
+              <input type="text" class="form-control" id="respName" required>
+            </div>
+            <div class="mb-3">
+              <label for="respCpf" class="form-label">CPF</label>
+              <input type="text" class="form-control" id="respCpf" placeholder="000.000.000-00" maxlength="14" required>
+            </div>
+            <div class="mb-3">
+              <label for="respBirthdate" class="form-label">Data de nascimento</label>
+              <input type="date" class="form-control" id="respBirthdate" required>
+            </div>
+            <div class="mb-3">
+              <label for="respEmail" class="form-label">E-mail</label>
+              <input type="email" class="form-control" id="respEmail" required>
+            </div>
+            <div class="mb-3">
+              <label for="respPhone" class="form-label">Telefone</label>
+              <input type="text" class="form-control" id="respPhone" placeholder="(00) 00000-0000">
+            </div>
+            <div class="mb-3">
+              <label for="respPassword" class="form-label">Senha</label>
+              <input type="password" class="form-control" id="respPassword" minlength="6" required>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-primary" id="saveResponsibleBtn">Salvar usuário</button>
         </div>
       </div>
     </div>
@@ -412,19 +462,51 @@
 
       let schoolResponsibles = [];
 
+      function formatCpfDisplay(cpf) {
+        const d = (cpf || '').replace(/\D/g, '');
+        if (d.length !== 11) return cpf || '—';
+        return d.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+      }
+
+      function responsibleOptionLabel(r) {
+        return `${r.name} — CPF: ${formatCpfDisplay(r.cpf)}`;
+      }
+
+      function selectResponsible(match) {
+        const selectedId = document.getElementById('selectedResponsibleId');
+        const selectedInfo = document.getElementById('selectedResponsibleInfo');
+        const noFound = document.getElementById('noResponsibleFound');
+        if (match) {
+          selectedId.value = match.id;
+          selectedInfo.classList.remove('d-none');
+          selectedInfo.textContent = `${match.name} | ${match.email} | CPF: ${formatCpfDisplay(match.cpf)}`;
+          noFound?.classList.add('d-none');
+        } else {
+          selectedId.value = '';
+          selectedInfo.classList.add('d-none');
+        }
+      }
+
       async function loadResponsibles(query) {
         const q = encodeURIComponent(query || '');
         const resp = await ZupiAPI.fetchJson('/school/responsibles?q=' + q);
         schoolResponsibles = Array.isArray(resp) ? resp : [];
         const datalist = document.getElementById('responsiblesDatalist');
+        const noFound = document.getElementById('noResponsibleFound');
         if (!datalist) return;
         datalist.textContent = '';
         schoolResponsibles.forEach((r) => {
           const opt = document.createElement('option');
-          opt.value = `${r.name} — ${r.email}`;
+          opt.value = responsibleOptionLabel(r);
           opt.dataset.id = r.id;
           datalist.appendChild(opt);
         });
+        const hasQuery = (query || '').trim().length > 0;
+        if (hasQuery && schoolResponsibles.length === 0) {
+          noFound?.classList.remove('d-none');
+        } else {
+          noFound?.classList.add('d-none');
+        }
       }
 
       const respSearch = document.getElementById('respSearch');
@@ -439,19 +521,63 @@
           debounce = setTimeout(() => loadResponsibles(respSearch.value.trim()), 300);
         });
         respSearch.addEventListener('change', () => {
-          const match = schoolResponsibles.find((r) =>
-            `${r.name} — ${r.email}` === respSearch.value.trim()
-          );
-          if (match) {
-            selectedId.value = match.id;
-            selectedInfo.classList.remove('d-none');
-            selectedInfo.textContent = `${match.name} | ${match.email} | CPF: ${match.cpf || '—'}`;
-          } else {
-            selectedId.value = '';
-            selectedInfo.classList.add('d-none');
+          const value = respSearch.value.trim();
+          let match = schoolResponsibles.find((r) => responsibleOptionLabel(r) === value);
+          if (!match && value) {
+            const digits = value.replace(/\D/g, '');
+            match = schoolResponsibles.find((r) =>
+              (r.name && r.name.toLowerCase().includes(value.toLowerCase()))
+              || (digits.length >= 3 && r.cpf && r.cpf.includes(digits))
+            );
           }
+          selectResponsible(match || null);
         });
       }
+
+      document.getElementById('openRegisterResponsibleBtn')?.addEventListener('click', () => {
+        bootstrap.Modal.getOrCreateInstance(document.getElementById('registerResponsibleModal')).show();
+      });
+
+      document.getElementById('saveResponsibleBtn')?.addEventListener('click', async () => {
+        const btn = document.getElementById('saveResponsibleBtn');
+        const name = document.getElementById('respName')?.value.trim();
+        const cpf = (document.getElementById('respCpf')?.value || '').replace(/\D/g, '');
+        const birthDate = document.getElementById('respBirthdate')?.value;
+        const email = document.getElementById('respEmail')?.value.trim();
+        const phone = document.getElementById('respPhone')?.value.trim();
+        const password = document.getElementById('respPassword')?.value;
+
+        if (!name || cpf.length !== 11 || !birthDate || !email || !password || password.length < 6) {
+          alert('Preencha todos os campos obrigatórios (senha com no mínimo 6 caracteres).');
+          return;
+        }
+
+        btn.disabled = true;
+        try {
+          const response = await ZupiAPI.post('/school/responsibles', {
+            name, cpf, birthDate, email, phone: phone || null, password
+          });
+          if (!response) return;
+          const text = await response.text();
+          if (!response.ok) {
+            alert(text || 'Erro ao cadastrar usuário.');
+            return;
+          }
+          const created = JSON.parse(text);
+          schoolResponsibles = [created, ...schoolResponsibles];
+          if (respSearch) {
+            respSearch.value = responsibleOptionLabel(created);
+          }
+          selectResponsible(created);
+          bootstrap.Modal.getInstance(document.getElementById('registerResponsibleModal'))?.hide();
+          document.getElementById('registerResponsibleForm')?.reset();
+          alert('Usuário cadastrado com sucesso. Agora você pode cadastrar o aluno.');
+        } catch (err) {
+          alert('Erro de conexão ao cadastrar usuário.');
+        } finally {
+          btn.disabled = false;
+        }
+      });
 
       const saveStudentBtn = document.getElementById('saveStudentBtn');
       if (saveStudentBtn) {

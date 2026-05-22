@@ -14,10 +14,12 @@ import senai.tcc.zupiapi.zupibackend.dto.LoginDTO;
 import senai.tcc.zupiapi.zupibackend.dto.LoginResponse;
 import senai.tcc.zupiapi.zupibackend.dto.mapper.UserMapper;
 import senai.tcc.zupiapi.zupibackend.security.jwt.JwtUtil;
+import senai.tcc.zupiapi.zupibackend.dto.request.AddressRequest;
 import senai.tcc.zupiapi.zupibackend.dto.request.UserRequest;
 import senai.tcc.zupiapi.zupibackend.dto.response.UserResponse;
 import senai.tcc.zupiapi.zupibackend.exceptions.ResourceNotFoundException;
 import senai.tcc.zupiapi.zupibackend.model.User;
+import senai.tcc.zupiapi.zupibackend.model.enums.PlanType;
 import senai.tcc.zupiapi.zupibackend.repositories.UserRepository;
 import senai.tcc.zupiapi.zupibackend.security.services.AccessControlService;
 
@@ -73,9 +75,22 @@ class UserServiceTest {
     }
 
     private void mockValidUserRequest(UserRequest request) {
+        AddressRequest address = mock(AddressRequest.class);
+        when(address.cep()).thenReturn("00000000");
+        when(address.street()).thenReturn("Rua");
+        when(address.number()).thenReturn("1");
+        when(address.neighborhood()).thenReturn("Centro");
+        when(address.state()).thenReturn("BA");
+        when(address.country()).thenReturn("BR");
+
         when(request.password()).thenReturn("123");
+        when(request.email()).thenReturn("teste@email.com");
         when(request.cpf()).thenReturn("12345678901");
         when(request.birthDate()).thenReturn(LocalDate.of(1990, 1, 1));
+        when(request.userType()).thenReturn(null);
+        when(request.planType()).thenReturn(PlanType.PESSOA_FISICA);
+        when(request.address()).thenReturn(address);
+        when(userRepository.existsByEmailAndPlanType(any(), any())).thenReturn(false);
     }
 
     // 1
