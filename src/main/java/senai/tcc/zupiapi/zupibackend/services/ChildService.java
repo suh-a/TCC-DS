@@ -5,14 +5,14 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import senai.tcc.zupiapi.zupibackend.model.enums.UserType;
-import senai.tcc.zupiapi.zupibackend.security.AccessControlService;
+import senai.tcc.zupiapi.zupibackend.security.services.AccessControlService;
 import senai.tcc.zupiapi.zupibackend.security.SecurityUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import senai.tcc.zupiapi.zupibackend.dto.ChildLoginResponse;
 import senai.tcc.zupiapi.zupibackend.dto.ChildRegistrationResponse;
 import senai.tcc.zupiapi.zupibackend.dto.mapper.ChildMapper;
-import senai.tcc.zupiapi.zupibackend.security.JwtUtil;
+import senai.tcc.zupiapi.zupibackend.security.jwt.JwtUtil;
 import senai.tcc.zupiapi.zupibackend.dto.request.ChildLoginDTO;
 import senai.tcc.zupiapi.zupibackend.dto.request.ChildRequest;
 import senai.tcc.zupiapi.zupibackend.dto.response.ChildResponse;
@@ -76,17 +76,41 @@ public class ChildService {
     }
 
     public void validateAgeChild(Child child) {
-        Integer age = child.getAge();
-        if (age == null && child.getBirthDate() != null) {
-            age = Period.between(child.getBirthDate(), LocalDate.now()).getYears();
-            child.setAge(age);
+        if (child.getBirthDate() == null) {
+            throw new BusinessException("Informe a data de nascimento da criança");
         }
-        if (age == null) {
-            throw new BusinessException("Informe a idade da criança");
-        }
+        int age = Period.between(child.getBirthDate(), LocalDate.now()).getYears();
+        child.setAge(age);
         if (age < 5 || age > 25) {
-            throw new BusinessException("A idade deve estar entre 5 e 25 anos");
+            throw new BusinessException("A idade deve estar entre 5 e 25 anos (conforme data de nascimento)");
         }
+    }
+
+    public ChildRegistrationResponse saveForSchool(ChildRequest childRequest) {
+        if (!SecurityUtils.hasRole(UserType.ESCOLA.name())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Acesso restrito à escola");
+        }
+        User user = userRepository.findById(childRequest.responsibleId())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        Child child = childMapper.toEntity(childRequest);
+        if (childRequest.cpf() != null) {
+            child.setCpf(normalizeCpf(childRequest.cpf()));
+        }
+        child.setSchoolLinked(childRequest.schoolLinked());
+        child.setSchoolName(childRequest.schoolName());
+        validateCpf(child.getCpf());
+        validateAgeChild(child);
+        child.setResponsible(user);
+
+        ChildCredentials credentials = generateChildCredentials(child.getName(), child.getBirthDate());
+        String generatedPassword = credentials.password();
+        child.setChildLoginEmail(credentials.email());
+        child.setChildPasswordHash(passwordEncoder.encode(generatedPassword));
+        child.setOnboardingCompleted(false);
+
+        Child savedChild = childRepository.save(child);
+        return new ChildRegistrationResponse(childMapper.toResponse(savedChild), generatedPassword);
     }
 
     private String normalizeCpf(String cpf) {

@@ -75,6 +75,16 @@
               </div>
 
               <div class="mb-3">
+                <label for="tipoConta" class="form-label">Tipo de conta</label>
+                <select class="form-select" id="tipoConta" name="tipoConta">
+                  <option value="">Detectar automaticamente</option>
+                  <option value="PESSOA_FISICA">Pessoa Física (responsável)</option>
+                  <option value="PESSOA_JURIDICA">Pessoa Jurídica (escola)</option>
+                </select>
+                <small class="text-muted">Obrigatório se o mesmo e-mail tiver conta PF e PJ.</small>
+              </div>
+
+              <div class="mb-3">
                 <label for="senha" class="form-label">Senha</label>
                 <input type="password" class="form-control" id="senha" name="senha" placeholder="Digite sua senha" required aria-required="true">
               </div>

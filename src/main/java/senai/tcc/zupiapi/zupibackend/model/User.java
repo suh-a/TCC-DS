@@ -10,7 +10,9 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "usuarios")
+@Table(name = "usuarios", uniqueConstraints = {
+        @UniqueConstraint(name = "uk_usuario_email_plano", columnNames = {"email", "plan_type"})
+})
 public class User {
 
     @Id
@@ -19,7 +21,6 @@ public class User {
 
     private String name;
 
-    @Column(unique = true)
     private String email;
 
     private String password;

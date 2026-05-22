@@ -1,4 +1,4 @@
-package senai.tcc.zupiapi.zupibackend.config;
+package senai.tcc.zupiapi.zupibackend.security.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,9 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import senai.tcc.zupiapi.zupibackend.security.JwtAuthenticationFilter;
-import senai.tcc.zupiapi.zupibackend.security.JsonAccessDeniedHandler;
-import senai.tcc.zupiapi.zupibackend.security.JsonAuthenticationEntryPoint;
+import senai.tcc.zupiapi.zupibackend.security.jwt.JwtAuthenticationFilter;
 
 import java.util.Arrays;
 import java.util.List;

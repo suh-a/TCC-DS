@@ -12,8 +12,8 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import senai.tcc.zupiapi.zupibackend.security.AccessControlService;
-import senai.tcc.zupiapi.zupibackend.security.JwtUtil;
+import senai.tcc.zupiapi.zupibackend.security.services.AccessControlService;
+import senai.tcc.zupiapi.zupibackend.security.jwt.JwtUtil;
 
 import senai.tcc.zupiapi.zupibackend.dto.mapper.ChildMapper;
 import senai.tcc.zupiapi.zupibackend.dto.ChildRegistrationResponse;

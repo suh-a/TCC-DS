@@ -297,16 +297,12 @@
                       <input type="text" class="form-control" id="childName" placeholder="Digite o nome" required>
                     </div>
                     <div class="mb-3">
-                      <label for="childAge" class="form-label fw-600">Idade (5 a 25 anos)</label>
-                      <input type="number" class="form-control" id="childAge" min="5" max="25" required>
-                    </div>
-                    <div class="mb-3">
                       <label for="childCpf" class="form-label fw-600">CPF</label>
                       <input type="text" class="form-control" id="childCpf" placeholder="000.000.000-00" required maxlength="14">
                     </div>
                     <div class="mb-3">
-                      <label for="childBirthdate" class="form-label fw-600">Data de Nascimento (opcional)</label>
-                      <input type="date" class="form-control" id="childBirthdate">
+                      <label for="childBirthdate" class="form-label fw-600">Data de Nascimento</label>
+                      <input type="date" class="form-control" id="childBirthdate" required>
                     </div>
                     <div class="mb-3">
                       <label for="childGrade" class="form-label fw-600">Ano Escolar</label>
@@ -419,6 +415,7 @@
   <script src="/js/routes.js"></script>
   <script src="/js/api.js"></script>
   <script src="/js/auth-guard.js"></script>
+  <script src="/js/responsavel-sidebar.js"></script>
   <script src="/js/main.js"></script>
   <script src="/js/theme.js"></script>
   <script src="/js/game-score.js"></script>

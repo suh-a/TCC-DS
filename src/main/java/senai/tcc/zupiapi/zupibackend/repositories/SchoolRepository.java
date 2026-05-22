@@ -9,5 +9,7 @@ public interface SchoolRepository extends JpaRepository<School, Long> {
 
     Optional<School> findByCnpj(String cnpj);
 
+    Optional<School> findByAccountId(Long accountId);
+
     boolean existsByCnpj(String cnpj);
 }

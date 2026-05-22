@@ -53,7 +53,6 @@ function onlyDigits(v) {
 async function cadastrarCrianca() {
     const btn = document.getElementById('addChildButton');
     const name = document.getElementById('childName').value.trim();
-    const age = parseInt(document.getElementById('childAge').value, 10);
     const cpf = onlyDigits(document.getElementById('childCpf').value);
     const birthInput = document.getElementById('childBirthdate').value;
     const childGrade = document.getElementById('childGrade').value;
@@ -63,8 +62,8 @@ async function cadastrarCrianca() {
         alert('Preencha nome e CPF válido (11 dígitos).');
         return;
     }
-    if (isNaN(age) || age < 5 || age > 25) {
-        alert('A idade deve estar entre 5 e 25 anos.');
+    if (!birthInput) {
+        alert('Informe a data de nascimento.');
         return;
     }
     if (!childGrade) {
@@ -74,9 +73,8 @@ async function cadastrarCrianca() {
 
     const childData = {
         name,
-        age,
         cpf,
-        birthDate: birthInput || null,
+        birthDate: birthInput,
         schoolClass: childGrade,
         condition: null,
         responsibleId: parseInt(userId, 10)

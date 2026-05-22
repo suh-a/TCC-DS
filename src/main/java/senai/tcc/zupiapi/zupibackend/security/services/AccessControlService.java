@@ -1,4 +1,4 @@
-package senai.tcc.zupiapi.zupibackend.security;
+package senai.tcc.zupiapi.zupibackend.security.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,6 +8,7 @@ import senai.tcc.zupiapi.zupibackend.exceptions.ResourceNotFoundException;
 import senai.tcc.zupiapi.zupibackend.model.Child;
 import senai.tcc.zupiapi.zupibackend.model.enums.UserType;
 import senai.tcc.zupiapi.zupibackend.repositories.ChildRepository;
+import senai.tcc.zupiapi.zupibackend.security.SecurityUtils;
 
 @Service
 public class AccessControlService {

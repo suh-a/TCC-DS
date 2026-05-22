@@ -13,12 +13,13 @@ import org.springframework.web.server.ResponseStatusException;
 import senai.tcc.zupiapi.zupibackend.dto.LoginDTO;
 import senai.tcc.zupiapi.zupibackend.dto.LoginResponse;
 import senai.tcc.zupiapi.zupibackend.dto.mapper.UserMapper;
-import senai.tcc.zupiapi.zupibackend.security.JwtUtil;
+import senai.tcc.zupiapi.zupibackend.security.jwt.JwtUtil;
 import senai.tcc.zupiapi.zupibackend.dto.request.UserRequest;
 import senai.tcc.zupiapi.zupibackend.dto.response.UserResponse;
 import senai.tcc.zupiapi.zupibackend.exceptions.ResourceNotFoundException;
 import senai.tcc.zupiapi.zupibackend.model.User;
 import senai.tcc.zupiapi.zupibackend.repositories.UserRepository;
+import senai.tcc.zupiapi.zupibackend.security.services.AccessControlService;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -49,7 +50,7 @@ class UserServiceTest {
     private PasswordEncoder passwordEncoder;
 
     @Mock
-    private senai.tcc.zupiapi.zupibackend.security.AccessControlService accessControl;
+    private AccessControlService accessControl;
 
     @InjectMocks
     private UserService userService;
@@ -187,12 +188,12 @@ class UserServiceTest {
     // 10
     @Test
     void shouldValidatePasswordCorrectly() {
-        LoginDTO login = new LoginDTO("teste@email.com", "123");
+        LoginDTO login = new LoginDTO("teste@email.com", "123", null);
 
         PasswordEncoder encoder = new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder();
         user.setPassword(encoder.encode("123"));
 
-        when(userRepository.findByEmail(login.email())).thenReturn(Optional.of(user));
+        when(userRepository.findAllByEmail(login.email())).thenReturn(List.of(user));
         when(userMapper.toResponse(user)).thenReturn(userResponse);
         when(jwtUtil.generateToken(any(), any(), any())).thenReturn("token");
 
@@ -205,12 +206,12 @@ class UserServiceTest {
     // 11
     @Test
     void shouldReturnFalseForWrongPassword() {
-        LoginDTO login = new LoginDTO("teste@email.com", "wrong");
+        LoginDTO login = new LoginDTO("teste@email.com", "wrong", null);
 
         PasswordEncoder encoder = new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder();
         user.setPassword(encoder.encode("123"));
 
-        when(userRepository.findByEmail(login.email())).thenReturn(Optional.of(user));
+        when(userRepository.findAllByEmail(login.email())).thenReturn(List.of(user));
         when(passwordEncoder.matches(any(), any())).thenReturn(false);
 
         assertThrows(ResponseStatusException.class, () -> {
@@ -221,9 +222,9 @@ class UserServiceTest {
     // 12
     @Test
     void shouldThrowExceptionWhenValidatingPasswordUserNotFound() {
-        LoginDTO login = new LoginDTO("x", "123");
+        LoginDTO login = new LoginDTO("x", "123", null);
 
-        when(userRepository.findByEmail(login.email())).thenReturn(Optional.empty());
+        when(userRepository.findAllByEmail(login.email())).thenReturn(List.of());
 
         assertThrows(ResponseStatusException.class, () -> {
             userService.login(login);
@@ -279,12 +280,12 @@ class UserServiceTest {
         // 17
         @Test
         void shouldCallRepositoryFindByEmailOnValidation () {
-            LoginDTO login = new LoginDTO("teste@email.com", "123");
+            LoginDTO login = new LoginDTO("teste@email.com", "123", null);
 
             PasswordEncoder encoder = new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder();
             user.setPassword(encoder.encode("123"));
 
-            when(userRepository.findByEmail(login.email())).thenReturn(Optional.of(user));
+            when(userRepository.findAllByEmail(login.email())).thenReturn(List.of(user));
             when(userMapper.toResponse(user)).thenReturn(userResponse);
             when(jwtUtil.generateToken(any())).thenReturn("token");
 
@@ -293,7 +294,7 @@ class UserServiceTest {
             } catch (Exception ignored) {
             }
 
-            verify(userRepository).findByEmail(login.email());
+            verify(userRepository).findAllByEmail(login.email());
 
 
         }

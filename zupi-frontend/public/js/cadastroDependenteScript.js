@@ -27,15 +27,6 @@ document.addEventListener('DOMContentLoaded', function () {
     loadDependentesList();
 });
 
-function calcAge(birthDateStr) {
-    const birth = new Date(birthDateStr);
-    const today = new Date();
-    let age = today.getFullYear() - birth.getFullYear();
-    const m = today.getMonth() - birth.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
-    return age;
-}
-
 async function submitDependente(e) {
     e.preventDefault();
 
@@ -60,16 +51,8 @@ async function submitDependente(e) {
         return;
     }
 
-    const age = calcAge(birthDate);
-    if (age < 5 || age > 25) {
-        errorMsg.textContent = 'A idade deve estar entre 5 e 25 anos.';
-        errorMsg.style.display = 'block';
-        return;
-    }
-
     const payload = {
         name,
-        age,
         cpf,
         birthDate,
         schoolClass: '',

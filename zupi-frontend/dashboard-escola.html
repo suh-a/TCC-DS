@@ -306,39 +306,21 @@
                 <label for="studentBirthdate" class="form-label">Data de Nascimento</label>
                 <input type="date" class="form-control" id="studentBirthdate" required>
               </div>
-              <div class="col-md-4 mb-3">
-                <label for="studentAge" class="form-label">Idade</label>
-                <input type="number" class="form-control" id="studentAge" min="5" max="25" required>
-              </div>
-              <div class="col-md-4 mb-3">
+              <div class="col-md-6 mb-3">
                 <label for="studentGrade" class="form-label">Ano Escolar</label>
                 <input type="text" class="form-control" id="studentGrade" placeholder="Ex: 3º Ano" required>
               </div>
             </div>
             <hr>
-            <h6 class="mb-3">Dados do Responsável</h6>
-            <div class="row g-3">
-              <div class="col-md-6 mb-3">
-                <label for="respName" class="form-label">Nome do Responsável</label>
-                <input type="text" class="form-control" id="respName" required>
-              </div>
-              <div class="col-md-6 mb-3">
-                <label for="respEmail" class="form-label">E-mail</label>
-                <input type="email" class="form-control" id="respEmail" required>
-              </div>
-              <div class="col-md-4 mb-3">
-                <label for="respCpf" class="form-label">CPF</label>
-                <input type="text" class="form-control" id="respCpf" placeholder="000.000.000-00" maxlength="14" required>
-              </div>
-              <div class="col-md-4 mb-3">
-                <label for="respPhone" class="form-label">Telefone</label>
-                <input type="text" class="form-control" id="respPhone" placeholder="(00) 00000-0000">
-              </div>
-              <div class="col-md-4 mb-3">
-                <label for="respAddress" class="form-label">Endereço</label>
-                <input type="text" class="form-control" id="respAddress">
-              </div>
+            <h6 class="mb-3">Responsável cadastrado</h6>
+            <p class="text-muted small">Busque um responsável já vinculado à escola ou cadastrado no sistema (nome, e-mail ou CPF).</p>
+            <div class="mb-3">
+              <label for="respSearch" class="form-label">Buscar responsável</label>
+              <input type="search" class="form-control" id="respSearch" list="responsiblesDatalist" placeholder="Digite para buscar..." autocomplete="off" required>
+              <datalist id="responsiblesDatalist"></datalist>
+              <input type="hidden" id="selectedResponsibleId">
             </div>
+            <div id="selectedResponsibleInfo" class="alert alert-light border small d-none"></div>
           </form>
         </div>
         <div class="modal-footer">
@@ -424,6 +406,96 @@
             }
           } catch (err) {
             alert('Erro ao enviar chamado.');
+          }
+        });
+      }
+
+      let schoolResponsibles = [];
+
+      async function loadResponsibles(query) {
+        const q = encodeURIComponent(query || '');
+        const resp = await ZupiAPI.fetchJson('/school/responsibles?q=' + q);
+        schoolResponsibles = Array.isArray(resp) ? resp : [];
+        const datalist = document.getElementById('responsiblesDatalist');
+        if (!datalist) return;
+        datalist.textContent = '';
+        schoolResponsibles.forEach((r) => {
+          const opt = document.createElement('option');
+          opt.value = `${r.name} — ${r.email}`;
+          opt.dataset.id = r.id;
+          datalist.appendChild(opt);
+        });
+      }
+
+      const respSearch = document.getElementById('respSearch');
+      const selectedId = document.getElementById('selectedResponsibleId');
+      const selectedInfo = document.getElementById('selectedResponsibleInfo');
+
+      if (respSearch) {
+        loadResponsibles('');
+        let debounce;
+        respSearch.addEventListener('input', () => {
+          clearTimeout(debounce);
+          debounce = setTimeout(() => loadResponsibles(respSearch.value.trim()), 300);
+        });
+        respSearch.addEventListener('change', () => {
+          const match = schoolResponsibles.find((r) =>
+            `${r.name} — ${r.email}` === respSearch.value.trim()
+          );
+          if (match) {
+            selectedId.value = match.id;
+            selectedInfo.classList.remove('d-none');
+            selectedInfo.textContent = `${match.name} | ${match.email} | CPF: ${match.cpf || '—'}`;
+          } else {
+            selectedId.value = '';
+            selectedInfo.classList.add('d-none');
+          }
+        });
+      }
+
+      const saveStudentBtn = document.getElementById('saveStudentBtn');
+      if (saveStudentBtn) {
+        saveStudentBtn.addEventListener('click', async () => {
+          const responsibleId = parseInt(selectedId?.value, 10);
+          const name = document.getElementById('studentName')?.value.trim();
+          const cpf = (document.getElementById('studentCpf')?.value || '').replace(/\D/g, '');
+          const birthDate = document.getElementById('studentBirthdate')?.value;
+          const schoolClass = document.getElementById('studentGrade')?.value.trim();
+
+          if (!responsibleId || !name || cpf.length !== 11 || !birthDate || !schoolClass) {
+            alert('Preencha os dados do aluno e selecione um responsável da lista.');
+            return;
+          }
+
+          saveStudentBtn.disabled = true;
+          try {
+            const response = await ZupiAPI.post('/school/students', {
+              name,
+              cpf,
+              birthDate,
+              schoolClass,
+              condition: null,
+              responsibleId,
+              schoolLinked: true,
+              schoolName: null
+            });
+            if (!response) return;
+            const text = await response.text();
+            if (response.ok) {
+              const created = JSON.parse(text);
+              const child = created.child || created;
+              alert(`Aluno cadastrado!\nLogin infantil: ${child.childLoginEmail || '—'}\nSenha: ${created.generatedPassword || '—'}`);
+              bootstrap.Modal.getInstance(document.getElementById('addStudentModal'))?.hide();
+              document.getElementById('studentForm')?.reset();
+              selectedId.value = '';
+              selectedInfo?.classList.add('d-none');
+            } else {
+              alert(text || 'Erro ao cadastrar aluno.');
+            }
+          } catch (err) {
+            alert('Erro de conexão ao cadastrar aluno.');
+          } finally {
+            saveStudentBtn.disabled = false;
           }
         });
       }

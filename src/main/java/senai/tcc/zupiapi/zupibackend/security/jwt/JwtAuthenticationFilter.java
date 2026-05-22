@@ -1,4 +1,4 @@
-package senai.tcc.zupiapi.zupibackend.security;
+package senai.tcc.zupiapi.zupibackend.security.jwt;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

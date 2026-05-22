@@ -85,6 +85,7 @@ export default defineConfig(({ mode }) => {
       proxy: {
         '/auth': { target: apiTarget, changeOrigin: true },
         '/child': { target: apiTarget, changeOrigin: true },
+        '/school': { target: apiTarget, changeOrigin: true },
         '/contact': { target: apiTarget, changeOrigin: true },
         '/skillAreas': { target: apiTarget, changeOrigin: true },
         '/content': { target: apiTarget, changeOrigin: true },

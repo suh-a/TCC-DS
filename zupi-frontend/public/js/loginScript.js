@@ -29,6 +29,7 @@ async function loginUser(event) {
 
     const email = document.getElementById('email').value.trim();
     const password = document.getElementById('senha').value;
+    const planType = document.getElementById('tipoConta')?.value || null;
     const erroLogin = document.getElementById('erroLogin');
 
     erroLogin.style.display = 'none';
@@ -39,13 +40,21 @@ async function loginUser(event) {
         return;
     }
 
+    const body = { email, password };
+    if (planType) body.planType = planType;
+
     try {
-        const response = await ZupiAPI.postPublic('/auth/login', { email, password });
+        const response = await ZupiAPI.postPublic('/auth/login', body);
 
         if (!response || !response.ok) {
-            erroLogin.textContent = response?.status === 401
-                ? 'Email ou senha inválidos!'
-                : 'Erro ao realizar login.';
+            if (response?.status === 409) {
+                const msg = await response.text();
+                erroLogin.textContent = msg || 'Selecione o tipo de conta (Pessoa Física ou Jurídica).';
+            } else {
+                erroLogin.textContent = response?.status === 401
+                    ? 'Email ou senha inválidos!'
+                    : 'Erro ao realizar login.';
+            }
             erroLogin.style.display = 'block';
             return;
         }

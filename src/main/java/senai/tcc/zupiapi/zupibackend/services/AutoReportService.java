@@ -11,7 +11,7 @@ import senai.tcc.zupiapi.zupibackend.model.GameSession;
 import senai.tcc.zupiapi.zupibackend.model.SkillArea;
 import senai.tcc.zupiapi.zupibackend.repositories.ChildReportRepository;
 import senai.tcc.zupiapi.zupibackend.repositories.GameSessionRepository;
-import senai.tcc.zupiapi.zupibackend.security.AccessControlService;
+import senai.tcc.zupiapi.zupibackend.security.services.AccessControlService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

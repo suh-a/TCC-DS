@@ -15,7 +15,7 @@ import senai.tcc.zupiapi.zupibackend.exceptions.DataBaseExceptions;
 import senai.tcc.zupiapi.zupibackend.exceptions.ResourceNotFoundException;
 import senai.tcc.zupiapi.zupibackend.model.*;
 import senai.tcc.zupiapi.zupibackend.repositories.*;
-import senai.tcc.zupiapi.zupibackend.security.AccessControlService;
+import senai.tcc.zupiapi.zupibackend.security.services.AccessControlService;
 
 import java.util.List;
 import java.util.Optional;

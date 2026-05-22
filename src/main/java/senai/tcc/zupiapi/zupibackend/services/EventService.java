@@ -16,8 +16,7 @@ import senai.tcc.zupiapi.zupibackend.repositories.ChildRepository;
 import senai.tcc.zupiapi.zupibackend.repositories.EventRepository;
 import senai.tcc.zupiapi.zupibackend.repositories.SkillAreaRepository;
 import senai.tcc.zupiapi.zupibackend.repositories.UserRepository;
-import senai.tcc.zupiapi.zupibackend.security.AccessControlService;
-import senai.tcc.zupiapi.zupibackend.security.SecurityUtils;
+import senai.tcc.zupiapi.zupibackend.security.services.AccessControlService;
 
 import java.util.List;
 
