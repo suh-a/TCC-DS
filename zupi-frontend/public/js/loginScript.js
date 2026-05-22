@@ -61,3 +61,69 @@ async function loginUser(event) {
         erroLogin.style.display = 'block';
     }
 }
+
+window.onload = function () {
+
+    google.accounts.id.initialize({
+        client_id: "841923211184-gn3apap7cv42s3nrbtrri7seh31h0gvp.apps.googleusercontent.com",
+
+        callback: handleGoogleLogin
+    });
+
+    google.accounts.id.renderButton(
+        document.getElementById("googleBtn"),
+        {
+            theme: "outline",
+            size: "large",
+            shape: "rectangular",
+            width: 360,
+            text: "continue_with"
+        }
+    );
+};
+
+async function handleGoogleLogin(response) {
+
+    try {
+
+        const res = await fetch(
+            'http://localhost:8080/auth/google',
+            {
+                method: 'POST',
+
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+
+                body: JSON.stringify({
+                    token: response.credential
+                })
+            }
+        );
+
+        if (!res.ok) {
+            throw new Error('Erro no login Google');
+        }
+
+        const data = await res.json();
+
+        console.log(data);
+
+        // salva sessão
+        ZupiAPI.saveSession(data);
+
+        // pega tipo usuário
+        const userType =
+            data.user?.userType || 'RESPONSAVEL';
+
+        // redireciona corretamente
+        ZupiAPI.redirectByUserType(userType);
+
+    } catch (error) {
+
+        console.error(
+            'Erro login Google:',
+            error
+        );
+    }
+}

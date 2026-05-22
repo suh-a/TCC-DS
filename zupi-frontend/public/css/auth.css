@@ -1,15 +1,13 @@
 /* ===================================================
    Zupi - Auth CSS
-   Estilos específicos para páginas de autenticação
-   (Login e Cadastro)
+   Estilos especificos para paginas de autenticacao
    =================================================== */
 
-/* Auth Pages (Login/Cadastro) */
 .auth-page {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(180deg, #E9F6F5, #F1F7F6);
+  background: linear-gradient(180deg, #e9f6f5, #f7fbfa);
 }
 
 .auth-page main {
@@ -17,30 +15,180 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
   padding: 2rem 1rem;
 }
 
 .auth-card {
-  background: var(--zupi-white);
-  border-radius: 18px;
-  padding: 2.5rem;
-  box-shadow: 0 18px 40px rgba(7, 32, 35, 0.08);
   width: 100%;
   max-width: 450px;
   margin: 0 auto;
+  padding: 2.5rem;
+  background: var(--zupi-white, #fff);
+  border-radius: 18px;
+  box-shadow: 0 18px 40px rgba(7, 32, 35, 0.08);
 }
 
-/* Responsividade Auth */
+.login-card {
+  max-width: 450px;
+}
+
+.auth-card .form-control,
+.cadastro-card .form-control {
+  width: 100%;
+  min-width: 0;
+  height: 50px;
+  border-radius: 12px;
+}
+
+.auth-card .btn,
+.cadastro-card .btn {
+  min-height: 48px;
+  border-radius: 12px;
+  font-weight: 600;
+  white-space: normal;
+}
+
+.google-login-container {
+  width: 100%;
+  margin-top: 14px;
+  margin-bottom: 14px;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+}
+
+#googleBtn {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/* ===================================================
+   Cadastro por etapas
+   =================================================== */
+
+.cadastro-page main {
+  padding: 2.5rem 1rem;
+}
+
+.cadastro-card {
+  max-width: 860px;
+  padding: 0;
+  overflow: hidden;
+}
+
+.cadastro-header {
+  padding: 2rem 2.25rem 1rem;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.cadastro-kicker {
+  margin: 0 0 0.35rem;
+  color: var(--zupi-primary, #0d6efd);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.82rem;
+}
+
+.cadastro-header h1 {
+  margin: 0;
+  color: #1f2937;
+  font-size: 1.85rem;
+  font-weight: 700;
+}
+
+.step-indicator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 1.25rem 1rem 0;
+}
+
+.step {
+  width: 12px;
+  height: 12px;
+  border: 0;
+  border-radius: 50%;
+  background: #d6dde3;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.step.active {
+  background: var(--zupi-primary, #0d6efd);
+  transform: scale(1.2);
+}
+
+.cadastro-step {
+  display: none;
+  padding: 2rem 2.25rem 2.25rem;
+}
+
+.cadastro-step.active {
+  display: block;
+}
+
+.cadastro-step h2 {
+  margin-bottom: 1.5rem;
+  color: #1f2937;
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.cadastro-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.cadastro-actions .btn {
+  flex: 1 1 0;
+}
+
+.pagamento-box {
+  margin-bottom: 1.25rem;
+  padding: 1rem;
+  border: 1px solid rgba(13, 110, 253, 0.18);
+  border-radius: 14px;
+  background: #eef8ff;
+  color: #16324f;
+  font-weight: 700;
+}
+
 @media (max-width: 991.98px) {
   .auth-card {
+    max-width: 100%;
     padding: 1.5rem;
     margin: 1rem auto;
-    max-width: 100%;
+  }
+
+  .cadastro-card {
+    padding: 0;
   }
 
   .auth-page main {
-    padding: 1rem;
     min-height: auto;
+    padding: 1rem;
   }
 }
 
+@media (max-width: 767.98px) {
+  .cadastro-page main {
+    padding: 1rem;
+  }
+
+  .cadastro-header,
+  .cadastro-step {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+
+  .cadastro-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .cadastro-actions {
+    flex-direction: column;
+  }
+}
