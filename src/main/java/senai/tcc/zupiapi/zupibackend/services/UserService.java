@@ -3,25 +3,26 @@ package senai.tcc.zupiapi.zupibackend.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import senai.tcc.zupiapi.zupibackend.security.services.AccessControlService;
+import senai.tcc.zupiapi.zupibackend.model.Address;
+import senai.tcc.zupiapi.zupibackend.security.AccessControlService;
 import senai.tcc.zupiapi.zupibackend.security.SecurityUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import senai.tcc.zupiapi.zupibackend.dto.LoginDTO;
 import senai.tcc.zupiapi.zupibackend.dto.LoginResponse;
 import senai.tcc.zupiapi.zupibackend.dto.mapper.UserMapper;
-import senai.tcc.zupiapi.zupibackend.security.jwt.JwtUtil;
+import senai.tcc.zupiapi.zupibackend.security.JwtUtil;
 import senai.tcc.zupiapi.zupibackend.dto.request.UserRequest;
 import senai.tcc.zupiapi.zupibackend.dto.response.UserResponse;
 import senai.tcc.zupiapi.zupibackend.exceptions.BusinessException;
 import senai.tcc.zupiapi.zupibackend.exceptions.ResourceNotFoundException;
 import senai.tcc.zupiapi.zupibackend.model.School;
 import senai.tcc.zupiapi.zupibackend.model.User;
-import senai.tcc.zupiapi.zupibackend.model.enums.PlanType;
 import senai.tcc.zupiapi.zupibackend.model.enums.UserType;
 import senai.tcc.zupiapi.zupibackend.repositories.SchoolRepository;
 import senai.tcc.zupiapi.zupibackend.repositories.UserRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
@@ -72,22 +73,27 @@ public class UserService {
 
     public UserResponse save(UserRequest user) {
 
-        UserType type = user.userType() != null ? user.userType() : UserType.RESPONSAVEL;
-        PlanType planType = resolvePlanType(user, type);
-
-        if (userRepository.existsByEmailAndPlanType(user.email(), planType)) {
+        if (userRepository.existsByEmail(user.email())) {
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT,
-                    "E-mail já cadastrado para este tipo de conta"
+                    "Email já cadastrado"
             );
         }
+
+        UserType type = user.userType() != null ? user.userType() : UserType.RESPONSAVEL;
 
         User userEntity = userMapper.toEntity(user);
         userEntity.setPassword(passwordEncoder.encode(user.password()));
         userEntity.setUserType(type);
-        userEntity.setPlanType(planType);
         userEntity.setPhone(user.phone());
-        userEntity.setAddress(user.address());
+        Address address = new Address();
+        address.setCep(user.address().cep());
+        address.setStreet(user.address().street());
+        address.setNumber(user.address().number());
+        address.setNeighborhood(user.address().neighborhood());
+        address.setState(user.address().state());
+        address.setCountry(user.address().country());
+        userEntity.setAddress(address);
 
         if (type == UserType.ESCOLA) {
             String cnpj = onlyDigits(user.cnpj());
@@ -124,53 +130,23 @@ public class UserService {
 
     public LoginResponse login(LoginDTO user) {
         try {
-            User userEntity = resolveUserForLogin(user);
+            User userEntity = userRepository.findByEmail(user.email())
+                    .orElseThrow(() -> new RuntimeException());
 
             if (!passwordEncoder.matches(user.password(), userEntity.getPassword())) {
                 throw new RuntimeException();
             }
 
             UserResponse response = userMapper.toResponse(userEntity);
-            String token = jwtUtil.generateToken(
-                    String.valueOf(userEntity.getId()),
-                    userEntity.getId(),
-                    userEntity.getUserType()
-            );
+            String token = jwtUtil.generateToken(userEntity.getEmail(), userEntity.getId(), userEntity.getUserType());
             return new LoginResponse(token, response);
 
-        } catch (ResponseStatusException e) {
-            throw e;
         } catch (Exception e) {
             throw new ResponseStatusException(
                     HttpStatus.UNAUTHORIZED,
                     "Email ou senha inválidos"
             );
         }
-    }
-
-    private User resolveUserForLogin(LoginDTO login) {
-        if (login.planType() != null) {
-            return userRepository.findByEmailAndPlanType(login.email(), login.planType())
-                    .orElseThrow(() -> new RuntimeException());
-        }
-        List<User> accounts = userRepository.findAllByEmail(login.email());
-        if (accounts.isEmpty()) {
-            throw new RuntimeException();
-        }
-        if (accounts.size() == 1) {
-            return accounts.get(0);
-        }
-        throw new ResponseStatusException(
-                HttpStatus.CONFLICT,
-                "Este e-mail possui mais de uma conta. Selecione Pessoa Física ou Pessoa Jurídica."
-        );
-    }
-
-    private static PlanType resolvePlanType(UserRequest user, UserType type) {
-        if (user.planType() != null) {
-            return user.planType();
-        }
-        return type == UserType.ESCOLA ? PlanType.PESSOA_JURIDICA : PlanType.PESSOA_FISICA;
     }
 
     public UserResponse update(Long id, UserRequest user) {
@@ -203,10 +179,8 @@ public class UserService {
         accessControl.requireUserId(id);
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
-        PlanType plan = user.getPlanType() != null ? user.getPlanType() : PlanType.PESSOA_FISICA;
-        if (userRepository.existsByEmailAndPlanType(newEmail, plan)
-                && !Objects.equals(user.getEmail(), newEmail)) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "E-mail já cadastrado para este tipo de conta");
+        if (userRepository.existsByEmail(newEmail) && !Objects.equals(user.getEmail(), newEmail)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "E-mail já cadastrado");
         }
         user.setEmail(newEmail);
         return userMapper.toResponse(userRepository.save(user));

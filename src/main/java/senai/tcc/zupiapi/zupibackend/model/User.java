@@ -26,6 +26,13 @@ public class User {
     private String password;
 
     @Column(unique = true)
+    private String googleId;
+
+    private Boolean googleAccount;
+
+    private String provider;
+
+    @Column(unique = true)
     private String cpf;
 
     private java.time.LocalDate birthDate;
@@ -37,7 +44,8 @@ public class User {
     private PlanType planType;
 
     private String phone;
-    private String address;
+    @Embedded
+    private Address address;
     private boolean active = true;
     private boolean twoFactorEnabled;
 
@@ -149,11 +157,12 @@ public class User {
         this.phone = phone;
     }
 
-    public String getAddress() {
+
+    public Address getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
+    public void setAddress(Address address) {
         this.address = address;
     }
 

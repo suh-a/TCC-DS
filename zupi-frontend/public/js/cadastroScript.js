@@ -1,170 +1,463 @@
-/**
- * Cadastro Script — Usa ZupiAPI para registro e login automático.
- * Requer: /js/api.js carregado antes deste script.
- */
+let currentStep = 0;
+let tipoCadastro = 'pf';
+let stepsConfig = [];
+
 document.addEventListener('DOMContentLoaded', function () {
-    // Se já autenticado, redirecionar
     if (ZupiAPI.isAuthenticated()) {
-        const userType = ZupiAPI.getUser().type;
-        ZupiAPI.redirectByUserType(userType);
+        ZupiAPI.redirectByUserType(ZupiAPI.getUser().type);
         return;
     }
 
-    document.querySelectorAll('.tipo-btn').forEach(btn => {
-        btn.addEventListener('click', () => showForm(btn.dataset.tipo));
-    });
-    document.querySelectorAll('.voltar-tipo').forEach(btn => {
-        btn.addEventListener('click', showTypeStep);
-    });
+    const params = new URLSearchParams(window.location.search);
+    tipoCadastro = params.get('tipo') === 'pj' ? 'pj' : 'pf';
+    stepsConfig = tipoCadastro === 'pj' ? getPessoaJuridicaSteps() : getPessoaFisicaSteps();
 
-    const formPF = document.getElementById('signupFormPF');
-    const formPJ = document.getElementById('signupFormPJ');
-    if (formPF) formPF.addEventListener('submit', cadastrarPF);
-    if (formPJ) formPJ.addEventListener('submit', cadastrarPJ);
-
-    maskCpf(document.getElementById('cpfPF'));
-    maskCnpj(document.getElementById('cnpjPJ'));
-    maskPhone(document.getElementById('phonePF'));
-    maskPhone(document.getElementById('phonePJ'));
+    renderCadastro();
+    initMasks();
+    updateStep();
 });
 
-function showTypeStep() {
-    document.getElementById('stepTipo').classList.remove('d-none');
-    document.getElementById('formPF').classList.add('d-none');
-    document.getElementById('formPJ').classList.add('d-none');
-}
-
-function showForm(tipo) {
-    document.getElementById('stepTipo').classList.add('d-none');
-    document.getElementById('formPF').classList.toggle('d-none', tipo !== 'PESSOA_FISICA');
-    document.getElementById('formPJ').classList.toggle('d-none', tipo !== 'PESSOA_JURIDICA');
-}
-
-function maskCpf(el) {
-    if (!el) return;
-    el.addEventListener('input', () => {
-        const d = el.value.replace(/\D/g, '').slice(0, 11);
-        el.value = d.replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-    });
-}
-
-function maskCnpj(el) {
-    if (!el) return;
-    el.addEventListener('input', () => {
-        const d = el.value.replace(/\D/g, '').slice(0, 14);
-        el.value = d.replace(/^(\d{2})(\d)/, '$1.$2').replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3')
-            .replace(/\.(\d{3})(\d)/, '.$1/$2').replace(/(\d{4})(\d)/, '$1-$2');
-    });
-}
-
-function maskPhone(el) {
-    if (!el) return;
-    el.addEventListener('input', () => {
-        const d = el.value.replace(/\D/g, '').slice(0, 11);
-        if (d.length <= 10) {
-            el.value = d.replace(/(\d{2})(\d)/, '($1) $2').replace(/(\d{4})(\d)/, '$1-$2');
-        } else {
-            el.value = d.replace(/(\d{2})(\d)/, '($1) $2').replace(/(\d{5})(\d)/, '$1-$2');
+function getPessoaFisicaSteps() {
+    return [
+        {
+            title: 'Dados pessoais',
+            fields: [
+                field('nome', 'Nome completo'),
+                field('cpf', 'CPF'),
+                field('nascimento', 'Data de nascimento', 'date')
+            ],
+            actions: [{ label: 'Proximo', type: 'next' }]
+        },
+        {
+            title: 'Endereco',
+            fields: addressFields(),
+            actions: [
+                { label: 'Anterior', type: 'prev' },
+                { label: 'Proximo', type: 'next' }
+            ]
+        },
+        {
+            title: 'Contato / Seguranca',
+            fields: securityFields(),
+            actions: [
+                { label: 'Anterior', type: 'prev' },
+                { label: 'Proximo', type: 'next' }
+            ]
+        },
+        {
+            title: 'Pagamento',
+            payment: true,
+            actions: [
+                { label: 'Anterior', type: 'prev' },
+                { label: 'Concluir pagamento e se cadastrar', type: 'finish' }
+            ]
         }
-    });
+    ];
 }
 
-async function registerAndLogin(userData, erroEl) {
-    erroEl.style.display = 'none';
-    try {
-        // 1. Register
-        const regResponse = await ZupiAPI.postPublic('/auth/register', userData);
+function getPessoaJuridicaSteps() {
+    return [
+        {
+            title: 'Dados institucionais / Contato / Seguranca',
+            fields: [
+                field('nome', 'Nome da instituicao'),
+                field('cnpj', 'CNPJ'),
+                field('email', 'E-mail', 'email'),
+                field('telefone', 'Telefone'),
+                field('senha', 'Senha', 'password'),
+                field('confirmarSenha', 'Confirmar senha', 'password')
+            ],
+            actions: [{ label: 'Proximo', type: 'next' }]
+        },
+        {
+            title: 'Endereco',
+            fields: addressFields(),
+            actions: [
+                { label: 'Anterior', type: 'prev' },
+                { label: 'Proximo', type: 'next' }
+            ]
+        },
+        {
+            title: 'Pagamento',
+            payment: true,
+            actions: [
+                { label: 'Anterior', type: 'prev' },
+                { label: 'Concluir pagamento e se cadastrar', type: 'finish' }
+            ]
+        }
+    ];
+}
 
-        if (!regResponse.ok) {
-            const msg = await regResponse.text();
-            erroEl.textContent = regResponse.status === 409
-                ? 'E-mail ou documento já cadastrado.'
-                : (msg || 'Erro ao cadastrar.');
-            erroEl.style.display = 'block';
+function field(id, label, type = 'text') {
+    return { id, label, type };
+}
+
+function addressFields() {
+    return [
+        field('cep', 'CEP'),
+        field('rua', 'Rua'),
+        field('numero', 'Numero'),
+        field('bairro', 'Bairro'),
+        field('estado', 'Estado'),
+        field('pais', 'Pais')
+    ];
+}
+
+function securityFields() {
+    return [
+        field('email', 'E-mail', 'email'),
+        field('telefone', 'Telefone'),
+        field('senha', 'Senha', 'password'),
+        field('confirmarSenha', 'Confirmar senha', 'password')
+    ];
+}
+
+function renderCadastro() {
+    document.getElementById('cadastroTipoLabel').textContent =
+        tipoCadastro === 'pj' ? 'Plano Pessoa Juridica' : 'Plano Pessoa Fisica';
+    document.getElementById('cadastroTitulo').textContent =
+        tipoCadastro === 'pj' ? 'Cadastro Pessoa Juridica' : 'Cadastro Pessoa Fisica';
+
+    renderStepIndicator();
+    renderSteps();
+}
+
+function renderStepIndicator() {
+    const indicator = document.getElementById('stepIndicator');
+    indicator.innerHTML = stepsConfig
+        .map((_, index) => `<button class="step" type="button" aria-label="Etapa ${index + 1}"></button>`)
+        .join('');
+}
+
+function renderSteps() {
+    const wrapper = document.getElementById('cadastroSteps');
+
+    wrapper.innerHTML = stepsConfig
+        .map((step, index) => `
+            <section class="cadastro-step" data-step="${index}">
+                <h2>${step.title}</h2>
+                ${step.payment ? renderPaymentStep() : renderFields(step.fields)}
+                ${renderActions(step.actions)}
+            </section>
+        `)
+        .join('');
+
+    const pais = document.getElementById('pais');
+    if (pais) {
+        pais.value = '';
+    }
+}
+
+function renderFields(fields) {
+    return `<div class="row">${fields.map(renderField).join('')}</div>`;
+}
+
+function renderField(fieldConfig) {
+    const wide = ['nome', 'rua', 'email'].includes(fieldConfig.id) ? 'col-12' : 'col-12 col-md-6';
+    return `
+        <div class="${wide} mb-3">
+            <label class="form-label" for="${fieldConfig.id}">${fieldConfig.label}</label>
+            <input
+                type="${fieldConfig.type}"
+                id="${fieldConfig.id}"
+                name="${fieldConfig.id}"
+                class="form-control"
+                required
+            >
+        </div>
+    `;
+}
+
+function renderPaymentStep() {
+    const docLabel = tipoCadastro === 'pj' ? 'CNPJ' : 'CPF';
+    const nameLabel = tipoCadastro === 'pj' ? 'Nome da instituicao' : 'Nome';
+
+    return `
+        <div class="pagamento-box" id="planoValor">
+            Valor do plano: ${tipoCadastro === 'pj' ? 'R$ 700,00' : 'R$ 80,00'}
+        </div>
+
+        <div class="row">
+            <div class="col-12 mb-3">
+                <label class="form-label" for="resumoNome">${nameLabel}</label>
+                <input type="text" id="resumoNome" class="form-control" readonly>
+            </div>
+            <div class="col-12 col-md-6 mb-3">
+                <label class="form-label" for="resumoDocumento">${docLabel}</label>
+                <input type="text" id="resumoDocumento" class="form-control" readonly>
+            </div>
+            <div class="col-12 col-md-6 mb-3">
+                <label class="form-label" for="resumoEmail">E-mail</label>
+                <input type="email" id="resumoEmail" class="form-control" readonly>
+            </div>
+            <div class="col-12 mb-3">
+                <label class="form-label" for="numeroCartao">Numero do cartao</label>
+                <input type="text" id="numeroCartao" class="form-control" required>
+            </div>
+            <div class="col-12 col-md-6 mb-3">
+                <label class="form-label" for="validadeCartao">Validade</label>
+                <input type="text" id="validadeCartao" class="form-control" placeholder="MM/AA" required>
+            </div>
+            <div class="col-12 col-md-6 mb-3">
+                <label class="form-label" for="cvvCartao">CVV</label>
+                <input type="text" id="cvvCartao" class="form-control" required>
+            </div>
+        </div>
+    `;
+}
+
+function renderActions(actions) {
+    return `
+        <div class="cadastro-actions">
+            ${actions.map((action) => {
+                const className = action.type === 'finish' ? 'btn-success' : action.type === 'prev' ? 'btn-outline-secondary' : 'btn-primary';
+                const handler = action.type === 'finish' ? 'finalizarCadastro()' : action.type === 'prev' ? 'prevStep()' : 'nextStep()';
+                return `<button type="button" class="btn ${className}" onclick="${handler}">${action.label}</button>`;
+            }).join('')}
+        </div>
+    `;
+}
+
+function nextStep() {
+    if (!validateCurrentStep()) return;
+
+    if (currentStep < stepsConfig.length - 1) {
+        currentStep++;
+        updateStep();
+    }
+}
+
+function prevStep() {
+    if (currentStep > 0) {
+        currentStep--;
+        updateStep();
+    }
+}
+
+function updateStep() {
+    document.querySelectorAll('.cadastro-step').forEach((step, index) => {
+        step.classList.toggle('active', index === currentStep);
+    });
+
+    document.querySelectorAll('.step').forEach((step, index) => {
+        step.classList.toggle('active', index <= currentStep);
+    });
+
+    updateResumoPagamento();
+}
+
+function updateResumoPagamento() {
+    const nome = getValue('nome');
+    const documento = tipoCadastro === 'pj' ? getValue('cnpj') : getValue('cpf');
+    const email = getValue('email');
+
+    setValue('resumoNome', nome);
+    setValue('resumoDocumento', documento);
+    setValue('resumoEmail', email);
+}
+
+async function finalizarCadastro() {
+    if (!validateCurrentStep()) return;
+    if (!validatePasswords()) return;
+
+    const userData = tipoCadastro === 'pj' ? buildPessoaJuridicaData() : buildPessoaFisicaData();
+
+    try {
+        const registerResponse = await ZupiAPI.postPublic('/auth/register', userData);
+        if (!registerResponse || !registerResponse.ok) {
+            const erroTexto = await registerResponse.text(); // ← lê o corpo do erro
+            console.error('❌ Status:', registerResponse.status);
+            console.error('❌ Resposta do servidor:', erroTexto);
+            alert(`Erro ${registerResponse.status}: ${erroTexto}`);
             return;
         }
 
-        // 2. Auto-login after registration
+        alert('Pagamento aprovado!');
+
         const loginResponse = await ZupiAPI.postPublic('/auth/login', {
             email: userData.email,
             password: userData.password
         });
 
-        if (loginResponse.ok) {
-            const data = await loginResponse.json();
-            ZupiAPI.saveSession(data);
-            const userType = data.user?.userType || userData.userType;
-            ZupiAPI.redirectByUserType(userType);
-        } else {
-            // Login failed but registration succeeded — redirect to login page
-            alert('Cadastro realizado! Faça login para continuar.');
+        if (!loginResponse || !loginResponse.ok) {
+            alert('Cadastro concluido, mas nao foi possivel fazer login automatico.');
             window.location.href = '/login';
+            return;
         }
 
-    } catch (e) {
-        erroEl.textContent = 'Erro de conexão com o servidor.';
-        erroEl.style.display = 'block';
+        const data = await loginResponse.json();
+        ZupiAPI.saveSession(data);
+        ZupiAPI.redirectByUserType(userData.userType);
+    } catch (error) {
+        console.error('Erro ao finalizar cadastro:', error);
+        alert('Erro no servidor.');
     }
 }
 
-async function cadastrarPF(e) {
-    e.preventDefault();
-    const senha = document.getElementById('senhaPF').value;
-    const conf = document.getElementById('senhaConfirmPF').value;
-    const erro = document.getElementById('erroPF');
-
-    if (senha !== conf) {
-        erro.textContent = 'As senhas não coincidem.';
-        erro.style.display = 'block';
-        return;
-    }
-    if (senha.length < 6) {
-        erro.textContent = 'A senha deve ter pelo menos 6 caracteres.';
-        erro.style.display = 'block';
-        return;
-    }
-
-    await registerAndLogin({
-        name: document.getElementById('nomePF').value,
-        email: document.getElementById('emailPF').value,
-        password: senha,
-        cpf: document.getElementById('cpfPF').value,
+function buildPessoaFisicaData() {
+    return {
+        name: getValue('nome'),
+        email: getValue('email'),
+        password: getValue('senha'),
+        cpf: getValue('cpf'),
         cnpj: null,
-        birthDate: document.getElementById('nascimentoPF').value,
-        phone: document.getElementById('phonePF')?.value || null,
-        address: document.getElementById('addressPF')?.value || null,
+        birthDate: getValue('nascimento'),
+        phone: getValue('telefone'),
+        address: buildAddress(),
         userType: 'RESPONSAVEL',
         planType: 'PESSOA_FISICA'
-    }, erro);
+    };
 }
 
-async function cadastrarPJ(e) {
-    e.preventDefault();
-    const senha = document.getElementById('senhaPJ').value;
-    const conf = document.getElementById('senhaConfirmPJ').value;
-    const erro = document.getElementById('erroPJ');
-
-    if (senha !== conf) {
-        erro.textContent = 'As senhas não coincidem.';
-        erro.style.display = 'block';
-        return;
-    }
-    if (senha.length < 6) {
-        erro.textContent = 'A senha deve ter pelo menos 6 caracteres.';
-        erro.style.display = 'block';
-        return;
-    }
-
-    await registerAndLogin({
-        name: document.getElementById('nomePJ').value,
-        email: document.getElementById('emailPJ').value,
-        password: senha,
+function buildPessoaJuridicaData() {
+    return {
+        name: getValue('nome'),
+        email: getValue('email'),
+        password: getValue('senha'),
         cpf: null,
-        cnpj: document.getElementById('cnpjPJ').value,
+        cnpj: getValue('cnpj'),
         birthDate: null,
-        phone: document.getElementById('phonePJ')?.value || null,
-        address: document.getElementById('addressPJ')?.value || null,
+        phone: getValue('telefone'),
+        address: buildAddress(),
         userType: 'ESCOLA',
         planType: 'PESSOA_JURIDICA'
-    }, erro);
+    };
+}
+
+function buildAddress() {
+    return {
+        cep: getValue('cep'),
+        street: getValue('rua'),
+        number: getValue('numero'),
+        neighborhood: getValue('bairro'),
+        state: getValue('estado'),
+        country: getValue('pais')
+    };
+}
+
+function validateCurrentStep() {
+    const activeStep = document.querySelector('.cadastro-step.active');
+    if (!activeStep) return true;
+
+    const fields = Array.from(activeStep.querySelectorAll('input[required]'));
+
+    for (const input of fields) {
+        if (!input.value.trim()) {
+            alert('Preencha todos os campos obrigatorios desta etapa.');
+            input.focus();
+            return false;
+        }
+    }
+
+    return validatePasswords(activeStep);
+}
+
+function validatePasswords(scope = document) {
+    const senha = document.getElementById('senha');
+    const confirmarSenha = document.getElementById('confirmarSenha');
+
+    if (!senha || !confirmarSenha) return true;
+    if (!scope.contains(senha) && !scope.contains(confirmarSenha) && scope !== document) return true;
+
+    if (senha.value.length < 6) {
+        alert('A senha deve ter no minimo 6 caracteres.');
+        senha.focus();
+        return false;
+    }
+
+    if (senha.value !== confirmarSenha.value) {
+        alert('As senhas nao coincidem.');
+        confirmarSenha.focus();
+        return false;
+    }
+
+    return true;
+}
+
+function initMasks() {
+    maskCpf(document.getElementById('cpf'));
+    maskCnpj(document.getElementById('cnpj'));
+    maskPhone(document.getElementById('telefone'));
+    maskCardNumber(document.getElementById('numeroCartao'));
+    maskCardExpiry(document.getElementById('validadeCartao'));
+    maskCvv(document.getElementById('cvvCartao'));
+}
+
+function maskCpf(el) {
+    if (!el) return;
+
+    el.addEventListener('input', () => {
+        const d = el.value.replace(/\D/g, '').slice(0, 11);
+        el.value = d
+            .replace(/(\d{3})(\d)/, '$1.$2')
+            .replace(/(\d{3})(\d)/, '$1.$2')
+            .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+    });
+}
+
+function maskCnpj(el) {
+    if (!el) return;
+
+    el.addEventListener('input', () => {
+        const d = el.value.replace(/\D/g, '').slice(0, 14);
+        el.value = d
+            .replace(/^(\d{2})(\d)/, '$1.$2')
+            .replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3')
+            .replace(/\.(\d{3})(\d)/, '.$1/$2')
+            .replace(/(\d{4})(\d)/, '$1-$2');
+    });
+}
+
+function maskPhone(el) {
+    if (!el) return;
+
+    el.addEventListener('input', () => {
+        const d = el.value.replace(/\D/g, '').slice(0, 11);
+        if (d.length <= 10) {
+            el.value = d
+                .replace(/(\d{2})(\d)/, '($1) $2')
+                .replace(/(\d{4})(\d)/, '$1-$2');
+        } else {
+            el.value = d
+                .replace(/(\d{2})(\d)/, '($1) $2')
+                .replace(/(\d{5})(\d)/, '$1-$2');
+        }
+    });
+}
+
+function maskCardNumber(el) {
+    if (!el) return;
+
+    el.addEventListener('input', () => {
+        const d = el.value.replace(/\D/g, '').slice(0, 16);
+        el.value = d.replace(/(\d{4})(?=\d)/g, '$1 ');
+    });
+}
+
+function maskCardExpiry(el) {
+    if (!el) return;
+
+    el.addEventListener('input', () => {
+        const d = el.value.replace(/\D/g, '').slice(0, 4);
+        el.value = d.replace(/(\d{2})(\d)/, '$1/$2');
+    });
+}
+
+function maskCvv(el) {
+    if (!el) return;
+
+    el.addEventListener('input', () => {
+        el.value = el.value.replace(/\D/g, '').slice(0, 4);
+    });
+}
+
+function getValue(id) {
+    return document.getElementById(id)?.value.trim() || '';
+}
+
+function setValue(id, value) {
+    const el = document.getElementById(id);
+    if (el) {
+        el.value = value || '';
+    }
 }
