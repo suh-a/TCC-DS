@@ -1,5 +1,6 @@
 /**
  * Sidebar padronizada — área do responsável (pessoa física).
+ * Fonte única do menu; evita substituir HTML estático a cada navegação (piscar).
  */
 (function () {
     const PF_PATHS = [
@@ -19,11 +20,14 @@
         '/guia-casa',
         '/dicas-inclusao',
         '/atividades-interativas',
-        '/desafios-semanais'
+        '/desafios-semanais',
+        '/onboarding-crianca'
     ];
 
+    /** Rotas permitidas no menu do responsável (PF) */
     const MENU = [
         { href: '/dashboard', label: 'Dashboard' },
+        { href: '/selecao-perfil', label: 'Perfis das crianças' },
         { href: '/selecao-relatorios', label: 'Relatórios' },
         { href: '/cadastro-dependentes', label: 'Cadastro de dependentes' },
         { href: '/agenda', label: 'Agenda' },
@@ -43,9 +47,18 @@
         return PF_PATHS.some((base) => path === base || path.startsWith(base + '/'));
     }
 
+    function isPfUser() {
+        if (typeof ZupiAPI === 'undefined' || !ZupiAPI.isAuthenticated()) return true;
+        const type = ZupiAPI.getUser().type;
+        return !type || type === 'RESPONSAVEL' || type === 'ADMIN';
+    }
+
     function isActive(href) {
         const path = currentPath();
         if (href === '/dashboard') return path === '/dashboard';
+        if (href === '/selecao-perfil') {
+            return path === '/selecao-perfil' || path === '/perfil' || path === '/perfil-criancas';
+        }
         if (href === '/selecao-relatorios') {
             return path === '/selecao-relatorios' || path === '/relatorios';
         }
@@ -62,9 +75,30 @@
             + '<li class="nav-item mt-auto"><a class="nav-link text-white" href="#" data-action="logout">Sair</a></li>';
     }
 
+    function applyActiveState(ul) {
+        ul.querySelectorAll('a.nav-link[href^="/"]').forEach((link) => {
+            const href = link.getAttribute('href');
+            const active = isActive(href);
+            link.classList.toggle('active', active);
+            if (active) {
+                link.setAttribute('aria-current', 'page');
+            } else {
+                link.removeAttribute('aria-current');
+            }
+        });
+    }
+
     function renderSidebars() {
-        document.querySelectorAll('.dashboard-sidebar .nav.nav-pills, .dashboard-offcanvas .nav.nav-pills').forEach((ul) => {
-            ul.innerHTML = buildNavItems();
+        const html = buildNavItems();
+        document.querySelectorAll('[data-pf-sidebar]').forEach((ul) => {
+            const managed = ul.dataset.pfSidebarRendered === '1';
+            if (!managed) {
+                ul.innerHTML = html;
+                ul.dataset.pfSidebarRendered = '1';
+            } else {
+                applyActiveState(ul);
+            }
+            ul.removeAttribute('aria-busy');
         });
     }
 
@@ -83,13 +117,16 @@
         });
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
-        if (!isPfArea()) return;
-        if (typeof ZupiAPI !== 'undefined' && ZupiAPI.isAuthenticated()) {
-            const type = ZupiAPI.getUser().type;
-            if (type && type !== 'RESPONSAVEL' && type !== 'ADMIN') return;
-        }
+    function init() {
+        if (!isPfArea() || !isPfUser()) return;
         renderSidebars();
         bindLogout();
-    });
+        document.dispatchEvent(new CustomEvent('pf-sidebar-ready'));
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
 })();

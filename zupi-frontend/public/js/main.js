@@ -31,24 +31,26 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Inicializar funcionalidade de swipe para sidebar
     initSwipeSidebar();
 });
 
-// Função para destacar link ativo na navbar
+document.addEventListener('pf-sidebar-ready', () => {
+    initSwipeSidebar();
+});
+
+// Função para destacar link ativo na navbar pública (não altera sidebar PF)
 function highlightActiveNavLink() {
     const currentPage = window.location.pathname.split('/').pop();
     const navLinks = document.querySelectorAll('.navbar-nav .nav-link, .dashboard-sidebar .nav-link');
-    
+
     navLinks.forEach(link => {
+        if (link.closest('[data-pf-sidebar]')) return;
+
         const linkHref = link.getAttribute('href');
         if (linkHref === currentPage || (currentPage === '' && linkHref === 'index.html')) {
             link.classList.add('active');
             link.setAttribute('aria-current', 'page');
         } else {
-            if (currentPage === 'perfil-criancas.html'|| currentPage === 'relatorios.html') {
-                return;
-            }
             link.classList.remove('active');
             link.removeAttribute('aria-current');
         }

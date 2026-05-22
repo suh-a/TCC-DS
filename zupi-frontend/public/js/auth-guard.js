@@ -62,9 +62,12 @@ const ZupiAuthGuard = (() => {
         return responsible.includes(path);
     }
 
-    const CHILD_CONTEXT_PATHS = new Set([
-        '/dashboard-crianca', '/menuJogos', '/atividades-interativas',
-        '/desafios-semanais', '/biblioteca', '/perfil-crianca', '/guia-casa'
+    /** Exige perfil de criança selecionado (contexto infantil) */
+    const CHILD_ONLY_PATHS = new Set([
+        '/dashboard-crianca',
+        '/menuJogos',
+        '/perfil-crianca',
+        '/onboarding-crianca'
     ]);
 
     function guardPage() {
@@ -82,7 +85,7 @@ const ZupiAuthGuard = (() => {
             return;
         }
 
-        if (CHILD_CONTEXT_PATHS.has(path) && !localStorage.getItem('activeChildId')) {
+        if (CHILD_ONLY_PATHS.has(path) && !localStorage.getItem('activeChildId')) {
             window.location.href = (ZupiRoutes && ZupiRoutes.selecaoPerfil) || '/selecao-perfil';
         }
     }
