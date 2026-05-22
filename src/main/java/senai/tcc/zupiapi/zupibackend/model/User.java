@@ -25,6 +25,13 @@ public class User {
     private String password;
 
     @Column(unique = true)
+    private String googleId;
+
+    private Boolean googleAccount;
+
+    private String provider;
+
+    @Column(unique = true)
     private String cpf;
 
     private java.time.LocalDate birthDate;
