@@ -79,6 +79,7 @@ public class SecurityConfig {
                                 "/auth/reset-password",
                                 "/auth/child/login",
                                 "/contact",
+                                "/error",
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",

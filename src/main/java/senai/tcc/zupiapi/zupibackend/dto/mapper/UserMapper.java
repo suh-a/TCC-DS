@@ -17,8 +17,11 @@ public interface UserMapper {
     @Mapping(target = "twoFactorEnabled", ignore = true)
     @Mapping(target = "profilePhotoUrl", ignore = true)
     @Mapping(target = "active", ignore = true)
+
+    @Mapping(target = "address", ignore = true)
     User toEntity(UserRequest userRequest);
 
+    @Mapping(target = "address", expression = "java(user.getAddress() != null ? user.getAddress().toString() : null)")
     UserResponse toResponse(User user);
 
     List<UserResponse> toResponseList(List<User> users);

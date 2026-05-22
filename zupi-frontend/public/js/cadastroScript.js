@@ -144,7 +144,7 @@ function renderSteps() {
 
     const pais = document.getElementById('pais');
     if (pais) {
-        pais.value = 'Brasil';
+        pais.value = '';
     }
 }
 
@@ -264,9 +264,11 @@ async function finalizarCadastro() {
 
     try {
         const registerResponse = await ZupiAPI.postPublic('/auth/register', userData);
-
         if (!registerResponse || !registerResponse.ok) {
-            alert('Erro ao cadastrar.');
+            const erroTexto = await registerResponse.text(); // ← lê o corpo do erro
+            console.error('❌ Status:', registerResponse.status);
+            console.error('❌ Resposta do servidor:', erroTexto);
+            alert(`Erro ${registerResponse.status}: ${erroTexto}`);
             return;
         }
 

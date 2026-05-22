@@ -13,7 +13,7 @@ public record UserRequest(
         String cnpj,
         LocalDate birthDate,
         String phone,
-        String address,
+        AddressRequest address,
         UserType userType,
         PlanType planType,
         String googleToken

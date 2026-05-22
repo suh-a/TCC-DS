@@ -3,6 +3,7 @@ package senai.tcc.zupiapi.zupibackend.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import senai.tcc.zupiapi.zupibackend.model.Address;
 import senai.tcc.zupiapi.zupibackend.security.AccessControlService;
 import senai.tcc.zupiapi.zupibackend.security.SecurityUtils;
 import org.springframework.stereotype.Service;
@@ -85,7 +86,14 @@ public class UserService {
         userEntity.setPassword(passwordEncoder.encode(user.password()));
         userEntity.setUserType(type);
         userEntity.setPhone(user.phone());
-        userEntity.setAddress(user.address());
+        Address address = new Address();
+        address.setCep(user.address().cep());
+        address.setStreet(user.address().street());
+        address.setNumber(user.address().number());
+        address.setNeighborhood(user.address().neighborhood());
+        address.setState(user.address().state());
+        address.setCountry(user.address().country());
+        userEntity.setAddress(address);
 
         if (type == UserType.ESCOLA) {
             String cnpj = onlyDigits(user.cnpj());

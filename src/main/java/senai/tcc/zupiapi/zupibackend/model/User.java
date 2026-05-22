@@ -43,7 +43,8 @@ public class User {
     private PlanType planType;
 
     private String phone;
-    private String address;
+    @Embedded
+    private Address address;
     private boolean active = true;
     private boolean twoFactorEnabled;
 
@@ -155,11 +156,12 @@ public class User {
         this.phone = phone;
     }
 
-    public String getAddress() {
+
+    public Address getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
+    public void setAddress(Address address) {
         this.address = address;
     }
 
