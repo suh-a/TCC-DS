@@ -80,7 +80,8 @@ O Zupi também apoia pais, responsáveis e escolas no acompanhamento do progress
 cd zupi-frontend && npm install && npm run dev
 ```
 
-Detalhes da arquitetura: [docs/arquitetura.md](docs/arquitetura.md)
+Detalhes da arquitetura: [docs/arquitetura.md](docs/arquitetura.md)  
+Documentação completa (rotas, classes, JS, mapa tela↔API): [docs/documentacao-completa-zupi.md](docs/documentacao-completa-zupi.md)
 
 ---
 
