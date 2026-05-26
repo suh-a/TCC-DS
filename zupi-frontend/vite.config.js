@@ -70,7 +70,7 @@ function htmlEntries(dir) {
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, __dirname, '');
-  const apiTarget = (env.VITE_API_BASE || 'http://localhost:8080').replace(/\/$/, '');
+  const apiTarget = (env.VITE_API_BASE || 'https://tcc-ds-aplication.onrender.com').replace(/\/$/, '');
   const htmlRoutes = buildHtmlRoutes(__dirname);
 
   return {
