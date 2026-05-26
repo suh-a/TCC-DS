@@ -60,12 +60,7 @@ function createResponsibleCard(user) {
 }
 
 function createChildProfileCard(child) {
-    const photo = child.profilePhotoUrl;
-    const avatarContent = photo
-        ? `<img src="${photo}" alt="" class="rounded-circle" style="width:80px;height:80px;object-fit:cover;">`
-        : `<div style="width:80px;height:80px;border-radius:50%;background:var(--zupi-highlight,#FFB677);display:flex;align-items:center;justify-content:center;">
-             <span style="font-size:2rem;">🧒</span>
-           </div>`;
+    const avatarContent = ZupiChildAvatar.renderHtml(child, 80, 'profile-avatar');
 
     return `
     <div class="col-md-4 col-lg-3">

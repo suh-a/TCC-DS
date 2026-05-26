@@ -152,12 +152,12 @@ async function dashboardLoad() {
 }
 
 function createChildCard(child) {
-    const photo = child.profilePhotoUrl || '/img/logokids1.png';
+    const avatar = ZupiChildAvatar.renderHtml(child, 80, 'mx-auto mb-3');
     return `
       <div class="col-12 col-sm-6 col-md-4 col-lg-3">
         <div class="card h-100 shadow-sm">
           <div class="card-body text-center d-flex flex-column">
-            <img src="${photo}" alt="" class="img-fluid mx-auto mb-3 rounded-circle" style="max-width:80px;height:80px;object-fit:cover;">
+            ${avatar}
             <h3 class="card-title h6 mb-2">${child.name}</h3>
             <p class="card-text text-muted small flex-grow-1">Idade: ${child.age ?? '—'}</p>
             <a href="/perfil?childId=${child.id}" class="btn btn-primary btn-sm mt-auto">Ver Perfil</a>

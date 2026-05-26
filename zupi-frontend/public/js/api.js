@@ -1,4 +1,98 @@
 /**
+ * Zupi UI - modal global para mensagens padronizadas.
+ */
+const ZupiUI = (() => {
+    const nativeAlert = window.alert.bind(window);
+
+    function normalizeMessage(message) {
+        if (message == null) return 'Ocorreu um erro inesperado.';
+        if (typeof message === 'object') {
+            return message.detail || message.message || message.error || message.title || JSON.stringify(message);
+        }
+
+        const text = String(message).trim();
+        if (!text) return 'Ocorreu um erro inesperado.';
+
+        if (text.startsWith('{') && text.endsWith('}')) {
+            try {
+                const data = JSON.parse(text);
+                return data.detail || data.message || data.error || data.title || text;
+            } catch (_) {
+                return text;
+            }
+        }
+
+        const jsonStart = text.indexOf('{');
+        const jsonEnd = text.lastIndexOf('}');
+        if (jsonStart >= 0 && jsonEnd > jsonStart) {
+            try {
+                const data = JSON.parse(text.slice(jsonStart, jsonEnd + 1));
+                return data.detail || data.message || data.error || data.title || text;
+            } catch (_) {
+                return text;
+            }
+        }
+
+        return text;
+    }
+
+    function ensureModal() {
+        let modal = document.getElementById('zupiFeedbackModal');
+        if (modal) return modal;
+
+        modal = document.createElement('div');
+        modal.className = 'modal fade';
+        modal.id = 'zupiFeedbackModal';
+        modal.tabIndex = -1;
+        modal.setAttribute('aria-labelledby', 'zupiFeedbackModalTitle');
+        modal.setAttribute('aria-hidden', 'true');
+        modal.innerHTML = `
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-zupi-primary text-white">
+                        <h5 class="modal-title" id="zupiFeedbackModalTitle">Aviso</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="mb-0" id="zupiFeedbackModalMessage"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Entendi</button>
+                    </div>
+                </div>
+            </div>`;
+        document.body.appendChild(modal);
+        return modal;
+    }
+
+    function show(message, options = {}) {
+        const normalized = normalizeMessage(message);
+        if (typeof bootstrap === 'undefined' || !bootstrap.Modal || !document.body) {
+            nativeAlert(normalized);
+            return;
+        }
+
+        const modal = ensureModal();
+        modal.querySelector('#zupiFeedbackModalTitle').textContent = options.title || 'Aviso';
+        modal.querySelector('#zupiFeedbackModalMessage').textContent = normalized;
+        bootstrap.Modal.getOrCreateInstance(modal).show();
+    }
+
+    function error(message, title = 'Nao foi possivel concluir') {
+        show(message, { title });
+    }
+
+    function success(message, title = 'Tudo certo') {
+        show(message, { title });
+    }
+
+    return { show, error, success, normalizeMessage };
+})();
+
+window.ZupiUI = ZupiUI;
+window.alert = (message) => ZupiUI.show(message);
+
+/**
  * Zupi API — cliente HTTP centralizado (JWT Bearer).
  */
 const ZupiAPI = (() => {
@@ -120,6 +214,17 @@ const ZupiAPI = (() => {
         return response.json();
     }
 
+    async function readErrorMessage(response, fallback = 'Ocorreu um erro inesperado.') {
+        if (!response) return fallback;
+
+        try {
+            const text = await response.text();
+            return ZupiUI.normalizeMessage(text || fallback);
+        } catch (_) {
+            return fallback;
+        }
+    }
+
     async function fetchMe() {
         return fetchJson('/auth/me');
     }
@@ -217,6 +322,7 @@ const ZupiAPI = (() => {
         requireAuth,
         requireRole,
         fetchJson,
+        readErrorMessage,
         fetchMe,
         fetchMyChildren,
         get,

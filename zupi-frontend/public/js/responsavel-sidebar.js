@@ -32,8 +32,7 @@
         { href: '/cadastro-dependentes', label: 'Cadastro de dependentes' },
         { href: '/agenda', label: 'Agenda' },
         { href: '/ajuda', label: 'Ajuda?' },
-        { href: '/perfil-responsavel', label: 'Perfil' },
-        { href: '/configuracoes', label: 'Configurações' }
+        { href: '/perfil-responsavel', label: 'Perfil' }
     ];
 
     function currentPath() {
@@ -92,10 +91,13 @@
         const html = buildNavItems();
         document.querySelectorAll('[data-pf-sidebar]').forEach((ul) => {
             const managed = ul.dataset.pfSidebarRendered === '1';
-            if (!managed) {
+            const hasStaticItems = ul.querySelector('a.nav-link');
+            if (!managed && !hasStaticItems) {
+                ul.setAttribute('aria-busy', 'true');
                 ul.innerHTML = html;
                 ul.dataset.pfSidebarRendered = '1';
             } else {
+                ul.dataset.pfSidebarRendered = '1';
                 applyActiveState(ul);
             }
             ul.removeAttribute('aria-busy');
@@ -124,9 +126,8 @@
         document.dispatchEvent(new CustomEvent('pf-sidebar-ready'));
     }
 
+    init();
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
-    } else {
-        init();
     }
 })();

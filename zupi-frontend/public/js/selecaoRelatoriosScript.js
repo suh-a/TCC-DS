@@ -53,10 +53,8 @@ function createReportProfileCard(child) {
     body.className = 'card-body text-center d-flex flex-column align-items-center justify-content-center';
     body.style.minHeight = '260px';
 
-    const avatar = document.createElement('div');
-    avatar.className = 'mb-3';
-    avatar.style.cssText = 'width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,.35);display:flex;align-items:center;justify-content:center;font-size:2.5rem;color:white;';
-    avatar.textContent = '\u{1F9D2}';
+    const avatar = ZupiChildAvatar.createElement(child, 90, 'mb-3');
+    avatar.style.background = 'rgba(255,255,255,.35)';
 
     const title = document.createElement('h3');
     title.className = 'h5 text-white mb-3';

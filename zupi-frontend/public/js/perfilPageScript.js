@@ -33,6 +33,11 @@ function formatDate(dateString) {
 }
 
 function renderChildProfile(child) {
+    const avatarEl = document.getElementById('childProfileAvatar');
+    if (avatarEl && typeof ZupiChildAvatar !== 'undefined') {
+        ZupiChildAvatar.applyToElement(avatarEl, child, 96);
+    }
+
     document.getElementById('childName').textContent = child.name || 'Nome não informado';
     document.getElementById('childAge').textContent =
         child.age != null ? `${child.age} anos` : 'Não informado';

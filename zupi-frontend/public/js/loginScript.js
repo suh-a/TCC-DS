@@ -15,11 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     if (googleLoginBtn) {
         googleLoginBtn.addEventListener('click', () => {
-            const erroLogin = document.getElementById('erroLogin');
-            if (erroLogin) {
-                erroLogin.textContent = 'Login com Google estará disponível em breve.';
-                erroLogin.style.display = 'block';
-            }
+            ZupiUI.show('Login com Google estara disponivel em breve.');
         });
     }
 });
@@ -29,33 +25,20 @@ async function loginUser(event) {
 
     const email = document.getElementById('email').value.trim();
     const password = document.getElementById('senha').value;
-    const planType = document.getElementById('tipoConta')?.value || null;
-    const erroLogin = document.getElementById('erroLogin');
-
-    erroLogin.style.display = 'none';
 
     if (!email || !password) {
-        erroLogin.textContent = 'Preencha todos os campos.';
-        erroLogin.style.display = 'block';
+        ZupiUI.error('Preencha todos os campos.');
         return;
     }
 
-    const body = { email, password };
-    if (planType) body.planType = planType;
-
     try {
-        const response = await ZupiAPI.postPublic('/auth/login', body);
+        const response = await ZupiAPI.postPublic('/auth/login', { email, password });
 
         if (!response || !response.ok) {
-            if (response?.status === 409) {
-                const msg = await response.text();
-                erroLogin.textContent = msg || 'Selecione o tipo de conta (Pessoa Física ou Jurídica).';
-            } else {
-                erroLogin.textContent = response?.status === 401
-                    ? 'Email ou senha inválidos!'
-                    : 'Erro ao realizar login.';
-            }
-            erroLogin.style.display = 'block';
+            const message = response?.status === 401
+                ? 'Email ou senha invalidos!'
+                : await ZupiAPI.readErrorMessage(response, 'Erro ao realizar login.');
+            ZupiUI.error(message);
             return;
         }
 
@@ -66,8 +49,7 @@ async function loginUser(event) {
         ZupiAPI.redirectByUserType(userType);
     } catch (error) {
         console.error('Erro ao fazer login:', error);
-        erroLogin.textContent = 'Erro de conexão com o servidor. Verifique se a API está em execução.';
-        erroLogin.style.display = 'block';
+        ZupiUI.error('Erro de conexao com o servidor. Verifique se a API esta em execucao.');
     }
 }
 
@@ -134,5 +116,6 @@ async function handleGoogleLogin(response) {
             'Erro login Google:',
             error
         );
+        ZupiUI.error('Erro ao fazer login com Google.');
     }
 }

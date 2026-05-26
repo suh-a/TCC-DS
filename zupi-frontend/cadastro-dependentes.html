@@ -52,7 +52,32 @@
         aria-label="Navegação">
         <div class="d-flex flex-column p-4 h-100">
           <div class="navbar-brand text-white mb-4 fs-3 fw-bold">Zupi</div>
-          <ul class="nav nav-pills flex-column pf-sidebar-nav" data-pf-sidebar aria-busy="true"></ul>
+          <ul class="nav nav-pills flex-column pf-sidebar-nav" data-pf-sidebar>
+              <li class="nav-item mb-2">
+                <a class="nav-link text-white" href="/dashboard">Dashboard</a>
+              </li>
+              <li class="nav-item mb-2">
+                <a class="nav-link text-white" href="/selecao-perfil">Perfis das crianças</a>
+              </li>
+              <li class="nav-item mb-2">
+                <a class="nav-link text-white" href="/selecao-relatorios">Relatórios</a>
+              </li>
+              <li class="nav-item mb-2">
+                <a class="nav-link text-white active" href="/cadastro-dependentes" aria-current="page">Cadastro de dependentes</a>
+              </li>
+              <li class="nav-item mb-2">
+                <a class="nav-link text-white" href="/agenda">Agenda</a>
+              </li>
+              <li class="nav-item mb-2">
+                <a class="nav-link text-white" href="/ajuda">Ajuda?</a>
+              </li>
+              <li class="nav-item mb-2">
+                <a class="nav-link text-white" href="/perfil-responsavel">Perfil</a>
+              </li>
+              <li class="nav-item mt-auto">
+                <a class="nav-link text-white" href="#" data-action="logout">Sair</a>
+              </li>
+            </ul>
         </div>
       </nav>
 
@@ -65,7 +90,32 @@
         </div>
         <div class="offcanvas-body p-0">
           <nav role="navigation" aria-label="Navegação do dashboard">
-            <ul class="nav nav-pills flex-column pf-sidebar-nav" data-pf-sidebar aria-busy="true"></ul>
+            <ul class="nav nav-pills flex-column pf-sidebar-nav" data-pf-sidebar>
+              <li class="nav-item mb-2">
+                <a class="nav-link text-white" href="/dashboard">Dashboard</a>
+              </li>
+              <li class="nav-item mb-2">
+                <a class="nav-link text-white" href="/selecao-perfil">Perfis das crianças</a>
+              </li>
+              <li class="nav-item mb-2">
+                <a class="nav-link text-white" href="/selecao-relatorios">Relatórios</a>
+              </li>
+              <li class="nav-item mb-2">
+                <a class="nav-link text-white active" href="/cadastro-dependentes" aria-current="page">Cadastro de dependentes</a>
+              </li>
+              <li class="nav-item mb-2">
+                <a class="nav-link text-white" href="/agenda">Agenda</a>
+              </li>
+              <li class="nav-item mb-2">
+                <a class="nav-link text-white" href="/ajuda">Ajuda?</a>
+              </li>
+              <li class="nav-item mb-2">
+                <a class="nav-link text-white" href="/perfil-responsavel">Perfil</a>
+              </li>
+              <li class="nav-item mt-auto">
+                <a class="nav-link text-white" href="#" data-action="logout">Sair</a>
+              </li>
+            </ul>
           </nav>
         </div>
       </div>
@@ -109,10 +159,9 @@
                     name="cpf"
                     placeholder="000.000.000-00" 
                     maxlength="14"
-                    required
                     autocomplete="off"
                   >
-                  <small class="text-muted">Campo obrigatório</small>
+                  <small class="text-muted">Campo opcional</small>
                 </div>
 
                 <!-- Data de Nascimento -->
@@ -141,11 +190,10 @@
                       id="laudoMedico" 
                       name="laudoMedico"
                       accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
-                      required
                     >
                     <span class="input-group-text">📄</span>
                   </div>
-                  <small class="text-muted">Formatos aceitos: PDF, DOC, DOCX, JPG, PNG (Máx: 10MB)</small>
+                  <small class="text-muted">Campo opcional. Formatos aceitos: PDF, DOC, DOCX, JPG, PNG (Max: 10MB)</small>
                 </div>
 
                 <!-- Botão Cadastrar -->

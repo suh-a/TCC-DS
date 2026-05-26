@@ -276,8 +276,7 @@ async function finalizarCadastro() {
 
         const loginResponse = await ZupiAPI.postPublic('/auth/login', {
             email: userData.email,
-            password: userData.password,
-            planType: userData.planType
+            password: userData.password
         });
 
         if (!loginResponse || !loginResponse.ok) {
@@ -305,8 +304,7 @@ function buildPessoaFisicaData() {
         birthDate: getValue('nascimento'),
         phone: getValue('telefone'),
         address: buildAddress(),
-        userType: 'RESPONSAVEL',
-        planType: 'PESSOA_FISICA'
+        userType: 'RESPONSAVEL'
     };
 }
 
@@ -320,8 +318,7 @@ function buildPessoaJuridicaData() {
         birthDate: null,
         phone: getValue('telefone'),
         address: buildAddress(),
-        userType: 'ESCOLA',
-        planType: 'PESSOA_JURIDICA'
+        userType: 'ESCOLA'
     };
 }
 

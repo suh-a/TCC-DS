@@ -33,27 +33,28 @@ async function submitDependente(e) {
     const submitBtn = document.getElementById('submitBtn');
     const loadingMsg = document.getElementById('loadingMessage');
     const successMsg = document.getElementById('successMessage');
-    const errorMsg = document.getElementById('errorMessage');
 
     loadingMsg.style.display = 'none';
     successMsg.style.display = 'none';
-    errorMsg.style.display = 'none';
-    errorMsg.textContent = '';
 
     const cpf = document.getElementById('cpf').value.replace(/\D/g, '');
     const birthDate = document.getElementById('dataNascimento').value;
     const name = document.getElementById('nomeCompleto').value.trim();
     const userId = ZupiAPI.getUser().id;
 
-    if (!name || cpf.length !== 11 || !birthDate) {
-        errorMsg.textContent = 'Preencha nome, CPF e data de nascimento.';
-        errorMsg.style.display = 'block';
+    if (!name || !birthDate) {
+        ZupiUI.error('Preencha nome e data de nascimento.');
+        return;
+    }
+
+    if (cpf && cpf.length !== 11) {
+        ZupiUI.error('CPF invalido. Informe 11 digitos ou deixe o campo em branco.');
         return;
     }
 
     const payload = {
         name,
-        cpf,
+        cpf: cpf || null,
         birthDate,
         schoolClass: '',
         condition: null,
@@ -71,8 +72,8 @@ async function submitDependente(e) {
 
         if (!response) return;
 
-        const text = await response.text();
         if (response.ok) {
+            const text = await response.text();
             const created = JSON.parse(text);
             const child = created.child || created;
             successMsg.style.display = 'block';
@@ -81,14 +82,12 @@ async function submitDependente(e) {
                 window.location.href = '/onboarding-crianca?childId=' + child.id;
             }, 1500);
         } else {
-            errorMsg.textContent = text || 'Erro ao cadastrar dependente.';
-            errorMsg.style.display = 'block';
+            ZupiUI.error(await ZupiAPI.readErrorMessage(response, 'Erro ao cadastrar dependente.'));
             submitBtn.disabled = false;
         }
     } catch (err) {
         loadingMsg.style.display = 'none';
-        errorMsg.textContent = 'Erro ao processar: ' + err.message;
-        errorMsg.style.display = 'block';
+        ZupiUI.error('Erro ao processar: ' + err.message);
         submitBtn.disabled = false;
     }
 }
