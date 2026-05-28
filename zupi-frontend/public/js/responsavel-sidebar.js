@@ -5,6 +5,7 @@
 (function () {
     const PF_PATHS = [
         '/dashboard',
+        '/dashboard-pais',
         '/selecao-perfil',
         '/selecao-relatorios',
         '/relatorios',
@@ -26,7 +27,7 @@
 
     /** Rotas permitidas no menu do responsável (PF) */
     const MENU = [
-        { href: '/dashboard', label: 'Dashboard' },
+        { href: '/dashboard-pais', label: 'Dashboard' },
         { href: '/selecao-perfil', label: 'Perfis das crianças' },
         { href: '/selecao-relatorios', label: 'Relatórios' },
         { href: '/cadastro-dependentes', label: 'Cadastro de dependentes' },
@@ -54,7 +55,7 @@
 
     function isActive(href) {
         const path = currentPath();
-        if (href === '/dashboard') return path === '/dashboard';
+        if (href === '/dashboard-pais') return path === '/dashboard' || path === '/dashboard-pais';
         if (href === '/selecao-perfil') {
             return path === '/selecao-perfil' || path === '/perfil' || path === '/perfil-criancas';
         }

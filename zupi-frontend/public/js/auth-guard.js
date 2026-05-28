@@ -23,6 +23,9 @@ const ZupiAuthGuard = (() => {
         '/redefinir-senha.html',
         '/erro',
         '/erro.html',
+        '/403',
+        '/403.html',
+        '/acesso-negado',
         '/plano-gratis',
         '/plano-premium',
         '/plano-pro',
@@ -52,7 +55,7 @@ const ZupiAuthGuard = (() => {
 
     function isResponsibleArea(path = normalizePath()) {
         const responsible = [
-            '/dashboard', '/selecao-perfil', '/selecao-relatorios', '/relatorios',
+            '/dashboard', '/dashboard-pais', '/selecao-perfil', '/selecao-relatorios', '/relatorios',
             '/agenda', '/configuracoes', '/cadastro-dependentes', '/perfil',
             '/perfil-criancas', '/perfil-responsavel', '/feed', '/biblioteca',
             '/dicas-inclusao', '/atividades-interativas', '/guia-casa',
@@ -61,6 +64,12 @@ const ZupiAuthGuard = (() => {
         ];
         return responsible.includes(path);
     }
+
+    const ROLE_AREAS = [
+        { paths: ['/dashboard-escola'], roles: ['ESCOLA', 'ADMIN'] },
+        { paths: ['/dashboard-docente'], roles: ['DOCENTE', 'ADMIN'] },
+        { paths: ['/dashboard-admin'], roles: ['ADMIN'] }
+    ];
 
     /** Exige perfil de criança selecionado (contexto infantil) */
     const CHILD_ONLY_PATHS = new Set([
@@ -80,12 +89,20 @@ const ZupiAuthGuard = (() => {
 
         const type = ZupiAPI.getUser().type;
 
-        if (isResponsibleArea(path) && type && !['RESPONSAVEL', 'ADMIN'].includes(type)) {
-            ZupiAPI.redirectByUserType(type);
+        const restrictedArea = ROLE_AREAS.find((area) =>
+            area.paths.some((base) => path === base || path.startsWith(base + '/'))
+        );
+        if (restrictedArea && type && !restrictedArea.roles.includes(type)) {
+            window.location.href = `/403?from=${encodeURIComponent(path)}`;
             return;
         }
 
-        if (CHILD_ONLY_PATHS.has(path) && !localStorage.getItem('activeChildId')) {
+        if (isResponsibleArea(path) && type && !['RESPONSAVEL', 'ADMIN'].includes(type)) {
+            window.location.href = `/403?from=${encodeURIComponent(path)}`;
+            return;
+        }
+
+        if (CHILD_ONLY_PATHS.has(path) && !['CRIANCA', 'ALUNO_CREDENCIADO'].includes(type) && !localStorage.getItem('activeChildId')) {
             window.location.href = (ZupiRoutes && ZupiRoutes.selecaoPerfil) || '/selecao-perfil';
         }
     }

@@ -5,6 +5,9 @@ import { resolve } from 'node:path';
 const ROUTE_ALIASES = {
   '/': '/index.html',
   '/dashboard': '/dashboard-pais.html',
+  '/dashboad': '/dashboard-pais.html',
+  '/dashboad-pais': '/dashboard-pais.html',
+  '/acesso-negado': '/403.html',
   '/contatos': '/contato.html',
   '/perfil': '/perfil-criancas.html',
   '/jogoMath': '/JogoMath.html',

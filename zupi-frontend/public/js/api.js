@@ -304,7 +304,7 @@ const ZupiAPI = (() => {
                 window.location.href = R.dashboardCrianca || '/dashboard-crianca';
                 break;
             default:
-                window.location.href = R.dashboard || '/dashboard';
+                window.location.href = R.dashboard || '/dashboard-pais';
         }
     }
 

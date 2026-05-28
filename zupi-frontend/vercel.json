@@ -3,6 +3,9 @@
   "trailingSlash": false,
   "rewrites": [
     { "source": "/dashboard", "destination": "/dashboard-pais.html" },
+    { "source": "/dashboard-pais", "destination": "/dashboard-pais.html" },
+    { "source": "/dashboad", "destination": "/dashboard-pais.html" },
+    { "source": "/dashboad-pais", "destination": "/dashboard-pais.html" },
     { "source": "/dashboard-crianca", "destination": "/dashboard-crianca.html" },
     { "source": "/dashboard-escola", "destination": "/dashboard-escola.html" },
     { "source": "/dashboard-docente", "destination": "/dashboard-docente.html" },
@@ -41,6 +44,8 @@
     { "source": "/recompensas", "destination": "/recompensas.html" },
     { "source": "/zupi", "destination": "/zupi.html" },
     { "source": "/erro", "destination": "/erro.html" },
+    { "source": "/403", "destination": "/403.html" },
+    { "source": "/acesso-negado", "destination": "/403.html" },
     { "source": "/jogoMemoria", "destination": "/jogoMemoria.html" },
     { "source": "/jogoSequencia", "destination": "/jogoSequencia.html" },
     { "source": "/JogoLigarObjetos", "destination": "/jogo-ligar-objetos.html" },

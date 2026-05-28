@@ -97,7 +97,7 @@ function createAddCard() {
 function selectResponsibleProfile() {
     localStorage.setItem('activeProfile', 'RESPONSAVEL');
     localStorage.removeItem('activeChildId');
-    window.location.href = '/dashboard';
+    window.location.href = (typeof ZupiRoutes !== 'undefined' && ZupiRoutes.dashboard) || '/dashboard-pais';
 }
 
 function selectChildProfile(childId) {
