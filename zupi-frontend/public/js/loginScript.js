@@ -78,7 +78,7 @@ async function handleGoogleLogin(response) {
     try {
 
         const res = await fetch(
-            'http://localhost:8080/auth/google',
+            ZupiAPI.buildUrl('/auth/google'),
             {
                 method: 'POST',
 
