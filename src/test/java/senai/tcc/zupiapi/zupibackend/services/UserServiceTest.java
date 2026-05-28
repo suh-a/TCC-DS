@@ -19,7 +19,6 @@ import senai.tcc.zupiapi.zupibackend.dto.request.UserRequest;
 import senai.tcc.zupiapi.zupibackend.dto.response.UserResponse;
 import senai.tcc.zupiapi.zupibackend.exceptions.ResourceNotFoundException;
 import senai.tcc.zupiapi.zupibackend.model.User;
-import senai.tcc.zupiapi.zupibackend.model.enums.PlanType;
 import senai.tcc.zupiapi.zupibackend.repositories.UserRepository;
 import senai.tcc.zupiapi.zupibackend.security.services.AccessControlService;
 
@@ -83,14 +82,14 @@ class UserServiceTest {
         when(address.state()).thenReturn("BA");
         when(address.country()).thenReturn("BR");
 
-        when(request.password()).thenReturn("123");
+        when(request.name()).thenReturn("Teste");
+        when(request.password()).thenReturn("123456");
         when(request.email()).thenReturn("teste@email.com");
         when(request.cpf()).thenReturn("12345678901");
         when(request.birthDate()).thenReturn(LocalDate.of(1990, 1, 1));
         when(request.userType()).thenReturn(null);
-        when(request.planType()).thenReturn(PlanType.PESSOA_FISICA);
         when(request.address()).thenReturn(address);
-        when(userRepository.existsByEmailAndPlanType(any(), any())).thenReturn(false);
+        when(userRepository.existsByEmail(any())).thenReturn(false);
     }
 
     // 1
@@ -203,12 +202,12 @@ class UserServiceTest {
     // 10
     @Test
     void shouldValidatePasswordCorrectly() {
-        LoginDTO login = new LoginDTO("teste@email.com", "123", null);
+        LoginDTO login = new LoginDTO("teste@email.com", "123");
 
         PasswordEncoder encoder = new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder();
         user.setPassword(encoder.encode("123"));
 
-        when(userRepository.findAllByEmail(login.email())).thenReturn(List.of(user));
+        when(userRepository.findByEmail(login.email())).thenReturn(Optional.of(user));
         when(userMapper.toResponse(user)).thenReturn(userResponse);
         when(jwtUtil.generateToken(any(), any(), any())).thenReturn("token");
 
@@ -221,12 +220,12 @@ class UserServiceTest {
     // 11
     @Test
     void shouldReturnFalseForWrongPassword() {
-        LoginDTO login = new LoginDTO("teste@email.com", "wrong", null);
+        LoginDTO login = new LoginDTO("teste@email.com", "wrong");
 
         PasswordEncoder encoder = new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder();
         user.setPassword(encoder.encode("123"));
 
-        when(userRepository.findAllByEmail(login.email())).thenReturn(List.of(user));
+        when(userRepository.findByEmail(login.email())).thenReturn(Optional.of(user));
         when(passwordEncoder.matches(any(), any())).thenReturn(false);
 
         assertThrows(ResponseStatusException.class, () -> {
@@ -237,9 +236,9 @@ class UserServiceTest {
     // 12
     @Test
     void shouldThrowExceptionWhenValidatingPasswordUserNotFound() {
-        LoginDTO login = new LoginDTO("x", "123", null);
+        LoginDTO login = new LoginDTO("x", "123");
 
-        when(userRepository.findAllByEmail(login.email())).thenReturn(List.of());
+        when(userRepository.findByEmail(login.email())).thenReturn(Optional.empty());
 
         assertThrows(ResponseStatusException.class, () -> {
             userService.login(login);
@@ -295,12 +294,12 @@ class UserServiceTest {
         // 17
         @Test
         void shouldCallRepositoryFindByEmailOnValidation () {
-            LoginDTO login = new LoginDTO("teste@email.com", "123", null);
+            LoginDTO login = new LoginDTO("teste@email.com", "123");
 
             PasswordEncoder encoder = new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder();
             user.setPassword(encoder.encode("123"));
 
-            when(userRepository.findAllByEmail(login.email())).thenReturn(List.of(user));
+            when(userRepository.findByEmail(login.email())).thenReturn(Optional.of(user));
             when(userMapper.toResponse(user)).thenReturn(userResponse);
             when(jwtUtil.generateToken(any())).thenReturn("token");
 
@@ -309,7 +308,7 @@ class UserServiceTest {
             } catch (Exception ignored) {
             }
 
-            verify(userRepository).findAllByEmail(login.email());
+            verify(userRepository).findByEmail(login.email());
 
 
         }

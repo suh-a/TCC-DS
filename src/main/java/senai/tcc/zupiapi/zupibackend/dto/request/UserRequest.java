@@ -1,6 +1,5 @@
 package senai.tcc.zupiapi.zupibackend.dto.request;
 
-import senai.tcc.zupiapi.zupibackend.model.enums.PlanType;
 import senai.tcc.zupiapi.zupibackend.model.enums.UserType;
 
 import java.time.LocalDate;
@@ -15,7 +14,6 @@ public record UserRequest(
         String phone,
         AddressRequest address,
         UserType userType,
-        PlanType planType,
         String googleToken
 ) {
 }

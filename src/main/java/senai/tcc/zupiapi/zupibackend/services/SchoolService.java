@@ -106,8 +106,8 @@ public class SchoolService {
         if (userRepository.existsByCpf(cpf)) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "CPF já cadastrado");
         }
-        if (userRepository.existsByEmailAndPlanType(request.email(), PlanType.PESSOA_FISICA)) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "E-mail já cadastrado no plano Pessoa Física");
+        if (userRepository.existsByEmail(request.email())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "E-mail ja cadastrado");
         }
         if (request.birthDate() == null) {
             throw new BusinessException("Data de nascimento é obrigatória");

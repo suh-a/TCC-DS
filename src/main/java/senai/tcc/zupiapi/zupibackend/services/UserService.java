@@ -1,32 +1,31 @@
 package senai.tcc.zupiapi.zupibackend.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import senai.tcc.zupiapi.zupibackend.model.Address;
-import senai.tcc.zupiapi.zupibackend.security.services.AccessControlService;
-import senai.tcc.zupiapi.zupibackend.security.SecurityUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import senai.tcc.zupiapi.zupibackend.dto.LoginDTO;
 import senai.tcc.zupiapi.zupibackend.dto.LoginResponse;
 import senai.tcc.zupiapi.zupibackend.dto.mapper.UserMapper;
-import senai.tcc.zupiapi.zupibackend.security.jwt.JwtUtil;
 import senai.tcc.zupiapi.zupibackend.dto.request.UserRequest;
 import senai.tcc.zupiapi.zupibackend.dto.response.UserResponse;
 import senai.tcc.zupiapi.zupibackend.exceptions.BusinessException;
 import senai.tcc.zupiapi.zupibackend.exceptions.ResourceNotFoundException;
+import senai.tcc.zupiapi.zupibackend.model.Address;
 import senai.tcc.zupiapi.zupibackend.model.School;
 import senai.tcc.zupiapi.zupibackend.model.User;
 import senai.tcc.zupiapi.zupibackend.model.enums.PlanType;
 import senai.tcc.zupiapi.zupibackend.model.enums.UserType;
 import senai.tcc.zupiapi.zupibackend.repositories.SchoolRepository;
 import senai.tcc.zupiapi.zupibackend.repositories.UserRepository;
+import senai.tcc.zupiapi.zupibackend.security.SecurityUtils;
+import senai.tcc.zupiapi.zupibackend.security.jwt.JwtUtil;
+import senai.tcc.zupiapi.zupibackend.security.services.AccessControlService;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
-
 
 @Service
 public class UserService {
@@ -56,7 +55,7 @@ public class UserService {
     public UserResponse findById(Long id) {
         accessControl.requireUserId(id);
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with id " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario nao encontrado com id " + id));
 
         return userMapper.toResponse(user);
     }
@@ -67,20 +66,19 @@ public class UserService {
 
     public UserResponse findByEmail(String email) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with email " + email));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario nao encontrado com e-mail " + email));
 
         return userMapper.toResponse(user);
     }
 
     public UserResponse save(UserRequest user) {
-        UserType type = user.userType() != null ? user.userType() : UserType.RESPONSAVEL;
-        PlanType planType = resolvePlanType(user.planType(), type);
+        validateRequiredRegistrationFields(user);
 
-        if (userRepository.existsByEmailAndPlanType(user.email(), planType)) {
-            throw new ResponseStatusException(
-                    HttpStatus.CONFLICT,
-                    "Email já cadastrado para este plano"
-            );
+        UserType type = user.userType() != null ? user.userType() : UserType.RESPONSAVEL;
+        PlanType planType = resolvePlanType(type);
+
+        if (userRepository.existsByEmail(user.email())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "E-mail ja cadastrado");
         }
 
         User userEntity = userMapper.toEntity(user);
@@ -88,43 +86,12 @@ public class UserService {
         userEntity.setUserType(type);
         userEntity.setPlanType(planType);
         userEntity.setPhone(user.phone());
-        Address address = new Address();
-        address.setCep(user.address().cep());
-        address.setStreet(user.address().street());
-        address.setNumber(user.address().number());
-        address.setNeighborhood(user.address().neighborhood());
-        address.setState(user.address().state());
-        address.setCountry(user.address().country());
-        userEntity.setAddress(address);
+        userEntity.setAddress(toAddress(user));
 
         if (type == UserType.ESCOLA) {
-            String cnpj = onlyDigits(user.cnpj());
-            if (cnpj.length() != 14) {
-                throw new BusinessException("CNPJ inválido");
-            }
-            if (schoolRepository.existsByCnpj(cnpj)) {
-                throw new ResponseStatusException(HttpStatus.CONFLICT, "CNPJ já cadastrado");
-            }
-            userEntity.setCpf(null);
-            userEntity = userRepository.save(userEntity);
-
-            School school = new School();
-            school.setName(user.name());
-            school.setCnpj(cnpj);
-            school.setEmail(user.email());
-            school.setAccount(userEntity);
-            schoolRepository.save(school);
+            userEntity = saveSchoolAccount(user, userEntity);
         } else {
-            String cpf = onlyDigits(user.cpf());
-            if (cpf.length() != 11) {
-                throw new BusinessException("CPF inválido");
-            }
-            userEntity.setCpf(cpf);
-            userEntity.setBirthDate(user.birthDate());
-            if (userEntity.getBirthDate() == null) {
-                throw new BusinessException("Data de nascimento é obrigatória");
-            }
-            userEntity = userRepository.save(userEntity);
+            userEntity = saveResponsibleAccount(user, userEntity);
         }
 
         return userMapper.toResponse(userEntity);
@@ -132,7 +99,8 @@ public class UserService {
 
     public LoginResponse login(LoginDTO user) {
         try {
-            User userEntity = resolveUserForLogin(user.email(), user.planType());
+            User userEntity = userRepository.findByEmail(user.email())
+                    .orElseThrow(() -> new RuntimeException());
 
             if (!passwordEncoder.matches(user.password(), userEntity.getPassword())) {
                 throw new RuntimeException();
@@ -141,39 +109,17 @@ public class UserService {
             UserResponse response = userMapper.toResponse(userEntity);
             String token = jwtUtil.generateToken(userEntity.getEmail(), userEntity.getId(), userEntity.getUserType());
             return new LoginResponse(token, response);
-
         } catch (ResponseStatusException e) {
             throw e;
         } catch (Exception e) {
-            throw new ResponseStatusException(
-                    HttpStatus.UNAUTHORIZED,
-                    "Email ou senha inválidos"
-            );
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Email ou senha invalidos");
         }
-    }
-
-    private User resolveUserForLogin(String email, PlanType planType) {
-        if (planType != null) {
-            return userRepository.findByEmailAndPlanType(email, planType)
-                    .orElseThrow(() -> new RuntimeException());
-        }
-        List<User> accounts = userRepository.findAllByEmail(email);
-        if (accounts.isEmpty()) {
-            throw new RuntimeException();
-        }
-        if (accounts.size() > 1) {
-            throw new ResponseStatusException(
-                    HttpStatus.CONFLICT,
-                    "Selecione o tipo de conta (Pessoa Física ou Jurídica)."
-            );
-        }
-        return accounts.get(0);
     }
 
     public UserResponse update(Long id, UserRequest user) {
         accessControl.requireUserId(id);
         User userEntity = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario nao encontrado"));
 
         if (user.password() != null && !user.password().isBlank() && !user.password().startsWith("*")) {
             userEntity.setPassword(passwordEncoder.encode(user.password()));
@@ -185,13 +131,13 @@ public class UserService {
             userEntity.setName(user.name());
         }
         if (user.cpf() != null && !user.cpf().isBlank()) {
-            userEntity.setCpf(user.cpf());
+            userEntity.setCpf(onlyDigits(user.cpf()));
         }
         if (user.userType() != null) {
             userEntity.setUserType(user.userType());
         }
 
-        userEntity = userRepository.save(userEntity);
+        userEntity = saveUser(userEntity);
 
         return userMapper.toResponse(userEntity);
     }
@@ -199,22 +145,18 @@ public class UserService {
     public UserResponse updateEmail(Long id, String newEmail) {
         accessControl.requireUserId(id);
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
-        PlanType planType = user.getPlanType() != null
-                ? user.getPlanType()
-                : (user.getUserType() == UserType.ESCOLA ? PlanType.PESSOA_JURIDICA : PlanType.PESSOA_FISICA);
-        if (userRepository.existsByEmailAndPlanType(newEmail, planType)
-                && !Objects.equals(user.getEmail(), newEmail)) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "E-mail já cadastrado para este plano");
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario nao encontrado"));
+        if (userRepository.existsByEmail(newEmail) && !Objects.equals(user.getEmail(), newEmail)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "E-mail ja cadastrado");
         }
         user.setEmail(newEmail);
-        return userMapper.toResponse(userRepository.save(user));
+        return userMapper.toResponse(saveUser(user));
     }
 
     public void updatePassword(Long id, String currentPassword, String newPassword) {
         accessControl.requireUserId(id);
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario nao encontrado"));
         if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Senha atual incorreta");
         }
@@ -223,28 +165,103 @@ public class UserService {
 
     public void resetPasswordDirect(Long id, String newPassword) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario nao encontrado"));
         user.setPassword(passwordEncoder.encode(newPassword));
-        userRepository.save(user);
+        saveUser(user);
     }
 
     public UserResponse setTwoFactor(Long id, boolean enabled) {
         accessControl.requireUserId(id);
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario nao encontrado"));
         user.setTwoFactorEnabled(enabled);
-        return userMapper.toResponse(userRepository.save(user));
+        return userMapper.toResponse(saveUser(user));
     }
 
-    static PlanType resolvePlanType(PlanType requestPlanType, UserType userType) {
-        if (requestPlanType != null) {
-            return requestPlanType;
-        }
+    static PlanType resolvePlanType(UserType userType) {
         return userType == UserType.ESCOLA ? PlanType.PESSOA_JURIDICA : PlanType.PESSOA_FISICA;
+    }
+
+    private User saveSchoolAccount(UserRequest user, User userEntity) {
+        String cnpj = onlyDigits(user.cnpj());
+        if (cnpj.length() != 14) {
+            throw new BusinessException("CNPJ invalido");
+        }
+        if (schoolRepository.existsByCnpj(cnpj)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "CNPJ ja cadastrado");
+        }
+
+        userEntity.setCpf(null);
+        userEntity = saveUser(userEntity);
+
+        School school = new School();
+        school.setName(user.name());
+        school.setCnpj(cnpj);
+        school.setEmail(user.email());
+        school.setAccount(userEntity);
+        schoolRepository.save(school);
+
+        return userEntity;
+    }
+
+    private User saveResponsibleAccount(UserRequest user, User userEntity) {
+        String cpf = onlyDigits(user.cpf());
+        if (cpf.length() != 11) {
+            throw new BusinessException("CPF invalido");
+        }
+
+        userEntity.setCpf(cpf);
+        userEntity.setBirthDate(user.birthDate());
+        if (userEntity.getBirthDate() == null) {
+            throw new BusinessException("Data de nascimento e obrigatoria");
+        }
+
+        return saveUser(userEntity);
+    }
+
+    private void validateRequiredRegistrationFields(UserRequest user) {
+        if (user == null) {
+            throw new BusinessException("Dados de cadastro obrigatorios");
+        }
+        if (!hasText(user.name())) {
+            throw new BusinessException("Nome e obrigatorio");
+        }
+        if (!hasText(user.email())) {
+            throw new BusinessException("E-mail e obrigatorio");
+        }
+        if (user.password() == null || user.password().length() < 6) {
+            throw new BusinessException("Senha deve ter no minimo 6 caracteres");
+        }
+        if (user.address() == null) {
+            throw new BusinessException("Endereco e obrigatorio");
+        }
+    }
+
+    private Address toAddress(UserRequest user) {
+        Address address = new Address();
+        address.setCep(user.address().cep());
+        address.setStreet(user.address().street());
+        address.setNumber(user.address().number());
+        address.setNeighborhood(user.address().neighborhood());
+        address.setState(user.address().state());
+        address.setCountry(user.address().country());
+        return address;
+    }
+
+    private User saveUser(User user) {
+        try {
+            return userRepository.save(user);
+        } catch (DataIntegrityViolationException ex) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Ja existe um cadastro com estes dados");
+        }
     }
 
     private static String onlyDigits(String value) {
         if (value == null) return "";
         return value.replaceAll("\\D", "");
+    }
+
+    private static boolean hasText(String value) {
+        return value != null && !value.isBlank();
     }
 }

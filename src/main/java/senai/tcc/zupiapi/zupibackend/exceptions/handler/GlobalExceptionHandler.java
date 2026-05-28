@@ -1,5 +1,6 @@
 package senai.tcc.zupiapi.zupibackend.exceptions.handler;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -49,6 +50,14 @@ public class GlobalExceptionHandler {
     public ProblemDetail responseStatusException(ResponseStatusException ex) {
         ProblemDetail problem = ProblemDetail.forStatus(ex.getStatusCode());
         problem.setDetail(ex.getReason());
+        problem.setProperty("timeStamp", Instant.now());
+        return problem;
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ProblemDetail dataIntegrityViolationException(DataIntegrityViolationException ex) {
+        ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.CONFLICT);
+        problem.setDetail("Ja existe um cadastro com estes dados");
         problem.setProperty("timeStamp", Instant.now());
         return problem;
     }
