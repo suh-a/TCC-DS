@@ -1,0 +1,327 @@
+.help-hero {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  max-width: 1040px;
+  margin: 0 auto 1.25rem;
+  padding: 1.4rem 0.25rem 0;
+  animation: helpFadeUp 0.5s ease both;
+}
+
+.help-kicker {
+  color: #4a6fa5;
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  margin-bottom: 0.35rem;
+  text-transform: uppercase;
+}
+
+.help-hero h1 {
+  color: #2d3748;
+  font-family: 'Poppins', sans-serif;
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin: 0 0 0.45rem;
+}
+
+.help-hero p {
+  color: #5f6f7f;
+  margin: 0;
+  max-width: 640px;
+}
+
+.help-status {
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid rgba(126, 200, 230, 0.4);
+  border-radius: 999px;
+  box-shadow: 0 12px 28px rgba(45, 55, 72, 0.08);
+  color: #2d3748;
+  display: inline-flex;
+  flex: 0 0 auto;
+  font-weight: 700;
+  gap: 0.5rem;
+  padding: 0.7rem 1rem;
+}
+
+.help-status-dot {
+  background: #60c28f;
+  border-radius: 50%;
+  box-shadow: 0 0 0 6px rgba(96, 194, 143, 0.16);
+  height: 0.7rem;
+  width: 0.7rem;
+}
+
+.ajuda-chat-panel {
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.96), rgba(238, 249, 246, 0.94)),
+    linear-gradient(135deg, rgba(126, 200, 230, 0.18), rgba(255, 185, 128, 0.16));
+  border: 1px solid rgba(126, 200, 230, 0.28);
+  border-radius: 18px;
+  box-shadow: 0 22px 60px rgba(45, 55, 72, 0.12);
+  max-width: 1040px;
+  overflow: hidden;
+  padding: 0;
+  animation: helpFadeUp 0.55s ease 0.06s both;
+}
+
+.help-chat-header {
+  align-items: center;
+  background: linear-gradient(135deg, #7ec8e6, #7fceb8);
+  color: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  padding: 1.25rem 1.35rem;
+}
+
+.help-chat-header .help-kicker {
+  color: rgba(255, 255, 255, 0.78);
+  margin-bottom: 0.1rem;
+}
+
+.help-chat-header h2 {
+  font-size: 1.1rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.help-clear-btn,
+.help-suggestions button,
+.help-send-btn {
+  border: 0;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+}
+
+.help-clear-btn {
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 999px;
+  color: #ffffff;
+  font-weight: 800;
+  padding: 0.48rem 0.9rem;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.help-clear-btn:hover {
+  background: rgba(255, 255, 255, 0.28);
+  transform: translateY(-1px);
+}
+
+.help-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  padding: 1rem 1.25rem 0;
+}
+
+.help-suggestions button {
+  background: #ffffff;
+  border: 1px solid rgba(126, 200, 230, 0.42);
+  border-radius: 999px;
+  color: #4a6fa5;
+  font-weight: 800;
+  padding: 0.58rem 0.9rem;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.help-suggestions button:hover {
+  background: #ffb980;
+  border-color: #ffb980;
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+.ajuda-chat-messages {
+  background: rgba(255, 255, 255, 0.52);
+  max-height: 480px;
+  min-height: 360px;
+  overflow-y: auto;
+  padding: 1.25rem;
+  scroll-behavior: smooth;
+}
+
+.ajuda-msg {
+  align-items: flex-end;
+  animation: helpMessageIn 0.28s ease both;
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.ajuda-msg--out {
+  flex-direction: row-reverse;
+  text-align: right;
+}
+
+.ajuda-msg-avatar {
+  align-items: center;
+  background: #7ec8e6;
+  border: 3px solid #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 8px 18px rgba(45, 55, 72, 0.12);
+  color: #ffffff;
+  display: flex;
+  flex-shrink: 0;
+  font-weight: 800;
+  height: 42px;
+  justify-content: center;
+  width: 42px;
+}
+
+.ajuda-msg--out .ajuda-msg-avatar {
+  background: #ffb980;
+}
+
+.ajuda-msg-name {
+  color: #4a5568;
+  display: block;
+  font-size: 0.78rem;
+  margin-bottom: 0.24rem;
+}
+
+.ajuda-msg-bubble {
+  background: #ffffff;
+  border: 1px solid rgba(126, 200, 230, 0.24);
+  border-radius: 16px 16px 16px 4px;
+  box-shadow: 0 12px 24px rgba(45, 55, 72, 0.08);
+  color: #2d3748;
+  line-height: 1.55;
+  margin: 0;
+  max-width: 700px;
+  padding: 0.78rem 0.95rem;
+}
+
+.ajuda-msg--out .ajuda-msg-bubble {
+  background: #4a6fa5;
+  border-color: #4a6fa5;
+  border-radius: 16px 16px 4px 16px;
+  color: #ffffff;
+}
+
+.help-typing {
+  align-items: center;
+  display: inline-flex;
+  gap: 0.28rem;
+  margin: 0 0 0.85rem 1.35rem;
+}
+
+.help-typing[hidden] {
+  display: none;
+}
+
+.help-typing span {
+  animation: helpTyping 0.8s ease-in-out infinite alternate;
+  background: #7ec8e6;
+  border-radius: 50%;
+  height: 0.5rem;
+  width: 0.5rem;
+}
+
+.help-typing span:nth-child(2) {
+  animation-delay: 0.12s;
+}
+
+.help-typing span:nth-child(3) {
+  animation-delay: 0.24s;
+}
+
+.ajuda-chat-input {
+  align-items: center;
+  background: #ffffff;
+  border-top: 1px solid rgba(126, 200, 230, 0.24);
+  display: flex;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+}
+
+.ajuda-chat-input .form-control {
+  background: #f3f8fb;
+  border-radius: 999px;
+  min-height: 48px;
+  padding: 0.8rem 1rem;
+}
+
+.ajuda-chat-input .form-control:focus {
+  box-shadow: 0 0 0 0.22rem rgba(126, 200, 230, 0.26);
+}
+
+.help-send-btn {
+  background: #ffb980;
+  border-radius: 999px;
+  color: #ffffff;
+  font-weight: 900;
+  min-height: 48px;
+  padding: 0 1.2rem;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.help-send-btn:hover {
+  box-shadow: 0 12px 26px rgba(255, 185, 128, 0.34);
+  transform: translateY(-2px);
+}
+
+@keyframes helpFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes helpMessageIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes helpTyping {
+  from {
+    opacity: 0.35;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-5px);
+  }
+}
+
+@media (max-width: 767.98px) {
+  .help-hero {
+    align-items: flex-start;
+    flex-direction: column;
+    padding-top: 3.4rem;
+  }
+
+  .help-hero h1 {
+    font-size: 1.7rem;
+  }
+
+  .ajuda-chat-messages {
+    min-height: 300px;
+  }
+
+  .ajuda-msg-bubble {
+    max-width: min(72vw, 520px);
+  }
+
+  .ajuda-chat-input {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .help-send-btn {
+    width: 100%;
+  }
+}

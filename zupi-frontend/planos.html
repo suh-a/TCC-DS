@@ -3,32 +3,24 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Zupi — Planos</title>
-  
-  <!-- Bootstrap 5 CSS -->
+  <title>Zupi - Planos</title>
+
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-  
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-  
-  <!-- Custom CSS -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="/css/main.css" />
   <link rel="stylesheet" href="/css/planos.css" />
-  
-  <link rel="icon" href="../assets/img/favicon.png" type="image/png">
+
+  <link rel="icon" href="/img/logokids1.png" type="image/png">
 </head>
 <body>
-
-  <!-- FUNDO DECORATIVO -->
   <div class="background-decor" aria-hidden="true">
-    <span class="decor-shape decor-circle" style="background-color:#7EBCE6; top:10%; left:15%; width:60px; height:60px;"></span>
-    <span class="decor-shape decor-circle" style="background-color:#F9E39A; top:40%; left:70%; width:50px; height:50px;"></span>
-    <span class="decor-shape decor-circle" style="background-color:#A8E6CF; top:70%; left:25%; width:45px; height:45px;"></span>
-    <span class="decor-shape decor-square" style="background-color:#F9E39A; top:15%; left:25%; width:35px; height:35px;"></span>
-    <span class="decor-shape decor-square" style="background-color:#A8E6CF; top:45%; left:15%; width:40px; height:40px;"></span>
+    <span class="decor-shape decor-circle" style="background: var(--zupi-primary-solid); top: 9%; left: 8%; width: 90px; height: 90px;"></span>
+    <span class="decor-shape decor-circle" style="background: var(--zupi-accent); top: 52%; right: 9%; width: 130px; height: 130px;"></span>
+    <span class="decor-shape decor-square" style="background: var(--zupi-secondary); top: 18%; right: 22%; width: 72px; height: 72px;"></span>
+    <span class="decor-shape decor-square" style="background: var(--zupi-highlight); bottom: 12%; left: 12%; width: 84px; height: 84px;"></span>
   </div>
 
-  <!-- NAVBAR -->
   <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm" role="navigation" aria-label="Navegação principal">
     <div class="container">
       <a class="navbar-brand" id="brand-color-2" href="/" aria-label="Zupi - Página inicial">Zupi</a>
@@ -37,116 +29,122 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto align-items-center">
-          <li class="nav-item">
-            <a class="nav-link" href="/">Início</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/sobre">Sobre</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/planos">Planos</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/contatos">Contato</a>
-          </li>
-          <li class="nav-item">
-            <a class="btn btn-primary ms-2" href="/login" role="button">Entrar</a>
-          </li>
+          <li class="nav-item"><a class="nav-link" href="/">Início</a></li>
+          <li class="nav-item"><a class="nav-link" href="/sobre">Sobre</a></li>
+          <li class="nav-item"><a class="nav-link active" aria-current="page" href="/planos">Planos</a></li>
+          <li class="nav-item"><a class="nav-link" href="/contato">Contato</a></li>
+          <li class="nav-item"><a class="btn btn-primary ms-2" href="/login" role="button">Entrar</a></li>
         </ul>
       </div>
     </div>
   </nav>
 
-  <!-- CONTEÚDO PRINCIPAL -->
-  <main class="py-5">
-    <section id="planos" class="container">
-      <h1 class="section-title">Nossos Planos</h1>
-      <p class="section-subtitle">Escolha o plano ideal para você e aproveite ao máximo o Zupi!</p>
+  <main class="plans-page">
+    <section class="plans-hero">
+      <div class="container">
+        <div class="plans-hero-grid">
+          <div>
+            <span class="plans-kicker">Planos Zupi</span>
+            <h1>Escolha como o Zupi vai acompanhar sua rotina.</h1>
+            <p>
+              Compare os planos por tipo de uso, veja todos os recursos inclusos e siga para a compra com o cadastro já direcionado para Pessoa Física ou Pessoa Jurídica.
+            </p>
+          </div>
+          <div class="plans-mini-board" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </div>
+    </section>
 
-      <div class="row g-4 justify-content-center mt-4">
-        <!-- Pessoa Física -->
-        <div class="col-md-6 col-lg-5">
-
-          <a href="cadastro.html?tipo=pf"
-             class="text-decoration-none">
-
-            <div class="card plano-card h-100">
-
-              <div class="card-body text-center">
-
-                <h3 class="card-title h4 mb-3">
-                  Pessoa Física
-                </h3>
-
-                <p class="card-text mb-4">
-                  Para responsáveis e famílias.
-                </p>
-
-                <div class="h3 text-zupi-primary fw-bold">
-                  R$ 80<small class="fs-6">/mês</small>
-                </div>
-
-              </div>
-
-            </div>
-
-          </a>
-
+    <section class="plans-selector-section">
+      <div class="container">
+        <div class="plans-selector" aria-label="Escolha de plano">
+          <button class="plan-switch is-active" type="button" data-plan="pf">
+            <span>Pessoa Física</span>
+            <strong>R$ 80/mês</strong>
+          </button>
+          <button class="plan-switch" type="button" data-plan="pj">
+            <span>Pessoa Jurídica</span>
+            <strong>R$ 700/mês</strong>
+          </button>
         </div>
 
-        <!-- Pessoa Jurídica -->
-        <div class="col-md-6 col-lg-5">
-
-          <a href="cadastro.html?tipo=pj"
-             class="text-decoration-none">
-
-            <div class="card plano-card h-100 bg-zupi-highlight text-white">
-
-              <div class="card-body text-center">
-
-                <h3 class="card-title h4 mb-3">
-                  Pessoa Jurídica
-                </h3>
-
-                <p class="card-text mb-4">
-                  Para escolas e instituições de ensino.
-                </p>
-
-                <div class="h3 fw-bold">
-                  R$ 700<small class="fs-6">/mês</small>
-                </div>
-
-              </div>
-
+        <article class="plan-detail-card" id="planDetail" aria-live="polite">
+          <div class="plan-detail-head">
+            <div>
+              <span class="plans-kicker" id="planAudience">Para famílias</span>
+              <h2 id="planTitle">Plano Pessoa Física</h2>
+              <p id="planDescription">
+                Para responsáveis que querem acompanhar a evolução da criança em casa, com atividades guiadas, relatórios simples e apoio para a rotina.
+              </p>
             </div>
+            <div class="plan-price-box">
+              <span id="planPrice">R$ 80</span>
+              <small id="planCycle">por mês</small>
+              <a class="btn btn-warning" id="buyPlan" href="/cadastro?tipo=pf">Comprar plano</a>
+            </div>
+          </div>
 
-          </a>
+          <div class="plan-info-grid">
+            <section>
+              <h3>O que está incluso</h3>
+              <ul id="planIncludes"></ul>
+            </section>
+            <section>
+              <h3>Para quem é indicado</h3>
+              <ul id="planBestFor"></ul>
+            </section>
+            <section>
+              <h3>Como ajuda na prática</h3>
+              <ul id="planRoutine"></ul>
+            </section>
+          </div>
 
-        </div>
+          <div class="plan-highlight-row">
+            <div>
+              <span id="highlightOneValue">1</span>
+              <small id="highlightOneLabel">criança acompanhada</small>
+            </div>
+            <div>
+              <span id="highlightTwoValue">12+</span>
+              <small id="highlightTwoLabel">habilidades observadas</small>
+            </div>
+            <div>
+              <span id="highlightThreeValue">24h</span>
+              <small id="highlightThreeLabel">acesso à rotina</small>
+            </div>
+          </div>
 
+          <div class="plan-buy-panel">
+            <div>
+              <h3 id="buyTitle">Pronto para começar com Pessoa Física?</h3>
+              <p id="buyText">Você será levado para o cadastro com o tipo de conta familiar já selecionado.</p>
+            </div>
+            <a class="btn btn-primary" id="buyPlanBottom" href="/cadastro?tipo=pf">Ir para compra</a>
+          </div>
+        </article>
       </div>
     </section>
   </main>
 
-  <br><br><br>
-
-  <!-- FOOTER -->
   <footer class="footer" role="contentinfo">
     <div class="container">
       <div class="row text-center">
         <div class="col-12">
-          <p class="mb-0">© 2025 Zupi. Todos os direitos reservados.</p>
+          <p class="mb-0">© 2026 Zupi. Todos os direitos reservados.</p>
         </div>
       </div>
     </div>
   </footer>
 
-  <!-- Bootstrap 5 JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
   <script src="/js/routes.js"></script>
   <script src="/js/api.js"></script>
   <script src="/js/auth-guard.js"></script>
+  <script src="/js/planos.js"></script>
 </body>
 </html>
-
-

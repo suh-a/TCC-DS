@@ -9,9 +9,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/main.css" />
   <link rel="stylesheet" href="/css/dashboard.css" />
+  <link rel="stylesheet" href="/css/relatorios.css" />
   <link rel="stylesheet" href="/css/dark-mode.css" />
 </head>
-<body>
+<body data-org-nav="admin" data-org-section="dashboard">
   <div class="background-decor" aria-hidden="true">
     <span class="decor-shape decor-circle" style="width:160px;height:160px;top:12%;left:6%;background:var(--zupi-accent);"></span>
   </div>
@@ -27,7 +28,7 @@
       <nav class="col-lg-2 dashboard-sidebar p-0 position-fixed vh-100 d-none d-lg-block" role="navigation">
         <div class="d-flex flex-column p-4 h-100">
           <div class="navbar-brand text-white mb-4 fs-3 fw-bold">Zupi Admin</div>
-          <ul class="nav nav-pills flex-column">
+          <ul class="nav nav-pills flex-column" data-org-sidebar aria-busy="true">
             <li class="nav-item mb-2"><a class="nav-link text-white active" href="/dashboard-admin">Dashboard</a></li>
             <li class="nav-item mb-2"><a class="nav-link text-white" href="#" onclick="showSection('usuarios')">Usuários</a></li>
             <li class="nav-item mb-2"><a class="nav-link text-white" href="#" onclick="showSection('escolas')">Escolas</a></li>
@@ -46,7 +47,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
         </div>
         <div class="offcanvas-body p-0">
-          <ul class="nav nav-pills flex-column p-4">
+          <ul class="nav nav-pills flex-column p-4" data-org-sidebar aria-busy="true">
             <li class="nav-item mb-2"><a class="nav-link text-white active" href="/dashboard-admin">Dashboard</a></li>
             <li class="nav-item mb-2"><a class="nav-link text-white" href="#" onclick="showSection('usuarios')">Usuários</a></li>
             <li class="nav-item mb-2"><a class="nav-link text-white" href="#" onclick="showSection('escolas')">Escolas</a></li>
@@ -105,6 +106,16 @@
               <button class="btn btn-primary btn-sm" onclick="showSection('chamados')">Ver</button>
             </div></div></div>
           </div>
+
+          <section class="row g-4 mt-1">
+            <div class="col-lg-5" id="adminGameReport"></div>
+            <div class="col-lg-7">
+              <article class="zupi-report-panel h-100">
+                <header><p>Resumo geral dos jogos</p><strong id="adminGameAverage">0%</strong></header>
+                <div id="adminGameBars"></div>
+              </article>
+            </div>
+          </section>
         </section>
 
         <!-- USUARIOS -->
@@ -166,16 +177,34 @@
   <script src="/js/routes.js"></script>
   <script src="/js/api.js"></script>
   <script src="/js/auth-guard.js"></script>
+  <script src="/js/org-sidebar.js"></script>
   <script src="/js/main.js"></script>
+  <script src="/js/game-score.js"></script>
+  <script src="/js/game-reports.js"></script>
   <script>
     function showSection(name) {
       document.querySelectorAll('main > section').forEach(s => s.classList.add('d-none'));
       const target = document.getElementById('section-' + name);
       if (target) target.classList.remove('d-none');
+      document.body.dataset.orgSection = name;
+      if (window.ZupiOrgSidebar) window.ZupiOrgSidebar.setActive(name);
 
       if (name === 'usuarios') loadUsers();
       if (name === 'chamados') loadTickets();
+      if (name === 'metricas') renderAdminReports();
     }
+
+    async function renderAdminReports() {
+      if (!window.ZupiGameReports) return;
+      const sessions = await ZupiGameReports.loadSessions();
+      const summary = ZupiGameReports.summarize(sessions);
+      const average = document.getElementById('adminGameAverage');
+      if (average) average.textContent = summary.average + '%';
+      ZupiGameReports.renderMiniReport(document.getElementById('adminGameReport'), sessions, { title: 'Uso dos jogos' });
+      ZupiGameReports.renderSimpleBars(document.getElementById('adminGameBars'), ZupiGameReports.gameAverages(sessions));
+    }
+
+    document.addEventListener('DOMContentLoaded', renderAdminReports);
 
     async function loadUsers() {
       try {

@@ -39,7 +39,7 @@
             justify-content: space-between;
             width: 90%;
             max-width: 600px;
-            margin-top: 30px;
+            margin-top: 88px;
             padding: 20px;
         }
 
@@ -66,6 +66,7 @@
             transition: transform 0.2s, border 0.2s;
             border: 4px solid transparent;
             user-select: none;
+            font-family: "Segoe UI Emoji", "Apple Color Emoji", sans-serif;
         }
 
         /* Efeitos de Estado */
@@ -106,7 +107,8 @@
         }
 
         /* --- MENSAGEM DE VITÓRIA --- */
-        #victory-modal {
+        #victory-modal,
+        #modal-overlay {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -133,6 +135,32 @@
             border-radius: 10px;
             cursor: pointer;
             margin-top: 15px;
+        }
+
+        .btn-action {
+            background: linear-gradient(135deg, #7EC8E6, #A8D5BA);
+            color: #2D3748;
+            border: none;
+            padding: 12px 22px;
+            font-size: 1rem;
+            font-weight: 800;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        .modal-emoji {
+            display: block;
+            font-size: 3.2rem;
+            margin-bottom: .5rem;
+        }
+
+        .animal-menu {
+            display: block;
+            margin-top: .7rem;
+            color: #557386;
+            font-weight: 700;
+            text-decoration: none;
         }
 
         /* --- ANIMAÇÕES --- */

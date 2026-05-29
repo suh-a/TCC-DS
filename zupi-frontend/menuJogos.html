@@ -1,150 +1,577 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Jogos Zupi</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/zupi-jogos.css">
-  <link rel="stylesheet" href="/css/menuJogos.css">
-</head>
-<body class="zj-body">
-<div id="zj-sky" class="zj-sky"></div>
-<a href="/dashboard-crianca" class="back-btn">&#8592; Voltar</a>
-<nav class="sky-nav" style="justify-content:center">
-  <span class="sky-nav-brand">&#x1F43E; Jogos Zupi</span>
-</nav>
-<div class="menu-header">
-  <span class="menu-mascote">&#x1F308;</span>
-  <h1 class="sky-title">Jogos da Zupi!</h1>
-  <p class="menu-sub">Escolha um jogo e divirta-se aprendendo!</p>
-</div>
-<div class="menu-wrap">
-
-  <div class="sec-label">Memoria e Raciocinio</div>
-  <div class="games-grid">
-    <a href="/jogoMemoria" class="g-card" style="--gc:linear-gradient(135deg,#7EC8E6,#A8D5BA);--ga:#7EC8E6;--gs:rgba(126,200,230,.4)">
-      <div class="g-icon-ring"><span>&#x1F9E0;</span></div>
-      <div class="g-name">Jogo da Memoria</div>
-      <div class="g-desc">Vire as cartas e ache os pares! 5 fases!</div>
-      <span class="g-tag">Jogar!</span>
-    </a>
-    <a href="/jogoSequencia" class="g-card" style="--gc:linear-gradient(135deg,#C8B8F0,#7EC8E6);--ga:#C8B8F0;--gs:rgba(200,184,240,.4)">
-      <div class="g-icon-ring"><span>&#x1F308;</span></div>
-      <div class="g-name">Sequencia Magica</div>
-      <div class="g-desc">Repita a sequencia de cores! Cada rodada mais dificil!</div>
-      <span class="g-tag">Jogar!</span>
-    </a>
-    <a href="/JogoLigarObjetos" class="g-card" style="--gc:linear-gradient(135deg,#A8D5BA,#FFE66D);--ga:#A8D5BA;--gs:rgba(168,213,186,.4)">
-      <div class="g-icon-ring"><span>&#x1F517;</span></div>
-      <div class="g-name">Liga os Objetos</div>
-      <div class="g-desc">Conecte os pares que combinam!</div>
-      <span class="g-tag">Jogar!</span>
-    </a>
-    <a href="/jogoSombras" class="g-card" style="--gc:linear-gradient(135deg,#F9C6D0,#C8B8F0);--ga:#F9C6D0;--gs:rgba(249,198,208,.4)">
-      <div class="g-icon-ring"><span>&#x1F311;</span></div>
-      <div class="g-name">Acha a Sombra</div>
-      <div class="g-desc">Encontre a sombra correta do objeto!</div>
-      <span class="g-tag">Jogar!</span>
-    </a>
-  </div>
-
-  <div class="sec-label">Numeros e Letras</div>
-  <div class="games-grid">
-    <a href="/jogoMath" class="g-card" style="--gc:linear-gradient(135deg,#FFE66D,#FFB980);--ga:#FFE66D;--gs:rgba(255,230,109,.4)">
-      <div class="g-icon-ring"><span>&#x1F522;</span></div>
-      <div class="g-name">Matematica Magica</div>
-      <div class="g-desc">Somar e subtrair! 5 niveis de dificuldade!</div>
-      <span class="g-tag">Jogar!</span>
-    </a>
-    <a href="/jogoPalavras" class="g-card" style="--gc:linear-gradient(135deg,#FFB980,#F9C6D0);--ga:#FFB980;--gs:rgba(255,185,128,.4)">
-      <div class="g-icon-ring"><span>&#x1F4DD;</span></div>
-      <div class="g-name">Forma a Palavra</div>
-      <div class="g-desc">Veja o emoji e monte a palavra correta!</div>
-      <span class="g-tag">Jogar!</span>
-    </a>
-    <a href="/jogoContagem" class="g-card" style="--gc:linear-gradient(135deg,#A8D5BA,#7EC8E6);--ga:#A8D5BA;--gs:rgba(168,213,186,.4)">
-      <div class="g-icon-ring"><span>&#x1F34E;</span></div>
-      <div class="g-name">Conta os Objetos</div>
-      <div class="g-desc">Conte os itens e escolha o numero certo!</div>
-      <span class="g-tag">Jogar!</span>
-    </a>
-    <a href="/jogoOrdem" class="g-card" style="--gc:linear-gradient(135deg,#7EC8E6,#C8B8F0);--ga:#7EC8E6;--gs:rgba(126,200,230,.4)">
-      <div class="g-icon-ring"><span>&#x2B06;&#xFE0F;</span></div>
-      <div class="g-name">Ordem Crescente</div>
-      <div class="g-desc">Toque nos numeros do menor ao maior!</div>
-      <span class="g-tag">Jogar!</span>
-    </a>
-  </div>
-
-  <div class="sec-label">Criatividade e Arte</div>
-  <div class="games-grid">
-    <a href="/jogoColorir" class="g-card" style="--gc:linear-gradient(135deg,#F9C6D0,#FFE66D);--ga:#F9C6D0;--gs:rgba(249,198,208,.4)">
-      <div class="g-icon-ring"><span>&#x1F3A8;</span></div>
-      <div class="g-name">Hora de Colorir</div>
-      <div class="g-desc">Pinte figuras lindas com pincel e balde!</div>
-      <span class="g-tag">Jogar!</span>
-    </a>
-    <a href="/jogoCoresFormas" class="g-card" style="--gc:linear-gradient(135deg,#7EC8E6,#C8B8F0);--ga:#C8B8F0;--gs:rgba(200,184,240,.4)">
-      <div class="g-icon-ring"><span>&#x1F534;</span></div>
-      <div class="g-name">Cores e Formas</div>
-      <div class="g-desc">Identifique cores, formas e tamanhos!</div>
-      <span class="g-tag">Jogar!</span>
-    </a>
-    <a href="/jogoPintura" class="g-card" style="--gc:linear-gradient(135deg,#A8D5BA,#F9C6D0);--ga:#A8D5BA;--gs:rgba(168,213,186,.4)">
-      <div class="g-icon-ring"><span>&#x1F58C;&#xFE0F;</span></div>
-      <div class="g-name">Mistura de Cores</div>
-      <div class="g-desc">Misture as cores primarias e descubra novas!</div>
-      <span class="g-tag">Jogar!</span>
-    </a>
-  </div>
-
-  <div class="sec-label">Reflexos e Atencao</div>
-  <div class="games-grid">
-    <a href="/jogoBolhas" class="g-card" style="--gc:linear-gradient(135deg,#7EC8E6,#C8B8F0);--ga:#7EC8E6;--gs:rgba(126,200,230,.4)">
-      <div class="g-icon-ring"><span>&#x1FAE7;</span></div>
-      <div class="g-name">Estoura Bolhas</div>
-      <div class="g-desc">Estoure bolhas de sabao com sons reais!</div>
-      <span class="g-tag">Jogar!</span>
-    </a>
-    <a href="/jogoClique" class="g-card" style="--gc:linear-gradient(135deg,#FFB980,#FFE66D);--ga:#FFB980;--gs:rgba(255,185,128,.4)">
-      <div class="g-icon-ring"><span>&#x2B50;</span></div>
-      <div class="g-name">Pega a Estrela</div>
-      <div class="g-desc">Toque nos alvos antes que sumam!</div>
-      <span class="g-tag">Jogar!</span>
-    </a>
-    <a href="/jogoBalao" class="g-card" style="--gc:linear-gradient(135deg,#FFE66D,#A8D5BA);--ga:#FFE66D;--gs:rgba(255,230,109,.4)">
-      <div class="g-icon-ring"><span>&#x1F388;</span></div>
-      <div class="g-name">Salva os Baloes</div>
-      <div class="g-desc">Estoure so os baloes da cor certa!</div>
-      <span class="g-tag">Jogar!</span>
-    </a>
-  </div>
-</div>
-
-<script src="/js/zupi-sky.js"></script>
-<script th:inline="none">
-zupiSky();
-document.querySelectorAll('.g-card').forEach(function(c) {
-  c.addEventListener('mouseenter', function() {
-    var r = c.getBoundingClientRect();
-    var cores = ['#7EC8E6','#A8D5BA','#FFE66D','#FFB980','#F9C6D0','#C8B8F0'];
-    for (var i = 0; i < 7; i++) {
-      var p = document.createElement('div');
-      p.style.cssText = 'position:fixed;width:8px;height:8px;border-radius:50%;pointer-events:none;z-index:999;animation:pHov .55s ease-out forwards;background:' + cores[i%6] + ';left:' + (r.left + Math.random()*r.width) + 'px;top:' + (r.top + Math.random()*r.height*.6) + 'px';
-      document.body.appendChild(p);
-      setTimeout(function(el){ if(el.parentNode) el.parentNode.removeChild(el); }, 650, p);
+  <style>
+    :root {
+      --zupi-primary-solid: #7EC8E6;
+      --zupi-secondary: #FFE66D;
+      --zupi-accent: #A8D5BA;
+      --zupi-highlight: #FFB980;
+      --zupi-bg: #F5F7FA;
+      --zupi-text: #2D3748;
+      --zupi-white: #FFFFFF;
     }
-  });
-});
-</script>
-<style>@keyframes pHov{0%{transform:scale(0) translateY(0);opacity:1}100%{transform:scale(1.4) translateY(-38px);opacity:0}}</style>
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--zupi-bg);
+      color: var(--zupi-text);
+      min-height: 100vh;
+    }
+
+    /* â”€â”€ FUNDO ANIMADO â”€â”€ */
+    .zj-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .zj-bg-shape {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.13;
+      animation: bgFloat var(--dur, 14s) ease-in-out infinite alternate;
+    }
+    .zj-bg-shape:nth-child(1)  { width:320px; height:320px; background:var(--zupi-primary-solid); top:-80px; left:-80px; --dur:13s; }
+    .zj-bg-shape:nth-child(2)  { width:200px; height:200px; background:var(--zupi-secondary);     top:10%; right:-60px; --dur:17s; border-radius:30% 70% 60% 40%; }
+    .zj-bg-shape:nth-child(3)  { width:260px; height:260px; background:var(--zupi-accent);        bottom:15%; left:-70px; --dur:11s; }
+    .zj-bg-shape:nth-child(4)  { width:180px; height:180px; background:var(--zupi-highlight);     bottom:-40px; right:10%; --dur:15s; border-radius:40% 60%; }
+    .zj-bg-shape:nth-child(5)  { width:140px; height:140px; background:var(--zupi-secondary);     top:42%; left:40%; --dur:19s; border-radius:60% 40%; }
+    .zj-bg-dots {
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(126,200,230,0.18) 1.5px, transparent 1.5px);
+      background-size: 36px 36px;
+    }
+    @keyframes bgFloat {
+      0%   { transform: translateY(0) rotate(0deg) scale(1); opacity: 0.13; }
+      100% { transform: translateY(-28px) rotate(22deg) scale(1.07); opacity: 0.22; }
+    }
+
+    /* â”€â”€ NAV â”€â”€ */
+    .zj-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 64px;
+      background: rgba(245,247,250,0.85);
+      backdrop-filter: blur(14px);
+      border-bottom: 1.5px solid rgba(126,200,230,0.18);
+      box-shadow: 0 2px 18px rgba(126,200,230,0.10);
+    }
+    .zj-logo {
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--zupi-primary-solid);
+      letter-spacing: -0.5px;
+      text-decoration: none;
+    }
+    .zj-logo span { color: var(--zupi-highlight); }
+    .zj-back {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      padding: .45rem 1.1rem;
+      border-radius: 50px;
+      border: 2px solid rgba(126,200,230,0.35);
+      background: rgba(126,200,230,0.10);
+      color: var(--zupi-primary-solid);
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: .88rem;
+      text-decoration: none;
+      transition: all .22s;
+    }
+    .zj-back:hover { background: var(--zupi-primary-solid); color: #fff; border-color: var(--zupi-primary-solid); }
+
+    /* â”€â”€ HERO â”€â”€ */
+    .zj-hero {
+      position: relative;
+      z-index: 1;
+      padding: 3.5rem 2rem 2rem;
+      text-align: center;
+    }
+    .zj-kicker {
+      display: inline-block;
+      padding: .28rem .9rem;
+      border-radius: 50px;
+      background: rgba(126,200,230,0.15);
+      border: 1.5px solid rgba(126,200,230,0.35);
+      color: var(--zupi-primary-solid);
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .zj-hero-title {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 900;
+      color: var(--zupi-text);
+      line-height: 1.15;
+      margin-bottom: .9rem;
+    }
+    .zj-hero-title span { color: var(--zupi-primary-solid); }
+    .zj-hero-sub {
+      max-width: 540px;
+      margin: 0 auto;
+      font-size: 1rem;
+      color: #5A6A7E;
+      line-height: 1.65;
+    }
+
+    /* â”€â”€ DECORATIVE BAR â”€â”€ */
+    .zj-wave {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 1.5rem 0 2.5rem;
+    }
+    .zj-wave-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      animation: wdot 1.6s ease-in-out infinite alternate;
+    }
+    .zj-wave-dot:nth-child(1){ background:var(--zupi-primary-solid); animation-delay:0s; }
+    .zj-wave-dot:nth-child(2){ background:var(--zupi-accent);        animation-delay:.15s; }
+    .zj-wave-dot:nth-child(3){ background:var(--zupi-secondary);     animation-delay:.30s; }
+    .zj-wave-dot:nth-child(4){ background:var(--zupi-highlight);     animation-delay:.45s; }
+    .zj-wave-dot:nth-child(5){ background:var(--zupi-primary-solid); animation-delay:.60s; }
+    @keyframes wdot { from { transform: scaleY(1); } to { transform: scaleY(2.2); } }
+
+    /* â”€â”€ CONTENT â”€â”€ */
+    .zj-content {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 1.25rem 4rem;
+    }
+
+    /* â”€â”€ SECTION â”€â”€ */
+    .zj-section { margin-bottom: 2.8rem; }
+    .zj-section-label {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      margin-bottom: 1.1rem;
+    }
+    .zj-section-label::before {
+      content: '';
+      display: block;
+      width: 5px;
+      height: 22px;
+      border-radius: 4px;
+      background: linear-gradient(180deg, var(--zupi-primary-solid), var(--zupi-accent));
+    }
+    .zj-section-label h2 {
+      font-size: .82rem;
+      font-weight: 800;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: #7A90A4;
+    }
+
+    /* â”€â”€ GRID â”€â”€ */
+    .zj-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(196px, 1fr));
+      gap: 1rem;
+    }
+
+    /* â”€â”€ CARD â”€â”€ */
+    .zj-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: .5rem;
+      padding: 1.3rem 1.2rem 1rem;
+      border-radius: 20px;
+      background: var(--zupi-white);
+      border: 2px solid transparent;
+      box-shadow: 0 4px 18px rgba(126,200,230,0.10);
+      text-decoration: none;
+      color: var(--zupi-text);
+      transition: transform .22s cubic-bezier(.34,1.56,.64,1), box-shadow .22s, border-color .22s;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .zj-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--c1, #7EC8E6) 0%, var(--c2, #A8D5BA) 100%);
+      opacity: 0;
+      transition: opacity .22s;
+      border-radius: 18px;
+    }
+    .zj-card:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 12px 32px rgba(126,200,230,0.22);
+      border-color: var(--c1, #7EC8E6);
+    }
+    .zj-card:hover::before { opacity: 0.06; }
+
+    .zj-card-accent {
+      width: 38px;
+      height: 5px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--c1, #7EC8E6), var(--c2, #A8D5BA));
+      margin-bottom: .2rem;
+      transition: width .22s;
+    }
+    .zj-card:hover .zj-card-accent { width: 60px; }
+
+    .zj-card-name {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--zupi-text);
+      line-height: 1.2;
+    }
+    .zj-card-icon {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border-radius: 15px;
+      background: linear-gradient(135deg, color-mix(in srgb, var(--c1) 25%, white), color-mix(in srgb, var(--c2) 36%, white));
+      font-size: 1.65rem;
+    }
+    .zj-card-desc {
+      font-size: .8rem;
+      color: #7A90A4;
+      line-height: 1.5;
+    }
+    .zj-card-cta {
+      margin-top: .4rem;
+      display: inline-flex;
+      align-items: center;
+      gap: .3rem;
+      font-size: .75rem;
+      font-weight: 800;
+      color: var(--c1, var(--zupi-primary-solid));
+      letter-spacing: .5px;
+    }
+    .zj-card-cta::after {
+      content: '';
+      display: inline-block;
+      width: 16px;
+      height: 2px;
+      background: var(--c1, var(--zupi-primary-solid));
+      border-radius: 2px;
+      transition: width .2s;
+    }
+    .zj-card:hover .zj-card-cta::after { width: 24px; }
+
+    .zj-card.zj-recommended {
+      border-color: rgba(255,185,128,0.72);
+      box-shadow: 0 0 0 3px rgba(255,185,128,0.15), 0 12px 34px rgba(126,200,230,0.22);
+      animation: recommendedGlow 2.4s ease-in-out infinite alternate;
+    }
+    .zj-card.zj-recommended::after {
+      content: 'Sugestao';
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      z-index: 2;
+      border-radius: 999px;
+      background: rgba(255,185,128,0.96);
+      color: #fff;
+      font-size: .68rem;
+      font-weight: 900;
+      padding: .22rem .55rem;
+      letter-spacing: .2px;
+    }
+    .zj-card.zj-recommended .zj-card-accent {
+      width: 66px;
+      background: linear-gradient(90deg, #FFB980, #A8D5BA);
+    }
+    @keyframes recommendedGlow {
+      from { box-shadow: 0 0 0 3px rgba(255,185,128,0.12), 0 12px 28px rgba(126,200,230,0.16); }
+      to { box-shadow: 0 0 0 6px rgba(255,185,128,0.22), 0 16px 38px rgba(126,200,230,0.26); }
+    }
+
+    /* â”€â”€ COLOR THEMES â”€â”€ */
+    .t-blue   { --c1:#7EC8E6; --c2:#A8D5BA; }
+    .t-green  { --c1:#A8D5BA; --c2:#7EC8E6; }
+    .t-yellow { --c1:#FFE66D; --c2:#FFB980; }
+    .t-orange { --c1:#FFB980; --c2:#FFE66D; }
+
+    /* â”€â”€ FOOTER â”€â”€ */
+    .zj-footer {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 2rem;
+      font-size: .78rem;
+      color: #9EB0C0;
+      font-weight: 600;
+    }
+
+    @media (max-width: 520px) {
+      .zj-hero { padding: 2rem 1rem 1.2rem; }
+      .zj-grid { grid-template-columns: 1fr 1fr; gap: .7rem; }
+      .zj-card { padding: 1rem .9rem .8rem; }
+      .zj-card-name { font-size: .9rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- FUNDO -->
+  <div class="zj-bg" aria-hidden="true">
+    <div class="zj-bg-dots"></div>
+    <div class="zj-bg-shape"></div>
+    <div class="zj-bg-shape"></div>
+    <div class="zj-bg-shape"></div>
+    <div class="zj-bg-shape"></div>
+    <div class="zj-bg-shape"></div>
+  </div>
+
+  <!-- NAV -->
+  <nav class="zj-nav">
+    <a href="/dashboard-crianca" class="zj-logo">Zupi<span>.</span></a>
+    <a href="/dashboard-crianca" class="zj-back">Voltar</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="zj-hero">
+    <div class="zj-kicker">Area de Jogos</div>
+    <h1 class="zj-hero-title">Aprender <span>brincando</span></h1>
+    <p class="zj-hero-sub">Escolha uma aventura, passe de nivel e descubra desafios cada vez mais divertidos.</p>
+    <div class="zj-wave">
+      <div class="zj-wave-dot"></div>
+      <div class="zj-wave-dot"></div>
+      <div class="zj-wave-dot"></div>
+      <div class="zj-wave-dot"></div>
+      <div class="zj-wave-dot"></div>
+    </div>
+  </section>
+
+  <!-- CONTEUDO -->
+  <main class="zj-content">
+
+    <!-- Novos desafios cognitivos -->
+    <section class="zj-section">
+      <div class="zj-section-label"><h2>Novos Desafios Cognitivos</h2></div>
+      <div class="zj-grid">
+        <a href="/jogoPadroes" class="zj-card t-blue">
+          <div class="zj-card-accent"></div>
+          <span class="zj-card-icon">&#129513;</span>
+          <strong class="zj-card-name">Complete o Padrao</strong>
+          <span class="zj-card-desc">Observe cores e formas para descobrir a proxima peca.</span>
+          <span class="zj-card-cta">Jogar</span>
+        </a>
+        <a href="/jogoFocoCores" class="zj-card t-orange">
+          <div class="zj-card-accent"></div>
+          <span class="zj-card-icon">&#127912;</span>
+          <strong class="zj-card-name">Foco nas Cores</strong>
+          <span class="zj-card-desc">Escolha a cor da tinta e ignore a palavra escrita.</span>
+          <span class="zj-card-cta">Jogar</span>
+        </a>
+        <a href="/jogoSequenciaSons" class="zj-card t-green">
+          <div class="zj-card-accent"></div>
+          <span class="zj-card-icon">&#127925;</span>
+          <strong class="zj-card-name">Sequencia Sonora</strong>
+          <span class="zj-card-desc">Escute os tons e repita a ordem dos blocos.</span>
+          <span class="zj-card-cta">Jogar</span>
+        </a>        <a href="/jogoRotas" class="zj-card t-yellow">
+          <div class="zj-card-accent"></div>
+          <span class="zj-card-icon">&#129517;</span>
+          <strong class="zj-card-name">Caminho Tranquilo</strong>
+          <span class="zj-card-desc">Planeje passos, evite bloqueios e encontre a chegada.</span>
+          <span class="zj-card-cta">Jogar</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Memoria e raciocinio -->
+    <section class="zj-section">
+      <div class="zj-section-label"><h2>Memoria e Raciocinio</h2></div>
+      <div class="zj-grid">
+        <a href="/jogoMemoria" class="zj-card t-blue">
+          <div class="zj-card-accent"></div>
+          <span class="zj-card-icon">&#128054;</span>
+          <strong class="zj-card-name">Memoria Animal</strong>
+          <span class="zj-card-desc">Encontre pares com desafios de concentracao crescentes.</span>
+          <span class="zj-card-cta">Jogar</span>
+        </a>
+        <a href="/jogo-ligar-objetos" class="zj-card t-blue">
+          <div class="zj-card-accent"></div>
+          <span class="zj-card-icon">&#128048;</span>
+          <strong class="zj-card-name">Animais e Comidas</strong>
+          <span class="zj-card-desc">Ligue cada animal ao alimento correto.</span>
+          <span class="zj-card-cta">Jogar</span>
+        </a>
+        <a href="/jogoSombras" class="zj-card t-green">
+          <div class="zj-card-accent"></div>
+          <span class="zj-card-icon">&#128269;</span>
+          <strong class="zj-card-name">Achar a Sombra</strong>
+          <span class="zj-card-desc">Compare formatos e selecione a sombra correta.</span>
+          <span class="zj-card-cta">Jogar</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Numeros e letras -->
+    <section class="zj-section">
+      <div class="zj-section-label"><h2>Numeros e Letras</h2></div>
+      <div class="zj-grid">
+        <a href="/jogoMath" class="zj-card t-yellow">
+          <div class="zj-card-accent"></div>
+          <span class="zj-card-icon">&#10133;</span>
+          <strong class="zj-card-name">Matematica Magica</strong>
+          <span class="zj-card-desc">Resolva contas simples em niveis progressivos.</span>
+          <span class="zj-card-cta">Jogar</span>
+        </a>
+        <a href="/jogoPalavras" class="zj-card t-orange">
+          <div class="zj-card-accent"></div>
+          <span class="zj-card-icon">&#128214;</span>
+          <strong class="zj-card-name">Formar Palavras</strong>
+          <span class="zj-card-desc">Monte palavras usando letras embaralhadas.</span>
+          <span class="zj-card-cta">Jogar</span>
+        </a>
+        <a href="/jogoContagem" class="zj-card t-yellow">
+          <div class="zj-card-accent"></div>
+          <span class="zj-card-icon">&#128290;</span>
+          <strong class="zj-card-name">Contagem</strong>
+          <span class="zj-card-desc">Conte os itens e escolha o numero certo.</span>
+          <span class="zj-card-cta">Jogar</span>
+        </a>
+        <a href="/jogoOrdem" class="zj-card t-orange">
+          <div class="zj-card-accent"></div>
+          <span class="zj-card-icon">&#128202;</span>
+          <strong class="zj-card-name">Ordem Crescente</strong>
+          <span class="zj-card-desc">Organize os numeros do menor para o maior.</span>
+          <span class="zj-card-cta">Jogar</span>
+        </a>
+        <a href="/jogoLetra" class="zj-card t-yellow">
+          <div class="zj-card-accent"></div>
+          <span class="zj-card-icon">&#127822;</span>
+          <strong class="zj-card-name">Letras</strong>
+          <span class="zj-card-desc">Reconheca letras e treine associacoes.</span>
+          <span class="zj-card-cta">Jogar</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Criatividade e arte -->
+    <section class="zj-section">
+      <div class="zj-section-label"><h2>Criatividade e Arte</h2></div>
+      <div class="zj-grid">
+        <a href="/jogoColorir" class="zj-card t-blue">
+          <div class="zj-card-accent"></div>
+          <span class="zj-card-icon">&#128396;</span>
+          <strong class="zj-card-name">Atelie de Colorir</strong>
+          <span class="zj-card-desc">Pinte desenhos, complete metas e libere niveis.</span>
+          <span class="zj-card-cta">Jogar</span>
+        </a>
+        <a href="/jogo-cores-formas" class="zj-card t-green">
+          <div class="zj-card-accent"></div>
+          <span class="zj-card-icon">&#128314;</span>
+          <strong class="zj-card-name">Cores e Formas</strong>
+          <span class="zj-card-desc">Identifique cor, forma e tamanho.</span>
+          <span class="zj-card-cta">Jogar</span>
+        </a>
+         <a href="/jogoPintura" class="zj-card t-blue">
+           <div class="zj-card-accent"></div>
+           <span class="zj-card-icon">&#127752;</span>
+           <strong class="zj-card-name">Mistura de Cores</strong>
+           <span class="zj-card-desc">Descubra combinacoes entre cores.</span>
+           <span class="zj-card-cta">Jogar</span>
+         </a>
+         <a href="/jogoMosaico" class="zj-card t-yellow">
+           <div class="zj-card-accent"></div>
+           <span class="zj-card-icon">&#128996;</span>
+           <strong class="zj-card-name">Mosaico Criativo</strong>
+           <span class="zj-card-desc">Monte padroes coloridos e vire artista.</span>
+           <span class="zj-card-cta">Jogar</span>
+         </a>
+         <a href="/jogoCenarios" class="zj-card t-orange">
+           <div class="zj-card-accent"></div>
+           <span class="zj-card-icon">&#128444;</span>
+           <strong class="zj-card-name">Montar Cenarios</strong>
+           <span class="zj-card-desc">Use adesivos para criar paisagens divertidas.</span>
+           <span class="zj-card-cta">Jogar</span>
+         </a>
+       </div>
+     </section>
+
+    <!-- Reflexos e atencao -->
+    <section class="zj-section">
+      <div class="zj-section-label"><h2>Reflexos e Atencao</h2></div>
+      <div class="zj-grid">
+        <a href="/jogoBolhas" class="zj-card t-blue">
+          <div class="zj-card-accent"></div>
+          <span class="zj-card-icon">&#128167;</span>
+          <strong class="zj-card-name">Estoura Bolhas</strong>
+          <span class="zj-card-desc">Toque nas bolhas certas antes que escapem.</span>
+          <span class="zj-card-cta">Jogar</span>
+        </a>
+        <a href="/jogoClique" class="zj-card t-green">
+          <div class="zj-card-accent"></div>
+          <span class="zj-card-icon">&#127919;</span>
+          <strong class="zj-card-name">Clique Rapido</strong>
+          <span class="zj-card-desc">Acerte os alvos dentro do tempo.</span>
+          <span class="zj-card-cta">Jogar</span>
+        </a>
+        <a href="/jogoBalao" class="zj-card t-yellow">
+          <div class="zj-card-accent"></div>
+          <span class="zj-card-icon">&#127880;</span>
+          <strong class="zj-card-name">Baloes</strong>
+          <span class="zj-card-desc">Escolha as cores indicadas com atencao.</span>
+          <span class="zj-card-cta">Jogar</span>
+        </a>
+        <a href="/jogoCatch" class="zj-card t-orange">
+          <div class="zj-card-accent"></div>
+          <span class="zj-card-icon">&#129530;</span>
+          <strong class="zj-card-name">Pega Frutas</strong>
+          <span class="zj-card-desc">Mova a cesta e recolha frutas que estao caindo.</span>
+          <span class="zj-card-cta">Jogar</span>
+        </a>
+        <a href="/jogoBomba" class="zj-card t-blue">
+          <div class="zj-card-accent"></div>
+          <span class="zj-card-icon">&#9889;</span>
+          <strong class="zj-card-name">Desafio de Atencao</strong>
+          <span class="zj-card-desc">Reaja rapido e evite escolhas erradas.</span>
+          <span class="zj-card-cta">Jogar</span>
+        </a>
+        <a href="/jogoBolao" class="zj-card t-green">
+          <div class="zj-card-accent"></div>
+          <span class="zj-card-icon">&#127923;</span>
+          <strong class="zj-card-name">Boliche</strong>
+          <span class="zj-card-desc">Mire, controle a forca e derrube os pinos.</span>
+          <span class="zj-card-cta">Jogar</span>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="zj-footer">Zupi &mdash; Aprender brincando</footer>
+
   <script src="/js/routes.js"></script>
   <script src="/js/api.js"></script>
   <script src="/js/auth-guard.js"></script>
-
   <script src="/js/game-guard.js"></script>
-
   <script src="/js/game-score.js"></script>
+  <script src="/js/game-recommendations.js"></script>
 </body>
 </html>
+
 

@@ -16,6 +16,7 @@
   <!-- Custom CSS -->
   <link rel="stylesheet" href="/css/main.css" />
   <link rel="stylesheet" href="/css/dashboard.css" />
+  <link rel="stylesheet" href="/css/profile-ui.css" />
 
   <link rel="icon" href="../assets/img/favicon.png" type="image/png">
 </head>
@@ -47,32 +48,7 @@
         aria-label="Navegação">
         <div class="d-flex flex-column p-4 h-100">
           <div class="navbar-brand text-white mb-4 fs-3 fw-bold">Zupi</div>
-          <ul class="nav nav-pills flex-column pf-sidebar-nav" data-pf-sidebar>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/dashboard-pais">Dashboard</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/selecao-perfil">Perfis das crianças</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/selecao-relatorios">Relatórios</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/cadastro-dependentes">Cadastro de dependentes</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/agenda">Agenda</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/ajuda">Ajuda?</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white active" href="/perfil-responsavel" aria-current="page">Perfil</a>
-              </li>
-              <li class="nav-item mt-auto">
-                <a class="nav-link text-white" href="#" data-action="logout">Sair</a>
-              </li>
-            </ul>
+          <ul class="nav nav-pills flex-column pf-sidebar-nav" data-pf-sidebar aria-busy="true"></ul>
         </div>
       </nav>
 
@@ -85,72 +61,40 @@
         </div>
         <div class="offcanvas-body p-0">
           <nav role="navigation" aria-label="Navegação do dashboard">
-            <ul class="nav nav-pills flex-column pf-sidebar-nav" data-pf-sidebar>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/dashboard-pais">Dashboard</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/selecao-perfil">Perfis das crianças</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/selecao-relatorios">Relatórios</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/cadastro-dependentes">Cadastro de dependentes</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/agenda">Agenda</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/ajuda">Ajuda?</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white active" href="/perfil-responsavel" aria-current="page">Perfil</a>
-              </li>
-              <li class="nav-item mt-auto">
-                <a class="nav-link text-white" href="#" data-action="logout">Sair</a>
-              </li>
-            </ul>
+            <ul class="nav nav-pills flex-column pf-sidebar-nav" data-pf-sidebar aria-busy="true"></ul>
           </nav>
         </div>
       </div>
 
       <!-- CONTEÚDO PRINCIPAL -->
       <main class="col-12 col-lg-10 ms-lg-auto dashboard-main-content px-3 px-lg-4 py-4">
-        <div class="d-flex align-items-center justify-content-between mb-5">
-          <h1 class="text-zupi-primary mb-0">Meu Perfil</h1>
-          <a class="btn btn-outline-primary btn-sm" href="/configuracoes" aria-label="Abrir configurações">
-            ⚙
-          </a>
-        </div>
+        <section class="profile-page-hero">
+          <div class="d-flex flex-column flex-md-row justify-content-between gap-3 align-items-md-center">
+            <div>
+              <h1 class="h2">Meu Perfil</h1>
+              <p class="text-muted mb-0">Gerencie seus dados, foto e dependentes em um so lugar.</p>
+            </div>
+            <a href="/selecao-perfil" class="btn btn-primary rounded-pill px-4">Trocar perfil</a>
+          </div>
+        </section>
 
         <!-- PERFIL DO RESPONSÁVEL -->
         <section class="mb-5">
-          <div class="row">
+          <div class="row g-4 align-items-stretch">
             <!-- Foto de Perfil -->
-            <div class="col-md-3 text-center mb-4">
-              <div class="mb-3">
-                <div id="fotoResponsavel" style="
-                  width: 120px;
-                  height: 120px;
-                  margin: 0 auto;
-                  background: linear-gradient(135deg, var(--zupi-primary-solid), var(--zupi-accent));
-                  border-radius: 20px;
-                  display: flex;
-                  align-items: center;
-                  justify-content: center;
-                  font-size: 3rem;
-                  color: white;
-                ">
-                  👤
-                </div>
+            <div class="col-md-3 text-center">
+              <div class="profile-page-card h-100 bg-white p-4 d-flex flex-column align-items-center justify-content-center">
+                <div id="responsiblePhotoPreview" data-profile-size="132"></div>
+                <label class="profile-photo-action">
+                  <input type="file" id="responsiblePhotoInput" accept="image/*">
+                  <span>Alterar foto</span>
+                </label>
               </div>
-              <button class="btn btn-sm btn-outline-primary">Alterar Foto</button>
             </div>
 
             <!-- Informações Pessoais -->
             <div class="col-md-9">
-              <div class="card border-0 bg-light">
+              <div class="card border-0 profile-page-card bg-white h-100">
                 <div class="card-body">
                   <div class="row mb-3">
                     <div class="col-md-6">
@@ -165,11 +109,11 @@
                   <div class="row mb-3">
                     <div class="col-md-6">
                       <h6 class="text-muted mb-1">Email</h6>
-                      <p class="fw-bold" id="emailResponsavel">---</p>
+                      <p class="fw-bold" id="emailResponsavel">email@exemplo.com</p>
                     </div>
                     <div class="col-md-6">
                       <h6 class="text-muted mb-1">Telefone</h6>
-                      <p class="fw-bold" id="telefoneResponsavel">---</p>
+                      <p class="fw-bold" id="telefoneResponsavel">(77) 98546-2523</p>
                     </div>
                   </div>
                   <div class="row">
@@ -198,29 +142,29 @@
               <div class="row">
                 <div class="col-md-4">
                   <h6 class="text-muted mb-1">Rua</h6>
-                  <p class="fw-bold" id="ruaResponsavel">---</p>
+                  <p class="fw-bold">Vicente do Venceslau</p>
                 </div>
                 <div class="col-md-2">
                   <h6 class="text-muted mb-1">Número</h6>
-                  <p class="fw-bold" id="numeroResponsavel">---</p>
+                  <p class="fw-bold">478</p>
                 </div>
                 <div class="col-md-4">
                   <h6 class="text-muted mb-1">Bairro</h6>
-                  <p class="fw-bold" id="bairroResponsavel">---</p>
+                  <p class="fw-bold">Orolanga</p>
                 </div>
               </div>
               <div class="row">
                 <div class="col-md-4">
                   <h6 class="text-muted mb-1">Cidade</h6>
-                  <p class="fw-bold" id="cidadeResponsavel">---</p>
+                  <p class="fw-bold">Campos de George</p>
                 </div>
                 <div class="col-md-4">
                   <h6 class="text-muted mb-1">País</h6>
-                  <p class="fw-bold" id="paisResponsavel">---</p>
+                  <p class="fw-bold">Brasil</p>
                 </div>
                 <div class="col-md-4">
                   <h6 class="text-muted mb-1">CEP</h6>
-                  <p class="fw-bold" id="cepResponsavel">---</p>
+                  <p class="fw-bold">55.896-012</p>
                 </div>
               </div>
             </div>
@@ -290,8 +234,8 @@
   <script src="/js/api.js"></script>
   <script src="/js/auth-guard.js"></script>
   <script src="/js/responsavel-sidebar.js"></script>
+  <script src="/js/profile-media.js"></script>
   <script src="/js/main.js"></script>
-  <script src="/js/child-avatar.js"></script>
   <script src="/js/perfilResponsavelScript.js"></script>
 </body>
 

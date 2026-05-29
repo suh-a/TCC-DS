@@ -31,18 +31,34 @@ async function loadChildDashboard(childId) {
         let totalMinutes = 0;
         let completed = 0;
         let progressPct = 0;
+        let sessions = [];
 
         if (sessionsRes && sessionsRes.ok) {
-            const sessions = await sessionsRes.json();
-            if (Array.isArray(sessions)) {
-                completed = sessions.length;
-                totalMinutes = sessions.reduce((acc, s) => acc + (s.durationSeconds || 0), 0) / 60;
+            const apiSessions = await sessionsRes.json();
+            if (Array.isArray(apiSessions)) {
+                sessions = apiSessions;
             }
+        }
+
+        if (window.ZupiGameReports) {
+            sessions = ZupiGameReports.mergeSessions(sessions, childId);
+            const summary = ZupiGameReports.summarize(sessions);
+            completed = summary.totalSessions;
+            totalMinutes = summary.totalSeconds / 60;
+            progressPct = summary.average;
+            ZupiGameReports.renderMiniReport(
+                document.getElementById('childGameReport'),
+                sessions,
+                { title: 'Meu resumo dos jogos' }
+            );
+        } else if (Array.isArray(sessions)) {
+            completed = sessions.length;
+            totalMinutes = sessions.reduce((acc, s) => acc + (s.durationSeconds || 0), 0) / 60;
         }
 
         if (progressRes && progressRes.ok) {
             const progress = await progressRes.json();
-            progressPct = progress.averageScore ?? progress.average ?? 0;
+            progressPct = progressPct || progress.averageScore || progress.average || 0;
         }
 
         if (totalTimeEl) totalTimeEl.textContent = `${Math.round(totalMinutes)} min`;

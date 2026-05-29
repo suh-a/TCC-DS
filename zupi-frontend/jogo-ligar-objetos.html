@@ -1,41 +1,51 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zupi - Jogo de Fases</title>
-    <link rel="stylesheet" href="/css/jogo-ligar-objetos.css" />
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Ligar Objetos - Zupi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/jogo-ligar-objetos.css" />
+  <style>
+    :root{--blue:#7EC8E6;--green:#A8D5BA;--yellow:#FFE66D;--orange:#FFB980;--bg:#F5F7FA;--text:#2D3748;--white:#FFFFFF;}
+    body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);}
+    .bg-s{position:absolute;border-radius:50%;opacity:.11;animation:bgF var(--d,14s) ease-in-out infinite alternate;}
+    @keyframes bgF{0%{transform:translateY(0) rotate(0) scale(1)}100%{transform:translateY(-24px) rotate(18deg) scale(1.07);opacity:.18}}
+    header{position:fixed;top:0;left:0;right:0;height:58px;z-index:300;display:flex;align-items:center;justify-content:space-between;padding:0 1.2rem;background:rgba(245,247,250,.92);backdrop-filter:blur(14px);border-bottom:1.5px solid rgba(126,200,230,.18);box-shadow:0 2px 14px rgba(126,200,230,.10);}
+    header h1{font-size:1.25rem;font-weight:900;color:var(--blue);}
+    header h1 a{color:inherit;text-decoration:none;}
+    header h1 span{color:var(--orange);}
+    #level-indicator{padding:.25rem .9rem;border-radius:50px;background:rgba(126,200,230,.15);border:1.5px solid rgba(126,200,230,.3);font-size:.82rem;font-weight:800;color:var(--blue);}
+    #instruction-text{font-size:.82rem;font-weight:700;color:#7A90A4;}
+  </style>
 </head>
-<body class="g-body">
-
-<header>
-    <h1>🧩 Zupi</h1>
+<body>
+  <div id="zj-bg" style="position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;">
+    <div style="position:absolute;inset:0;background-image:radial-gradient(circle,rgba(126,200,230,.15) 1.5px,transparent 1.5px);background-size:34px 34px;"></div>
+    <div class="bg-s" style="width:300px;height:300px;background:#7EC8E6;top:-80px;left:-80px;--d:13s;"></div>
+    <div class="bg-s" style="width:190px;height:190px;background:#FFE66D;top:10%;right:-55px;--d:17s;border-radius:40% 60%;"></div>
+    <div class="bg-s" style="width:240px;height:240px;background:#A8D5BA;bottom:15%;left:-65px;--d:11s;"></div>
+  </div>
+  <header>
+    <h1><a href="/menuJogos">Zupi<span>.</span></a></h1>
     <div id="level-indicator">Fase 1</div>
     <p id="instruction-text">Ligue os pares!</p>
-</header>
-
-<div id="game-container">
+  </header>
+  <div id="game-container">
     <svg id="connections"></svg>
     <div class="column" id="col-left"></div>
     <div class="column" id="col-right"></div>
-</div>
-
-<div id="modal-overlay">
+  </div>
+  <div id="modal-overlay">
     <div class="modal-content">
-        <span class="modal-emoji" id="modal-icon">🌟</span>
-        <h2 id="modal-title">Muito bem!</h2>
-        <p id="modal-message">Você completou esta fase.</p>
-        <button class="btn-action" id="modal-btn" onclick="nextAction()">Próxima Fase</button>
+      <span class="modal-emoji" id="modal-icon"></span>
+      <h2 id="modal-title">Muito bem!</h2>
+      <p id="modal-message">Voce completou esta fase.</p>
+      <button class="btn-action" id="modal-btn" onclick="nextAction()">Proxima Fase</button>
+      <a href="/menuJogos" class="animal-menu">Voltar ao menu</a>
     </div>
-</div>
-
-<script src="../js/jogo-ligar-objetos.js"></script>
-  <script src="/js/routes.js"></script>
-  <script src="/js/api.js"></script>
-  <script src="/js/auth-guard.js"></script>
-
-  <script src="/js/game-guard.js"></script>
-
-  <script src="/js/game-score.js"></script>
+  </div>
+  <script src="../js/jogo-ligar-objetos.js"></script>
+  <script src="/js/routes.js"></script><script src="/js/api.js"></script><script src="/js/auth-guard.js"></script><script src="/js/game-guard.js"></script><script src="/js/game-score.js"></script>
+  <script src="/js/zupi-sky.js"></script>
 </body>
 </html>

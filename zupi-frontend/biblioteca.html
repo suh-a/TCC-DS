@@ -23,32 +23,7 @@
       <nav class="col-lg-2 dashboard-sidebar p-0 position-fixed vh-100 d-none d-lg-block" aria-label="Navegação">
         <section class="d-flex flex-column p-4 h-100">
           <p class="navbar-brand text-white mb-4 fs-3 fw-bold">Zupi</p>
-          <ul class="nav nav-pills flex-column pf-sidebar-nav" data-pf-sidebar>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/dashboard-pais">Dashboard</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/selecao-perfil">Perfis das crianças</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/selecao-relatorios">Relatórios</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/cadastro-dependentes">Cadastro de dependentes</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/agenda">Agenda</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/ajuda">Ajuda?</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/perfil-responsavel">Perfil</a>
-              </li>
-              <li class="nav-item mt-auto">
-                <a class="nav-link text-white" href="#" data-action="logout">Sair</a>
-              </li>
-            </ul>
+          <ul class="nav nav-pills flex-column pf-sidebar-nav" data-pf-sidebar aria-busy="true"></ul>
         </section>
       </nav>
       <main class="col-12 col-lg-10 ms-lg-auto dashboard-main-content px-3 px-lg-4 py-4">
@@ -83,7 +58,13 @@
   <script src="/js/responsavel-sidebar.js"></script>
   <script src="/js/main.js"></script>
   <script src="/js/child-nav.js"></script>
+  <script src="/js/school-parent-content.js"></script>
   <script src="/js/content-pages.js"></script>
-  <script>document.addEventListener('DOMContentLoaded',()=>ChildNav.init({active:'biblioteca'}));</script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      ChildNav.init({active:'biblioteca'});
+      if (typeof ContentPages !== 'undefined') await ContentPages.loadBiblioteca();
+    });
+  </script>
 </body>
 </html>

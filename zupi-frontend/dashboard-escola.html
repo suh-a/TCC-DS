@@ -17,12 +17,14 @@
   <!-- Custom CSS -->
   <link rel="stylesheet" href="/css/main.css" />
   <link rel="stylesheet" href="/css/dashboard.css" />
+  <link rel="stylesheet" href="/css/profile-ui.css" />
+  <link rel="stylesheet" href="/css/relatorios.css" />
   <link rel="stylesheet" href="/css/dark-mode.css" />
 
   <link rel="icon" href="../assets/img/favicon.png" type="image/png">
 </head>
 
-<body>
+<body data-org-nav="escola" data-org-section="dashboard">
 
   <!-- FUNDO DECORATIVO -->
   <div class="background-decor" aria-hidden="true">
@@ -49,7 +51,7 @@
         aria-label="Navegação">
         <div class="d-flex flex-column p-4 h-100">
           <div class="navbar-brand text-white mb-4 fs-3 fw-bold">Zupi</div>
-          <ul class="nav nav-pills flex-column">
+          <ul class="nav nav-pills flex-column" data-org-sidebar aria-busy="true">
             <li class="nav-item mb-2">
               <a class="nav-link text-white active" href="/dashboard-escola">Dashboard</a>
             </li>
@@ -66,7 +68,7 @@
               <a class="nav-link text-white" href="#" onclick="showSection('relatorios')">Relatórios</a>
             </li>
             <li class="nav-item mb-2">
-              <a class="nav-link text-white" href="/biblioteca">Biblioteca</a>
+              <a class="nav-link text-white" href="#" onclick="showSection('biblioteca')">Biblioteca</a>
             </li>
             <li class="nav-item mb-2">
               <a class="nav-link text-white" href="#" onclick="showSection('ajuda')">Ajuda</a>
@@ -87,13 +89,13 @@
         </div>
         <div class="offcanvas-body p-0">
           <nav role="navigation" aria-label="Navegação do dashboard">
-            <ul class="nav nav-pills flex-column p-4">
+            <ul class="nav nav-pills flex-column p-4" data-org-sidebar aria-busy="true">
               <li class="nav-item mb-2"><a class="nav-link text-white active" href="/dashboard-escola">Dashboard</a></li>
               <li class="nav-item mb-2"><a class="nav-link text-white" href="#" onclick="showSection('alunos')">Alunos</a></li>
               <li class="nav-item mb-2"><a class="nav-link text-white" href="#" onclick="showSection('docentes')">Docentes</a></li>
               <li class="nav-item mb-2"><a class="nav-link text-white" href="#" onclick="showSection('turmas')">Turmas</a></li>
               <li class="nav-item mb-2"><a class="nav-link text-white" href="#" onclick="showSection('relatorios')">Relatórios</a></li>
-              <li class="nav-item mb-2"><a class="nav-link text-white" href="/biblioteca">Biblioteca</a></li>
+              <li class="nav-item mb-2"><a class="nav-link text-white" href="#" onclick="showSection('biblioteca')">Biblioteca</a></li>
               <li class="nav-item mb-2"><a class="nav-link text-white" href="#" onclick="showSection('ajuda')">Ajuda</a></li>
               <li class="nav-item mt-auto"><a class="nav-link text-white" href="#" data-action="logout">Sair</a></li>
             </ul>
@@ -106,8 +108,18 @@
 
         <!-- ═══ DASHBOARD OVERVIEW ═══ -->
         <section id="section-dashboard">
-          <header class="mb-4">
-            <h1 id="schoolTitle" class="text-zupi-primary mb-3">Painel da Escola</h1>
+          <header class="profile-page-hero">
+            <div class="d-flex flex-column flex-md-row align-items-md-center gap-3 mb-4">
+              <div id="organizationPhotoPreview" data-profile-size="92"></div>
+              <div class="flex-grow-1">
+                <h1 id="schoolTitle" class="text-zupi-primary mb-1">Painel da Escola</h1>
+                <p class="text-muted mb-0">Perfil institucional sincronizado com a conta jurídica.</p>
+              </div>
+              <label class="profile-photo-action mt-0">
+                <input type="file" id="organizationPhotoInput" accept="image/*">
+                <span>Alterar foto</span>
+              </label>
+            </div>
             <div class="row g-3 mb-4">
               <div class="col-md-3">
                 <div class="card"><div class="card-body text-center">
@@ -213,7 +225,16 @@
         <section id="section-relatorios" class="d-none">
           <button class="btn btn-link ps-0" onclick="showSection('dashboard')">← Voltar</button>
           <h2 class="h3 text-zupi-primary mb-4">Relatórios</h2>
-          <div class="card">
+          <div class="row g-4 mb-4">
+            <div class="col-lg-5" id="escolaGameReport"></div>
+            <div class="col-lg-7">
+              <article class="zupi-report-panel h-100">
+                <header><p>Habilidades acompanhadas</p><strong id="escolaGameAverage">0%</strong></header>
+                <div id="escolaGameBars"></div>
+              </article>
+            </div>
+          </div>
+          <div class="card d-none">
             <div class="card-body">
               <p class="text-muted">Os relatórios de desempenho dos alunos serão exibidos aqui com base nos jogos, quizzes e atividades realizados.</p>
             </div>
@@ -221,26 +242,169 @@
         </section>
 
         <!-- ═══ SEÇÃO AJUDA ═══ -->
+        <section id="section-conteudos" class="d-none">
+          <button class="btn btn-link ps-0" onclick="showSection('dashboard')">Voltar</button>
+          <h2 class="h3 text-zupi-primary mb-4">Conte&uacute;dos para pais</h2>
+          <div class="row g-4">
+            <div class="col-lg-6">
+              <div class="card h-100">
+                <div class="card-body">
+                  <form id="schoolParentContentForm">
+                    <div class="mb-3">
+                      <label for="contentType" class="form-label">Onde deve aparecer</label>
+                      <select id="contentType" class="form-select" required>
+                        <option value="atividade">Atividades</option>
+                        <option value="desafio">Desafios semanais</option>
+                        <option value="biblioteca">Biblioteca</option>
+                      </select>
+                    </div>
+                    <div class="mb-3">
+                      <label for="contentResponsible" class="form-label">Conta dos pais</label>
+                      <select id="contentResponsible" class="form-select">
+                        <option value="">Todos os respons&aacute;veis vinculados</option>
+                      </select>
+                    </div>
+                    <div class="mb-3">
+                      <label for="contentChildId" class="form-label">ID da crian&ccedil;a (opcional)</label>
+                      <input id="contentChildId" class="form-control" placeholder="Deixe vazio para todos os filhos do respons&aacute;vel">
+                    </div>
+                    <div class="mb-3">
+                      <label for="contentTitle" class="form-label">T&iacute;tulo</label>
+                      <input id="contentTitle" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                      <label for="contentBody" class="form-label">Descri&ccedil;&atilde;o / orienta&ccedil;&atilde;o</label>
+                      <textarea id="contentBody" class="form-control" rows="4" required></textarea>
+                    </div>
+                    <div class="row g-3">
+                      <div class="col-md-7 mb-3">
+                        <label for="contentLink" class="form-label">Link ou material (opcional)</label>
+                        <input id="contentLink" type="url" class="form-control" placeholder="https://...">
+                      </div>
+                      <div class="col-md-5 mb-3">
+                        <label for="contentDeadline" class="form-label">Prazo (opcional)</label>
+                        <input id="contentDeadline" type="date" class="form-control">
+                      </div>
+                    </div>
+                    <button class="btn btn-primary" type="submit">Publicar para os pais</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="card h-100">
+                <div class="card-body">
+                  <h3 class="h5 mb-3">Publica&ccedil;&otilde;es recentes</h3>
+                  <div id="schoolParentContentList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="section-biblioteca" class="d-none">
+          <button class="btn btn-link ps-0" onclick="showSection('dashboard')">Voltar</button>
+          <header class="org-library-hero">
+            <div>
+              <span class="org-help-kicker">Biblioteca institucional</span>
+              <h2>Materiais para fam&iacute;lias e equipe</h2>
+              <p>Encontre, organize e transforme orienta&ccedil;&otilde;es em a&ccedil;&otilde;es r&aacute;pidas para respons&aacute;veis, docentes e turmas.</p>
+            </div>
+            <button class="org-help-submit" type="button" id="openLibraryPublisher">Novo material</button>
+          </header>
+
+          <div class="org-library-stats" aria-label="Resumo da biblioteca">
+            <article><span id="libraryTotalCount">0</span><small>materiais</small></article>
+            <article><span id="librarySchoolCount">0</span><small>da escola</small></article>
+            <article><span id="libraryFavoriteCount">0</span><small>favoritos</small></article>
+          </div>
+
+          <div class="org-library-tools" aria-label="Ferramentas da biblioteca">
+            <input id="librarySearch" type="search" class="form-control" placeholder="Buscar material, tema ou orienta&ccedil;&atilde;o">
+            <select id="libraryCategory" class="form-select" aria-label="Filtrar por categoria">
+              <option value="todas">Todas as categorias</option>
+              <option value="inclusao">Inclus&atilde;o</option>
+              <option value="sensorial">Sensorial</option>
+              <option value="comunicacao">Comunica&ccedil;&atilde;o</option>
+              <option value="rotina">Rotina</option>
+            </select>
+            <button class="org-help-ghost" type="button" id="exportLibrarySummary">Exportar resumo</button>
+          </div>
+
+          <div class="org-library-toolbar" aria-label="Filtros da biblioteca">
+            <button type="button" class="active" data-library-filter="todos">Todos</button>
+            <button type="button" data-library-filter="escola">Da escola</button>
+            <button type="button" data-library-filter="modelo">Modelos</button>
+            <button type="button" data-library-filter="favoritos">Favoritos</button>
+          </div>
+          <div id="schoolLibraryList" class="org-library-grid"></div>
+        </section>
+
         <section id="section-ajuda" class="d-none">
-          <button class="btn btn-link ps-0" onclick="showSection('dashboard')">← Voltar</button>
-          <h2 class="h3 text-zupi-primary mb-4">Ajuda & Suporte</h2>
-          <div class="card">
-            <div class="card-body">
-              <form id="supportForm">
-                <div class="mb-3">
-                  <label for="supportSubject" class="form-label">Assunto</label>
-                  <select class="form-select" id="supportSubject">
-                    <option value="bug">Reportar Bug</option>
-                    <option value="suporte">Solicitar Suporte</option>
-                    <option value="sugestao">Sugestão</option>
-                  </select>
+          <button class="btn btn-link ps-0" onclick="showSection('dashboard')">Voltar</button>
+          <div class="org-help-shell">
+            <header class="org-help-hero">
+              <div>
+                <span class="org-help-kicker">Ajuda da conta jur&iacute;dica</span>
+                <h2>Fale com a equipe Zupi</h2>
+                <p>Envie uma mensagem contando o problema, anexe o contexto principal e acompanhe a resposta pelo e-mail da institui&ccedil;&atilde;o.</p>
+              </div>
+              <div class="org-help-profile">
+                <div id="supportProfilePreview" data-profile-size="74"></div>
+                <label class="org-help-photo">
+                  <input type="file" id="supportProfilePhotoInput" accept="image/*">
+                  <span>Foto de perfil</span>
+                </label>
+              </div>
+            </header>
+
+            <div class="org-help-layout">
+              <form id="supportForm" class="org-help-form">
+                <div class="row g-3">
+                  <div class="col-md-7">
+                    <label for="supportSubject" class="form-label">Tipo de problema</label>
+                    <select class="form-select" id="supportSubject">
+                      <option value="bug">Erro ou bug na plataforma</option>
+                      <option value="acesso">Dificuldade de acesso</option>
+                      <option value="alunos">Alunos, turmas ou docentes</option>
+                      <option value="biblioteca">Biblioteca e conte&uacute;dos</option>
+                      <option value="suporte">Solicitar suporte</option>
+                      <option value="sugestao">Sugestao de melhoria</option>
+                    </select>
+                  </div>
+                  <div class="col-md-5">
+                    <label for="supportPriority" class="form-label">Prioridade</label>
+                    <select class="form-select" id="supportPriority">
+                      <option value="normal">Normal</option>
+                      <option value="alta">Alta</option>
+                      <option value="urgente">Urgente</option>
+                    </select>
+                  </div>
                 </div>
-                <div class="mb-3">
-                  <label for="supportMessage" class="form-label">Mensagem</label>
-                  <textarea class="form-control" id="supportMessage" rows="4" required></textarea>
+                <div class="mt-3">
+                  <label for="supportMessage" class="form-label">Mensagem para a equipe</label>
+                  <textarea class="form-control" id="supportMessage" rows="6" placeholder="Descreva o que aconteceu, em qual tela ocorreu e quem foi afetado." required></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary">Enviar</button>
+                <div class="org-help-actions">
+                  <button type="button" class="org-help-ghost" data-support-template="N&atilde;o consigo acessar uma &aacute;rea do painel jur&iacute;dico. Podem verificar meu acesso?">Acesso</button>
+                  <button type="button" class="org-help-ghost" data-support-template="Encontrei um erro na biblioteca ou nos conte&uacute;dos enviados aos pais.">Biblioteca</button>
+                  <button type="button" class="org-help-ghost" data-support-template="Preciso de ajuda com cadastro de alunos, turmas ou docentes.">Cadastros</button>
+                  <button type="submit" class="org-help-submit">Enviar chamado</button>
+                </div>
               </form>
+
+              <aside class="org-help-preview" aria-live="polite">
+                <div class="org-help-ticket-head">
+                  <span class="org-help-status-dot"></span>
+                  <strong>Pr&eacute;via do chamado</strong>
+                </div>
+                <div id="supportConversation" class="org-help-thread">
+                  <article class="org-help-message org-help-message-team">
+                    <strong>Equipe Zupi</strong>
+                    <p>Conte o problema com detalhes. Assim que enviar, registramos o chamado para acompanhamento.</p>
+                  </article>
+                </div>
+              </aside>
             </div>
           </div>
         </section>
@@ -300,7 +464,7 @@
               </div>
               <div class="col-md-6 mb-3">
                 <label for="studentCpf" class="form-label">CPF</label>
-                <input type="text" class="form-control" id="studentCpf" placeholder="000.000.000-00" maxlength="14">
+                <input type="text" class="form-control" id="studentCpf" placeholder="000.000.000-00" maxlength="14" required>
               </div>
               <div class="col-md-4 mb-3">
                 <label for="studentBirthdate" class="form-label">Data de Nascimento</label>
@@ -419,17 +583,239 @@
   <script src="/js/routes.js"></script>
   <script src="/js/api.js"></script>
   <script src="/js/auth-guard.js"></script>
+  <script src="/js/org-sidebar.js"></script>
+  <script src="/js/profile-media.js"></script>
   <script src="/js/main.js"></script>
+  <script src="/js/school-parent-content.js"></script>
   <script src="/js/theme.js"></script>
+  <script src="/js/game-score.js"></script>
+  <script src="/js/game-reports.js"></script>
   <script>
     // ─── Section Navigation ─────────────────────
     function showSection(name) {
       document.querySelectorAll('main > section').forEach(s => s.classList.add('d-none'));
       const target = document.getElementById('section-' + name);
       if (target) target.classList.remove('d-none');
+      document.body.dataset.orgSection = name;
+      if (window.ZupiOrgSidebar) window.ZupiOrgSidebar.setActive(name);
+    }
+
+    function renderOrganizationPhoto(user) {
+      if (!window.ZupiProfileMedia || !user?.id) return;
+      const name = user.name || 'Escola';
+      const preview = document.getElementById('organizationPhotoPreview');
+      if (preview) {
+        preview.dataset.profileName = name;
+        preview.innerHTML = ZupiProfileMedia.renderAvatar({
+          type: 'organization',
+          id: user.id,
+          name,
+          size: Number(preview.dataset.profileSize || 92)
+        });
+      }
+      ZupiProfileMedia.bindInput(document.getElementById('organizationPhotoInput'), {
+        type: 'organization',
+        id: user.id,
+        previewSelector: '#organizationPhotoPreview'
+      });
     }
 
     // ─── Init ───────────────────────────────────
+    function initSupportProfile(user) {
+      if (!window.ZupiProfileMedia || !user?.id) return;
+      const preview = document.getElementById('supportProfilePreview');
+      if (preview) {
+        preview.dataset.profileName = user.name || 'Escola';
+        preview.innerHTML = ZupiProfileMedia.renderAvatar({ type: 'organization', id: user.id, name: user.name || 'Escola', size: Number(preview.dataset.profileSize || 74) });
+      }
+      ZupiProfileMedia.bindInput(document.getElementById('supportProfilePhotoInput'), { type: 'organization', id: user.id, previewSelector: '#supportProfilePreview' });
+    }
+
+    function escapeSupportHtml(value) {
+      const div = document.createElement('div');
+      div.textContent = value == null ? '' : String(value);
+      return div.innerHTML;
+    }
+
+    function appendSupportMessage(author, message, own) {
+      const thread = document.getElementById('supportConversation');
+      if (!thread) return;
+      const item = document.createElement('article');
+      item.className = 'org-help-message' + (own ? ' org-help-message-user' : ' org-help-message-team');
+      item.innerHTML = '<strong>' + escapeSupportHtml(author) + '</strong><p>' + escapeSupportHtml(message) + '</p>';
+      thread.appendChild(item);
+      thread.scrollTop = thread.scrollHeight;
+    }
+
+    function initSchoolSupport(user) {
+      const supportForm = document.getElementById('supportForm');
+      const messageInput = document.getElementById('supportMessage');
+      if (!supportForm || !messageInput) return;
+      document.querySelectorAll('[data-support-template]').forEach((button) => {
+        button.addEventListener('click', () => { messageInput.value = button.dataset.supportTemplate || ''; messageInput.focus(); });
+      });
+      supportForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const subject = document.getElementById('supportSubject').value;
+        const priority = document.getElementById('supportPriority').value;
+        const message = messageInput.value.trim();
+        if (!message) return;
+        const submit = supportForm.querySelector('[type="submit"]');
+        if (submit) submit.disabled = true;
+        appendSupportMessage(user.name || 'Escola', message, true);
+        try {
+          const resp = await ZupiAPI.post('/support/ticket', { subject, priority, message, requesterEmail: user.email, requesterName: user.name, userType: 'ESCOLA' });
+          if (resp && resp.ok) { appendSupportMessage('Equipe Zupi', 'Chamado recebido. Nossa equipe vai analisar e retornar pelo e-mail cadastrado.', false); supportForm.reset(); }
+          else { appendSupportMessage('Equipe Zupi', 'Nao foi possivel confirmar o envio agora. Tente novamente em alguns instantes.', false); }
+        } catch (err) {
+          appendSupportMessage('Equipe Zupi', 'A conexao falhou, mas sua mensagem ficou na tela para voce tentar reenviar.', false);
+        } finally {
+          if (submit) submit.disabled = false;
+        }
+      });
+    }
+
+    async function initSchoolLibrary() {
+      const list = document.getElementById('schoolLibraryList');
+      if (!list) return;
+
+      const favoritesKey = 'zupiSchoolLibraryFavorites';
+      const modelItems = [
+        { title: 'Guia de inclus\u00e3o na rotina escolar', body: 'Adapte atividades, registre necessidades e acompanhe pequenos avan\u00e7os semanais.', source: 'modelo', category: 'inclusao' },
+        { title: 'Atividades sensoriais para casa', body: 'Sugest\u00f5es simples para trabalhar foco, calma e percep\u00e7\u00e3o junto com a fam\u00edlia.', source: 'modelo', category: 'sensorial' },
+        { title: 'Comunica\u00e7\u00e3o fam\u00edlia e escola', body: 'Modelo de alinhamento semanal para observa\u00e7\u00f5es, devolutivas e pr\u00f3ximos passos.', source: 'modelo', category: 'comunicacao' },
+        { title: 'Roteiro de rotina visual', body: 'Sequ\u00eancia pronta para organizar chegada, atividade, pausa e encerramento.', source: 'modelo', category: 'rotina' }
+      ];
+      const schoolItems = window.ZupiSchoolParentContent ? await ZupiSchoolParentContent.list('biblioteca') : [];
+      const items = [...schoolItems.map((item, index) => ({ ...item, source: 'escola', category: item.category || 'inclusao', id: item.id || 'escola-' + index })), ...modelItems.map((item, index) => ({ ...item, id: 'modelo-' + index }))];
+      const state = { filter: 'todos', category: 'todas', query: '' };
+
+      function readFavorites() {
+        try { return JSON.parse(localStorage.getItem(favoritesKey) || '[]'); }
+        catch (err) { return []; }
+      }
+
+      function writeFavorites(ids) {
+        localStorage.setItem(favoritesKey, JSON.stringify(ids));
+      }
+
+      function updateStats() {
+        const favorites = readFavorites();
+        document.getElementById('libraryTotalCount').textContent = String(items.length);
+        document.getElementById('librarySchoolCount').textContent = String(items.filter(item => item.source === 'escola').length);
+        document.getElementById('libraryFavoriteCount').textContent = String(favorites.length);
+      }
+
+      function itemText(item) {
+        return [item.title, item.body, item.summary, item.category].join(' ').toLowerCase();
+      }
+
+      function visibleItems() {
+        const favorites = readFavorites();
+        return items.filter((item) => {
+          const bySource = state.filter === 'todos' || item.source === state.filter || (state.filter === 'favoritos' && favorites.includes(item.id));
+          const byCategory = state.category === 'todas' || item.category === state.category;
+          const bySearch = !state.query || itemText(item).includes(state.query.toLowerCase());
+          return bySource && byCategory && bySearch;
+        });
+      }
+
+      function planFor(item) {
+        const plans = {
+          inclusao: '1. Observe a necessidade principal. 2. Escolha uma adapta\u00e7\u00e3o simples. 3. Registre o resultado ao final da atividade.',
+          sensorial: '1. Prepare um espa\u00e7o calmo. 2. Fa\u00e7a a atividade por poucos minutos. 3. Anote sinais de conforto ou desconforto.',
+          comunicacao: '1. Escreva o combinado. 2. Compartilhe com a fam\u00edlia. 3. Revise o retorno antes da pr\u00f3xima a\u00e7\u00e3o.',
+          rotina: '1. Mostre a sequ\u00eancia. 2. Marque cada etapa conclu\u00edda. 3. Repita a rotina no mesmo hor\u00e1rio.'
+        };
+        return plans[item.category] || '1. Leia o material. 2. Escolha uma a\u00e7\u00e3o pequena. 3. Registre o efeito observado.';
+      }
+
+      function render() {
+        const favorites = readFavorites();
+        const visible = visibleItems();
+        updateStats();
+        list.innerHTML = visible.map((item) => {
+          const safeTitle = escapeSupportHtml(item.title || 'Material da biblioteca');
+          const safeBody = escapeSupportHtml(item.body || item.summary || 'Material dispon\u00edvel para consulta.');
+          const favorite = favorites.includes(item.id);
+          const link = item.link ? '<a href="' + escapeSupportHtml(item.link) + '" target="_blank" rel="noopener noreferrer">Abrir material</a>' : '<small>Dispon\u00edvel no painel</small>';
+          return '<article class="org-library-card" data-library-id="' + escapeSupportHtml(item.id) + '"><div class="org-library-card-top"><span>' + (item.source === 'escola' ? 'Escola' : 'Modelo') + '</span><button type="button" class="org-library-icon' + (favorite ? ' active' : '') + '" data-library-favorite="' + escapeSupportHtml(item.id) + '" aria-label="Favoritar material">&#9733;</button></div><h3>' + safeTitle + '</h3><p>' + safeBody + '</p><div class="org-library-card-actions">' + link + '<button type="button" data-library-copy="' + escapeSupportHtml(item.id) + '">Copiar refer\u00eancia</button><button type="button" data-library-plan="' + escapeSupportHtml(item.id) + '">Roteiro r\u00e1pido</button></div><div class="org-library-plan" id="library-plan-' + escapeSupportHtml(item.id) + '" hidden></div></article>';
+        }).join('') || '<div class="alert alert-info mb-0">Nenhum material encontrado para este filtro.</div>';
+      }
+
+      document.querySelectorAll('[data-library-filter]').forEach((button) => {
+        button.addEventListener('click', () => {
+          document.querySelectorAll('[data-library-filter]').forEach(btn => btn.classList.remove('active'));
+          button.classList.add('active');
+          state.filter = button.dataset.libraryFilter;
+          render();
+        });
+      });
+
+      document.getElementById('librarySearch')?.addEventListener('input', (event) => {
+        state.query = event.target.value.trim();
+        render();
+      });
+
+      document.getElementById('libraryCategory')?.addEventListener('change', (event) => {
+        state.category = event.target.value;
+        render();
+      });
+
+      list.addEventListener('click', async (event) => {
+        const favoriteBtn = event.target.closest('[data-library-favorite]');
+        const copyBtn = event.target.closest('[data-library-copy]');
+        const planBtn = event.target.closest('[data-library-plan]');
+        const id = favoriteBtn?.dataset.libraryFavorite || copyBtn?.dataset.libraryCopy || planBtn?.dataset.libraryPlan;
+        const item = items.find(entry => entry.id === id);
+        if (!item) return;
+
+        if (favoriteBtn) {
+          const favorites = readFavorites();
+          const next = favorites.includes(id) ? favorites.filter(entry => entry !== id) : [...favorites, id];
+          writeFavorites(next);
+          render();
+          return;
+        }
+
+        if (copyBtn) {
+          const reference = (item.title || 'Material da biblioteca') + ' - ' + (item.body || item.summary || 'Material dispon\u00edvel para consulta.') + (item.link ? ' ' + item.link : '');
+          try { await navigator.clipboard.writeText(reference); copyBtn.textContent = 'Copiado'; }
+          catch (err) { copyBtn.textContent = 'Copie pelo card'; }
+          window.setTimeout(() => { copyBtn.textContent = 'Copiar refer\u00eancia'; }, 1400);
+          return;
+        }
+
+        if (planBtn) {
+          const plan = document.getElementById('library-plan-' + id);
+          if (!plan) return;
+          plan.hidden = !plan.hidden;
+          plan.textContent = plan.hidden ? '' : planFor(item);
+        }
+      });
+
+      document.getElementById('exportLibrarySummary')?.addEventListener('click', () => {
+        const visible = visibleItems();
+        const content = visible.map((item) => '- ' + (item.title || 'Material') + ': ' + (item.body || item.summary || 'Sem descri\u00e7\u00e3o.')).join('\\n');
+        const blob = new Blob(['Biblioteca Zupi\\n\\n' + content], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'biblioteca-zupi.txt';
+        link.click();
+        URL.revokeObjectURL(url);
+      });
+
+      document.getElementById('openLibraryPublisher')?.addEventListener('click', () => {
+        showSection('conteudos');
+        const type = document.getElementById('contentType');
+        if (type) type.value = 'biblioteca';
+        document.getElementById('contentTitle')?.focus();
+      });
+
+      render();
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
       if (!ZupiAPI.requireAuth()) return;
 
@@ -439,26 +825,10 @@
         titleEl.textContent = `Painel — ${user.name}`;
       }
 
-      // Support form
-      const supportForm = document.getElementById('supportForm');
-      if (supportForm) {
-        supportForm.addEventListener('submit', async (e) => {
-          e.preventDefault();
-          const subject = document.getElementById('supportSubject').value;
-          const message = document.getElementById('supportMessage').value;
-          try {
-            const resp = await ZupiAPI.post('/support/ticket', {
-              subject, message, userType: 'ESCOLA'
-            });
-            if (resp && resp.ok) {
-              alert('Chamado enviado com sucesso!');
-              supportForm.reset();
-            }
-          } catch (err) {
-            alert('Erro ao enviar chamado.');
-          }
-        });
-      }
+      renderOrganizationPhoto(user);
+      initSupportProfile(user);
+      initSchoolSupport(user);
+      initSchoolLibrary();
 
       let schoolResponsibles = [];
 
@@ -588,12 +958,8 @@
           const birthDate = document.getElementById('studentBirthdate')?.value;
           const schoolClass = document.getElementById('studentGrade')?.value.trim();
 
-          if (!responsibleId || !name || !birthDate || !schoolClass) {
-            alert('Preencha os dados obrigatórios do aluno e selecione um responsável da lista.');
-            return;
-          }
-          if (cpf && cpf.length !== 11) {
-            alert('CPF inválido. Informe 11 dígitos ou deixe o campo em branco.');
+          if (!responsibleId || !name || cpf.length !== 11 || !birthDate || !schoolClass) {
+            alert('Preencha os dados do aluno e selecione um responsável da lista.');
             return;
           }
 
@@ -601,7 +967,7 @@
           try {
             const response = await ZupiAPI.post('/school/students', {
               name,
-              cpf: cpf || null,
+              cpf,
               birthDate,
               schoolClass,
               condition: null,
@@ -630,6 +996,18 @@
         });
       }
     });
+      async function renderEscolaReports() {
+        if (!window.ZupiGameReports) return;
+        const childId = ZupiGameReports.getChildId();
+        const sessions = await ZupiGameReports.loadSessions(childId);
+        const summary = ZupiGameReports.summarize(sessions);
+        const average = document.getElementById('escolaGameAverage');
+        if (average) average.textContent = summary.average + '%';
+        ZupiGameReports.renderMiniReport(document.getElementById('escolaGameReport'), sessions, { title: 'Relat?rios dos jogos' });
+        ZupiGameReports.renderSimpleBars(document.getElementById('escolaGameBars'), ZupiGameReports.areaAverages(sessions));
+      }
+
+      document.addEventListener('DOMContentLoaded', renderEscolaReports);
   </script>
 </body>
 

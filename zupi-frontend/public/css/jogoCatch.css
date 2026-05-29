@@ -1,7 +1,424 @@
-body { overflow: hidden; }
-#game-canvas { position: fixed; top: 60px; left: 0; right: 0; width: 100%; height: calc(100vh - 60px); }
-.touch-area { position: fixed; bottom: 0; left: 0; right: 0; display: flex; z-index: 100; pointer-events: auto; }
-.touch-btn { flex: 1; height: 80px; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; background: rgba(126,200,230,.35); backdrop-filter: blur(4px); border: none; cursor: pointer; user-select: none; font-family: 'Poppins',sans-serif; color: var(--z-text); transition: background .15s; border-top: 2px solid rgba(126,200,230,.3); }
-.touch-btn:active { background: rgba(126,200,230,.6); }
-#t-left { border-right: 1px solid rgba(126,200,230,.3); border-radius: 0 0 0 0; }
-@media(min-width:769px){ .touch-area { display: none; } }
+:root {
+  --blue: #7EC8E6;
+  --green: #A8D5BA;
+  --yellow: #FFE66D;
+  --orange: #FFB980;
+  --bg: #F5F7FA;
+  --text: #2D3748;
+  --muted: #7A90A4;
+  --white: #FFFFFF;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Nunito", sans-serif;
+  min-height: 100vh;
+}
+
+.fruit-bg {
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  position: fixed;
+}
+
+.fruit-bg::before {
+  background-image: radial-gradient(circle, rgba(126, 200, 230, .15) 1.5px, transparent 1.5px);
+  background-size: 34px 34px;
+  content: "";
+  inset: 0;
+  position: absolute;
+}
+
+.fruit-bg span {
+  animation: floatBackground 14s ease-in-out infinite alternate;
+  border-radius: 50%;
+  opacity: .12;
+  position: absolute;
+}
+
+.fruit-bg span:nth-child(1) { background: var(--blue); height: 300px; left: -80px; top: -80px; width: 300px; }
+.fruit-bg span:nth-child(2) { background: var(--yellow); border-radius: 40% 60%; height: 190px; right: -55px; top: 10%; width: 190px; }
+.fruit-bg span:nth-child(3) { background: var(--green); bottom: 13%; height: 240px; left: -65px; width: 240px; }
+.fruit-bg span:nth-child(4) { background: var(--orange); border-radius: 60% 40%; bottom: -35px; height: 160px; right: 8%; width: 160px; }
+
+@keyframes floatBackground {
+  to { opacity: .19; transform: translateY(-24px) rotate(18deg) scale(1.07); }
+}
+
+.zj-nav {
+  align-items: center;
+  backdrop-filter: blur(14px);
+  background: rgba(245, 247, 250, .92);
+  border-bottom: 1.5px solid rgba(126, 200, 230, .18);
+  box-shadow: 0 2px 14px rgba(126, 200, 230, .10);
+  display: flex;
+  height: 58px;
+  justify-content: space-between;
+  left: 0;
+  padding: 0 1.2rem;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 20;
+}
+
+.zj-logo {
+  color: var(--blue);
+  font-size: 1.25rem;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.zj-logo b {
+  color: var(--orange);
+}
+
+.zj-hud {
+  display: flex;
+  gap: .45rem;
+}
+
+.zj-pill {
+  background: rgba(255, 255, 255, .88);
+  border: 1.5px solid rgba(126, 200, 230, .25);
+  border-radius: 50px;
+  font-size: .8rem;
+  font-weight: 800;
+  padding: .25rem .7rem;
+}
+
+.zj-pill strong {
+  margin-left: .2rem;
+}
+
+.fruit-main {
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 74px 1rem 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.fruit-card {
+  background: var(--white);
+  border: 2px solid rgba(126, 200, 230, .14);
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(126, 200, 230, .11);
+  display: flex;
+  flex-direction: column;
+  max-width: 780px;
+  overflow: hidden;
+  padding: 1rem;
+  width: 100%;
+}
+
+.fruit-heading {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  padding: .3rem .6rem .9rem;
+  text-align: center;
+}
+
+.kicker {
+  background: rgba(126, 200, 230, .15);
+  border: 1.5px solid rgba(126, 200, 230, .35);
+  border-radius: 50px;
+  color: var(--blue);
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: 1.8px;
+  margin-bottom: .45rem;
+  padding: .25rem .75rem;
+  text-transform: uppercase;
+}
+
+.fruit-heading h1 {
+  font-size: clamp(1.55rem, 4vw, 2rem);
+  font-weight: 900;
+  margin-bottom: .35rem;
+}
+
+.fruit-heading p {
+  color: var(--muted);
+  font-size: clamp(.95rem, 2vw, 1.04rem);
+  line-height: 1.45;
+  max-width: 570px;
+}
+
+.fruit-heading strong {
+  color: #4d94b2;
+}
+
+.orchard {
+  background:
+    radial-gradient(circle at 10% 13%, rgba(255, 255, 255, .52), transparent 24%),
+    linear-gradient(#d8f3ff 0%, #a8def1 67%, #bce5a9 67%, #8dcc83 100%);
+  border: 3px solid rgba(126, 200, 230, .25);
+  border-radius: 22px;
+  flex: 1;
+  height: min(64vh, 545px);
+  min-height: 380px;
+  overflow: hidden;
+  position: relative;
+  touch-action: none;
+}
+
+.orchard::before {
+  background: #946240;
+  border-radius: 0 0 22px 22px;
+  bottom: 0;
+  content: "";
+  height: 9%;
+  left: 0;
+  opacity: .2;
+  position: absolute;
+  right: 0;
+}
+
+.tree-leaves {
+  display: flex;
+  font-size: clamp(42px, 7vw, 58px);
+  justify-content: space-around;
+  left: 0;
+  opacity: .82;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+  top: -16px;
+}
+
+.falling-fruit {
+  filter: drop-shadow(0 4px 2px rgba(45, 55, 72, .18));
+  font-size: clamp(34px, 5.5vw, 46px);
+  line-height: 1;
+  pointer-events: none;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+
+.falling-fruit.golden {
+  animation: fruitGlow .55s ease-in-out infinite alternate;
+}
+
+@keyframes fruitGlow {
+  to { filter: drop-shadow(0 0 10px #FFE66D); transform: translate(-50%, -50%) scale(1.12); }
+}
+
+.basket {
+  align-items: center;
+  bottom: 13px;
+  cursor: grab;
+  display: flex;
+  flex-direction: column;
+  height: 94px;
+  justify-content: end;
+  left: calc(50% - 62px);
+  position: absolute;
+  touch-action: none;
+  user-select: none;
+  width: 124px;
+  z-index: 5;
+}
+
+.basket.dragging {
+  cursor: grabbing;
+  filter: drop-shadow(0 7px 7px rgba(45, 55, 72, .18));
+  transform: scale(1.04);
+}
+
+.basket-fruits {
+  font-size: 26px;
+  height: 19px;
+  line-height: 1;
+  position: relative;
+  top: 13px;
+  z-index: 1;
+}
+
+.basket-body {
+  font-size: 71px;
+  line-height: .84;
+}
+
+.basket small {
+  background: var(--white);
+  border: 1px solid rgba(126, 200, 230, .25);
+  border-radius: 50px;
+  color: #56849a;
+  font-size: .68rem;
+  font-weight: 900;
+  padding: 2px 11px;
+  position: absolute;
+  top: 67px;
+}
+
+.level-toast {
+  background: linear-gradient(135deg, var(--yellow), var(--orange));
+  border-radius: 50px;
+  box-shadow: 0 6px 18px rgba(255, 185, 128, .35);
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 900;
+  left: 50%;
+  padding: .65rem 1.1rem;
+  position: absolute;
+  top: 16px;
+  transform: translateX(-50%);
+  z-index: 8;
+}
+
+.level-toast.hidden {
+  display: none;
+}
+
+.fruit-burst {
+  animation: burstUp .75s ease-out forwards;
+  font-size: 1.25rem;
+  font-weight: 900;
+  pointer-events: none;
+  position: absolute;
+  transform: translateX(-50%);
+  z-index: 7;
+}
+
+@keyframes burstUp {
+  to { opacity: 0; transform: translate(-50%, -48px) scale(1.18); }
+}
+
+.fruit-footer {
+  align-items: center;
+  color: var(--muted);
+  display: flex;
+  font-size: .95rem;
+  font-weight: 800;
+  justify-content: space-between;
+  padding: .8rem .3rem .05rem;
+}
+
+.fruit-footer strong {
+  color: #4d94b2;
+}
+
+.legend {
+  font-size: 1.35rem;
+}
+
+.overlay {
+  align-items: center;
+  backdrop-filter: blur(12px);
+  background: rgba(45, 55, 72, .45);
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  padding: 1rem;
+  position: fixed;
+  z-index: 30;
+}
+
+.overlay.hidden {
+  display: none;
+}
+
+.modal {
+  background: var(--white);
+  border: 2px solid rgba(126, 200, 230, .18);
+  border-radius: 28px;
+  box-shadow: 0 20px 60px rgba(45, 55, 72, .18);
+  max-width: 385px;
+  padding: 2rem 1.8rem 1.6rem;
+  text-align: center;
+  width: 100%;
+}
+
+.modal-icon {
+  align-items: center;
+  background: linear-gradient(135deg, var(--blue), var(--green));
+  border-radius: 50%;
+  display: flex;
+  font-size: 40px;
+  height: 72px;
+  justify-content: center;
+  margin: 0 auto .9rem;
+  width: 72px;
+}
+
+.modal h2 {
+  font-size: 1.55rem;
+  margin-bottom: .5rem;
+}
+
+.modal p {
+  color: var(--muted);
+  font-size: .94rem;
+  line-height: 1.55;
+  margin-bottom: 1.2rem;
+}
+
+.primary,
+.ghost {
+  border-radius: 50px;
+  display: block;
+  font: 800 1rem "Nunito", sans-serif;
+  margin-top: .55rem;
+  padding: .75rem;
+  text-align: center;
+  text-decoration: none;
+  transition: all .2s;
+  width: 100%;
+}
+
+.primary {
+  background: linear-gradient(135deg, var(--blue), var(--green));
+  border: 0;
+  box-shadow: 0 6px 20px rgba(126, 200, 230, .35);
+  color: white;
+  cursor: pointer;
+}
+
+.primary:hover {
+  transform: scale(1.03) translateY(-2px);
+}
+
+.ghost {
+  border: 2px solid rgba(126, 200, 230, .28);
+  color: var(--muted);
+}
+
+@media (max-width: 560px) {
+  .zj-nav {
+    padding: 0 .65rem;
+  }
+
+  .zj-hud {
+    gap: .25rem;
+  }
+
+  .zj-pill {
+    font-size: .7rem;
+    padding: .25rem .43rem;
+  }
+
+  .fruit-main {
+    padding: 68px .45rem .45rem;
+  }
+
+  .fruit-card {
+    padding: .55rem;
+  }
+
+  .orchard {
+    height: calc(100vh - 257px);
+    min-height: 345px;
+  }
+}

@@ -13,7 +13,28 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    if (!localStorage.getItem('activeChildId')) {
+    const childId = resolveGameChildId();
+    if (!childId) {
         window.location.href = (ZupiRoutes && ZupiRoutes.selecaoPerfil) || '/selecao-perfil';
     }
 });
+
+function resolveGameChildId() {
+    const params = new URLSearchParams(window.location.search);
+    const fromUrl = params.get('childId');
+    const stored = fromUrl
+        || localStorage.getItem('activeChildId')
+        || localStorage.getItem('selectedChildId')
+        || localStorage.getItem('childId');
+
+    const user = typeof ZupiAPI !== 'undefined' ? ZupiAPI.getUser() : {};
+    const userType = user.type;
+    const childId = stored || (['CRIANCA', 'ALUNO_CREDENCIADO'].includes(userType) ? user.id : null);
+
+    if (childId) {
+        localStorage.setItem('activeChildId', String(childId));
+        localStorage.setItem('selectedChildId', String(childId));
+    }
+
+    return childId;
+}

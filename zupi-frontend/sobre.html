@@ -3,33 +3,24 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Zupi — Sobre</title>
-  
-  <!-- Bootstrap 5 CSS -->
+  <title>Zupi - Sobre</title>
+
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-  
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-  
-  <!-- Custom CSS -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="/css/main.css" />
   <link rel="stylesheet" href="/css/sobre.css" />
-  
-  <link rel="icon" href="../assets/img/favicon.png" type="image/png">
+
+  <link rel="icon" href="/img/logokids1.png" type="image/png">
 </head>
 <body>
-
-  <!-- FUNDO DECORATIVO -->
-  <div class="background-decor" aria-hidden="true">
-    <span class="decor-shape decor-circle" style="background-color:#7EBCE6; top:10%; left:15%; width:60px; height:60px;"></span>
-    <span class="decor-shape decor-circle" style="background-color:#F9E39A; top:40%; left:70%; width:50px; height:50px;"></span>
-    <span class="decor-shape decor-circle" style="background-color:#A8E6CF; top:70%; left:25%; width:45px; height:45px;"></span>
-    <span class="decor-shape decor-circle" style="background-color:#FFB677; top:20%; left:80%; width:55px; height:55px;"></span>
-    <span class="decor-shape decor-square" style="background-color:#F9E39A; top:15%; left:25%; width:35px; height:35px;"></span>
-    <span class="decor-shape decor-square" style="background-color:#A8E6CF; top:45%; left:15%; width:40px; height:40px;"></span>
+  <div class="background-decor about-decor" aria-hidden="true">
+    <span class="decor-shape decor-circle" style="background: var(--zupi-primary-solid); top: 10%; left: 8%; width: 96px; height: 96px;"></span>
+    <span class="decor-shape decor-circle" style="background: var(--zupi-accent); top: 54%; right: 8%; width: 148px; height: 148px;"></span>
+    <span class="decor-shape decor-square" style="background: var(--zupi-secondary); top: 18%; right: 24%; width: 78px; height: 78px;"></span>
+    <span class="decor-shape decor-square" style="background: var(--zupi-highlight); bottom: 12%; left: 12%; width: 84px; height: 84px;"></span>
   </div>
 
-  <!-- NAVBAR -->
   <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm" role="navigation" aria-label="Navegação principal">
     <div class="container">
       <a class="navbar-brand" id="brand-color-2" href="/" aria-label="Zupi - Página inicial">Zupi</a>
@@ -38,151 +29,281 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto align-items-center">
-          <li class="nav-item">
-            <a class="nav-link" href="/">Início</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/sobre">Sobre</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/planos">Planos</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/contatos">Contato</a>
-          </li>
-          <li class="nav-item">
-            <a class="btn btn-primary ms-2" href="/login" role="button">Entrar</a>
-          </li>
+          <li class="nav-item"><a class="nav-link" href="/">Início</a></li>
+          <li class="nav-item"><a class="nav-link active" aria-current="page" href="/sobre">Sobre</a></li>
+          <li class="nav-item"><a class="nav-link" href="/planos">Planos</a></li>
+          <li class="nav-item"><a class="nav-link" href="/contato">Contato</a></li>
+          <li class="nav-item"><a class="btn btn-primary ms-2" href="/login" role="button">Entrar</a></li>
         </ul>
       </div>
     </div>
   </nav>
 
-  <!-- HERO SECTION -->
-  <section class="hero-section text-center">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-lg-8">
-          <h1 class="display-4 fw-bold mb-4">Como funciona o Zupi</h1>
-          <p class="lead">
-            O Zupi combina jogos, rotinas e suporte emocional para o desenvolvimento infantil. Conteúdos adaptados para cada idade, TDAH, autismo e necessidades especiais.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CONTEÚDO PRINCIPAL -->
-  <main>
-    <!-- SOBRE NÓS -->
-    <section class="py-5" id="sobre">
+  <main class="about-page">
+    <section class="about-hero">
       <div class="container">
-        <h2 class="section-title">Sobre Nós</h2>
-        <p class="section-subtitle">
-          O Zupi é uma plataforma educativa que une aprendizado e diversão, permitindo que pais e filhos cresçam juntos com tecnologia, criatividade e sustentabilidade.
-        </p>
+        <div class="about-hero-grid">
+          <div class="about-hero-copy about-reveal">
+            <span class="about-kicker">Sobre a Zupi</span>
+            <h1>Uma plataforma feita para acompanhar desenvolvimento com cuidado e clareza.</h1>
+            <p>
+              A Zupi une jogos educativos, rotina, relatórios e apoio pedagógico para aproximar famílias, escolas e crianças em uma experiência simples de usar.
+            </p>
+            <div class="about-actions">
+              <a class="btn btn-warning btn-lg" href="/planos">Conhecer planos</a>
+              <a class="btn btn-outline-primary btn-lg" href="/contato">Falar com a equipe</a>
+            </div>
+          </div>
 
-        <!-- Cards missão, visão e valores -->
-        <div class="row g-4">
-          <div class="col-md-6 col-lg-3">
-            <div class="card h-100 text-center">
-              <div class="card-body">
-                <div class="display-4 mb-3">🎯</div>
-                <h3 class="card-title h5">Missão</h3>
-                <p class="card-text">Promover aprendizado divertido, seguro e inclusivo para crianças de todas as idades, com atenção às necessidades individuais.</p>
-              </div>
+          <div class="about-panel about-reveal" aria-label="Resumo da proposta Zupi">
+            <div class="about-board" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
             </div>
-          </div>
-          <div class="col-md-6 col-lg-3">
-            <div class="card h-100 text-center">
-              <div class="card-body">
-                <div class="display-4 mb-3">🔭</div>
-                <h3 class="card-title h5">Visão</h3>
-                <p class="card-text">Ser referência em tecnologia educacional para o desenvolvimento infantil e inovação em experiências digitais.</p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6 col-lg-3">
-            <div class="card h-100 text-center">
-              <div class="card-body">
-                <div class="display-4 mb-3">💎</div>
-                <h3 class="card-title h5">Valores</h3>
-                <p class="card-text">Inclusão, criatividade, segurança, diversão, sustentabilidade e empatia em cada interação.</p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6 col-lg-3">
-            <div class="card h-100 text-center">
-              <div class="card-body">
-                <div class="display-4 mb-3">🤝</div>
-                <h3 class="card-title h5">Nosso Compromisso</h3>
-                <p class="card-text">Garantir que cada criança tenha acesso a experiências educativas de qualidade, de forma divertida e acessível.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Timeline interativa -->
-        <div class="row mt-5">
-          <div class="col-lg-8 mx-auto">
-            <div class="timeline">
-              <div class="timeline-item mb-4">
-                <div class="card">
-                  <div class="card-body">
-                    <div class="h4 text-zupi-primary mb-2">2020</div>
-                    <p class="card-text">Fundação do Zupi e desenvolvimento da primeira plataforma de aprendizado lúdico.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="timeline-item mb-4">
-                <div class="card">
-                  <div class="card-body">
-                    <div class="h4 text-zupi-primary mb-2">2022</div>
-                    <p class="card-text">Lançamento do painel para pais e recursos de acessibilidade.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="timeline-item mb-4">
-                <div class="card">
-                  <div class="card-body">
-                    <div class="h4 text-zupi-primary mb-2">2025</div>
-                    <p class="card-text">Expansão para recursos personalizados, integração de TDAH e autismo.</p>
-                  </div>
-                </div>
-              </div>
+            <div class="about-panel-note">
+              <strong>Aprender, observar e evoluir</strong>
+              <p>O sistema transforma atividades em dados úteis para decisões melhores no dia a dia.</p>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- REDES SOCIAIS -->
-    <section class="py-5 bg-light">
-      <div class="container text-center">
-        <h2 class="section-title">Conecte-se conosco</h2>
-        <div class="mt-4">
-          <a href="https://www.instagram.com/zupi.up" class="btn btn-primary btn-lg" target="_blank" rel="noopener noreferrer" aria-label="Instagram do Zupi">Instagram</a>
+    <section class="about-section">
+      <div class="container">
+        <div class="about-heading about-reveal">
+          <span class="about-kicker">A plataforma</span>
+          <h2>O que a Zupi entrega no dia a dia</h2>
+          <p>Uma experiência simples para brincar, acompanhar e aproximar quem participa do desenvolvimento da criança.</p>
+        </div>
+
+        <div class="about-platform-grid">
+          <article class="about-info-card about-reveal">
+            <span class="about-info-mark"></span>
+            <h3>Jogos educativos</h3>
+            <p>Temos atividades interativas para trabalhar memória, atenção, contagem, cores, formas, palavras, leitura e lógica de um jeito mais leve.</p>
+          </article>
+          <article class="about-info-card about-reveal">
+            <span class="about-info-mark"></span>
+            <h3>Pais e escolas mais próximos</h3>
+            <p>A plataforma ajuda responsáveis e instituições a acompanharem a mesma rotina, com informações organizadas sobre atividades e evolução.</p>
+          </article>
+          <article class="about-info-card about-reveal">
+            <span class="about-info-mark"></span>
+            <h3>Relatórios claros</h3>
+            <p>Os relatórios mostram progresso, frequência e habilidades observadas, facilitando conversas e decisões sobre próximos estímulos.</p>
+          </article>
+          <article class="about-info-card about-reveal">
+            <span class="about-info-mark"></span>
+            <h3>Funcionalidades úteis</h3>
+            <p>O Zupi reúne jogos, agenda, biblioteca, perfis, relatórios e áreas de acompanhamento para deixar a rotina mais prática.</p>
+          </article>
+        </div>
+
+        <div class="about-heading about-reveal about-subheading">
+          <span class="about-kicker">Funcionalidades</span>
+          <h2>Recursos que organizam o acompanhamento</h2>
+          <p>Além dos jogos, o Zupi ajuda a transformar a rotina da criança em informações simples para responsáveis e escolas.</p>
+        </div>
+
+        <div class="about-feature-list">
+          <article class="about-feature-row about-reveal">
+            <strong>Perfis da criança</strong>
+            <p>Reúnem informações importantes para acompanhar a rotina, o uso dos jogos e a evolução de cada criança.</p>
+          </article>
+          <article class="about-feature-row about-reveal">
+            <strong>Área dos responsáveis</strong>
+            <p>Ajuda pais e responsáveis a visualizarem atividades, relatórios e orientações de forma mais direta.</p>
+          </article>
+          <article class="about-feature-row about-reveal">
+            <strong>Área da escola</strong>
+            <p>Permite organizar crianças, turmas, docentes e informações pedagógicas em um ambiente centralizado.</p>
+          </article>
+          <article class="about-feature-row about-reveal">
+            <strong>Agenda e conteúdos</strong>
+            <p>Apoiam a criação de uma rotina com atividades, dicas de inclusão, biblioteca e materiais de acompanhamento.</p>
+          </article>
+          <article class="about-feature-row about-reveal">
+            <strong>Relatórios de evolução</strong>
+            <p>Mostram frequência, desempenho e habilidades observadas, ajudando na comunicação entre família e escola.</p>
+          </article>
+          <article class="about-feature-row about-reveal">
+            <strong>Comunicação mais clara</strong>
+            <p>As informações ficam organizadas para facilitar conversas, reuniões e decisões sobre próximos estímulos.</p>
+          </article>
+        </div>
+
+        <div class="about-heading about-reveal about-subheading">
+          <span class="about-kicker">Jogos do Zupi</span>
+          <h2>Atividades educativas por habilidade</h2>
+          <p>Cada jogo trabalha uma habilidade de forma breve, visual e interativa, respeitando a ideia de aprender brincando.</p>
+        </div>
+
+        <div class="about-games-block">
+          <section class="about-game-category about-reveal">
+            <h3>Memória e raciocínio</h3>
+            <div class="about-games-grid">
+              <article><strong>Memória Animal</strong><span>Encontra pares e treina concentração em níveis progressivos.</span></article>
+              <article><strong>Sequência de Cores</strong><span>Estimula observação, memória visual e repetição de padrões.</span></article>
+              <article><strong>Animais e Comidas</strong><span>Relaciona cada animal ao alimento correto, reforçando associação.</span></article>
+              <article><strong>Achar a Sombra</strong><span>Trabalha comparação de formas e percepção visual.</span></article>
+            </div>
+          </section>
+
+          <section class="about-game-category about-reveal">
+            <h3>Números e letras</h3>
+            <div class="about-games-grid">
+              <article><strong>Matemática Mágica</strong><span>Apresenta contas simples em desafios por nível.</span></article>
+              <article><strong>Formar Palavras</strong><span>Ajuda a montar palavras usando letras embaralhadas.</span></article>
+              <article><strong>Contagem</strong><span>Treina quantidade, observação e escolha do número correto.</span></article>
+              <article><strong>Ordem Crescente</strong><span>Estimula organização numérica do menor para o maior.</span></article>
+              <article><strong>Letras</strong><span>Reforça reconhecimento de letras e associações iniciais.</span></article>
+            </div>
+          </section>
+
+          <section class="about-game-category about-reveal">
+            <h3>Criatividade e arte</h3>
+            <div class="about-games-grid">
+              <article><strong>Ateliê de Colorir</strong><span>Permite pintar desenhos, cumprir metas e liberar níveis.</span></article>
+              <article><strong>Cores e Formas</strong><span>Trabalha identificação de cor, forma e tamanho.</span></article>
+              <article><strong>Mistura de Cores</strong><span>Mostra combinações e descobertas entre cores.</span></article>
+              <article><strong>Mosaico Criativo</strong><span>Estimula padrões visuais e construção de composições.</span></article>
+              <article><strong>Montar Cenários</strong><span>Usa elementos visuais para criar paisagens e histórias.</span></article>
+            </div>
+          </section>
+
+          <section class="about-game-category about-reveal">
+            <h3>Reflexos e atenção</h3>
+            <div class="about-games-grid">
+              <article><strong>Estoura Bolhas</strong><span>Treina atenção rápida ao tocar nos alvos corretos.</span></article>
+              <article><strong>Clique Rápido</strong><span>Estimula tempo de reação e foco em alvos.</span></article>
+              <article><strong>Balões</strong><span>Trabalha atenção às cores indicadas.</span></article>
+              <article><strong>Pega Frutas</strong><span>Exercita coordenação ao mover a cesta e coletar itens.</span></article>
+              <article><strong>Desafio de Atenção</strong><span>Ajuda a reagir rápido e evitar escolhas erradas.</span></article>
+              <article><strong>Boliche</strong><span>Trabalha mira, controle de força e coordenação.</span></article>
+            </div>
+          </section>
+        </div>
+
+        <div class="about-team-panel about-reveal">
+          <div>
+            <span class="about-kicker">Sobre a gente</span>
+            <h2>Somos uma equipe pequena construindo algo com vontade de crescer.</h2>
+            <p>
+              O Zupi é desenvolvido por um grupo de seis pessoas. Somos uma empresa pequena, ainda em construção, mas com muita disposição para evoluir, aprender com os usuários e transformar a plataforma em uma solução cada vez mais completa.
+            </p>
+          </div>
+          <div class="team-count" aria-label="Equipe com seis pessoas">
+            <strong>6</strong>
+            <span>pessoas desenvolvendo o Zupi</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-section">
+      <div class="container">
+        <div class="about-heading about-reveal">
+          <span class="about-kicker">Nossa base</span>
+          <h2>O que orienta a Zupi</h2>
+          <p>Trabalhamos para que a tecnologia seja uma ponte entre brincadeira, aprendizagem e acompanhamento responsável.</p>
+        </div>
+
+        <div class="about-values-grid">
+          <article class="about-value-card about-reveal" data-about-card="missao">
+            <span class="about-symbol"></span>
+            <h3>Missão</h3>
+            <p>Promover aprendizado divertido, seguro e inclusivo, respeitando o ritmo e as necessidades de cada criança.</p>
+          </article>
+          <article class="about-value-card about-reveal" data-about-card="visao">
+            <span class="about-symbol"></span>
+            <h3>Visão</h3>
+            <p>Ser referência em tecnologia educacional para desenvolvimento infantil, inclusão e experiências digitais acessíveis.</p>
+          </article>
+          <article class="about-value-card about-reveal" data-about-card="valores">
+            <span class="about-symbol"></span>
+            <h3>Valores</h3>
+            <p>Inclusão, criatividade, segurança, empatia, colaboração e cuidado com as informações de cada família.</p>
+          </article>
+          <article class="about-value-card about-reveal" data-about-card="compromisso">
+            <span class="about-symbol"></span>
+            <h3>Compromisso</h3>
+            <p>Entregar uma experiência clara para crianças, responsáveis, docentes e instituições de ensino.</p>
+          </article>
+        </div>
+
+        <div class="about-focus-card about-reveal" id="aboutFocus" aria-live="polite">
+          <span class="about-kicker" id="aboutFocusLabel">Missão em prática</span>
+          <h3 id="aboutFocusTitle">Aprendizagem com intenção</h3>
+          <p id="aboutFocusText">Cada jogo e cada relatório existem para ajudar adultos a perceberem avanços, dificuldades e oportunidades de estímulo.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-section about-timeline-section">
+      <div class="container">
+        <div class="about-heading about-reveal">
+          <span class="about-kicker">Caminho</span>
+          <h2>Como a ideia ganha forma</h2>
+        </div>
+
+        <div class="about-timeline">
+          <button class="timeline-item is-active about-reveal" type="button" data-year="inicio">
+            <span>01</span>
+            <strong>Pesquisa e cuidado</strong>
+            <small>Entendimento das necessidades de famílias e escolas.</small>
+          </button>
+          <button class="timeline-item about-reveal" type="button" data-year="jogos">
+            <span>02</span>
+            <strong>Jogos educativos</strong>
+            <small>Atividades visuais para atenção, memória, leitura e lógica.</small>
+          </button>
+          <button class="timeline-item about-reveal" type="button" data-year="dados">
+            <span>03</span>
+            <strong>Relatórios claros</strong>
+            <small>Informações organizadas para acompanhar evolução.</small>
+          </button>
+        </div>
+
+        <article class="timeline-detail about-reveal" id="timelineDetail" aria-live="polite">
+          <h3>Pesquisa e cuidado</h3>
+          <p>O Zupi nasce da necessidade de transformar acompanhamento infantil em algo mais claro, visual e colaborativo.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="about-cta">
+      <div class="container">
+        <div class="about-cta-panel about-reveal">
+          <div>
+            <span class="about-kicker">Próximo passo</span>
+            <h2>Veja qual plano combina com sua rotina.</h2>
+            <p>Famílias podem começar com acompanhamento individual. Instituições podem organizar turmas, docentes e relatórios em uma só experiência.</p>
+          </div>
+          <a class="btn btn-primary btn-lg" href="/planos">Ver planos</a>
         </div>
       </div>
     </section>
   </main>
 
-  <!-- FOOTER -->
   <footer class="footer" role="contentinfo">
     <div class="container">
       <div class="row text-center">
         <div class="col-12">
-          <p class="mb-0">© 2025 Zupi. Todos os direitos reservados.</p>
+          <p class="mb-0">© 2026 Zupi. Todos os direitos reservados.</p>
         </div>
       </div>
     </div>
   </footer>
 
-  <!-- Bootstrap 5 JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
   <script src="/js/routes.js"></script>
   <script src="/js/api.js"></script>
   <script src="/js/auth-guard.js"></script>
+  <script src="/js/sobre.js"></script>
 </body>
 </html>
-

@@ -8,15 +8,17 @@
 
   <!-- Bootstrap 5 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap"
-        rel="stylesheet">
+    rel="stylesheet">
 
   <!-- Custom CSS -->
   <link rel="stylesheet" href="/css/main.css" />
   <link rel="stylesheet" href="/css/dashboard.css" />
+  <link rel="stylesheet" href="/css/profile-ui.css" />
+  <link rel="stylesheet" href="/css/relatorios.css" />
   <link rel="stylesheet" href="/css/dark-mode.css" />
 
   <link rel="icon" href="../assets/img/favicon.png" type="image/png">
@@ -24,430 +26,363 @@
 
 <body>
 
-<!-- FUNDO DECORATIVO -->
-<div class="background-decor" aria-hidden="true">
-  <span class="decor-shape decor-circle"
-        style="width: 180px; height: 180px; top: 10%; left: 5%; background: var(--zupi-accent);"></span>
-
-  <span class="decor-shape decor-circle"
-        style="width: 240px; height: 240px; bottom: 8%; right: 10%; background: var(--zupi-highlight);"></span>
-
-  <span class="decor-shape decor-square"
-        style="width: 100px; height: 100px; top: 20%; right: 25%; background: var(--zupi-secondary); transform: rotate(25deg);"></span>
-
-  <span class="decor-shape decor-square"
-        style="width: 80px; height: 80px; bottom: 20%; left: 10%; background: var(--zupi-primary); transform: rotate(15deg);"></span>
-</div>
-
-<!-- BOTÃO HAMBURGER -->
-<button class="menu-toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#dashboardOffcanvas"
-        aria-controls="dashboardOffcanvas" aria-label="Abrir menu">
-
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-    <line x1="3" y1="6" x2="21" y2="6"></line>
-    <line x1="3" y1="12" x2="21" y2="12"></line>
-    <line x1="3" y1="18" x2="21" y2="18"></line>
-  </svg>
-
-</button>
-
-<div class="container-fluid">
-  <div class="row">
-
-    <!-- SIDEBAR DESKTOP -->
-    <nav class="col-lg-2 dashboard-sidebar p-0 position-fixed vh-100 d-none d-lg-block"
-         role="navigation"
-         aria-label="Navegação">
-
-      <div class="d-flex flex-column p-4 h-100">
-
-        <div class="navbar-brand text-white mb-4 fs-3 fw-bold">
-          Zupi
-        </div>
-
-        <ul class="nav nav-pills flex-column pf-sidebar-nav" data-pf-sidebar>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white active" href="/dashboard-pais" aria-current="page">Dashboard</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/selecao-perfil">Perfis das crianças</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/selecao-relatorios">Relatórios</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/cadastro-dependentes">Cadastro de dependentes</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/agenda">Agenda</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/ajuda">Ajuda?</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/perfil-responsavel">Perfil</a>
-              </li>
-              <li class="nav-item mt-auto">
-                <a class="nav-link text-white" href="#" data-action="logout">Sair</a>
-              </li>
-            </ul>
-
-      </div>
-
-    </nav>
-
-    <!-- SIDEBAR MOBILE -->
-    <div class="offcanvas offcanvas-start dashboard-offcanvas"
-         tabindex="-1"
-         id="dashboardOffcanvas">
-
-      <div class="offcanvas-header">
-
-        <h5 class="offcanvas-title">Zupi</h5>
-
-        <button type="button"
-                class="btn-close"
-                data-bs-dismiss="offcanvas"
-                aria-label="Fechar"></button>
-
-      </div>
-
-      <div class="offcanvas-body p-0">
-
-        <nav>
-          <ul class="nav nav-pills flex-column p-4 pf-sidebar-nav" data-pf-sidebar>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white active" href="/dashboard-pais" aria-current="page">Dashboard</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/selecao-perfil">Perfis das crianças</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/selecao-relatorios">Relatórios</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/cadastro-dependentes">Cadastro de dependentes</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/agenda">Agenda</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/ajuda">Ajuda?</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/perfil-responsavel">Perfil</a>
-              </li>
-              <li class="nav-item mt-auto">
-                <a class="nav-link text-white" href="#" data-action="logout">Sair</a>
-              </li>
-            </ul>
-        </nav>
-
-      </div>
-
-    </div>
-
-    <!-- CONTEÚDO -->
-    <main class="col-12 col-lg-10 ms-lg-auto dashboard-main-content px-3 px-lg-4 py-4">
-
-      <!-- HEADER -->
-      <header class="mb-4">
-        <h1 id="title" class="text-zupi-primary mb-3"></h1>
-      </header>
-
-      <!-- CARROSSEL -->
-      <section class="mb-4">
-
-        <div id="dashCarousel"
-             class="carousel slide"
-             data-bs-ride="carousel"
-             data-bs-interval="5000">
-
-          <div class="carousel-inner">
-
-            <!-- CARD 1 -->
-            <div class="carousel-item active">
-
-              <div class="card border-0 shadow-sm"
-                   style="border-radius: 30px; overflow: hidden; background: linear-gradient(135deg, #7bc0e3, #9bd3ae); min-height: 250px;">
-
-                <div class="card-body d-flex align-items-center justify-content-center text-center p-5">
-
-                  <p class="mb-0 fs-4 fw-semibold text-white">
-                    Bem-vindo ao painel Zupi — acompanhe o desenvolvimento das crianças
-                  </p>
-
-                </div>
-
-              </div>
-
-            </div>
-
-            <!-- CARD 2 -->
-            <div class="carousel-item">
-
-              <div class="card border-0 shadow-sm"
-                   style="border-radius: 30px; overflow: hidden; background: linear-gradient(135deg, #89f7fe, #66a6ff); min-height: 250px;">
-
-                <div class="card-body d-flex align-items-center justify-content-center text-center p-5">
-
-                  <p class="mb-0 fs-4 fw-semibold text-white">
-                    Novidades: atividades personalizadas e relatórios atualizados
-                  </p>
-
-                </div>
-
-              </div>
-
-            </div>
-
-            <!-- CARD 3 -->
-            <div class="carousel-item">
-
-              <div class="card border-0 shadow-sm"
-                   style="border-radius: 30px; overflow: hidden; background: linear-gradient(135deg, #c2ffd8, #465efb); min-height: 250px;">
-
-                <div class="card-body d-flex align-items-center justify-content-center text-center p-5">
-
-                  <p class="mb-0 fs-4 fw-semibold text-white">
-                    Dicas de inclusão e guias para casa disponíveis no menu
-                  </p>
-
-                </div>
-
-              </div>
-
-            </div>
-
-          </div>
-
-          <!-- BOTÃO ESQUERDA -->
-          <button class="carousel-control-prev"
-                  type="button"
-                  data-bs-target="#dashCarousel"
-                  data-bs-slide="prev">
-
-            <span class="carousel-control-prev-icon"></span>
-
-          </button>
-
-          <!-- BOTÃO DIREITA -->
-          <button class="carousel-control-next"
-                  type="button"
-                  data-bs-target="#dashCarousel"
-                  data-bs-slide="next">
-
-            <span class="carousel-control-next-icon"></span>
-
-          </button>
-
-        </div>
-
-      </section>
-
-      <!-- CARDS -->
-      <section class="mb-5">
-
-        <div class="row g-4">
-
-          <div class="col-md-4">
-            <div class="card h-100">
-
-              <div class="card-body text-center">
-
-                <h3 class="card-title h5">Perfis das crianças</h3>
-
-                <p class="card-text">
-                  <a href="/selecao-perfil" class="btn btn-primary">
-                    Gerenciar perfis
-                  </a>
-                </p>
-
-              </div>
-
-            </div>
-          </div>
-
-          <div class="col-md-4">
-            <div class="card h-100">
-
-              <div class="card-body text-center">
-
-                <h3 class="card-title h5">Relatórios rápidos</h3>
-
-                <p class="card-text">
-                  <a href="/selecao-relatorios" class="btn btn-primary">
-                    Ver relatórios
-                  </a>
-                </p>
-
-              </div>
-
-            </div>
-          </div>
-
-          <div class="col-md-4">
-            <div class="card h-100">
-
-              <div class="card-body text-center">
-
-                <h3 class="card-title h5">Agenda de Atividades</h3>
-
-                <p class="card-text">
-                  <a href="/agenda" class="btn btn-primary">
-                    Visualizar Agenda
-                  </a>
-                </p>
-
-              </div>
-
-            </div>
-          </div>
-
-        </div>
-
-      </section>
-
-      <!-- PERFIS DAS CRIANÇAS -->
-      <section class="mb-5">
-
-        <h2 class="h4 mb-4">
-          Perfis das Crianças
-        </h2>
-
-        <div class="row g-4" id="perfil-criancas">
-
-          <!-- CARD ADICIONAR -->
-          <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-
-            <div class="card h-100">
-
-              <a href="/cadastro-dependentes"
-                 class="card-body text-center d-flex flex-column align-items-center justify-content-center text-decoration-none"
-                 style="min-height: 200px; cursor: pointer;">
-
-                <div class="display-5 text-zupi-primary fw-bold mb-3">
-                  +
-                </div>
-
-                <h3 class="card-title h6 text-dark">
-                  Adicionar Criança
-                </h3>
-
-                <p class="card-text text-muted small">
-                  Novo perfil
-                </p>
-
-              </a>
-
-            </div>
-
-          </div>
-
-          <!-- CHILD CARDS VIA JS -->
-
-        </div>
-
-      </section>
-
-      <!-- RECURSOS -->
-      <section class="mb-5">
-
-        <h2 class="h4 mb-4">
-          Recursos para Responsáveis
-        </h2>
-
-        <div class="row g-4">
-
-          <div class="col-md-6 col-lg-4">
-            <div class="card h-100">
-
-              <div class="card-body text-center">
-
-                <h3 class="card-title h5">
-                  Feed Personalizado
-                </h3>
-
-                <p class="card-text small text-muted">
-                  Conteúdos sobre neurodivergência e desenvolvimento
-                </p>
-
-                <a href="/feed" class="btn btn-primary btn-sm">
-                  Ver Feed
-                </a>
-
-              </div>
-
-            </div>
-          </div>
-
-          <div class="col-md-6 col-lg-4">
-            <div class="card h-100">
-
-              <div class="card-body text-center">
-
-                <h3 class="card-title h5">
-                  Guias para Casa
-                </h3>
-
-                <p class="card-text small text-muted">
-                  Estratégias práticas para o dia a dia
-                </p>
-
-                <a href="/guia-casa" class="btn btn-primary btn-sm">
-                  Ver Guias
-                </a>
-
-              </div>
-
-            </div>
-          </div>
-
-          <div class="col-md-6 col-lg-4">
-            <div class="card h-100">
-
-              <div class="card-body text-center">
-
-                <h3 class="card-title h5">
-                  Dicas de Inclusão
-                </h3>
-
-                <p class="card-text small text-muted">
-                  Apoio na inclusão das crianças
-                </p>
-
-                <a href="/dicas-inclusao" class="btn btn-primary btn-sm">
-                  Ler Dicas
-                </a>
-
-              </div>
-
-            </div>
-          </div>
-
-        </div>
-
-      </section>
-
-    </main>
-
+  <!-- FUNDO DECORATIVO -->
+  <div class="background-decor" aria-hidden="true">
+    <span class="decor-shape decor-circle"
+      style="width: 180px; height: 180px; top: 10%; left: 5%; background: var(--zupi-accent);"></span>
+    <span class="decor-shape decor-circle"
+      style="width: 240px; height: 240px; bottom: 8%; right: 10%; background: var(--zupi-highlight);"></span>
+    <span class="decor-shape decor-square"
+      style="width: 100px; height: 100px; top: 20%; right: 25%; background: var(--zupi-secondary); transform: rotate(25deg);"></span>
+    <span class="decor-shape decor-square"
+      style="width: 80px; height: 80px; bottom: 20%; left: 10%; background: var(--zupi-primary); transform: rotate(15deg);"></span>
   </div>
-</div>
 
-<!-- Bootstrap -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-        crossorigin="anonymous"></script>
+  <!-- BOTÃO HAMBURGER PARA MOBILE -->
+  <button class="menu-toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#dashboardOffcanvas"
+    aria-controls="dashboardOffcanvas" aria-label="Abrir menu">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </button>
 
-<!-- JS -->
-<script src="/js/routes.js"></script>
-<script src="/js/api.js"></script>
-<script src="/js/auth-guard.js"></script>
-<script src="/js/responsavel-sidebar.js"></script>
-<script src="/js/main.js"></script>
-<script src="/js/theme.js"></script>
-<script src="/js/child-avatar.js"></script>
-<script src="/js/dashboardResponsavelPF.js"></script>
+  <div class="container-fluid">
+    <div class="row">
+      <!-- SIDEBAR FIXA (DESKTOP) -->
+      <nav class="col-lg-2 dashboard-sidebar p-0 position-fixed vh-100 d-none d-lg-block" role="navigation"
+        aria-label="Navegação">
+        <div class="d-flex flex-column p-4 h-100">
+          <div class="navbar-brand text-white mb-4 fs-3 fw-bold">Zupi</div>
+          <ul class="nav nav-pills flex-column pf-sidebar-nav" data-pf-sidebar aria-busy="true"></ul>
+        </div>
+      </nav>
 
+      <!-- SIDEBAR OFFCANVAS (MOBILE/TABLET) -->
+      <div class="offcanvas offcanvas-start dashboard-offcanvas" tabindex="-1" id="dashboardOffcanvas"
+        aria-labelledby="dashboardOffcanvasLabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="dashboardOffcanvasLabel">Zupi</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Fechar"></button>
+        </div>
+        <div class="offcanvas-body p-0">
+          <nav role="navigation" aria-label="Navegação do dashboard">
+            <ul class="nav nav-pills flex-column pf-sidebar-nav" data-pf-sidebar aria-busy="true"></ul>
+          </nav>
+        </div>
+      </div>
+
+      <!-- CONTEÚDO PRINCIPAL -->
+      <main class="col-12 col-lg-10 ms-lg-auto dashboard-main-content px-3 px-lg-4 py-4">
+        <!-- HEADER -->
+        <header class="mb-4">
+          <h1 id="title" class="text-zupi-primary mb-3"></h1>
+          <div class="row g-3 mb-4">
+            <div class="col-md-4">
+              <div class="card">
+                <div class="card-body">
+                  <p class="card-text mb-0">Tempo total: <strong id="parentTotalTime">0 min</strong></p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card">
+                <div class="card-body">
+                  <p class="card-text mb-0">Jogos completados: <strong id="parentGamesCompleted">0</strong></p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card bg-zupi-highlight text-white">
+                <div class="card-body">
+                  <p class="card-text mb-0">Progresso: <strong id="parentProgress">0%</strong></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <section class="mb-5" id="parentGameReport"></section>
+
+        <!-- CARROSSEL (wireframe responsável) -->
+        <section class="mb-4">
+          <div id="dashCarousel" class="carousel slide dash-carousel" data-bs-ride="carousel">
+            <div class="carousel-inner">
+              <div class="carousel-item active">
+                <p class="mb-0 fs-5 fw-semibold">Bem-vindo ao painel Zupi — acompanhe o desenvolvimento das crianças</p>
+              </div>
+              <div class="carousel-item">
+                <p class="mb-0 fs-5 fw-semibold">Novidades: atividades personalizadas e relatórios atualizados</p>
+              </div>
+              <DIV class="carousel-item">
+                <p class="mb-0 fs-5 fw-semibold">Dicas de inclusão e guias para casa disponíveis no menu</p>
+              </DIV>
+            </DIV>
+            <button class="carousel-control-prev" type="button" data-bs-target="#dashCarousel" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#dashCarousel" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            </button>
+          </DIV>
+        </section>
+
+        <!-- ATALHO CADASTRAR + GRADE DE AÇÕES -->
+        <section class="mb-5">
+          <div class="row g-3 mb-3">
+            <div class="col-md-3">
+              <a href="/cadastro-dependentes" class="dash-add-card" aria-label="Cadastrar dependente">+</a>
+            </DIV>
+          </DIV>
+          <div class="row g-3 dash-quick-grid">
+            <div class="col-md-4"><a href="/guia-casa" class="dash-quick-btn">Guias para casa</a></div>
+            <div class="col-md-4"><a href="/dicas-inclusao" class="dash-quick-btn">Dicas de inclusão</a></div>
+            <div class="col-md-4"><a href="/relatorios" class="dash-quick-btn">Relatórios rápidos</a></div>
+            <div class="col-md-4"><a href="#" class="dash-quick-btn">Anotações</a></div>
+            <div class="col-md-4"><a href="/selecao-perfil" class="dash-quick-btn">Alternar entre perfis</a></div>
+          </DIV>
+        </section>
+
+        <!-- CHAMADO PARA JOGOS — HERO COM MASCOTE -->
+        <section class="mb-5">
+          <div class="dash-hero">
+
+            <!-- Mascote como fundo -->
+            <img
+              src="/img/mascote-hero.png"
+              alt="Mascote Zupi com brinquedos"
+              class="dash-hero-img"
+              draggable="false"
+            />
+
+            <!-- Gradiente para legibilidade -->
+            <div class="dash-hero-overlay"></div>
+
+            <!-- Estrelinhas decorativas flutuantes -->
+            <span class="dash-hero-star" style="top:14%;right:28%;animation-duration:3s;">&#x2B50;</span>
+            <span class="dash-hero-star" style="bottom:18%;right:14%;animation-duration:4s;animation-delay:.8s;font-size:1.1rem;">&#x2728;</span>
+            <span class="dash-hero-star" style="top:38%;right:8%;animation-duration:2.5s;animation-delay:.4s;font-size:1rem;">&#x1F4AB;</span>
+
+            <!-- Conteúdo — lado esquerdo -->
+            <div class="dash-hero-content">
+              <h2>Vamos jogar!</h2>
+              <p>Toque aqui para acessar os jogos divertidos!</p>
+              <a href="/menuJogos" class="dash-hero-btn" role="button">
+                &#x1F3AE; Jogar Agora
+              </a>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- CARDS DE ACESSO RÁPIDO -->
+        <section class="mb-5">
+          <div class="row g-4">
+            <div class="col-md-4">
+              <div class="card h-100">
+                <div class="card-body text-center">
+                  <h3 class="card-title h5">Perfis das crianças</h3>
+                  <p class="card-text">
+                    <a href="/selecao-perfil" class="btn btn-primary">Gerenciar perfis</a>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card h-100">
+                <div class="card-body text-center">
+                  <h3 class="card-title h5">Relatórios rápidos</h3>
+                  <p class="card-text">
+                    <a href="/selecao-relatorios" class="btn btn-primary">Ver relatórios</a>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card h-100">
+                <div class="card-body text-center">
+                  <h3 class="card-title h5">Agenda de Atividades</h3>
+                  <p class="card-text">
+                    <a href="/agenda" class="btn btn-primary">Visualizar Agenda</a>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- PERFIS DAS CRIANÇAS -->
+        <section class="mb-5 profile-children-section">
+          <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-2 mb-4">
+            <div>
+              <h2 class="h4 mb-1">Perfis das Crianças</h2>
+              <p class="text-muted mb-0">Acompanhe cada criança e mantenha a foto sincronizada com o perfil.</p>
+            </div>
+            <a href="/selecao-perfil" class="btn btn-outline-primary rounded-pill px-4">Ver todos</a>
+          </div>
+          <div class="row g-4" id="perfil-criancas">
+            <!-- Add Child Card -->
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+              <div class="card h-100">
+                <div class="card-body text-center d-flex flex-column align-items-center justify-content-center"
+                  style="min-height: 200px; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#addChildModal">
+                  <div class="display-5 text-zupi-primary fw-bold mb-3">+</div>
+                  <h3 class="card-title h6">Adicionar Criança</h3>
+                  <p class="card-text text-muted small">Novo perfil</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Child Cards (Template) -->
+
+          </div>
+
+          
+
+          <!-- Modal for Adding a New Child -->
+          <div class="modal fade" id="addChildModal" tabindex="-1" aria-labelledby="addChildModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header bg-zupi-primary text-white">
+                  <h5 class="modal-title" id="addChildModalLabel">Adicionar Nova Criança</h5>
+                  <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body p-4">
+                  <form>
+                    <div class="mb-3">
+                      <label for="childName" class="form-label fw-600">Nome da Criança</label>
+                      <input type="text" class="form-control" id="childName" placeholder="Digite o nome" required>
+                    </div>
+                    <div class="mb-3">
+                      <label for="childCpf" class="form-label fw-600">CPF</label>
+                      <input type="text" class="form-control" id="childCpf" placeholder="000.000.000-00" required maxlength="14">
+                    </div>
+                    <div class="mb-3">
+                      <label for="childBirthdate" class="form-label fw-600">Data de Nascimento</label>
+                      <input type="date" class="form-control" id="childBirthdate" required>
+                    </div>
+                    <div class="mb-3">
+                      <label for="childGrade" class="form-label fw-600">Ano Escolar</label>
+                      <input type="text" class="form-control" id="childGrade" placeholder="Ex: 3º Ano, Pré-escolar" required>
+                    </div>
+                    <div class="mb-3">
+                      <label for="childCondition" class="form-label fw-600">Condição/Diagnóstico</label>
+                      <select class="form-select" id="childCondition" required>
+                        <option value="">Selecione uma condição</option>
+                        <option value="Autismo">Autismo (TEA)</option>
+                        <option value="TDAH">TDAH</option>
+                        <option value="Dislexia">Dislexia</option>
+                        <option value="Discalculia">Discalculia</option>
+                        <option value="Dispraxia">Dispraxia</option>
+                        <option value="Altas Habilidades">Altas Habilidades/Superdotação</option>
+                        <option value="Deficiência Auditiva">Deficiência Auditiva</option>
+                        <option value="Deficiência Visual">Deficiência Visual</option>
+                        <option value="Deficiência Motora">Deficiência Motora</option>
+                        <option value="Múltiplas">Múltiplas Deficiências</option>
+                        <option value="Outro">Outro</option>
+                      </select>
+                    </div>
+                    <div class="mb-3">
+                      <label for="childMedicalReport" class="form-label fw-600">Laudo Médico (Opcional)</label>
+                      <input type="file" class="form-control" id="childMedicalReport" accept=".pdf,.doc,.docx,.jpg,.png">
+                      <small class="form-text text-muted">Formatos aceitos: PDF, DOC, DOCX, JPG, PNG</small>
+                    </div>
+                  </form>
+                </div>
+                <div class="modal-footer border-top pt-3">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                  <button type="button" class="btn btn-primary" id="addChildButton">Adicionar Criança</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </section>
+
+        <!-- CHAT SIMULADO -->
+       <!-- <section class="mb-5">
+          <h2 class="h4 mb-4">Chat com a equipe Zupi</h2>
+          <div class="card">
+            <div class="card-body">
+              <div class="mb-3" style="max-height: 300px; overflow-y: auto;">
+                <div class="mb-2">
+                  <div class="badge bg-secondary">Equipe Zupi</div>
+                  <p class="mt-2 mb-0">Olá! Como está o progresso da criança hoje?</p>
+                </div>
+                <div class="mb-2 text-end">
+                  <div class="badge bg-primary">Você</div>
+                  <p class="mt-2 mb-0">Está indo muito bem, completou todos os jogos planejados!</p>
+                </div>
+                <div class="mb-2">
+                  <div class="badge bg-secondary">Equipe Zupi</div>
+                  <p class="mt-2 mb-0">Ótimo! Continue acompanhando e motivando-a.</p>
+                </div>
+              </div>
+              <form class="d-flex gap-2">
+                <input type="text" class="form-control" placeholder="Digite sua mensagem..." aria-label="Mensagem">
+                <button type="submit" class="btn btn-primary">Enviar</button>
+              </form>
+            </div>
+          </div>
+        </section>-->
+
+        <!-- RECURSOS E ATIVIDADES -->
+        <section class="mb-5">
+          <h2 class="h4 mb-4">Recursos para Responsáveis</h2>
+          <div class="row g-4">
+            <div class="col-md-6 col-lg-4">
+              <div class="card h-100">
+                <div class="card-body text-center">
+                  <h3 class="card-title h5">Feed Personalizado</h3>
+                  <p class="card-text small text-muted">Conteúdos sobre neurodivergência e desenvolvimento</p>
+                  <a href="/feed" class="btn btn-primary btn-sm">Ver Feed</a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+              <div class="card h-100">
+                <div class="card-body text-center">
+                  <h3 class="card-title h5">Guias para Casa</h3>
+                  <p class="card-text small text-muted">Estratégias práticas para o dia a dia</p>
+                  <a href="/guia-casa" class="btn btn-primary btn-sm">Ver Guias</a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+              <div class="card h-100">
+                <div class="card-body text-center">
+                  <h3 class="card-title h5">Dicas de Inclusão</h3>
+                  <p class="card-text small text-muted">Apoio na inclusão das crianças</p>
+                  <a href="/dicas-inclusao" class="btn btn-primary btn-sm">Ler Dicas</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Bootstrap 5 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
+  <!-- Custom JS -->
+  <script src="/js/routes.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/auth-guard.js"></script>
+  <script src="/js/responsavel-sidebar.js"></script>
+  <script src="/js/profile-media.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/theme.js"></script>
+  <script src="/js/game-score.js"></script>
+  <script src="/js/game-reports.js"></script>
+  <!-- Script Dashboard -->
+  <script src="/js/dashboardScript.js"></script>
 </body>
+
 </html>

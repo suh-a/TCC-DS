@@ -23,9 +23,6 @@ const ZupiAuthGuard = (() => {
         '/redefinir-senha.html',
         '/erro',
         '/erro.html',
-        '/403',
-        '/403.html',
-        '/acesso-negado',
         '/plano-gratis',
         '/plano-premium',
         '/plano-pro',
@@ -55,7 +52,7 @@ const ZupiAuthGuard = (() => {
 
     function isResponsibleArea(path = normalizePath()) {
         const responsible = [
-            '/dashboard', '/dashboard-pais', '/selecao-perfil', '/selecao-relatorios', '/relatorios',
+            '/dashboard', '/selecao-perfil', '/selecao-relatorios', '/relatorios',
             '/agenda', '/configuracoes', '/cadastro-dependentes', '/perfil',
             '/perfil-criancas', '/perfil-responsavel', '/feed', '/biblioteca',
             '/dicas-inclusao', '/atividades-interativas', '/guia-casa',
@@ -64,12 +61,6 @@ const ZupiAuthGuard = (() => {
         ];
         return responsible.includes(path);
     }
-
-    const ROLE_AREAS = [
-        { paths: ['/dashboard-escola'], roles: ['ESCOLA', 'ADMIN'] },
-        { paths: ['/dashboard-docente'], roles: ['DOCENTE', 'ADMIN'] },
-        { paths: ['/dashboard-admin'], roles: ['ADMIN'] }
-    ];
 
     /** Exige perfil de criança selecionado (contexto infantil) */
     const CHILD_ONLY_PATHS = new Set([
@@ -89,25 +80,36 @@ const ZupiAuthGuard = (() => {
 
         const type = ZupiAPI.getUser().type;
 
-        const restrictedArea = ROLE_AREAS.find((area) =>
-            area.paths.some((base) => path === base || path.startsWith(base + '/'))
-        );
-        if (restrictedArea && type && !restrictedArea.roles.includes(type)) {
-            window.location.href = `/403?from=${encodeURIComponent(path)}`;
-            return;
-        }
-
         if (isResponsibleArea(path) && type && !['RESPONSAVEL', 'ADMIN'].includes(type)) {
-            window.location.href = `/403?from=${encodeURIComponent(path)}`;
+            ZupiAPI.redirectByUserType(type);
             return;
         }
 
-        if (CHILD_ONLY_PATHS.has(path) && !['CRIANCA', 'ALUNO_CREDENCIADO'].includes(type) && !localStorage.getItem('activeChildId')) {
+        if (CHILD_ONLY_PATHS.has(path) && !resolveActiveChildId()) {
             window.location.href = (ZupiRoutes && ZupiRoutes.selecaoPerfil) || '/selecao-perfil';
         }
     }
 
-    return { guardPage, isPublicPage, normalizePath };
+    function resolveActiveChildId() {
+        const params = new URLSearchParams(window.location.search);
+        const fromUrl = params.get('childId');
+        const stored = fromUrl
+            || localStorage.getItem('activeChildId')
+            || localStorage.getItem('selectedChildId')
+            || localStorage.getItem('childId');
+
+        const user = typeof ZupiAPI !== 'undefined' ? ZupiAPI.getUser() : {};
+        const childId = stored || (['CRIANCA', 'ALUNO_CREDENCIADO'].includes(user.type) ? user.id : null);
+
+        if (childId) {
+            localStorage.setItem('activeChildId', String(childId));
+            localStorage.setItem('selectedChildId', String(childId));
+        }
+
+        return childId;
+    }
+
+    return { guardPage, isPublicPage, normalizePath, resolveActiveChildId };
 })();
 
 document.addEventListener('DOMContentLoaded', () => {

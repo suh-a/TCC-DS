@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Foco nas Cores - Zupi</title>
+  <link rel="stylesheet" href="/css/zupi-cognitive-games.css">
+</head>
+<body data-game="stroop">
+  <div class="cg-bg" aria-hidden="true"><span class="cg-shape"></span><span class="cg-shape"></span><span class="cg-shape"></span><span class="cg-shape"></span></div>
+  <nav class="cg-nav">
+    <a class="cg-brand" href="/menuJogos">Zupi</a>
+    <div class="cg-stats">
+      <span class="cg-pill">Fase <b id="cgRound">1</b></span>
+      <span class="cg-pill">Pontos <b id="cgScore">0/10</b></span>
+    </div>
+  </nav>
+  <main class="cg-main">
+    <section class="cg-card">
+      <div class="cg-progress"><span id="cgProgress"></span></div>
+      <div class="cg-stage" id="cgStage"></div>
+    </section>
+  </main>
+  <div class="cg-overlay" id="cgOverlay">
+    <div class="cg-modal">
+      <div class="cg-modal-mark"></div>
+      <span class="cg-kicker">Controle de impulso</span>
+      <h1 class="cg-title">Foco nas cores</h1>
+      <p class="cg-sub">Escolha a cor da tinta e ignore a palavra escrita.</p>
+      <button class="cg-btn primary" id="cgStart">Começar</button>
+      <a class="cg-btn" href="/menuJogos">Voltar ao menu</a>
+    </div>
+  </div>
+  <div class="cg-overlay cg-hidden" id="cgEnd">
+    <div class="cg-modal">
+      <div class="cg-modal-mark"></div>
+      <h2 class="cg-title" id="cgEndTitle">Fim</h2>
+      <p class="cg-sub" id="cgEndText"></p>
+      <button class="cg-btn primary" id="cgRestart">Jogar novamente</button>
+      <a class="cg-btn" href="/menuJogos">Menu</a>
+    </div>
+  </div>
+  <script src="/js/routes.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/auth-guard.js"></script>
+  <script src="/js/game-guard.js"></script>
+  <script src="/js/game-score.js"></script>
+  <script src="/js/zupi-cognitive-games.js"></script>
+</body>
+</html>

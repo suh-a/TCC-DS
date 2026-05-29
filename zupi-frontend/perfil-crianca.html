@@ -20,7 +20,7 @@
   <link rel="icon" href="../assets/img/favicon.png" type="image/png">
 </head>
 
-<body>
+<body data-child-nav="perfil">
 
   <!-- FUNDO DECORATIVO -->
   <div class="background-decor" aria-hidden="true">
@@ -226,6 +226,10 @@
   <script src="/js/api.js"></script>
   <script src="/js/auth-guard.js"></script>
   <script src="/js/main.js"></script>
+  <script src="/js/child-nav.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => ChildNav.init({ active: 'perfil', requireChild: false }));
+  </script>
 </body>
 
 </html>

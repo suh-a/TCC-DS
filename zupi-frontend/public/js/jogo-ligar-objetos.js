@@ -1,149 +1,161 @@
-// Dados do Jogo (Pares: id e matchId devem corresponder)
-        const gameData = [
-            { id: 'a1', icon: '🐶', matchId: 'f1' }, // Cachorro
-            { id: 'a2', icon: '🐵', matchId: 'f2' }, // Macaco
-            { id: 'a3', icon: '🐰', matchId: 'f3' }, // Coelho
-            { id: 'a4', icon: '🐱', matchId: 'f4' }  // Gato
-        ];
+const levels = [
+  [
+    { animal: '🐶', animalName: 'Cachorro', food: '🦴', foodName: 'Osso' },
+    { animal: '🐵', animalName: 'Macaco', food: '🍌', foodName: 'Banana' },
+    { animal: '🐱', animalName: 'Gato', food: '🥛', foodName: 'Leite' }
+  ],
+  [
+    { animal: '🐶', animalName: 'Cachorro', food: '🦴', foodName: 'Osso' },
+    { animal: '🐵', animalName: 'Macaco', food: '🍌', foodName: 'Banana' },
+    { animal: '🐱', animalName: 'Gato', food: '🥛', foodName: 'Leite' },
+    { animal: '🐰', animalName: 'Coelho', food: '🥕', foodName: 'Cenoura' }
+  ],
+  [
+    { animal: '🐶', animalName: 'Cachorro', food: '🦴', foodName: 'Osso' },
+    { animal: '🐵', animalName: 'Macaco', food: '🍌', foodName: 'Banana' },
+    { animal: '🐱', animalName: 'Gato', food: '🥛', foodName: 'Leite' },
+    { animal: '🐰', animalName: 'Coelho', food: '🥕', foodName: 'Cenoura' },
+    { animal: '🐴', animalName: 'Cavalo', food: '🌿', foodName: 'Capim' }
+  ],
+  [
+    { animal: '🐶', animalName: 'Cachorro', food: '🦴', foodName: 'Osso' },
+    { animal: '🐵', animalName: 'Macaco', food: '🍌', foodName: 'Banana' },
+    { animal: '🐱', animalName: 'Gato', food: '🥛', foodName: 'Leite' },
+    { animal: '🐰', animalName: 'Coelho', food: '🥕', foodName: 'Cenoura' },
+    { animal: '🐴', animalName: 'Cavalo', food: '🌿', foodName: 'Capim' },
+    { animal: '🐼', animalName: 'Panda', food: '🎋', foodName: 'Bambu' }
+  ]
+];
 
-        const matchData = [
-            { id: 'f1', icon: '🦴', matchId: 'a1' }, // Osso
-            { id: 'f2', icon: '🍌', matchId: 'a2' }, // Banana
-            { id: 'f3', icon: '🥕', matchId: 'a3' }, // Cenoura
-            { id: 'f4', icon: '🥛', matchId: 'a4' }  // Leite
-        ];
+let currentLevel = 0;
+let selectedItem = null;
+let matchesFound = 0;
+let matchedPairs = [];
 
-        let selectedItem = null;
-        let matchesFound = 0;
-        const totalMatches = gameData.length;
+function shuffle(items) {
+  return items.slice().sort(() => Math.random() - 0.5);
+}
 
-        // Inicialização
-        function initGame() {
-            const leftCol = document.getElementById('col-left');
-            const rightCol = document.getElementById('col-right');
-            const svg = document.getElementById('connections');
-            
-            // Limpar
-            leftCol.innerHTML = '';
-            rightCol.innerHTML = '';
-            svg.innerHTML = '';
-            matchesFound = 0;
-            document.getElementById('victory-modal').style.display = 'none';
+function initGame() {
+  const level = levels[currentLevel];
+  const leftCol = document.getElementById('col-left');
+  const rightCol = document.getElementById('col-right');
+  leftCol.innerHTML = '';
+  rightCol.innerHTML = '';
+  document.getElementById('connections').innerHTML = '';
+  document.getElementById('modal-overlay').style.display = 'none';
+  document.getElementById('level-indicator').textContent = `Nivel ${currentLevel + 1} de ${levels.length}`;
+  document.getElementById('instruction-text').textContent = `${level.length} animais: ligue cada um ao alimento.`;
+  selectedItem = null;
+  matchesFound = 0;
+  matchedPairs = [];
 
-            // Embaralhar as comidas para não ficarem na mesma linha
-            const shuffledMatches = [...matchData].sort(() => Math.random() - 0.5);
+  level.forEach((pair, index) => {
+    createCard({ id: `animal-${index}`, match: `food-${index}`, icon: pair.animal, name: pair.animalName }, leftCol, 'left');
+  });
+  shuffle(level.map((pair, index) => ({ id: `food-${index}`, match: `animal-${index}`, icon: pair.food, name: pair.foodName })))
+    .forEach((food) => createCard(food, rightCol, 'right'));
+}
 
-            // Criar elementos
-            gameData.forEach(item => createCard(item, leftCol, 'left'));
-            shuffledMatches.forEach(item => createCard(item, rightCol, 'right'));
-        }
+function createCard(item, container, side) {
+  const card = document.createElement('button');
+  card.type = 'button';
+  card.className = 'item';
+  card.textContent = item.icon;
+  card.dataset.id = item.id;
+  card.dataset.match = item.match;
+  card.dataset.side = side;
+  card.setAttribute('aria-label', item.name);
+  card.addEventListener('click', () => handleSelection(card));
+  container.appendChild(card);
+}
 
-        function createCard(item, container, side) {
-            const card = document.createElement('div');
-            card.className = 'item';
-            card.innerText = item.icon;
-            card.dataset.id = item.id;
-            card.dataset.match = item.matchId;
-            card.dataset.side = side;
-            
-            card.addEventListener('click', () => handleSelection(card));
-            container.appendChild(card);
-        }
+function handleSelection(card) {
+  if (card.classList.contains('matched')) return;
+  if (!selectedItem) {
+    selectedItem = card;
+    card.classList.add('selected');
+    return;
+  }
+  if (selectedItem === card) {
+    card.classList.remove('selected');
+    selectedItem = null;
+    return;
+  }
+  if (selectedItem.dataset.side === card.dataset.side) {
+    selectedItem.classList.remove('selected');
+    selectedItem = card;
+    card.classList.add('selected');
+    return;
+  }
+  if (selectedItem.dataset.match === card.dataset.id) {
+    successMatch(selectedItem, card);
+  } else {
+    errorMatch(selectedItem, card);
+  }
+}
 
-        function handleSelection(card) {
-            // Ignorar se já estiver combinado
-            if (card.classList.contains('matched')) return;
+function successMatch(first, second) {
+  first.classList.remove('selected');
+  first.classList.add('matched');
+  second.classList.add('matched');
+  matchedPairs.push([first, second]);
+  drawLine(first, second);
+  selectedItem = null;
+  matchesFound++;
+  if (matchesFound === levels[currentLevel].length) setTimeout(showLevelComplete, 450);
+}
 
-            // Se for o primeiro clique
-            if (!selectedItem) {
-                selectedItem = card;
-                card.classList.add('selected');
-                return;
-            }
+function errorMatch(first, second) {
+  window.GameScore?.recordError?.();
+  first.classList.add('error');
+  second.classList.add('error');
+  setTimeout(() => {
+    first.classList.remove('error', 'selected');
+    second.classList.remove('error');
+    selectedItem = null;
+  }, 500);
+}
 
-            // Se clicou no mesmo item, desmarca
-            if (selectedItem === card) {
-                selectedItem.classList.remove('selected');
-                selectedItem = null;
-                return;
-            }
+function drawLine(start, end) {
+  const svg = document.getElementById('connections');
+  const area = document.getElementById('game-container').getBoundingClientRect();
+  const a = start.getBoundingClientRect();
+  const b = end.getBoundingClientRect();
+  const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  line.setAttribute('x1', a.left + a.width / 2 - area.left);
+  line.setAttribute('y1', a.top + a.height / 2 - area.top);
+  line.setAttribute('x2', b.left + b.width / 2 - area.left);
+  line.setAttribute('y2', b.top + b.height / 2 - area.top);
+  svg.appendChild(line);
+}
 
-            // Se clicou em itens da mesma coluna (lado), troca a seleção
-            if (selectedItem.dataset.side === card.dataset.side) {
-                selectedItem.classList.remove('selected');
-                selectedItem = card;
-                card.classList.add('selected');
-                return;
-            }
+function showLevelComplete() {
+  const last = currentLevel === levels.length - 1;
+  document.getElementById('modal-icon').textContent = last ? '🏆' : '⭐';
+  document.getElementById('modal-title').textContent = last ? 'Mestre dos Animais!' : 'Nivel concluido!';
+  document.getElementById('modal-message').textContent = last
+    ? 'Voce ligou todos os animais corretamente!'
+    : `Agora o nivel ${currentLevel + 2} tem mais animais para combinar.`;
+  document.getElementById('modal-btn').textContent = last ? 'Jogar novamente' : 'Proximo nivel';
+  document.getElementById('modal-overlay').style.display = 'flex';
+  if (last) {
+    window.GameScore?.submit?.({
+      gameId: 'jogo-ligar-objetos',
+      score: levels.length,
+      maxScore: levels.length,
+      errors: window.GameScore?.state?.errors || 0
+    });
+  }
+}
 
-            // Verificar Match (Lógica Principal)
-            if (selectedItem.dataset.match === card.dataset.id) {
-                successMatch(selectedItem, card);
-            } else {
-                errorMatch(selectedItem, card);
-            }
-        }
+function nextAction() {
+  currentLevel = currentLevel === levels.length - 1 ? 0 : currentLevel + 1;
+  initGame();
+}
 
-        function successMatch(item1, item2) {
-            item1.classList.remove('selected');
-            item1.classList.add('matched');
-            item2.classList.add('matched');
-
-            // Desenhar linha
-            drawLine(item1, item2);
-
-            selectedItem = null;
-            matchesFound++;
-
-            // Verificar Vitória
-            if (matchesFound === totalMatches) {
-                setTimeout(() => {
-                    document.getElementById('victory-modal').style.display = 'flex';
-                }, 500);
-            }
-        }
-
-        function errorMatch(item1, item2) {
-            item1.classList.add('error');
-            item2.classList.add('error');
-
-            setTimeout(() => {
-                item1.classList.remove('error', 'selected');
-                item2.classList.remove('error');
-                selectedItem = null;
-            }, 500);
-        }
-
-        function drawLine(startElem, endElem) {
-            const svg = document.getElementById('connections');
-            const containerRect = document.getElementById('game-container').getBoundingClientRect();
-            
-            const startRect = startElem.getBoundingClientRect();
-            const endRect = endElem.getBoundingClientRect();
-
-            // Calcular coordenadas relativas ao container SVG
-            const x1 = startRect.left + startRect.width / 2 - containerRect.left;
-            const y1 = startRect.top + startRect.height / 2 - containerRect.top;
-            const x2 = endRect.left + endRect.width / 2 - containerRect.left;
-            const y2 = endRect.top + endRect.height / 2 - containerRect.top;
-
-            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            line.setAttribute('x1', x1);
-            line.setAttribute('y1', y1);
-            line.setAttribute('x2', x2);
-            line.setAttribute('y2', y2);
-            
-            svg.appendChild(line);
-        }
-
-        function restartGame() {
-            initGame();
-        }
-
-        // Iniciar ao carregar
-        window.onload = initGame;
-        // Atualizar linhas se a janela redimensionar
-        window.onresize = () => {
-            document.getElementById('connections').innerHTML = ''; // Limpa linhas antigas
-            // Nota: Em um app real, redesenharíamos as linhas dos pares já feitos aqui
-        };
+window.addEventListener('load', initGame);
+window.addEventListener('resize', () => {
+  document.getElementById('connections').innerHTML = '';
+  matchedPairs.forEach((pair) => drawLine(pair[0], pair[1]));
+});

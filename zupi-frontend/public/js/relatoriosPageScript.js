@@ -1,19 +1,23 @@
-/**
- * Relatórios com gráficos — integração ZupiAPI + Chart.js
- */
-const CHART_COLORS = ['#60A5FA', '#C084FC', '#FDBA74', '#FDE047'];
+const CHART_COLORS = ['#7EC8E6', '#A8D5BA', '#FFB980', '#F7D86A', '#9ED8CE', '#8FB8E8', '#F3A6A6'];
 const GAME_SUBJECT_LABELS = {
-    jogoMemoria: 'Memória',
-    jogoMath: 'Matemática',
-    JogoMath: 'Matemática',
-    jogoPalavras: 'Português',
-    jogoSequencia: 'Raciocínio',
+    jogoMemoria: 'Memoria',
+    jogoMath: 'Matematica',
+    JogoMath: 'Matematica',
+    jogoPalavras: 'Linguagem',
+    jogoLetra: 'Linguagem',
+    jogoSequenciaSons: 'Memoria auditiva',
     jogoColorir: 'Artes',
-    jogoCoresFormas: 'Ciências',
-    'jogo-cores-formas': 'Ciências',
-    'jogo-ligar-objetos': 'Lógica',
-    jogoBolhas: 'Coordenação',
-    jogoContagem: 'Matemática',
+    jogoPintura: 'Artes',
+    jogoMosaico: 'Coordenacao visual',
+    jogoRotas: 'Planejamento',
+    jogoFocoCores: 'Atencao',
+    jogoPadroes: 'Logica',
+    jogoCenarios: 'Criatividade',
+    jogoCoresFormas: 'Percepcao visual',
+    'jogo-cores-formas': 'Percepcao visual',
+    'jogo-ligar-objetos': 'Associacao',
+    jogoBolhas: 'Coordenacao',
+    jogoContagem: 'Matematica',
     default: 'Atividades'
 };
 
@@ -60,21 +64,21 @@ async function loadChildHeader(childId) {
 
         const set = (id, text) => {
             const el = document.getElementById(id);
-            if (el) el.textContent = text || '—';
+            if (el) el.textContent = text || '-';
         };
 
         set('childFullName', child.name);
         set('childCpf', formatCpf(child.cpf));
-        set('childAge', child.age != null ? `${child.age} anos` : '—');
-        set('childCondition', child.condition || 'Não informado');
-        set('childGrade', child.schoolClass || '—');
+        set('childAge', child.age != null ? `${child.age} anos` : '-');
+        set('childCondition', child.condition || 'Nao informado');
+        set('childGrade', child.schoolClass || '-');
     } catch (e) {
         console.error(e);
     }
 }
 
 function formatCpf(cpf) {
-    if (!cpf) return '—';
+    if (!cpf) return '-';
     const d = String(cpf).replace(/\D/g, '');
     if (d.length !== 11) return cpf;
     return d.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
@@ -101,7 +105,19 @@ async function loadCharts(childId) {
         console.error(e);
     }
 
-    renderPerformanceChart(averages);
+    if (window.ZupiGameReports) {
+        sessions = ZupiGameReports.mergeSessions(sessions, childId);
+        const summary = ZupiGameReports.summarize(sessions);
+        progress = {
+            ...(progress || {}),
+            averageScore: summary.average,
+            errors: summary.totalErrors,
+            totalSeconds: summary.totalSeconds
+        };
+        renderGameReportDetails(sessions);
+    }
+
+    renderPerformanceChart(averages, sessions);
     renderSubjectsChart(sessions);
     renderActivityChart(sessions, progress);
 }
@@ -111,7 +127,7 @@ function destroyCharts() {
     chartInstances = [];
 }
 
-function renderPerformanceChart(averages) {
+function renderPerformanceChart(averages, sessions) {
     const canvas = document.getElementById('chartPerformance');
     if (!canvas) return;
 
@@ -120,13 +136,17 @@ function renderPerformanceChart(averages) {
 
     if (Array.isArray(averages) && averages.length > 0) {
         averages.forEach(item => {
-            const name = item.skillArea?.name || item.skillArea || 'Área';
+            const name = item.skillArea?.name || item.skillArea || 'Area';
             labels.push(name);
             data.push(Math.round(item.average ?? 0));
         });
+    } else if (window.ZupiGameReports && Array.isArray(sessions) && sessions.length) {
+        const areas = ZupiGameReports.areaAverages(sessions);
+        labels = areas.map(item => item.label);
+        data = areas.map(item => item.value);
     } else {
-        labels = ['Comunicação', 'Proatividade', 'Agilidade', 'Desempenho'];
-        data = [19, 28, 20, 33];
+        labels = ['Sem dados'];
+        data = [1];
     }
 
     chartInstances.push(new Chart(canvas, {
@@ -135,7 +155,7 @@ function renderPerformanceChart(averages) {
             labels,
             datasets: [{
                 data,
-                backgroundColor: CHART_COLORS.slice(0, labels.length),
+                backgroundColor: labels[0] === 'Sem dados' ? ['#E2E8F0'] : CHART_COLORS.slice(0, labels.length),
                 borderWidth: 2,
                 borderColor: '#fff'
             }]
@@ -151,9 +171,9 @@ function renderSubjectsChart(sessions) {
     const grouped = {};
     if (Array.isArray(sessions)) {
         sessions.forEach(s => {
-            const key = GAME_SUBJECT_LABELS[s.gameId] || GAME_SUBJECT_LABELS.default;
+            const key = s.skillArea || GAME_SUBJECT_LABELS[s.gameId] || GAME_SUBJECT_LABELS.default;
             if (!grouped[key]) grouped[key] = [];
-            grouped[key].push(s.maxScore ? ((s.score || 0) * 100 / s.maxScore) : (s.score || 0));
+            grouped[key].push(s.percentage ?? (s.maxScore ? ((s.score || 0) * 100 / s.maxScore) : (s.score || 0)));
         });
     }
 
@@ -164,8 +184,8 @@ function renderSubjectsChart(sessions) {
     });
 
     if (labels.length === 0) {
-        labels = ['Matemática', 'Português', 'Ciências', 'Artes'];
-        data = [29, 16, 20, 35];
+        labels = ['Sem dados'];
+        data = [1];
     }
 
     chartInstances.push(new Chart(canvas, {
@@ -174,12 +194,12 @@ function renderSubjectsChart(sessions) {
             labels,
             datasets: [{
                 data,
-                backgroundColor: CHART_COLORS.slice(0, labels.length),
+                backgroundColor: labels[0] === 'Sem dados' ? ['#E2E8F0'] : CHART_COLORS.slice(0, labels.length),
                 borderWidth: 2,
                 borderColor: '#fff'
             }]
         },
-        options: chartOptions('Por disciplina')
+        options: chartOptions('Por habilidade')
     }));
 }
 
@@ -192,18 +212,15 @@ function renderActivityChart(sessions, progress) {
         : 0;
     const playCount = Array.isArray(sessions) ? sessions.length : 0;
     const avgScore = progress.averageScore ?? 0;
+    const totalErrors = progress.errors ?? (Array.isArray(sessions) ? sessions.reduce((acc, s) => acc + (s.errors || 0), 0) : 0);
 
-    const labels = ['Tempo de tela', 'Brincando', 'Desenvolvendo competências', 'Melhora na condição'];
+    const labels = ['Tempo de jogo', 'Partidas', 'Desempenho', 'Precisao'];
     const data = [
-        Math.min(80, Math.round(totalMin)),
-        Math.min(80, Math.round(playCount * 8)),
-        Math.min(80, Math.round(avgScore)),
-        Math.min(80, Math.round(avgScore * 1.1))
+        Math.min(100, Math.round(totalMin)),
+        Math.min(100, Math.round(playCount * 8)),
+        Math.min(100, Math.round(avgScore)),
+        Math.min(100, Math.max(0, Math.round(avgScore - totalErrors)))
     ];
-
-    if (playCount === 0 && avgScore === 0) {
-        data.splice(0, 4, 50, 70, 60, 80);
-    }
 
     chartInstances.push(new Chart(canvas, {
         type: 'bar',
@@ -224,11 +241,32 @@ function renderActivityChart(sessions, progress) {
                 title: { display: true, text: 'Atividades', font: { size: 14, weight: '600' } }
             },
             scales: {
-                y: { beginAtZero: true, max: 80 },
+                y: { beginAtZero: true, max: 100 },
                 x: { ticks: { maxRotation: 45, minRotation: 45 } }
             }
         }
     }));
+}
+
+function renderGameReportDetails(sessions) {
+    if (!window.ZupiGameReports) return;
+    const summary = ZupiGameReports.summarize(sessions);
+    ZupiGameReports.renderMiniReport(
+        document.getElementById('gameReportSummary'),
+        sessions,
+        { title: 'Relatorio automatico dos jogos' }
+    );
+    const avg = document.getElementById('gameReportAverage');
+    if (avg) avg.textContent = `${summary.average}%`;
+    ZupiGameReports.renderSimpleBars(
+        document.getElementById('gameReportBars'),
+        ZupiGameReports.gameAverages(sessions)
+    );
+    ZupiGameReports.renderCategoryDetails(document.getElementById('gameCategoryDetails'), sessions);
+    ZupiGameReports.renderGameDetails(document.getElementById('gameDetails'), sessions);
+    ZupiGameReports.renderLatestSessions(document.getElementById('gameLatestSessions'), sessions);
+    const narrative = document.getElementById('gameNarrative');
+    if (narrative) narrative.textContent = ZupiGameReports.buildNarrative(sessions);
 }
 
 function chartOptions(title) {
@@ -311,7 +349,7 @@ function addScoreField() {
     const rm = document.createElement('button');
     rm.type = 'button';
     rm.className = 'btn btn-sm btn-danger remove-score';
-    rm.textContent = '×';
+    rm.textContent = 'x';
     rm.addEventListener('click', () => wrap.remove());
     col1.appendChild(rm);
     row.appendChild(col8);
@@ -339,16 +377,17 @@ async function saveReport(childId) {
 
     const response = await ZupiAPI.post(`/child/${childId}/reports`, { scores });
     if (response && response.ok) {
-        alert('Relatório salvo!');
+        alert('Relatorio salvo!');
         const modal = bootstrap.Modal.getInstance(document.getElementById('saveReportModal'));
         if (modal) modal.hide();
         await loadCharts(childId);
     } else {
-        alert('Erro ao salvar relatório.');
+        alert('Erro ao salvar relatorio.');
     }
 }
 
 document.getElementById('btnDownloadPdf')?.addEventListener('click', () => window.print());
 document.getElementById('btnDescribedReport')?.addEventListener('click', () => {
-    alert('Relatório descrito em desenvolvimento. Os gráficos acima refletem os dados mais recentes.');
+    const text = document.getElementById('gameNarrative')?.textContent || 'Ainda nao ha dados para descrever.';
+    alert(text);
 });

@@ -1,13 +1,13 @@
 import { defineConfig, loadEnv } from 'vite';
 import { readdirSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
 const ROUTE_ALIASES = {
   '/': '/index.html',
   '/dashboard': '/dashboard-pais.html',
-  '/dashboad': '/dashboard-pais.html',
-  '/dashboad-pais': '/dashboard-pais.html',
-  '/acesso-negado': '/403.html',
   '/contatos': '/contato.html',
   '/perfil': '/perfil-criancas.html',
   '/jogoMath': '/JogoMath.html',
@@ -73,7 +73,7 @@ function htmlEntries(dir) {
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, __dirname, '');
-  const apiTarget = (env.VITE_API_BASE || 'https://tcc-ds-aplication.onrender.com').replace(/\/$/, '');
+  const apiTarget = (env.VITE_API_BASE || 'http://localhost:8080').replace(/\/$/, '');
   const htmlRoutes = buildHtmlRoutes(__dirname);
 
   return {
@@ -95,6 +95,7 @@ export default defineConfig(({ mode }) => {
         '/reports': { target: apiTarget, changeOrigin: true },
         '/quiz': { target: apiTarget, changeOrigin: true },
         '/support': { target: apiTarget, changeOrigin: true },
+        '/ai': { target: apiTarget, changeOrigin: true },
         '/v3': { target: apiTarget, changeOrigin: true },
         '/swagger-ui': { target: apiTarget, changeOrigin: true },
         '^/\\d+/events': { target: apiTarget, changeOrigin: true },

@@ -5,7 +5,6 @@
 (function () {
     const PF_PATHS = [
         '/dashboard',
-        '/dashboard-pais',
         '/selecao-perfil',
         '/selecao-relatorios',
         '/relatorios',
@@ -27,13 +26,14 @@
 
     /** Rotas permitidas no menu do responsável (PF) */
     const MENU = [
-        { href: '/dashboard-pais', label: 'Dashboard' },
+        { href: '/dashboard', label: 'Dashboard' },
         { href: '/selecao-perfil', label: 'Perfis das crianças' },
         { href: '/selecao-relatorios', label: 'Relatórios' },
         { href: '/cadastro-dependentes', label: 'Cadastro de dependentes' },
         { href: '/agenda', label: 'Agenda' },
         { href: '/ajuda', label: 'Ajuda?' },
-        { href: '/perfil-responsavel', label: 'Perfil' }
+        { href: '/perfil-responsavel', label: 'Perfil' },
+        { href: '/configuracoes', label: 'Configurações' }
     ];
 
     function currentPath() {
@@ -55,7 +55,7 @@
 
     function isActive(href) {
         const path = currentPath();
-        if (href === '/dashboard-pais') return path === '/dashboard' || path === '/dashboard-pais';
+        if (href === '/dashboard') return path === '/dashboard';
         if (href === '/selecao-perfil') {
             return path === '/selecao-perfil' || path === '/perfil' || path === '/perfil-criancas';
         }
@@ -92,16 +92,14 @@
         const html = buildNavItems();
         document.querySelectorAll('[data-pf-sidebar]').forEach((ul) => {
             const managed = ul.dataset.pfSidebarRendered === '1';
-            const hasStaticItems = ul.querySelector('a.nav-link');
-            if (!managed && !hasStaticItems) {
-                ul.setAttribute('aria-busy', 'true');
+            if (!managed) {
                 ul.innerHTML = html;
                 ul.dataset.pfSidebarRendered = '1';
             } else {
-                ul.dataset.pfSidebarRendered = '1';
                 applyActiveState(ul);
             }
             ul.removeAttribute('aria-busy');
+            requestAnimationFrame(() => ul.classList.add('is-ready'));
         });
     }
 
@@ -121,14 +119,16 @@
     }
 
     function init() {
+        if (document.body.dataset.childNav) return;
         if (!isPfArea() || !isPfUser()) return;
         renderSidebars();
         bindLogout();
         document.dispatchEvent(new CustomEvent('pf-sidebar-ready'));
     }
 
-    init();
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
     }
 })();

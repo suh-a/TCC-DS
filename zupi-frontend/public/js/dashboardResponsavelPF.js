@@ -6,8 +6,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     if (!ZupiAPI.requireAuth()) return;
 
-    initDashboardCarousel();
-
     // Máscara CPF
     const cpfInput = document.getElementById('childCpf');
     if (cpfInput) {
@@ -32,21 +30,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     dashboardLoad();
 });
-
-function initDashboardCarousel() {
-    const carouselEl = document.getElementById('dashCarousel');
-    if (!carouselEl || typeof bootstrap === 'undefined' || !bootstrap.Carousel) return;
-
-    const carousel = bootstrap.Carousel.getOrCreateInstance(carouselEl, {
-        interval: 5000,
-        ride: 'carousel',
-        pause: false,
-        wrap: true,
-        touch: true
-    });
-
-    carousel.cycle();
-}
 
 async function getUserData() {
     const user = await ZupiAPI.fetchMe();
@@ -79,12 +62,8 @@ async function cadastrarCrianca() {
     const childGrade = document.getElementById('childGrade').value;
     const userId = ZupiAPI.getUser().id;
 
-    if (!name) {
-        alert('Preencha o nome da criança.');
-        return;
-    }
-    if (cpf && cpf.length !== 11) {
-        alert('CPF inválido. Informe 11 dígitos ou deixe o campo em branco.');
+    if (!name || !cpf || cpf.length !== 11) {
+        alert('Preencha nome e CPF válido (11 dígitos).');
         return;
     }
     if (isNaN(age) || age < 5 || age > 25) {
@@ -99,7 +78,7 @@ async function cadastrarCrianca() {
     const childData = {
         name,
         age,
-        cpf: cpf || null,
+        cpf,
         birthDate: birthInput || null,
         schoolClass: childGrade,
         condition: null,
@@ -113,8 +92,8 @@ async function cadastrarCrianca() {
         const response = await ZupiAPI.post('/child', childData);
         if (!response) return;
 
+        const text = await response.text();
         if (response.ok) {
-            const text = await response.text();
             const created = JSON.parse(text);
             const child = created.child || created;
             const generatedPassword = created.generatedPassword;
@@ -131,11 +110,11 @@ async function cadastrarCrianca() {
 
             window.location.href = `/onboarding-crianca?childId=${child.id}`;
         } else {
-            ZupiUI.error(await ZupiAPI.readErrorMessage(response, 'Erro ao cadastrar crianca.'));
+            alert(text || 'Erro ao cadastrar criança.');
         }
     } catch (error) {
         console.error(error);
-        ZupiUI.error('Erro de conexao ao cadastrar crianca.');
+        alert('Erro de conexão ao cadastrar criança.');
     } finally {
         btn.disabled = false;
         btn.textContent = 'Adicionar Criança';
@@ -169,12 +148,12 @@ async function dashboardLoad() {
 }
 
 function createChildCard(child) {
-    const avatar = ZupiChildAvatar.renderHtml(child, 80, 'mx-auto mb-3');
+    const photo = child.profilePhotoUrl || '/img/logokids1.png';
     return `
       <div class="col-12 col-sm-6 col-md-4 col-lg-3">
         <div class="card h-100 shadow-sm">
           <div class="card-body text-center d-flex flex-column">
-            ${avatar}
+            <img src="${photo}" alt="" class="img-fluid mx-auto mb-3 rounded-circle" style="max-width:80px;height:80px;object-fit:cover;">
             <h3 class="card-title h6 mb-2">${child.name}</h3>
             <p class="card-text text-muted small flex-grow-1">Idade: ${child.age ?? '—'}</p>
             <a href="/perfil?childId=${child.id}" class="btn btn-primary btn-sm mt-auto">Ver Perfil</a>

@@ -136,6 +136,8 @@ async function dashboardLoad() {
             titleEl.textContent = `Olá, ${user.name}`;
         }
 
+        await loadParentGameSummary(children);
+
         const container = document.getElementById('perfil-criancas');
         if (container) {
             children.forEach(child => {
@@ -151,17 +153,115 @@ async function dashboardLoad() {
     }
 }
 
-function createChildCard(child) {
-    const avatar = ZupiChildAvatar.renderHtml(child, 80, 'mx-auto mb-3');
+async function loadParentGameSummary(children) {
+    if (!window.ZupiGameReports) return;
+    const firstChild = Array.isArray(children) && children.length ? children[0] : null;
+    const childId = localStorage.getItem('activeChildId') || firstChild?.id;
+    if (!childId) return;
+
+    localStorage.setItem('activeChildId', String(childId));
+    localStorage.setItem('childId', String(childId));
+
+    const sessions = await ZupiGameReports.loadSessions(childId);
+    const summary = ZupiGameReports.summarize(sessions);
+
+    const totalTime = document.getElementById('parentTotalTime');
+    const completed = document.getElementById('parentGamesCompleted');
+    const progress = document.getElementById('parentProgress');
+    if (totalTime) totalTime.textContent = ZupiGameReports.formatMinutes(summary.totalSeconds);
+    if (completed) completed.textContent = String(summary.totalSessions);
+    if (progress) progress.textContent = `${summary.average}%`;
+
+    ZupiGameReports.renderMiniReport(
+        document.getElementById('parentGameReport'),
+        sessions,
+        { title: 'Resumo do dependente selecionado' }
+    );
+}
+
+function createChildCardLegacy(child) {
+    const childName = child.name || 'Crianca';
+    const avatar = window.ZupiProfileMedia
+        ? ZupiProfileMedia.renderAvatar({
+            type: 'child',
+            id: child.id,
+            name: childName,
+            size: 92,
+            fallbackUrl: child.profilePhotoUrl || ''
+        })
+        : `<img src="${escapeAttribute(child.profilePhotoUrl || '/img/logokids1.png')}" alt="" class="img-fluid mx-auto mb-3 rounded-circle" style="max-width:92px;height:92px;object-fit:cover;">`;
     return `
       <div class="col-12 col-sm-6 col-md-4 col-lg-3">
         <div class="card h-100 shadow-sm">
           <div class="card-body text-center d-flex flex-column">
-            ${avatar}
-            <h3 class="card-title h6 mb-2">${child.name}</h3>
+            <div>${avatar}</div>
+            <h3 class="card-title h6 mb-2">${escapeHtml(childName)}</h3>
             <p class="card-text text-muted small flex-grow-1">Idade: ${child.age ?? '—'}</p>
             <a href="/perfil?childId=${child.id}" class="btn btn-primary btn-sm mt-auto">Ver Perfil</a>
           </div>
         </div>
       </div>`;
+}
+
+function createChildCard(child) {
+    const childName = child.name || 'Crianca';
+    const avatar = window.ZupiProfileMedia
+        ? ZupiProfileMedia.renderAvatar({
+            type: 'child',
+            id: child.id,
+            name: childName,
+            size: 92,
+            fallbackUrl: child.profilePhotoUrl || ''
+        })
+        : `<img src="${escapeAttribute(child.profilePhotoUrl || '/img/logokids1.png')}" alt="" class="img-fluid mx-auto mb-3 rounded-circle" style="max-width:92px;height:92px;object-fit:cover;">`;
+
+    return `
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+        <div class="card h-100 shadow-sm profile-card child-profile-dashboard-card">
+          <div class="card-body text-center d-flex flex-column align-items-center">
+            <div id="dashboard-child-avatar-${escapeAttribute(child.id)}" class="mb-2">${avatar}</div>
+            <h3 class="card-title h6 mb-1">${escapeHtml(childName)}</h3>
+            <p class="card-text text-muted small mb-1">Idade: ${child.age ?? '-'}</p>
+            <p class="selection-card-meta mb-2">${escapeHtml(child.schoolClass || 'Perfil infantil')}</p>
+            <label class="profile-photo-action mt-0 mb-3" onclick="event.stopPropagation();">
+              <input type="file" accept="image/*" data-profile-name="${escapeAttribute(childName)}" onchange="saveDashboardChildPhoto(event, '${escapeJsString(child.id)}')">
+              <span>Trocar foto</span>
+            </label>
+            <a href="/perfil?childId=${encodeURIComponent(child.id)}" class="btn btn-primary btn-sm mt-auto w-100">Ver Perfil</a>
+          </div>
+        </div>
+      </div>`;
+}
+
+function saveDashboardChildPhoto(event, childId) {
+    event.stopPropagation();
+    if (!window.ZupiProfileMedia) return;
+    const name = event.target.dataset.profileName || 'Crianca';
+    ZupiProfileMedia.saveFromInput(event.target, {
+        type: 'child',
+        id: childId,
+        onSaved: () => updateDashboardChildAvatar(childId, name)
+    });
+}
+
+function updateDashboardChildAvatar(childId, name) {
+    if (!window.ZupiProfileMedia) return;
+    const preview = document.getElementById(`dashboard-child-avatar-${childId}`);
+    if (!preview) return;
+    preview.innerHTML = ZupiProfileMedia.renderAvatar({ type: 'child', id: childId, name, size: 92 });
+    ZupiProfileMedia.animatePreview(preview);
+}
+
+function escapeHtml(value) {
+    const div = document.createElement('div');
+    div.textContent = value == null ? '' : String(value);
+    return div.innerHTML;
+}
+
+function escapeAttribute(value) {
+    return escapeHtml(value).replace(/'/g, '&#39;');
+}
+
+function escapeJsString(value) {
+    return String(value == null ? '' : value).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
 }

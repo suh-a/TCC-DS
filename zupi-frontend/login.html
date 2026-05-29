@@ -3,155 +3,68 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Entrar — Zupi</title>
-  
-  <!-- Bootstrap 5 CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-  
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-  
-  <!-- Custom CSS -->
+  <title>Entrar - Zupi</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/main.css" />
   <link rel="stylesheet" href="/css/auth.css" />
-  
   <link rel="icon" href="../assets/img/favicon.png" type="image/png">
 </head>
-<body class="auth-page">
-
-  <!-- FUNDO DECORATIVO -->
-  <div class="background-decor" aria-hidden="true">
-    <span class="decor-shape decor-circle" style="background-color:#7EBCE6; top:10%; left:15%; width:60px; height:60px;"></span>
-    <span class="decor-shape decor-circle" style="background-color:#F9E39A; top:40%; left:70%; width:50px; height:50px;"></span>
-    <span class="decor-shape decor-circle" style="background-color:#A8E6CF; top:70%; left:25%; width:45px; height:45px;"></span>
-    <span class="decor-shape decor-circle" style="background-color:#FFB677; top:20%; left:80%; width:55px; height:55px;"></span>
-    <span class="decor-shape decor-circle" style="background-color:#7EBCE6; top:60%; left:50%; width:35px; height:35px;"></span>
-    <span class="decor-shape decor-square" style="background-color:#F9E39A; top:15%; left:25%; width:35px; height:35px;"></span>
-    <span class="decor-shape decor-square" style="background-color:#A8E6CF; top:45%; left:15%; width:40px; height:40px;"></span>
-    <span class="decor-shape decor-square" style="background-color:#7EBCE6; top:65%; left:65%; width:50px; height:50px;"></span>
-  </div>
-
-  <!-- NAVBAR -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-white" role="navigation" aria-label="Navegação principal">
+<body class="auth-page auth-page--login">
+  <div class="auth-orbit" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+  <nav class="navbar navbar-expand-lg navbar-light auth-navbar" role="navigation" aria-label="Navega&ccedil;&atilde;o principal">
     <div class="container">
-      <a class="navbar-brand" id="brand-color-2" href="/" aria-label="Zupi - Página inicial">Zupi</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Alternar navegação">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+      <a class="navbar-brand" id="brand-color-2" href="/" aria-label="Zupi - P&aacute;gina inicial">Zupi</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Alternar navega&ccedil;&atilde;o"><span class="navbar-toggler-icon"></span></button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto align-items-center">
-          <li class="nav-item">
-            <a class="nav-link" href="/">Início</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/sobre">Sobre</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/planos">Planos</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/contatos">Contato</a>
-          </li>
-          <li class="nav-item">
-            <a class="btn btn-primary ms-2" href="/login" role="button" aria-current="page">Entrar</a>
-          </li>
+          <li class="nav-item"><a class="nav-link" href="/">In&iacute;cio</a></li>
+          <li class="nav-item"><a class="nav-link" href="/sobre">Sobre</a></li>
+          <li class="nav-item"><a class="nav-link" href="/planos">Planos</a></li>
+          <li class="nav-item"><a class="nav-link" href="/contato">Contato</a></li>
+          <li class="nav-item"><a class="btn btn-primary ms-lg-2" href="/login" aria-current="page">Entrar</a></li>
         </ul>
       </div>
     </div>
   </nav>
-
-  <!-- CONTEÚDO PRINCIPAL -->
-  <main class="d-flex align-items-center justify-content-center" style="min-height: calc(100vh - 200px);">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-12 col-md-8 col-lg-5">
-
-          <div class="auth-card login-card">
-
-            <h1 class="text-center mb-4">Entrar</h1>
-
-            <form id="signupForm" method="get" role="form" aria-label="Formulário de login">
-
-              <div class="mb-3">
-                <label for="email" class="form-label">E-mail</label>
-
-                <input
-                        type="email"
-                        class="form-control"
-                        id="email"
-                        name="email"
-                        placeholder="Digite seu e-mail"
-                        required
-                        aria-required="true"
-                >
-              </div>
-
-              <div class="mb-3">
-                <label for="senha" class="form-label">Senha</label>
-
-                <input
-                        type="password"
-                        class="form-control"
-                        id="senha"
-                        name="senha"
-                        placeholder="Digite sua senha"
-                        required
-                        aria-required="true"
-                >
-              </div>
-
-              <div class="d-flex justify-content-end mb-3">
-                <a href="/esqueci-senha" class="small">
-                  Esqueceu sua senha?
-                </a>
-              </div>
-
-              <button type="submit" class="btn btn-primary w-100 mb-2">
-                Entrar
-              </button>
-
-              <div class="google-login-container">
-                <div id="googleBtn"></div>
-              </div>
-
-              <p id="erroLogin"
-                 class="text-danger text-center mt-2"
-                 style="display: none;">
-              </p>
-
-              <p class="text-center cadastro-text">
-                Ainda não tem conta?
-                <a href="/planos">Crie uma agora</a>
-              </p>
-
-            </form>
-
+  <main class="auth-main">
+    <section class="auth-shell auth-shell--wide" aria-labelledby="loginTitle">
+      <aside class="auth-story" aria-label="Resumo da plataforma">
+        <span class="auth-kicker">Acesso Zupi</span>
+        <h1 id="loginTitle">Entre para acompanhar cada avan&ccedil;o com clareza.</h1>
+        <p>Respons&aacute;veis, escolas e docentes acessam seus pain&eacute;is com seguran&ccedil;a e encontram relat&oacute;rios, biblioteca e atividades em um s&oacute; lugar.</p>
+        <div class="auth-story-metrics">
+          <article><strong>01</strong><span>Conta protegida</span></article>
+          <article><strong>02</strong><span>Painel certo</span></article>
+          <article><strong>03</strong><span>Rotina conectada</span></article>
+        </div>
+      </aside>
+      <section class="auth-card login-card auth-card--interactive">
+        <div class="auth-card-header">
+          <span class="auth-kicker">Bem-vindo de volta</span>
+          <h2>Entrar</h2>
+          <p>Use o e-mail e a senha cadastrados para continuar.</p>
+        </div>
+        <form id="signupForm" method="get" aria-label="Formul&aacute;rio de login" novalidate>
+          <div class="auth-field mb-3"><label for="email" class="form-label">E-mail</label><input type="email" class="form-control" id="email" name="email" placeholder="voce@email.com" required aria-required="true" autocomplete="email"></div>
+          <div class="auth-field mb-3">
+            <label for="tipoConta" class="form-label">Tipo de conta</label>
+            <select class="form-select" id="tipoConta" name="tipoConta"><option value="">Detectar automaticamente</option><option value="PESSOA_FISICA">Pessoa F&iacute;sica (respons&aacute;vel)</option><option value="PESSOA_JURIDICA">Pessoa Jur&iacute;dica (escola)</option></select>
+            <small class="auth-hint">Use esta op&ccedil;&atilde;o se o mesmo e-mail tiver mais de uma conta.</small>
           </div>
-
-        </div>
-      </div>
-    </div>
+          <div class="auth-field mb-2"><label for="senha" class="form-label">Senha</label><div class="auth-password-wrap"><input type="password" class="form-control" id="senha" name="senha" placeholder="Digite sua senha" required aria-required="true" autocomplete="current-password"><button type="button" class="auth-eye-btn" data-toggle-password="senha" aria-label="Mostrar senha">Mostrar</button></div></div>
+          <div class="auth-row mb-3"><label class="auth-check"><input type="checkbox" id="rememberLogin"> <span>Lembrar acesso</span></label><a href="/esqueci-senha">Esqueceu sua senha?</a></div>
+          <button type="submit" class="btn btn-primary w-100 auth-submit" id="loginSubmit">Entrar</button>
+          <div class="auth-divider"><span>ou</span></div>
+          <div class="google-login-container"><div id="googleBtn"></div></div>
+          <p id="erroLogin" class="auth-feedback auth-feedback--error" role="alert" style="display:none;"></p>
+          <p class="text-center cadastro-text mb-0">Ainda n&atilde;o tem conta? <a href="/planos">Escolha um plano</a></p>
+        </form>
+      </section>
+    </section>
   </main>
-
-  <!-- FOOTER -->
-  <footer class="footer" role="contentinfo">
-    <div class="container">
-      <div class="row text-center">
-        <div class="col-12">
-          <p class="mb-0">© 2025 Zupi. Todos os direitos reservados.</p>
-        </div>
-      </div>
-    </div>
-  </footer>
-
-  <!-- Bootstrap 5 JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-  <script src="/js/routes.js"></script>
-  <script src="/js/api.js"></script>
-  <script src="/js/auth-guard.js"></script>
-  <!-- Script Login -->
-  <script src="/js/loginScript.js"></script>
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <footer class="footer" role="contentinfo"><div class="container"><p class="mb-0 text-center">&copy; 2025 Zupi. Todos os direitos reservados.</p></div></footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+  <script src="/js/routes.js"></script><script src="/js/api.js"></script><script src="/js/auth-guard.js"></script><script src="/js/loginScript.js"></script><script src="https://accounts.google.com/gsi/client" async defer></script>
 </body>
 </html>
-

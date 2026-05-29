@@ -29,30 +29,27 @@
     }
 
     .guide-section {
-      background: #ffffff;
+      background: white;
       border-radius: 12px;
       overflow: hidden;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      border: 1px solid rgba(0, 0, 0, 0.06);
       transition: all 0.3s ease;
     }
 
     .guide-section:hover {
       transform: translateY(-4px);
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
     }
 
     .guide-section-header {
-      background: #ffffff;
-      color: var(--zupi-primary);
+      background: linear-gradient(135deg, var(--zupi-primary), var(--zupi-secondary));
+      color: white;
       padding: 1.5rem;
       font-size: 2rem;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
     }
 
     .guide-section-body {
       padding: 1.5rem;
-      background: #ffffff;
     }
 
     .guide-section-title {
@@ -70,7 +67,7 @@
 
     .guide-list li {
       padding: 0.5rem 0;
-      color: #4a5568;
+      color: #666;
       position: relative;
       padding-left: 1.5rem;
     }
@@ -83,18 +80,18 @@
       font-weight: bold;
     }
 
-    [data-theme="dark"] .guide-section,
-    [data-theme="dark"] .guide-section-header,
-    [data-theme="dark"] .guide-section-body {
-      background: #ffffff !important;
-    }
+    @media (prefers-color-scheme: dark) {
+      .guide-section {
+        background: #1e1e1e;
+      }
 
-    [data-theme="dark"] .guide-section-title {
-      color: var(--zupi-primary);
-    }
+      .guide-section-body {
+        color: #ccc;
+      }
 
-    [data-theme="dark"] .guide-list li {
-      color: #4a5568;
+      .guide-list li {
+        color: #bbb;
+      }
     }
   </style>
 </head>
@@ -128,32 +125,7 @@
         aria-label="Navegação">
         <div class="d-flex flex-column p-4 h-100">
           <div class="navbar-brand text-white mb-4 fs-3 fw-bold">Zupi</div>
-          <ul class="nav nav-pills flex-column pf-sidebar-nav" data-pf-sidebar>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/dashboard-pais">Dashboard</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/selecao-perfil">Perfis das crianças</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/selecao-relatorios">Relatórios</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/cadastro-dependentes">Cadastro de dependentes</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/agenda">Agenda</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/ajuda">Ajuda?</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/perfil-responsavel">Perfil</a>
-              </li>
-              <li class="nav-item mt-auto">
-                <a class="nav-link text-white" href="#" data-action="logout">Sair</a>
-              </li>
-            </ul>
+          <ul class="nav nav-pills flex-column pf-sidebar-nav" data-pf-sidebar aria-busy="true"></ul>
         </div>
       </nav>
 
@@ -166,32 +138,7 @@
         </div>
         <div class="offcanvas-body p-0">
           <nav role="navigation" aria-label="Navegação do dashboard">
-            <ul class="nav nav-pills flex-column pf-sidebar-nav" data-pf-sidebar>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/dashboard-pais">Dashboard</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/selecao-perfil">Perfis das crianças</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/selecao-relatorios">Relatórios</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/cadastro-dependentes">Cadastro de dependentes</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/agenda">Agenda</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/ajuda">Ajuda?</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/perfil-responsavel">Perfil</a>
-              </li>
-              <li class="nav-item mt-auto">
-                <a class="nav-link text-white" href="#" data-action="logout">Sair</a>
-              </li>
-            </ul>
+            <ul class="nav nav-pills flex-column pf-sidebar-nav" data-pf-sidebar aria-busy="true"></ul>
           </nav>
         </div>
       </div>

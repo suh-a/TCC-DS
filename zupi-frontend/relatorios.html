@@ -25,32 +25,7 @@
       <nav class="col-lg-2 dashboard-sidebar p-0 position-fixed vh-100 d-none d-lg-block" aria-label="Navegação">
         <section class="d-flex flex-column p-4 h-100">
           <p class="navbar-brand text-white mb-4 fs-3 fw-bold">Zupi</p>
-          <ul class="nav nav-pills flex-column pf-sidebar-nav" data-pf-sidebar>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/dashboard-pais">Dashboard</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/selecao-perfil">Perfis das crianças</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white active" href="/selecao-relatorios" aria-current="page">Relatórios</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/cadastro-dependentes">Cadastro de dependentes</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/agenda">Agenda</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/ajuda">Ajuda?</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/perfil-responsavel">Perfil</a>
-              </li>
-              <li class="nav-item mt-auto">
-                <a class="nav-link text-white" href="#" data-action="logout">Sair</a>
-              </li>
-            </ul>
+          <ul class="nav nav-pills flex-column pf-sidebar-nav" data-pf-sidebar aria-busy="true"></ul>
         </section>
       </nav>
 
@@ -93,6 +68,36 @@
           <section class="col-md-4"><article class="chart-card"><canvas id="chartActivity"></canvas></article></section>
         </section>
 
+        <section class="row g-4 mb-4">
+          <section class="col-lg-5" id="gameReportSummary"></section>
+          <section class="col-lg-7">
+            <article class="zupi-report-panel h-100">
+              <header>
+                <p>Desempenho por jogo</p>
+                <strong id="gameReportAverage">0%</strong>
+              </header>
+              <div id="gameReportBars"></div>
+            </article>
+          </section>
+        </section>
+
+        <section class="row g-4 mb-4">
+          <section class="col-lg-6" id="gameCategoryDetails"></section>
+          <section class="col-lg-6" id="gameDetails"></section>
+        </section>
+
+        <section class="mb-4" id="gameLatestSessions"></section>
+
+        <section class="mb-5">
+          <article class="zupi-report-panel">
+            <header>
+              <p>Relatorio descrito</p>
+              <strong>TXT</strong>
+            </header>
+            <p class="mb-0" id="gameNarrative">Carregando leitura dos resultados...</p>
+          </article>
+        </section>
+
         <section class="d-flex flex-wrap gap-3 justify-content-center relatorio-actions mb-5">
           <button type="button" class="btn btn-outline-secondary rounded-pill px-4" id="btnDownloadPdf">Baixar relatórios em pdf</button>
           <button type="button" class="btn btn-secondary rounded-pill px-4" id="btnDescribedReport">Relatório descrito</button>
@@ -127,6 +132,8 @@
   <script src="/js/api.js"></script>
   <script src="/js/auth-guard.js"></script>
   <script src="/js/responsavel-sidebar.js"></script>
+  <script src="/js/game-score.js"></script>
+  <script src="/js/game-reports.js"></script>
   <script src="/js/main.js"></script>
   <script src="/js/relatoriosPageScript.js"></script>
 </body>

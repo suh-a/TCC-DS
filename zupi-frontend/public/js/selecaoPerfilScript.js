@@ -1,6 +1,6 @@
 /**
- * Seleção de Perfil Script — Estilo Netflix.
- * Requer: /js/api.js carregado antes deste script.
+ * Selecao de perfil.
+ * Requer: /js/api.js e /js/profile-media.js carregados antes deste script.
  */
 document.addEventListener('DOMContentLoaded', function () {
     if (!ZupiAPI.requireAuth()) return;
@@ -14,7 +14,7 @@ async function loadProfileSelection() {
     if (!container) return;
 
     if (!user.id) {
-        container.innerHTML = '<div class="col-12"><p class="text-center text-danger">Usuário não autenticado. Faça login novamente.</p></div>';
+        container.innerHTML = '<div class="col-12"><p class="text-center text-danger">Usuario nao autenticado. Faca login novamente.</p></div>';
         return;
     }
 
@@ -22,20 +22,15 @@ async function loadProfileSelection() {
         const children = await ZupiAPI.fetchMyChildren();
 
         container.innerHTML = '';
-
-        // Card do Responsável (sempre primeiro)
         container.insertAdjacentHTML('beforeend', createResponsibleCard(user));
 
-        // Cards das crianças
         if (Array.isArray(children) && children.length > 0) {
             children.forEach(child => {
                 container.insertAdjacentHTML('beforeend', createChildProfileCard(child));
             });
         }
 
-        // Card de adicionar
         container.insertAdjacentHTML('beforeend', createAddCard());
-
     } catch (error) {
         console.error('Erro ao carregar perfis:', error);
         container.innerHTML = '<div class="col-12"><p class="text-center text-danger">Erro ao carregar perfis.</p></div>';
@@ -43,37 +38,55 @@ async function loadProfileSelection() {
 }
 
 function createResponsibleCard(user) {
+    const userName = user.name || 'Responsavel';
+    const avatar = window.ZupiProfileMedia
+        ? ZupiProfileMedia.renderAvatar({ type: 'responsible', id: user.id, name: userName, size: 88 })
+        : '';
+
     return `
     <div class="col-md-4 col-lg-3">
       <div class="card h-100 profile-card profile-card--responsible" role="button"
            onclick="selectResponsibleProfile()" style="cursor:pointer;">
-        <div class="card-body text-center d-flex flex-column align-items-center justify-content-center" style="min-height:220px;">
-          <div class="profile-avatar mb-3" style="width:80px;height:80px;border-radius:50%;background:var(--zupi-primary,#6C63FF);display:flex;align-items:center;justify-content:center;">
-            <span style="font-size:2rem;color:white;">👤</span>
-          </div>
-          <h3 class="card-title h5 mb-1">${user.name || 'Responsável'}</h3>
-          <p class="card-text text-muted small">Perfil do Responsável</p>
-          <span class="badge bg-primary mt-2">Acessar</span>
+        <div class="card-body text-center d-flex flex-column align-items-center justify-content-center" style="min-height:250px;">
+          <div id="responsible-card-avatar-${escapeAttribute(user.id)}">${avatar}</div>
+          <h3 class="card-title h5 mb-1">${escapeHtml(userName)}</h3>
+          <p class="card-text text-muted small mb-2">Perfil do Responsavel</p>
+          <label class="profile-photo-action mt-1" onclick="event.stopPropagation();">
+            <input type="file" accept="image/*" data-profile-name="${escapeAttribute(userName)}" onchange="saveProfileCardPhoto(event, 'responsible', '${escapeJsString(user.id)}')">
+            <span>Trocar foto</span>
+          </label>
+          <span class="badge bg-primary mt-3">Acessar</span>
         </div>
       </div>
     </div>`;
 }
 
 function createChildProfileCard(child) {
-    const avatarContent = ZupiChildAvatar.renderHtml(child, 80, 'profile-avatar');
+    const childName = child.name || 'Crianca';
+    const avatar = window.ZupiProfileMedia
+        ? ZupiProfileMedia.renderAvatar({
+            type: 'child',
+            id: child.id,
+            name: childName,
+            size: 88,
+            fallbackUrl: child.profilePhotoUrl || ''
+        })
+        : '';
 
     return `
     <div class="col-md-4 col-lg-3">
       <div class="card h-100 profile-card profile-card--child" role="button"
-           onclick="selectChildProfile(${child.id})" style="cursor:pointer;">
-        <div class="card-body text-center d-flex flex-column align-items-center justify-content-center" style="min-height:220px;">
-          <div class="profile-avatar mb-3">
-            ${avatarContent}
-          </div>
-          <h3 class="card-title h5 mb-1">${child.name}</h3>
-          <p class="card-text text-muted small">Idade: ${child.age ?? 'N/A'} anos</p>
-          <p class="card-text text-muted small">${child.schoolClass || ''}</p>
-          <span class="badge bg-success mt-2">Jogar</span>
+           onclick="selectChildProfile('${escapeJsString(child.id)}')" style="cursor:pointer;">
+        <div class="card-body text-center d-flex flex-column align-items-center justify-content-center" style="min-height:250px;">
+          <div id="child-card-avatar-${escapeAttribute(child.id)}">${avatar}</div>
+          <h3 class="card-title h5 mb-1">${escapeHtml(childName)}</h3>
+          <p class="card-text text-muted small mb-1">Idade: ${child.age ?? 'N/A'} anos</p>
+          <p class="card-text text-muted small mb-2">${escapeHtml(child.schoolClass || '')}</p>
+          <label class="profile-photo-action mt-1" onclick="event.stopPropagation();">
+            <input type="file" accept="image/*" data-profile-name="${escapeAttribute(childName)}" onchange="saveProfileCardPhoto(event, 'child', '${escapeJsString(child.id)}')">
+            <span>Trocar foto</span>
+          </label>
+          <span class="badge bg-success mt-3">Jogar</span>
         </div>
       </div>
     </div>`;
@@ -84,11 +97,11 @@ function createAddCard() {
     <div class="col-md-4 col-lg-3">
       <div class="card h-100 profile-card profile-card--add" role="button"
            onclick="window.location.href='${(typeof ZupiRoutes !== 'undefined' && ZupiRoutes.cadastroDependentes) || '/cadastro-dependentes'}'" style="cursor:pointer;border:2px dashed #ccc;">
-        <div class="card-body text-center d-flex flex-column align-items-center justify-content-center" style="min-height:220px;">
-          <div style="width:80px;height:80px;border-radius:50%;background:#f0f0f0;display:flex;align-items:center;justify-content:center;">
+        <div class="card-body text-center d-flex flex-column align-items-center justify-content-center" style="min-height:250px;">
+          <div style="width:80px;height:80px;border-radius:24px;background:#f0f0f0;display:flex;align-items:center;justify-content:center;">
             <span style="font-size:2.5rem;color:#999;">+</span>
           </div>
-          <h3 class="card-title h6 mt-3">Adicionar Criança</h3>
+          <h3 class="card-title h6 mt-3">Adicionar Crianca</h3>
         </div>
       </div>
     </div>`;
@@ -97,7 +110,7 @@ function createAddCard() {
 function selectResponsibleProfile() {
     localStorage.setItem('activeProfile', 'RESPONSAVEL');
     localStorage.removeItem('activeChildId');
-    window.location.href = (typeof ZupiRoutes !== 'undefined' && ZupiRoutes.dashboard) || '/dashboard-pais';
+    window.location.href = '/dashboard';
 }
 
 function selectChildProfile(childId) {
@@ -109,4 +122,36 @@ function selectChildProfile(childId) {
 function selectChildForReports(childId) {
     localStorage.setItem('activeChildId', childId);
     window.location.href = `/relatorios?childId=${childId}`;
+}
+
+function saveProfileCardPhoto(event, type, id) {
+    event.stopPropagation();
+    if (!window.ZupiProfileMedia) return;
+    const name = event.target.dataset.profileName || '';
+    ZupiProfileMedia.saveFromInput(event.target, {
+        type,
+        id,
+        onSaved: () => {
+            const prefix = type === 'child' ? 'child-card-avatar' : 'responsible-card-avatar';
+            const preview = document.getElementById(`${prefix}-${id}`);
+            if (preview) {
+                preview.innerHTML = ZupiProfileMedia.renderAvatar({ type, id, name, size: 88 });
+                ZupiProfileMedia.animatePreview(preview);
+            }
+        }
+    });
+}
+
+function escapeHtml(value) {
+    const div = document.createElement('div');
+    div.textContent = value == null ? '' : String(value);
+    return div.innerHTML;
+}
+
+function escapeAttribute(value) {
+    return escapeHtml(value).replace(/'/g, '&#39;');
+}
+
+function escapeJsString(value) {
+    return String(value == null ? '' : value).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
 }
