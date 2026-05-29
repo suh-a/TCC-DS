@@ -1,4 +1,25 @@
 const ContentPages = {
+  atividades: [
+    {
+      titulo: 'Atenção, Emoções e Organização',
+      descricao: 'Atividade adaptada para reconhecimento de emoções, atenção e rotina.',
+      objetivo: 'Estimular autopercepção, foco e organização.',
+      arquivo: '/atividades/atividade_educativa_neurodivergente.pdf'
+    },
+    {
+      titulo: 'Explorando Emoções',
+      descricao: 'Atividade para ajudar a criança a identificar e expressar sentimentos.',
+      objetivo: 'Desenvolver educação emocional.',
+      arquivo: '/atividades/atividade_neurodivergente_emocoes.pdf'
+    },
+    {
+      titulo: 'Treinando Atenção e Organização',
+      descricao: 'Atividade com desafios simples de foco, memória e planejamento.',
+      objetivo: 'Estimular atenção, memória e funções executivas.',
+      arquivo: '/atividades/atividade_neurodivergente_atencao.pdf'
+    }
+  ],
+
   childId() {
     return localStorage.getItem('activeChildId') || localStorage.getItem('selectedChildId') || '1';
   },
@@ -6,12 +27,23 @@ const ContentPages = {
   async loadAtividades() {
     const el = document.getElementById('atividadesList');
     if (!el) return;
-    const items = (await ZupiAPI.fetchJson(`/content/atividades/${this.childId()}`)) || [];
-    el.innerHTML = items.map((a) => `
-      <section class="col-md-4 col-lg-3">
-        <article class="child-book-card">
-          <span class="child-book-download">⬇</span>
-          <p class="mb-0 fw-semibold">${a.title}</p>
+    el.innerHTML = this.atividades.map((atividade) => `
+      <section class="col-12 col-md-6 col-xl-4">
+        <article class="activity-card h-100">
+          <span class="activity-card__badge" aria-hidden="true">PDF</span>
+          <h2 class="activity-card__title">${atividade.titulo}</h2>
+          <p class="activity-card__description">${atividade.descricao}</p>
+          <p class="activity-card__objective">
+            <strong>Objetivo pedagógico:</strong> ${atividade.objetivo}
+          </p>
+          <section class="activity-card__actions" aria-label="Ações para ${atividade.titulo}">
+            <a class="btn btn-primary" href="${atividade.arquivo}" download>
+              Baixar PDF
+            </a>
+            <a class="btn btn-outline-primary" href="${atividade.arquivo}" target="_blank" rel="noopener">
+              Visualizar
+            </a>
+          </section>
         </article>
       </section>`).join('');
   },

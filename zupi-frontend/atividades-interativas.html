@@ -53,9 +53,8 @@
       </nav>
       <main class="col-12 col-lg-10 ms-lg-auto dashboard-main-content px-3 px-lg-4 py-4">
         <h1 class="text-zupi-primary mb-2">Atividades</h1>
-        <p class="text-muted mb-4">Atividades educativas personalizadas com base no seu perfil.</p>
-        <section id="atividadesList" class="row g-4 child-books-grid"></section>
-        <button id="btnPdf" class="btn btn-outline-primary mt-4" type="button">Baixar atividades em PDF</button>
+        <p class="text-muted mb-4">Atividades educativas adaptadas para apoiar emoções, atenção e organização.</p>
+        <section id="atividadesList" class="row g-4 child-books-grid" aria-label="Lista de atividades educativas"></section>
       </main>
     </section>
   </section>
@@ -72,7 +71,6 @@
       ChildNav.init({ active: 'atividades' });
       if (typeof ContentPages !== 'undefined') {
         await ContentPages.loadAtividades();
-        document.getElementById('btnPdf')?.addEventListener('click', () => ContentPages.downloadPdf('atividades'));
       }
     });
   </script>
