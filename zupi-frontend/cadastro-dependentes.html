@@ -161,7 +161,7 @@
                     maxlength="14"
                     autocomplete="off"
                   >
-                  <small class="text-muted">Campo opcional</small>
+                  <small class="text-muted">Campo obrigatório</small>
                 </div>
 
                 <!-- Data de Nascimento -->
@@ -175,8 +175,23 @@
                       name="dataNascimento"
                       required
                     >
-                    <span class="input-group-text">📅</span>
+
                   </div>
+                  <small class="text-muted">Campo obrigatório</small>
+                </div>
+
+                <!--Campo de condição -->
+                <div class="mb-4">
+                  <label for="condicao" class="form-label fw-bold">Condição</label>
+                  <input
+                          type="text"
+                          class="form-control form-control-lg"
+                          id="condicao"
+                          name="condicao"
+                          placeholder="Digite a condição da criança (ex: Autismo)"
+                          required
+                          autocomplete="off"
+                  >
                   <small class="text-muted">Campo obrigatório</small>
                 </div>
 
@@ -193,7 +208,7 @@
                     >
                     <span class="input-group-text">📄</span>
                   </div>
-                  <small class="text-muted">Campo opcional. Formatos aceitos: PDF, DOC, DOCX, JPG, PNG (Max: 10MB)</small>
+                  <small class="text-muted">Campo obrigatório. Formatos aceitos: PDF, DOC, DOCX, JPG, PNG (Max: 10MB)</small>
                 </div>
 
                 <!-- Botão Cadastrar -->
