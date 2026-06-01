@@ -3,140 +3,133 @@
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Cores e Formas - Zupi</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/zupi-jogos.css">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
   <style>
-    .falvo{width:130px;height:130px;margin:.8rem auto;animation:emojiBounce 2s ease-in-out infinite alternate;filter:drop-shadow(0 6px 14px rgba(126,200,230,.3));}
-    .fmode{font-family:'Poppins',sans-serif;font-weight:700;font-size:1.05rem;margin:.4rem 0;background:linear-gradient(135deg,#7EC8E6,#A8D5BA);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    :root{--blue:#7EC8E6;--green:#A8D5BA;--yellow:#FFE66D;--orange:#FFB980;--bg:#F5F7FA;--text:#2D3748;--white:#FFFFFF;}
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);}
+    .bg-s{position:absolute;border-radius:50%;opacity:.11;animation:bgF var(--d,14s) ease-in-out infinite alternate;}
+    @keyframes bgF{0%{transform:translateY(0) rotate(0) scale(1)}100%{transform:translateY(-24px) rotate(18deg) scale(1.07);opacity:.18}}
+    .zj-nav{position:fixed;top:0;left:0;right:0;height:58px;z-index:300;display:flex;align-items:center;justify-content:space-between;padding:0 1.2rem;background:rgba(245,247,250,.92);backdrop-filter:blur(14px);border-bottom:1.5px solid rgba(126,200,230,.18);box-shadow:0 2px 14px rgba(126,200,230,.10);}
+    .zj-logo{font-size:1.25rem;font-weight:900;color:var(--blue);text-decoration:none;}
+    .zj-logo b{color:var(--orange);}
+    .zj-hud{display:flex;gap:.45rem;flex-wrap:wrap;}
+    .zj-pill{padding:.25rem .7rem;border-radius:50px;background:rgba(255,255,255,.85);border:1.5px solid rgba(126,200,230,.25);font-size:.8rem;font-weight:800;}
+    .zj-overlay{position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;background:rgba(45,55,72,.45);backdrop-filter:blur(12px);padding:1rem;}
+    .zj-modal{background:var(--white);border-radius:28px;padding:2.2rem 2rem;max-width:360px;width:100%;text-align:center;border:2px solid rgba(126,200,230,.18);box-shadow:0 20px 60px rgba(45,55,72,.18);animation:mIn .38s cubic-bezier(.34,1.56,.64,1);}
+    @keyframes mIn{from{transform:scale(.85) translateY(16px);opacity:0}to{transform:scale(1);opacity:1}}
+    .modal-icon{width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--green));margin:0 auto 1rem;display:flex;align-items:center;justify-content:center;}
+    .modal-icon svg{width:34px;height:34px;fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
+    .modal-icon.yi{background:linear-gradient(135deg,var(--yellow),var(--orange));}
+    .modal-icon.oi{background:linear-gradient(135deg,var(--orange),var(--yellow));}
+    .modal-icon.gi{background:linear-gradient(135deg,var(--green),var(--blue));}
+    .modal-title{font-size:1.5rem;font-weight:900;margin-bottom:.45rem;}
+    .modal-sub{font-size:.88rem;color:#7A90A4;line-height:1.55;margin-bottom:1.3rem;}
+    .zj-btn{display:block;width:100%;padding:.75rem;border-radius:50px;font-family:'Nunito',sans-serif;font-size:1rem;font-weight:800;cursor:pointer;border:none;text-decoration:none;text-align:center;transition:all .22s;margin-top:.5rem;}
+    .zj-btn-p{background:linear-gradient(135deg,var(--blue),var(--green));color:#fff;box-shadow:0 6px 20px rgba(126,200,230,.35);}
+    .zj-btn-p:hover{transform:scale(1.03) translateY(-2px);}
+    .zj-btn-y{background:linear-gradient(135deg,var(--yellow),var(--orange));color:var(--text);box-shadow:0 6px 20px rgba(255,230,109,.3);}
+    .zj-btn-y:hover{transform:scale(1.03) translateY(-2px);}
+    .zj-btn-g{background:transparent;color:#7A90A4;border:2px solid rgba(126,200,230,.28);}
+    .zj-btn-g:hover{border-color:var(--blue);color:var(--blue);}
+    .zj-main{position:relative;z-index:1;display:flex;align-items:flex-start;justify-content:center;padding:74px 1rem 2rem;min-height:100vh;}
+    .zj-card{background:var(--white);border-radius:24px;padding:1.5rem 1.4rem;width:100%;max-width:480px;border:2px solid rgba(126,200,230,.14);box-shadow:0 8px 32px rgba(126,200,230,.11);}
+    .zj-prog{height:6px;border-radius:6px;background:rgba(126,200,230,.15);overflow:hidden;margin-bottom:1rem;}
+    .zj-prog-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--green));border-radius:6px;transition:width .4s ease;}
+    .zj-opts{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin:.8rem 0;}
+    .zj-opt{padding:.9rem .5rem;border:2.5px solid rgba(126,200,230,.22);border-radius:16px;background:rgba(255,255,255,.85);color:var(--text);font-family:'Nunito',sans-serif;font-size:1.35rem;font-weight:800;cursor:pointer;transition:all .22s cubic-bezier(.34,1.56,.64,1);}
+    .zj-opt:hover{transform:scale(1.06) translateY(-3px);border-color:var(--blue);box-shadow:0 6px 18px rgba(126,200,230,.25);}
+    .zj-opt.ok{background:linear-gradient(135deg,rgba(168,213,186,.25),rgba(126,200,230,.25));border-color:var(--green);animation:optPop .4s;}
+    .zj-opt.no{background:rgba(255,185,128,.2);border-color:var(--orange);animation:optShake .38s;}
+    @keyframes optPop{0%{transform:scale(1)}50%{transform:scale(1.10)}100%{transform:scale(1)}}
+    @keyframes optShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+    .zj-timebar{position:fixed;bottom:0;left:0;right:0;height:5px;z-index:300;background:rgba(126,200,230,.15);}
+    .zj-timebar-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--green));transition:width .9s linear;}
+    .zj-streak{font-size:.82rem;font-weight:700;color:var(--orange);min-height:1.3rem;text-align:center;}
+    @keyframes floatUp{0%{transform:translate(-50%,0);opacity:1}100%{transform:translate(-50%,-52px);opacity:0}}
+    @keyframes confeteQ{0%{transform:translateY(-10vh) rotate(0);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:.1}}
+    @keyframes gotaV{0%{transform:translate(0,0);opacity:.9}100%{transform:translate(var(--gx),var(--gy)) scale(0);opacity:0}}
+    @keyframes zjPop{0%{transform:scale(1)}50%{transform:scale(1.13)}100%{transform:scale(1)}}
+    @keyframes zjShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-9px)}75%{transform:translateX(9px)}}
+
+    .falvo{width:120px;height:120px;margin:.8rem auto;animation:zupiFloat 2s ease-in-out infinite alternate;filter:drop-shadow(0 6px 14px rgba(126,200,230,.3));}
+    @keyframes zupiFloat{0%{transform:translateY(0)}100%{transform:translateY(-10px)}}
+    .fmode{font-weight:800;font-size:1rem;margin:.4rem 0;background:linear-gradient(135deg,var(--blue),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
     .fopts{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;margin:.7rem 0;}
-    .fopt{padding:.9rem .5rem;border:2.5px solid rgba(126,200,230,.22);border-radius:16px;background:rgba(255,255,255,.85);cursor:pointer;transition:all .25s cubic-bezier(.34,1.56,.64,1);font-family:'Poppins',sans-serif;font-size:.9rem;font-weight:700;color:#2D3748;display:flex;flex-direction:column;align-items:center;gap:.35rem;}
-    .fopt svg{width:44px;height:44px;}
-    .fopt:hover{transform:scale(1.07) translateY(-3px);border-color:#7EC8E6;box-shadow:0 6px 16px rgba(126,200,230,.28);}
-    .fopt.ok{background:linear-gradient(135deg,rgba(168,213,186,.2),rgba(126,200,230,.2));border-color:#A8D5BA;animation:zjPop .4s cubic-bezier(.34,1.56,.64,1);}
-    .fopt.no{background:rgba(249,198,208,.15);border-color:#F9C6D0;animation:zjShake .35s;}
-    .fmsg{font-size:.85rem;color:#9CA3AF;font-family:'Poppins',sans-serif;min-height:1.3rem;}
-  </style>
+    .fopt{padding:.9rem .5rem;border:2.5px solid rgba(126,200,230,.22);border-radius:16px;background:rgba(255,255,255,.85);cursor:pointer;transition:all .25s cubic-bezier(.34,1.56,.64,1);font-family:'Nunito',sans-serif;font-size:.88rem;font-weight:800;color:var(--text);display:flex;flex-direction:column;align-items:center;gap:.35rem;}
+    .fopt svg{width:40px;height:40px;}
+    .fopt:hover{transform:scale(1.07) translateY(-3px);border-color:var(--blue);box-shadow:0 6px 16px rgba(126,200,230,.25);}
+    .fopt.ok{background:linear-gradient(135deg,rgba(168,213,186,.2),rgba(126,200,230,.2));border-color:var(--green);animation:zjPop .4s;}
+    .fopt.no{background:rgba(255,185,128,.15);border-color:var(--orange);animation:zjShake .35s;}
+    .fmsg{font-size:.82rem;color:var(--text);min-height:1.3rem;text-align:center;}
+</style>
 </head>
-<body class="zj-body">
-<div id="zj-sky" class="zj-sky"></div>
-<nav class="zj-nav">
-  <a href="/menuJogos" class="zj-brand">&#x1F43E; Zupi</a>
-  <div class="zj-stats">
-    <div class="zj-pill">&#x2B50; <span id="p">0</span></div>
-    <div class="zj-pill">&#x1F522; <span id="q">1/15</span></div>
-    <div class="zj-pill">&#x1F525; <span id="st">0</span></div>
+<body>
+  <div id="zj-bg" style="position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;">
+    <div style="position:absolute;inset:0;background-image:radial-gradient(circle,rgba(126,200,230,.15) 1.5px,transparent 1.5px);background-size:34px 34px;"></div>
+    <div class="bg-s" style="width:300px;height:300px;background:#7EC8E6;top:-80px;left:-80px;--d:13s;"></div>
+    <div class="bg-s" style="width:190px;height:190px;background:#FFE66D;top:10%;right:-55px;--d:17s;border-radius:40% 60%;"></div>
+    <div class="bg-s" style="width:240px;height:240px;background:#A8D5BA;bottom:15%;left:-65px;--d:11s;"></div>
+    <div class="bg-s" style="width:160px;height:160px;background:#FFB980;bottom:-35px;right:8%;--d:15s;border-radius:60% 40%;"></div>
   </div>
-</nav>
-<div class="zj-main">
-  <div class="zj-card" id="jcard" style="display:none">
-    <div class="zj-prog"><div class="zj-prog-fill" id="pf" style="width:0%"></div></div>
-    <div class="fmode" id="fmode">Que cor e essa?</div>
-    <div id="falvo" class="falvo"></div>
-    <div class="fopts" id="fopts"></div>
-    <div class="fmsg" id="fmsg"></div>
+  <nav class="zj-nav">
+    <a href="/menuJogos" class="zj-logo">Zupi<b>.</b></a>
+    <div class="zj-hud"><div class="zj-pill" id="p">0 pts</div><div class="zj-pill">Fase <span id="q">1/15</span></div><div class="zj-pill">Serie <span id="st">0</span></div></div>
+  </nav>
+  <div class="zj-main">
+    <div class="zj-card" id="jcard" style="display:none;text-align:center">
+      <div class="zj-prog"><div class="zj-prog-fill" id="pf" style="width:0%"></div></div>
+      <div class="fmode" id="fmode">Que cor e essa?</div>
+      <div id="falvo" class="falvo"></div>
+      <div class="fopts" id="fopts"></div>
+      <div class="fmsg" id="fmsg"></div>
+    </div>
   </div>
-</div>
-<div class="zj-overlay" id="oi">
-  <div class="zj-modal">
-    <span class="zj-modal-emoji">&#x1F534;</span>
-    <div class="zj-modal-title">Cores e Formas!</div>
-    <div class="zj-modal-sub">Identifique cores, formas e tamanhos! Aprenda brincando!</div>
-    <button class="zj-btn zj-btn-main" onclick="iniciar()">&#x1F680; Jogar!</button><br>
-    <a href="/menuJogos" class="zj-btn zj-btn-ghost" style="margin-top:.5rem">&#x2B05; Menu</a>
+  <div class="zj-overlay" id="oi">
+    <div class="zj-modal">
+      <div class="modal-icon gi"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M2 12h3M19 12h3M12 2v3M12 19v3"/></svg></div>
+      <div class="modal-title">Cores e Formas!</div>
+      <div class="modal-sub">Identifique cores, formas e tamanhos! Aprenda brincando!</div>
+      <button class="zj-btn zj-btn-p" onclick="iniciar()">Jogar!</button>
+      <a href="/menuJogos" class="zj-btn zj-btn-g">Menu</a>
+    </div>
+  </div>  <div class="zj-overlay" id="of" style="display:none">
+    <div class="zj-modal">
+      <div class="modal-icon yi"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="#fff" stroke-width="2" stroke-linejoin="round"/></svg></div>
+      <div class="modal-title" id="ft">Fim!</div>
+      <div class="modal-sub" id="fs"></div>
+      <button class="zj-btn zj-btn-p" onclick="reiniciar()">Jogar novamente</button>
+      
+      <a href="/menuJogos" class="zj-btn zj-btn-g">Menu</a>
+    </div>
   </div>
-</div>
-<div class="zj-overlay" id="of" style="display:none">
-  <div class="zj-modal">
-    <span class="zj-modal-emoji" id="fe">&#x1F3C6;</span>
-    <div class="zj-modal-title" id="ft">Fim!</div>
-    <div class="zj-modal-sub" id="fs"></div>
-    <button class="zj-btn zj-btn-main" onclick="reiniciar()">&#x1F504; Jogar novamente</button><br>
-    <a href="/menuJogos" class="zj-btn zj-btn-ghost" style="margin-top:.5rem">&#x2B05; Menu</a>
-  </div>
-</div>
-<script src="/js/zupi-sky.js"></script>
-<script th:inline="none">
-zupiSky();
-var CORES=[{n:'Vermelho',h:'#FF6B6B'},{n:'Azul',h:'#7EC8E6'},{n:'Verde',h:'#A8D5BA'},{n:'Amarelo',h:'#FFE66D'},{n:'Roxo',h:'#C8B8F0'},{n:'Laranja',h:'#FFB980'},{n:'Rosa',h:'#F9C6D0'}];
-var FORMAS=['circulo','quadrado','triangulo','estrela','diamante'];
-var TAMS=[{n:'Grande',v:1},{n:'Medio',v:.72},{n:'Pequeno',v:.48}];
-var MODOS=['cor','forma','tamanho'];
-var pts=0,streak=0,q=0,total=15,resp=false;
-function shuffle(a){return a.sort(function(){return Math.random()-.5;});}
-function svgForma(forma,cor,scale){
-  scale=scale||1;var s=scale;
-  if(forma==='circulo') return '<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="'+(36*s)+'" fill="'+cor+'"/></svg>';
-  if(forma==='quadrado') return '<svg viewBox="0 0 100 100"><rect x="'+(50-32*s)+'" y="'+(50-32*s)+'" width="'+(64*s)+'" height="'+(64*s)+'" fill="'+cor+'" rx="6"/></svg>';
-  if(forma==='triangulo') return '<svg viewBox="0 0 100 100"><polygon points="50,'+(10+8*(1-s))+' '+(10+8*(1-s))+','+(90-8*(1-s))+' '+(90-8*(1-s))+','+(90-8*(1-s))+'" fill="'+cor+'"/></svg>';
-  if(forma==='estrela') return '<svg viewBox="0 0 100 100"><polygon points="50,'+(18-4*(1-s))+' '+(62*s+19*(1-s))+','+(38-4*(1-s))+' 85,'+(40-4*(1-s))+' '+(68*s+16*(1-s))+','+(58-4*(1-s))+' '+(74*s+13*(1-s))+',82 50,'+(70-4*(1-s))+' '+(26*s+37*(1-s))+',82 '+(32*s+35*(1-s))+','+(58-4*(1-s))+' 15,'+(40-4*(1-s))+' '+(38*s+29*(1-s))+','+(38-4*(1-s))+'" fill="'+cor+'"/></svg>';
-  return '<svg viewBox="0 0 100 100"><polygon points="50,'+(15-4*(1-s))+' '+(80+4*(1-s))+',50 50,'+(85+4*(1-s))+' '+(20-4*(1-s))+',50" fill="'+cor+'"/></svg>';
-}
-function iniciar(){document.getElementById('oi').style.display='none';document.getElementById('jcard').style.display='';pts=0;streak=0;q=0;gerarQ();}
-function gerarQ(){
-  resp=false;document.getElementById('fmsg').textContent='';
-  var modo=MODOS[Math.floor(Math.random()*MODOS.length)];
-  var cor=CORES[Math.floor(Math.random()*CORES.length)];
-  var forma=FORMAS[Math.floor(Math.random()*FORMAS.length)];
-  var tam=TAMS[Math.floor(Math.random()*TAMS.length)];
-  var alvoEl=document.getElementById('falvo');
-  alvoEl.innerHTML=svgForma(forma,cor.h,tam.v);
-  var opts=[],correta='';
-  if(modo==='cor'){
-    document.getElementById('fmode').textContent='Que COR e essa?';
-    var erradas=shuffle(CORES.filter(function(c){return c.n!==cor.n;})).slice(0,3);
-    opts=shuffle([cor].concat(erradas)).map(function(c){return {label:c.n,certa:c.n===cor.n,svg:'<div style="width:32px;height:32px;border-radius:50%;background:'+c.h+';border:2px solid rgba(0,0,0,.08)"></div>'};});
-    correta=cor.n;
-  } else if(modo==='forma'){
-    document.getElementById('fmode').textContent='Que FORMA e essa?';
-    var erradas=shuffle(FORMAS.filter(function(f){return f!==forma;})).slice(0,3);
-    opts=shuffle([forma].concat(erradas)).map(function(f){return {label:f,certa:f===forma,svg:svgForma(f,'#7EC8E6',.7)};});
-    correta=forma;
-  } else {
-    document.getElementById('fmode').textContent='Que TAMANHO e esse?';
-    opts=shuffle(TAMS).map(function(t){return {label:t.n,certa:t.n===tam.n,svg:svgForma(forma,cor.h,t.v)};});
-    correta=tam.n;
-  }
-  var fopts=document.getElementById('fopts');fopts.innerHTML='';
-  opts.forEach(function(o){
-    var b=document.createElement('button');b.className='fopt';
-    b.innerHTML='<div>'+o.svg+'</div><span>'+o.label+'</span>';
-    b.onclick=function(){responder(b,o.certa);};
-    fopts.appendChild(b);
-  });
-  q++;document.getElementById('q').textContent=q+'/'+total;
-  document.getElementById('pf').style.width=((q-1)/total*100)+'%';
-}
-function responder(btn,certa){
-  if(resp) return; resp=true;
-  if(certa){
-    btn.classList.add('ok');zupiRight();streak++;
-    var bonus=Math.floor(streak/3)*5;pts+=10+bonus;
-    document.getElementById('p').textContent=pts;document.getElementById('st').textContent=streak;
-    document.getElementById('fmsg').textContent=streak>=3?'Sequencia de '+streak+'! +'+bonus+' bonus!':'';
-    zupiConfete(15);
-    if(q>=total) setTimeout(fimDeJogo,800);
-    else setTimeout(gerarQ,950);
-  } else {
-    btn.classList.add('no');zupiWrong();streak=0;document.getElementById('st').textContent=0;
-    document.getElementById('fmsg').textContent='Ops! Tente outra opcao!';
-    setTimeout(function(){btn.classList.remove('no');resp=false;},750);
-  }
-}
-function fimDeJogo(){
-  document.getElementById('fe').innerHTML=pts>=120?'&#x1F3C6;':pts>=70?'&#x2B50;':'&#x1F534;';
-  document.getElementById('ft').textContent=pts>=120?'Especialista em Formas!':pts>=70?'Muito bom!':'Continue praticando!';
-  document.getElementById('fs').textContent='Pontuacao: '+pts+' pontos!';
-  document.getElementById('of').style.display='flex';zupiConfete(30);
-}
-function reiniciar(){document.getElementById('of').style.display='none';pts=0;streak=0;q=0;gerarQ();}
+  <script>
+    var _ac;function _gac(){if(!_ac)_ac=new(window.AudioContext||window.webkitAudioContext)();return _ac;}
+    function zupiTone(f,tp,v,dur){try{var c=_gac(),tm=c.currentTime;var o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=f||440;o.type=tp||'sine';g.gain.setValueAtTime(v||.15,tm);g.gain.exponentialRampToValueAtTime(.001,tm+(dur||.18));o.start(tm);o.stop(tm+(dur||.18));}catch(e){}}
+    function zupiRight(){try{var c=_gac(),t=c.currentTime;[523,659,784].forEach(function(f,i){var o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=f;o.type='sine';g.gain.setValueAtTime(.14,t+i*.1);g.gain.exponentialRampToValueAtTime(.001,t+i*.1+.15);o.start(t+i*.1);o.stop(t+i*.1+.15);});}catch(e){}}
+    function zupiWrong(){try{var c=_gac(),t=c.currentTime;var o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=200;o.type='sawtooth';g.gain.setValueAtTime(.14,t);g.gain.exponentialRampToValueAtTime(.001,t+.32);o.start(t);o.stop(t+.32);}catch(e){}}
+    function zupiLevelUp(){try{var c=_gac(),t=c.currentTime;[523,659,784,1046].forEach(function(f,i){var o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=f;o.type='sine';g.gain.setValueAtTime(.16,t+i*.12);g.gain.exponentialRampToValueAtTime(.001,t+i*.12+.18);o.start(t+i*.12);o.stop(t+i*.12+.18);});}catch(e){}}
+    function zupiFloat(x,y,txt,cor){var el=document.createElement('div');el.style.cssText='position:fixed;left:'+x+'px;top:'+y+'px;color:'+(cor||'#7EC8E6')+';font-family:Nunito,sans-serif;font-weight:900;font-size:1.1rem;pointer-events:none;z-index:900;animation:floatUp .9s ease-out forwards;transform:translateX(-50%);white-space:nowrap;';el.textContent=txt;document.body.appendChild(el);setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);},950);}
+    function zupiConfete(q){var c=['#7EC8E6','#A8D5BA','#FFE66D','#FFB980'];for(var i=0;i<(q||30);i++){(function(){var el=document.createElement('div');var dur=(1.4+Math.random()*1.8).toFixed(2);var del=(Math.random()*.8).toFixed(2);el.style.cssText='position:fixed;left:'+Math.random()*100+'vw;top:-20px;width:'+(7+Math.random()*10)+'px;height:'+(7+Math.random()*10)+'px;background:'+c[Math.floor(Math.random()*c.length)]+';border-radius:'+(Math.random()>.5?'50%':'3px')+';pointer-events:none;z-index:800;animation:confeteQ '+dur+'s ease-in '+del+'s forwards;';document.body.appendChild(el);setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);},(parseFloat(dur)+parseFloat(del))*1000+200);})();}}
+    function zupiGota(cx,cy,cor,qtd){for(var i=0;i<(qtd||8);i++){(function(idx){var g=document.createElement('div');var ang=(idx/(qtd||8))*Math.PI*2,d=28+Math.random()*40;g.style.cssText='position:fixed;left:'+cx+'px;top:'+cy+'px;width:'+(5+Math.random()*6)+'px;height:'+(5+Math.random()*6)+'px;background:'+(cor||'#7EC8E6')+';border-radius:50%;pointer-events:none;z-index:700;margin:-3px 0 0 -3px;animation:gotaV .65s ease-out forwards;--gx:'+Math.cos(ang)*d+'px;--gy:'+Math.sin(ang)*d+'px;';document.body.appendChild(g);setTimeout(function(){if(g.parentNode)g.parentNode.removeChild(g);},700);})(i);}}
+
+    var CORES=[{n:'Vermelho',h:'#FFB980'},{n:'Azul',h:'#7EC8E6'},{n:'Verde',h:'#A8D5BA'},{n:'Amarelo',h:'#FFE66D'},{n:'Laranja',h:'#FFB980'}];
+    var FORMAS=['circulo','quadrado','triangulo','estrela','diamante'];
+    var TAMS=[{n:'Grande',v:1},{n:'Medio',v:.72},{n:'Pequeno',v:.48}];
+    var MODOS=['cor','forma','tamanho'];
+    var pts=0,streak=0,q=0,total=15,resp=false;
+    function shuffle(a){return a.sort(function(){return Math.random()-.5;});}
+    function svgF(forma,cor,scale){var s=scale||1;if(forma==='circulo')return'<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="'+(36*s)+'" fill="'+cor+'"/></svg>';if(forma==='quadrado')return'<svg viewBox="0 0 100 100"><rect x="'+(50-32*s)+'" y="'+(50-32*s)+'" width="'+(64*s)+'" height="'+(64*s)+'" fill="'+cor+'" rx="6"/></svg>';if(forma==='triangulo')return'<svg viewBox="0 0 100 100"><polygon points="50,'+(10+8*(1-s))+' '+(10+8*(1-s))+','+(90-8*(1-s))+' '+(90-8*(1-s))+','+(90-8*(1-s))+'" fill="'+cor+'"/></svg>';if(forma==='estrela')return'<svg viewBox="0 0 100 100"><polygon points="50,15 61,38 85,40 67,58 72,82 50,70 28,82 33,58 15,40 39,38" fill="'+cor+'"/></svg>';return'<svg viewBox="0 0 100 100"><polygon points="50,'+(15)+' '+(80)+',50 50,'+(85)+' '+(20)+',50" fill="'+cor+'"/></svg>';}
+    function iniciar(){document.getElementById('oi').style.display='none';document.getElementById('jcard').style.display='';pts=0;streak=0;q=0;gerarQ();}
+    function gerarQ(){resp=false;document.getElementById('fmsg').textContent='';var modo=MODOS[Math.floor(Math.random()*MODOS.length)];var cor=CORES[Math.floor(Math.random()*CORES.length)];var forma=FORMAS[Math.floor(Math.random()*FORMAS.length)];var tam=TAMS[Math.floor(Math.random()*TAMS.length)];document.getElementById('falvo').innerHTML=svgF(forma,cor.h,tam.v);var opts=[],correta='';
+    if(modo==='cor'){document.getElementById('fmode').textContent='Que COR e essa?';var erradas=shuffle(CORES.filter(function(c){return c.n!==cor.n;})).slice(0,3);opts=shuffle([cor].concat(erradas)).map(function(c){return{label:c.n,certa:c.n===cor.n,svg:'<div style="width:32px;height:32px;border-radius:50%;background:'+c.h+';border:2px solid rgba(0,0,0,.08)"></div>'};});}
+    else if(modo==='forma'){document.getElementById('fmode').textContent='Que FORMA e essa?';var erradas=shuffle(FORMAS.filter(function(f){return f!==forma;})).slice(0,3);opts=shuffle([forma].concat(erradas)).map(function(f){return{label:f,certa:f===forma,svg:svgF(f,'#7EC8E6',.7)};});}
+    else{document.getElementById('fmode').textContent='Que TAMANHO e esse?';opts=shuffle(TAMS).map(function(t){return{label:t.n,certa:t.n===tam.n,svg:svgF(forma,cor.h,t.v)};});}
+    var fopts=document.getElementById('fopts');fopts.innerHTML='';opts.forEach(function(o){var b=document.createElement('button');b.className='fopt';b.innerHTML='<div>'+o.svg+'</div><span>'+o.label+'</span>';b.onclick=function(){responder(b,o.certa);};fopts.appendChild(b);});q++;document.getElementById('q').textContent=q+'/'+total;document.getElementById('pf').style.width=((q-1)/total*100)+'%';}
+    function responder(btn,certa){if(resp) return;resp=true;if(certa){btn.classList.add('ok');zupiRight();streak++;var bonus=Math.floor(streak/3)*5;pts+=10+bonus;document.getElementById('p').textContent=pts+' pts';document.getElementById('st').textContent=streak;document.getElementById('fmsg').textContent=streak>=3?'Serie de '+streak+'! +'+bonus+' bonus!':'';zupiConfete(12);if(q>=total)setTimeout(fimDeJogo,800);else setTimeout(gerarQ,950);}else{btn.classList.add('no');zupiWrong();streak=0;document.getElementById('st').textContent=0;document.getElementById('fmsg').textContent='Ops! Tente outra opcao!';setTimeout(function(){btn.classList.remove('no');resp=false;},750);}}
+    function fimDeJogo(){document.getElementById('ft').textContent=pts>=120?'Especialista em Formas!':pts>=70?'Muito bom!':'Continue praticando!';document.getElementById('fs').textContent='Pontuacao: '+pts+' pontos!';document.getElementById('of').style.display='flex';zupiConfete(30);}
+    function reiniciar(){document.getElementById('of').style.display='none';pts=0;streak=0;q=0;gerarQ();}
 </script>
-  <script src="/js/routes.js"></script>
-  <script src="/js/api.js"></script>
-  <script src="/js/auth-guard.js"></script>
-
-  <script src="/js/game-guard.js"></script>
-
-  <script src="/js/game-score.js"></script>
+  <script src="/js/routes.js"></script><script src="/js/api.js"></script><script src="/js/auth-guard.js"></script><script src="/js/game-guard.js"></script><script src="/js/game-score.js"></script>
 </body>
 </html>
-

@@ -3,34 +3,26 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Início — Zupi</title>
-  
-  <!-- Bootstrap 5 CSS -->
+  <title>Início - Zupi</title>
+
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-  
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-  
-  <!-- Custom CSS -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="/css/main.css" />
-  <link rel="stylesheet" href="/css/index.css"/>
-  
-  <link rel="icon" href="../assets/img/favicon.png" type="image/png">
+  <link rel="stylesheet" href="/css/index.css" />
+
+  <link rel="icon" href="/img/logokids1.png" type="image/png">
 </head>
 <body>
-
-  <!-- FUNDO DECORATIVO GLOBAL -->
-  <div class="background-decor" aria-hidden="true">
-    <span class="decor-shape decor-circle" style="width: 180px; height: 180px; top: 10%; left: 5%; background: var(--zupi-accent);"></span>
-    <span class="decor-shape decor-circle" style="width: 240px; height: 240px; bottom: 8%; right: 10%; background: var(--zupi-highlight);"></span>
-    <span class="decor-shape decor-circle" style="width: 120px; height: 120px; top: 50%; left: 60%; background: var(--zupi-primary);"></span>
-    <span class="decor-shape decor-square" style="width: 100px; height: 100px; top: 20%; right: 25%; background: var(--zupi-secondary); transform: rotate(25deg);"></span>
-    <span class="decor-shape decor-square" style="width: 80px; height: 80px; bottom: 20%; left: 10%; background: var(--zupi-primary); transform: rotate(15deg);"></span>
-    <span class="decor-shape decor-square" style="width: 120px; height: 120px; top: 60%; left: 50%; background: var(--zupi-highlight); transform: rotate(35deg);"></span>
+  <div class="background-decor home-decor" aria-hidden="true">
+    <span class="decor-shape decor-circle" style="width: 180px; height: 180px; top: 8%; left: 4%; background: var(--zupi-accent);"></span>
+    <span class="decor-shape decor-circle" style="width: 230px; height: 230px; bottom: 6%; right: 8%; background: var(--zupi-highlight);"></span>
+    <span class="decor-shape decor-circle" style="width: 116px; height: 116px; top: 42%; left: 58%; background: var(--zupi-primary-solid);"></span>
+    <span class="decor-shape decor-square" style="width: 96px; height: 96px; top: 18%; right: 20%; background: var(--zupi-secondary); transform: rotate(18deg);"></span>
+    <span class="decor-shape decor-square" style="width: 74px; height: 74px; bottom: 24%; left: 8%; background: var(--zupi-primary-solid); transform: rotate(15deg);"></span>
   </div>
 
-  <!-- NAVBAR -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm" role="navigation" aria-label="Navegação principal">
+  <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm zupi-home-nav" role="navigation" aria-label="Navegação principal">
     <div class="container">
       <a class="navbar-brand" id="brand-color-2" href="/" aria-label="Zupi - Página inicial">Zupi</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Alternar navegação">
@@ -38,95 +30,215 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto align-items-center">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/">Início</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/sobre">Sobre</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/planos">Planos</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/contatos">Contato</a>
-          </li>
-          <li class="nav-item">
-            <a class="btn btn-primary ms-2" href="/login" role="button">Entrar</a>
-          </li>
+          <li class="nav-item"><a class="nav-link active" aria-current="page" href="/">Início</a></li>
+          <li class="nav-item"><a class="nav-link" href="/sobre">Sobre</a></li>
+          <li class="nav-item"><a class="nav-link" href="/planos">Planos</a></li>
+          <li class="nav-item"><a class="nav-link" href="/contato">Contato</a></li>
+          <li class="nav-item"><a class="btn btn-primary ms-2" href="/login" role="button">Entrar</a></li>
         </ul>
       </div>
     </div>
   </nav>
 
-  <!-- CONTEÚDO PRINCIPAL -->
   <main>
-    <!-- HERO SECTION -->
-    <section class="hero-section text-center" id="inicio">
+    <section class="home-hero" id="inicio">
       <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-lg-8">
-            <h1 class="display-4 fw-bold mb-4">Bem-vindo ao Zupi!</h1>
-            <p class="lead mb-4">Aprendizado divertido e tecnologia para o futuro das crianças.</p>
-            <a href="/cadastro" class="btn btn-warning btn-lg" role="button">Começar Agora</a>
+        <div class="home-hero-grid">
+          <div class="home-hero-copy reveal-on-scroll">
+            <span class="home-kicker">Aprender com cuidado, brincar com propósito</span>
+            <h1>O Zupi organiza a rotina de aprendizagem de crianças, famílias e escolas.</h1>
+            <p>
+              Uma plataforma com jogos educativos, acompanhamento de evolução, relatórios e conteúdos de apoio para tornar o desenvolvimento infantil mais claro, leve e participativo.
+            </p>
+            <div class="home-actions">
+              <a href="/planos" class="btn btn-warning btn-lg">Ver planos</a>
+              <a href="/login" class="btn btn-outline-primary btn-lg">Entrar no Zupi</a>
+            </div>
+            <div class="home-trust-row" aria-label="Destaques do Zupi">
+              <span>Jogos interativos</span>
+              <span>Relatórios</span>
+              <span>Rotina guiada</span>
+            </div>
+          </div>
+
+          <div class="home-hero-panel reveal-on-scroll" aria-label="Resumo visual da plataforma">
+            <div class="hero-card hero-card-main">
+              <div class="hero-board" aria-hidden="true">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+              <div>
+                <span class="mini-label">Hoje no Zupi</span>
+                <strong>4 atividades concluídas</strong>
+                <p>Coordenação, leitura, atenção e sequência lógica.</p>
+              </div>
+            </div>
+            <div class="hero-metrics">
+              <div>
+                <strong>92%</strong>
+                <span>engajamento</span>
+              </div>
+              <div>
+                <strong>12</strong>
+                <span>habilidades</span>
+              </div>
+              <div>
+                <strong>7d</strong>
+                <span>histórico</span>
+              </div>
+            </div>
+            <div class="hero-path" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- FEATURES SECTION -->
-    <section class="py-5">
+    <section class="home-section">
       <div class="container">
-        <h2 class="section-title">O que você encontra no Zupi</h2>
-        <div class="row g-4 mt-4">
-          <div class="col-md-4">
-            <div class="card h-100 text-center">
-              <div class="card-body">
-                <h3 class="card-title h5">Aprendizado Interativo</h3>
-                <p class="card-text">Atividades lúdicas que estimulam a criatividade das crianças.</p>
-              </div>
-            </div>
+        <div class="section-heading reveal-on-scroll">
+          <span class="section-eyebrow">Experiência completa</span>
+          <h2>O que você encontra no Zupi</h2>
+          <p>Recursos pensados para acompanhar a criança sem transformar o cuidado em uma tarefa confusa para os adultos.</p>
+        </div>
+
+        <div class="feature-grid">
+          <article class="feature-card reveal-on-scroll">
+            <span class="feature-symbol"></span>
+            <h3>Jogos com objetivo pedagógico</h3>
+            <p>Atividades de memória, contagem, formas, cores, palavras, associação e atenção com uma experiência visual próxima dos jogos do sistema.</p>
+          </article>
+          <article class="feature-card reveal-on-scroll">
+            <span class="feature-symbol"></span>
+            <h3>Relatórios fáceis de entender</h3>
+            <p>Famílias e instituições acompanham progresso, frequência, áreas de habilidade e pontos que precisam de mais estímulo.</p>
+          </article>
+          <article class="feature-card reveal-on-scroll">
+            <span class="feature-symbol"></span>
+            <h3>Rotina para casa e escola</h3>
+            <p>Agenda, biblioteca, dicas de inclusão e materiais de apoio ajudam a manter todos alinhados na mesma jornada.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="home-section plans-section" id="planos">
+      <div class="container">
+        <div class="section-heading reveal-on-scroll">
+          <span class="section-eyebrow">Escolha seu acesso</span>
+          <h2>Planos para responsáveis e instituições</h2>
+          <p>Clique em um card para ver o pacote completo, os diferenciais e para quem ele faz mais sentido.</p>
+        </div>
+
+        <div class="plans-layout plans-layout-home">
+          <div class="plan-cards reveal-on-scroll" aria-label="Planos do Zupi">
+            <button class="plan-card is-active" type="button" data-home-plan="pf" aria-pressed="true">
+              <span class="plan-badge">Pessoa Física</span>
+              <strong>Famílias e responsáveis</strong>
+              <span class="plan-price">R$ 80<small>/mês</small></span>
+              <span class="plan-short">Acompanhamento individual para apoiar a criança dentro e fora de casa.</span>
+              <span class="plan-card-cta">Ver resumo ao lado</span>
+            </button>
+
+            <button class="plan-card plan-card-featured" type="button" data-home-plan="pj" aria-pressed="false">
+              <span class="plan-badge">Pessoa Jurídica</span>
+              <strong>Escolas e instituições</strong>
+              <span class="plan-price">R$ 700<small>/mês</small></span>
+              <span class="plan-short">Gestão pedagógica para turmas, equipes e relatórios institucionais.</span>
+              <span class="plan-card-cta">Ver resumo ao lado</span>
+            </button>
           </div>
-          <div class="col-md-4">
-            <div class="card h-100 text-center">
-              <div class="card-body">
-                <h3 class="card-title h5">Segurança Digital</h3>
-                <p class="card-text">Ambiente seguro e monitorado para o aprendizado online.</p>
-              </div>
+
+          <article class="plan-details plan-summary reveal-on-scroll" id="homePlanDetails" aria-live="polite">
+            <div class="plan-details-top">
+              <span class="mini-label" id="homePlanLabel">Plano familiar</span>
+              <h3 id="homePlanTitle">Famílias e responsáveis</h3>
+              <p id="homePlanText">
+                O plano familiar foca na rotina de uma criança e na leitura simples do progresso. O plano institucional amplia isso para turmas, docentes, gestão escolar e relatórios por grupo.
+              </p>
             </div>
+            <div class="plan-note" id="homePlanNote">
+              Na página de cada plano você encontra benefícios, recursos, indicação de uso, rotina sugerida e o botão para seguir para a compra.
+            </div>
+            <a class="btn btn-primary plan-action" id="homePlanAction" href="/planos?tipo=pf">Ver plano familiar completo</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="home-section journey-section">
+      <div class="container">
+        <div class="section-heading reveal-on-scroll">
+          <span class="section-eyebrow">Como funciona</span>
+          <h2>Uma jornada simples para acompanhar o desenvolvimento</h2>
+        </div>
+        <div class="journey-track">
+          <article class="journey-step reveal-on-scroll">
+            <span>01</span>
+            <h3>Cadastro e perfil</h3>
+            <p>O adulto cria o acesso, registra informações importantes e prepara o ambiente da criança.</p>
+          </article>
+          <article class="journey-step reveal-on-scroll">
+            <span>02</span>
+            <h3>Atividades guiadas</h3>
+            <p>A criança joga, explora desafios e pratica habilidades em uma interface visual, leve e segura.</p>
+          </article>
+          <article class="journey-step reveal-on-scroll">
+            <span>03</span>
+            <h3>Análise do progresso</h3>
+            <p>Responsáveis, docentes ou gestores visualizam relatórios para entender avanços e necessidades.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="home-section contact-section" id="contato">
+      <div class="container">
+        <div class="contact-panel reveal-on-scroll">
+          <div>
+            <span class="section-eyebrow">Contato</span>
+            <h2>Quer entender qual plano combina com seu caso?</h2>
+            <p>Fale com o Zupi para tirar dúvidas sobre acesso familiar, implantação em escola, suporte, relatórios e uso pedagógico.</p>
           </div>
-          <div class="col-md-4">
-            <div class="card h-100 text-center">
-              <div class="card-body">
-                <h3 class="card-title h5">Tecnologia do Futuro</h3>
-                <p class="card-text">Ferramentas modernas que preparam as crianças para o mundo digital.</p>
-              </div>
-            </div>
+          <div class="contact-actions">
+            <a href="mailto:contato@zupi.com.br" class="contact-link">
+              <span>E-mail</span>
+              contato@zupi.com.br
+            </a>
+            <a href="https://www.instagram.com/zupi.up" target="_blank" rel="noopener noreferrer" class="contact-link">
+              <span>Instagram</span>
+              @zupi.up
+            </a>
+            <a href="/contato" class="btn btn-warning">Abrir página de contato</a>
           </div>
         </div>
       </div>
     </section>
   </main>
 
-  <!-- FOOTER -->
   <footer class="footer" role="contentinfo">
     <div class="container">
       <div class="row text-center">
         <div class="col-12">
-          <p class="mb-2">© 2025 Zupi. Todos os direitos reservados.</p>
-          <p class="mb-0">
-            Siga-nos: 
-            <a href="https://www.instagram.com/zupi.up" target="_blank" rel="noopener noreferrer" aria-label="Instagram do Zupi">Instagram</a>
-          </p>
+          <p class="mb-2">© 2026 Zupi. Todos os direitos reservados.</p>
+          <p class="mb-0"><a href="https://www.instagram.com/zupi.up" target="_blank" rel="noopener noreferrer" aria-label="Instagram do Zupi">Instagram</a></p>
         </div>
       </div>
     </div>
   </footer>
 
-  <!-- Bootstrap 5 JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
   <script src="/js/routes.js"></script>
   <script src="/js/api.js"></script>
   <script src="/js/auth-guard.js"></script>
+  <script src="/js/index.js"></script>
 </body>
 </html>
-

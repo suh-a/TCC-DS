@@ -2,123 +2,124 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Pega a Estrela - Zupi</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/zupi-jogos.css">
+  <title>Pega o Alvo - Zupi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
   <style>
-    .ga{position:fixed;inset:0;top:58px;overflow:hidden;}
-    .alvo{position:absolute;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:50%;animation:alvoIn .3s cubic-bezier(.34,1.56,.64,1);transition:transform .1s;}
+    :root{--blue:#7EC8E6;--green:#A8D5BA;--yellow:#FFE66D;--orange:#FFB980;--bg:#F5F7FA;--text:#2D3748;--white:#FFFFFF;}
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);}
+    .bg-s{position:absolute;border-radius:50%;opacity:.11;animation:bgF var(--d,14s) ease-in-out infinite alternate;}
+    @keyframes bgF{0%{transform:translateY(0) rotate(0) scale(1)}100%{transform:translateY(-24px) rotate(18deg) scale(1.07);opacity:.18}}
+    .zj-nav{position:fixed;top:0;left:0;right:0;height:58px;z-index:300;display:flex;align-items:center;justify-content:space-between;padding:0 1.2rem;background:rgba(245,247,250,.92);backdrop-filter:blur(14px);border-bottom:1.5px solid rgba(126,200,230,.18);box-shadow:0 2px 14px rgba(126,200,230,.10);}
+    .zj-logo{font-size:1.25rem;font-weight:900;color:var(--blue);text-decoration:none;}
+    .zj-logo b{color:var(--orange);}
+    .zj-hud{display:flex;gap:.45rem;flex-wrap:wrap;}
+    .zj-pill{padding:.25rem .7rem;border-radius:50px;background:rgba(255,255,255,.85);border:1.5px solid rgba(126,200,230,.25);font-size:.8rem;font-weight:800;}
+    .zj-overlay{position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;background:rgba(45,55,72,.45);backdrop-filter:blur(12px);padding:1rem;}
+    .zj-modal{background:var(--white);border-radius:28px;padding:2.2rem 2rem;max-width:360px;width:100%;text-align:center;border:2px solid rgba(126,200,230,.18);box-shadow:0 20px 60px rgba(45,55,72,.18);animation:mIn .38s cubic-bezier(.34,1.56,.64,1);}
+    @keyframes mIn{from{transform:scale(.85) translateY(16px);opacity:0}to{transform:scale(1);opacity:1}}
+    .modal-icon{width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--green));margin:0 auto 1rem;display:flex;align-items:center;justify-content:center;}
+    .modal-icon svg{width:34px;height:34px;fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
+    .modal-icon.yi{background:linear-gradient(135deg,var(--yellow),var(--orange));}
+    .modal-icon.oi{background:linear-gradient(135deg,var(--orange),var(--yellow));}
+    .modal-title{font-size:1.5rem;font-weight:900;margin-bottom:.45rem;}
+    .modal-sub{font-size:.88rem;color:#7A90A4;line-height:1.55;margin-bottom:1.3rem;}
+    .zj-btn{display:block;width:100%;padding:.75rem;border-radius:50px;font-family:'Nunito',sans-serif;font-size:1rem;font-weight:800;cursor:pointer;border:none;text-decoration:none;text-align:center;transition:all .22s;margin-top:.5rem;}
+    .zj-btn-p{background:linear-gradient(135deg,var(--blue),var(--green));color:#fff;box-shadow:0 6px 20px rgba(126,200,230,.35);}
+    .zj-btn-p:hover{transform:scale(1.03) translateY(-2px);}
+    .zj-btn-y{background:linear-gradient(135deg,var(--yellow),var(--orange));color:var(--text);}
+    .zj-btn-y:hover{transform:scale(1.03) translateY(-2px);}
+    .zj-btn-g{background:transparent;color:#7A90A4;border:2px solid rgba(126,200,230,.28);}
+    .zj-btn-g:hover{border-color:var(--blue);color:var(--blue);}
+    .zj-main{position:relative;z-index:1;display:flex;align-items:flex-start;justify-content:center;padding:74px 1rem 2rem;min-height:100vh;}
+    .zj-card{background:var(--white);border-radius:24px;padding:1.5rem 1.4rem;width:100%;max-width:480px;border:2px solid rgba(126,200,230,.14);box-shadow:0 8px 32px rgba(126,200,230,.11);}
+    .zj-prog{height:6px;border-radius:6px;background:rgba(126,200,230,.15);overflow:hidden;margin-bottom:1rem;}
+    .zj-prog-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--green));border-radius:6px;transition:width .4s ease;}
+    .zj-opts{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin:.8rem 0;}
+    .zj-opt{padding:.9rem .5rem;border:2.5px solid rgba(126,200,230,.22);border-radius:16px;background:rgba(255,255,255,.85);color:var(--text);font-family:'Nunito',sans-serif;font-size:1.4rem;font-weight:800;cursor:pointer;transition:all .22s cubic-bezier(.34,1.56,.64,1);}
+    .zj-opt:hover{transform:scale(1.06) translateY(-3px);border-color:var(--blue);box-shadow:0 6px 18px rgba(126,200,230,.25);}
+    .zj-opt.ok{background:linear-gradient(135deg,rgba(168,213,186,.25),rgba(126,200,230,.25));border-color:var(--green);animation:optPop .4s;}
+    .zj-opt.no{background:rgba(255,185,128,.2);border-color:var(--orange);animation:optShake .38s;}
+    @keyframes optPop{0%{transform:scale(1)}50%{transform:scale(1.10)}100%{transform:scale(1)}}
+    @keyframes optShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+    .zj-timebar{position:fixed;bottom:0;left:0;right:0;height:5px;z-index:300;background:rgba(126,200,230,.15);}
+    .zj-timebar-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--green));transition:width .9s linear;}
+    .zj-streak{font-size:.82rem;font-weight:700;color:var(--orange);min-height:1.3rem;text-align:center;}
+    @keyframes floatUp{0%{transform:translate(-50%,0);opacity:1}100%{transform:translate(-50%,-52px);opacity:0}}
+    @keyframes confeteQ{0%{transform:translateY(-10vh) rotate(0);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:.1}}
+
+    .ga{position:fixed;inset:0;top:58px;overflow:hidden;z-index:1;}
+    .alvo{position:absolute;cursor:pointer;border-radius:50%;animation:alvoIn .3s cubic-bezier(.34,1.56,.64,1);transition:transform .1s;display:flex;align-items:center;justify-content:center;}
     @keyframes alvoIn{from{transform:scale(0)}to{transform:scale(1)}}
     .alvo:hover{transform:scale(1.1);}
     .alvo:active{transform:scale(.88);}
     .alvo.saindo{animation:alvoOut .25s ease-in forwards;}
     @keyframes alvoOut{to{transform:scale(0);opacity:0}}
-    .abarra{position:absolute;bottom:-6px;left:0;right:0;height:4px;border-radius:4px;background:rgba(255,255,255,.35);overflow:hidden;}
+    .abarra{position:absolute;bottom:-6px;left:0;right:0;height:4px;border-radius:4px;background:rgba(255,255,255,.3);overflow:hidden;}
     .abarra-fill{height:100%;background:rgba(255,255,255,.8);border-radius:4px;}
-    .mpart{position:fixed;pointer-events:none;z-index:600;animation:zjPop .55s ease-out forwards;font-size:1rem;}
-    @keyframes mPartFly{0%{transform:translate(0,0) scale(1);opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(0);opacity:0}}
+    .alvo-core{width:45%;height:45%;border-radius:50%;background:rgba(255,255,255,.55);}
   </style>
 </head>
-<body class="zj-body">
-<div id="zj-sky" class="zj-sky"></div>
-<nav class="zj-nav">
-  <a href="/menuJogos" class="zj-brand">&#x1F43E; Zupi</a>
-  <div class="zj-stats">
-    <div class="zj-pill">&#x2B50; <span id="p">0</span></div>
-    <div class="zj-pill">&#x274C; <span id="e">0</span>/3</div>
-    <div class="zj-pill">&#x23F1; <span id="t">30</span>s</div>
-  </div>
-</nav>
-<div id="ga" class="ga"></div>
-<div class="zj-timebar"><div class="zj-timebar-fill" id="tb" style="width:100%"></div></div>
-<div class="zj-overlay" id="oi">
-  <div class="zj-modal">
-    <span class="zj-modal-emoji">&#x2B50;</span>
-    <div class="zj-modal-title">Pega a Estrela!</div>
-    <div class="zj-modal-sub">Toque nos alvos antes que desaparecam! Nao erre mais de 3 vezes!</div>
-    <button class="zj-btn zj-btn-main" onclick="iniciar()">&#x1F680; Jogar!</button><br>
-    <a href="/menuJogos" class="zj-btn zj-btn-ghost" style="margin-top:.5rem">&#x2B05; Menu</a>
-  </div>
-</div>
-<div class="zj-overlay" id="of" style="display:none">
-  <div class="zj-modal">
-    <span class="zj-modal-emoji" id="fe">&#x1F3C6;</span>
-    <div class="zj-modal-title" id="ft">Fim!</div>
-    <div class="zj-modal-sub" id="fs"></div>
-    <button class="zj-btn zj-btn-main" onclick="reiniciar()">&#x1F504; Jogar novamente</button><br>
-    <a href="/menuJogos" class="zj-btn zj-btn-ghost" style="margin-top:.5rem">&#x2B05; Menu</a>
-  </div>
-</div>
-<script src="/js/zupi-sky.js"></script>
-<script th:inline="none">
-zupiSky();
-var ALVOS=[
-  {e:'&#x2B50;',g:'linear-gradient(135deg,#FFE66D,#FFB980)',pts:10,t:65},
-  {e:'&#x1F48E;',g:'linear-gradient(135deg,#7EC8E6,#C8B8F0)',pts:20,t:52},
-  {e:'&#x1F338;',g:'linear-gradient(135deg,#F9C6D0,#C8B8F0)',pts:15,t:60},
-  {e:'&#x1F340;',g:'linear-gradient(135deg,#A8D5BA,#7EC8E6)',pts:25,t:45},
-  {e:'&#x1F98B;',g:'linear-gradient(135deg,#C8B8F0,#F9C6D0)',pts:30,t:40}
-];
-var pts=0,erros=0,tempo=30,rodando=false,nivel=1;
-var spInt,tmInt;
-var ga=document.getElementById('ga');
-function iniciar(){
-  document.getElementById('oi').style.display='none';
-  pts=0;erros=0;tempo=30;rodando=true;nivel=1;
-  atuHud(); ga.innerHTML='';
-  clearInterval(spInt);clearInterval(tmInt);
-  spInt=setInterval(spawn,Math.max(600,1400-nivel*80));
-  tmInt=setInterval(function(){
-    tempo--;document.getElementById('t').textContent=tempo;
-    document.getElementById('tb').style.width=(tempo/30*100)+'%';
-    if(tempo<=0) fimDeJogo();
-  },1000);
-  for(var i=0;i<3;i++) setTimeout(spawn,i*250);
-}
-function spawn(){
-  if(!rodando) return;
-  var cfg=ALVOS[Math.floor(Math.random()*ALVOS.length)];
-  var tam=cfg.t-Math.min(nivel*2,18);
-  var vida=Math.max(900,2800-nivel*160);
-  var el=document.createElement('div');el.className='alvo';
-  el.style.cssText='left:'+(5+Math.random()*85)+'%;top:'+(5+Math.random()*80)+'%;width:'+tam+'px;height:'+tam+'px;font-size:'+(tam*.5)+'px;background:'+cfg.g+';box-shadow:0 4px 14px rgba(0,0,0,.12);';
-  el.innerHTML=cfg.e+'<div class="abarra"><div class="abarra-fill" style="width:100%;transition:width '+vida+'ms linear"></div></div>';
-  el.onclick=el.ontouchstart=function(e){e.preventDefault();clicar(el,cfg);};
-  ga.appendChild(el);
-  setTimeout(function(){if(el.parentNode) el.querySelector('.abarra-fill').style.width='0%';},30);
-  setTimeout(function(){
-    if(el.parentNode){el.classList.add('saindo');setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);},260);
-    if(rodando){erros++;atuHud();if(erros>=3) fimDeJogo();}}
-  },vida);
-}
-function clicar(el,cfg){
-  if(!el.parentNode||!rodando) return;
-  var r=el.getBoundingClientRect();var cx=r.left+r.width/2,cy=r.top+r.height/2;
-  el.classList.add('saindo');setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);},260);
-  zupiTone(400+cfg.pts*5,'sine',.15);setTimeout(function(){zupiTone(600+cfg.pts*5,'sine',.12);},80);
-  pts+=cfg.pts+Math.floor(nivel*1.5);atuHud();
-  zupiFloat(cx,cy,'+'+cfg.pts,'#A8D5BA');
-  zupiParts(cx,cy,'#FFE66D');
-  if(pts>0&&pts%100===0){nivel++;clearInterval(spInt);spInt=setInterval(spawn,Math.max(600,1400-nivel*80));}
-}
-function atuHud(){document.getElementById('p').textContent=pts;document.getElementById('e').textContent=erros;}
-function fimDeJogo(){
-  rodando=false;clearInterval(spInt);clearInterval(tmInt);ga.innerHTML='';
-  document.getElementById('fe').innerHTML=pts>400?'&#x1F3C6;':pts>200?'&#x2B50;':'&#x1F3AF;';
-  document.getElementById('ft').textContent=pts>400?'Lendario!!':pts>200?'Incrivel!':'Bom jogo!';
-  document.getElementById('fs').textContent='Pontuacao: '+pts+' pts! Nivel '+nivel+'!';
-  document.getElementById('of').style.display='flex';
-  if(pts>150) zupiConfete();
-}
-function reiniciar(){document.getElementById('of').style.display='none';ga.innerHTML='';iniciar();}
-</script>
-  <script src="/js/routes.js"></script>
-  <script src="/js/api.js"></script>
-  <script src="/js/auth-guard.js"></script>
+<body>
 
-  <script src="/js/game-guard.js"></script>
+  <div id="zj-bg" style="position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;">
+    <div style="position:absolute;inset:0;background-image:radial-gradient(circle,rgba(126,200,230,.15) 1.5px,transparent 1.5px);background-size:34px 34px;"></div>
+    <div class="bg-s" style="width:300px;height:300px;background:#7EC8E6;top:-80px;left:-80px;--d:13s;"></div>
+    <div class="bg-s" style="width:190px;height:190px;background:#FFE66D;top:10%;right:-55px;--d:17s;border-radius:40% 60%;"></div>
+    <div class="bg-s" style="width:240px;height:240px;background:#A8D5BA;bottom:15%;left:-65px;--d:11s;"></div>
+    <div class="bg-s" style="width:160px;height:160px;background:#FFB980;bottom:-35px;right:8%;--d:15s;border-radius:60% 40%;"></div>
+  </div>
 
-  <script src="/js/game-score.js"></script>
+
+  <nav class="zj-nav">
+    <a href="/menuJogos" class="zj-logo">Zupi<b>.</b></a>
+    <div class="zj-hud"><div class="zj-pill" id="p">0 pts</div><div class="zj-pill">Erros <span id="e">0</span>/3</div><div class="zj-pill">Tempo <span id="t">30</span>s</div></div>
+  </nav>
+  <div id="ga" class="ga"></div>
+  <div class="zj-timebar"><div class="zj-timebar-fill" id="tb" style="width:100%"></div></div>
+
+  <div class="zj-overlay" id="oi">
+    <div class="zj-modal">
+      <div class="modal-icon "><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="rgba(255,255,255,.6)" stroke="none"/></svg></div>
+      <div class="modal-title">Pega o Alvo!</div>
+      <div class="modal-sub">Toque nos alvos coloridos antes que desaparecam! Nao erre mais de 3 vezes!</div>
+      <button class="zj-btn zj-btn-p" onclick="iniciar()">Jogar!</button>
+      <a href="/menuJogos" class="zj-btn zj-btn-g">Menu</a>
+    </div>
+  </div>
+
+  <div class="zj-overlay" id="of" style="display:none">
+    <div class="zj-modal">
+      <div class="modal-icon yi"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="#fff" stroke-width="2" stroke-linejoin="round"/></svg></div>
+      <div class="modal-title" id="ft">Fim!</div>
+      <div class="modal-sub" id="fs"></div>
+      <button class="zj-btn zj-btn-p" onclick="reiniciar()">Jogar novamente</button>
+      <a href="/menuJogos" class="zj-btn zj-btn-g">Menu</a>
+    </div>
+  </div>
+  <script>
+    var _ac;function _gac(){if(!_ac)_ac=new(window.AudioContext||window.webkitAudioContext)();return _ac;}
+    function zupiTone(f,tp,v,dur){try{var c=_gac(),tm=c.currentTime;var o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=f||440;o.type=tp||'sine';g.gain.setValueAtTime(v||.15,tm);g.gain.exponentialRampToValueAtTime(.001,tm+(dur||.18));o.start(tm);o.stop(tm+(dur||.18));}catch(e){}}
+    function zupiRight(){try{var c=_gac(),t=c.currentTime;[523,659,784].forEach(function(f,i){var o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=f;o.type='sine';g.gain.setValueAtTime(.14,t+i*.1);g.gain.exponentialRampToValueAtTime(.001,t+i*.1+.15);o.start(t+i*.1);o.stop(t+i*.1+.15);});}catch(e){}}
+    function zupiWrong(){try{var c=_gac(),t=c.currentTime;var o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=200;o.type='sawtooth';g.gain.setValueAtTime(.14,t);g.gain.exponentialRampToValueAtTime(.001,t+.32);o.start(t);o.stop(t+.32);}catch(e){}}
+    function zupiLevelUp(){try{var c=_gac(),t=c.currentTime;[523,659,784,1046].forEach(function(f,i){var o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=f;o.type='sine';g.gain.setValueAtTime(.16,t+i*.12);g.gain.exponentialRampToValueAtTime(.001,t+i*.12+.18);o.start(t+i*.12);o.stop(t+i*.12+.18);});}catch(e){}}
+    function zupiFloat(x,y,txt,cor){var el=document.createElement('div');el.style.cssText='position:fixed;left:'+x+'px;top:'+y+'px;color:'+(cor||'#7EC8E6')+';font-family:Nunito,sans-serif;font-weight:900;font-size:1.1rem;pointer-events:none;z-index:900;animation:floatUp .9s ease-out forwards;transform:translateX(-50%);white-space:nowrap;';el.textContent=txt;document.body.appendChild(el);setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);},950);}
+    function zupiConfete(q){var c=['#7EC8E6','#A8D5BA','#FFE66D','#FFB980'];for(var i=0;i<(q||30);i++){var el=document.createElement('div');var dur=(1.4+Math.random()*1.8).toFixed(2);var del=(Math.random()*.8).toFixed(2);el.style.cssText='position:fixed;left:'+Math.random()*100+'vw;top:-20px;width:'+(7+Math.random()*10)+'px;height:'+(7+Math.random()*10)+'px;background:'+c[Math.floor(Math.random()*c.length)]+';border-radius:'+(Math.random()>.5?'50%':'3px')+';pointer-events:none;z-index:800;animation:confeteQ '+dur+'s ease-in '+del+'s forwards;';document.body.appendChild(el);setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);},(parseFloat(dur)+parseFloat(del))*1000+200);}}
+    function zupiGota(cx,cy,cor,qtd){for(var i=0;i<(qtd||8);i++){(function(idx){var g=document.createElement('div');var ang=(idx/(qtd||8))*Math.PI*2,d=28+Math.random()*40;g.style.cssText='position:fixed;left:'+cx+'px;top:'+cy+'px;width:'+(5+Math.random()*6)+'px;height:'+(5+Math.random()*6)+'px;background:'+(cor||'#7EC8E6')+';border-radius:50%;pointer-events:none;z-index:700;margin:-3px 0 0 -3px;animation:gotaV .65s ease-out forwards;--gx:'+Math.cos(ang)*d+'px;--gy:'+Math.sin(ang)*d+'px;';document.body.appendChild(g);setTimeout(function(){if(g.parentNode)g.parentNode.removeChild(g);},700);})(i);}if(!document.getElementById('gota-kf')){var s=document.createElement('style');s.id='gota-kf';s.textContent='@keyframes gotaV{0%{transform:translate(0,0);opacity:.9}100%{transform:translate(var(--gx),var(--gy)) scale(0);opacity:0}}';document.head.appendChild(s);}}
+
+    var ALVOS=[{g:'linear-gradient(135deg,#FFE66D,#FFB980)',pts:10,t:65},{g:'linear-gradient(135deg,#7EC8E6,#A8D5BA)',pts:20,t:52},{g:'linear-gradient(135deg,#FFB980,#7EC8E6)',pts:15,t:60},{g:'linear-gradient(135deg,#A8D5BA,#7EC8E6)',pts:25,t:45},{g:'linear-gradient(135deg,#7EC8E6,#FFB980)',pts:30,t:40}];
+    var CORS=['#FFE66D','#7EC8E6','#A8D5BA','#FFB980','#7EC8E6'];
+    var pts=0,erros=0,tempo=30,rodando=false,nivel=1;
+    var spInt,tmInt;
+    var ga=document.getElementById('ga');
+    function iniciar(){document.getElementById('oi').style.display='none';pts=0;erros=0;tempo=30;rodando=true;nivel=1;atuHud();ga.innerHTML='';clearInterval(spInt);clearInterval(tmInt);spInt=setInterval(spawn,Math.max(600,1400-nivel*80));tmInt=setInterval(function(){tempo--;document.getElementById('t').textContent=tempo;document.getElementById('tb').style.width=(tempo/30*100)+'%';if(tempo<=0) fimDeJogo();},1000);for(var i=0;i<3;i++) setTimeout(spawn,i*250);}
+    function spawn(){if(!rodando) return;var cfg=ALVOS[Math.floor(Math.random()*ALVOS.length)];var tam=cfg.t-Math.min(nivel*2,18);var vida=Math.max(900,2800-nivel*160);var el=document.createElement('div');el.className='alvo';el.style.cssText='left:'+(5+Math.random()*85)+'%;top:'+(5+Math.random()*80)+'%;width:'+tam+'px;height:'+tam+'px;background:'+cfg.g+';box-shadow:0 4px 14px rgba(0,0,0,.12);';el.innerHTML='<div class="alvo-core"></div><div class="abarra"><div class="abarra-fill" style="width:100%;transition:width '+vida+'ms linear"></div></div>';el.onclick=el.ontouchstart=function(e){e.preventDefault();clicar(el,cfg);};ga.appendChild(el);setTimeout(function(){if(el.parentNode)el.querySelector('.abarra-fill').style.width='0%';},30);setTimeout(function(){if(el.parentNode){el.classList.add('saindo');setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);},260);if(rodando){erros++;atuHud();if(erros>=3) fimDeJogo();}}},vida);}
+    function clicar(el,cfg){if(!el.parentNode||!rodando) return;var r=el.getBoundingClientRect();var cx=r.left+r.width/2,cy=r.top+r.height/2;el.classList.add('saindo');setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);},260);zupiTone(400+cfg.pts*5,'sine',.15);setTimeout(function(){zupiTone(600+cfg.pts*5,'sine',.12);},80);pts+=cfg.pts+Math.floor(nivel*1.5);atuHud();zupiFloat(cx,cy,'+'+cfg.pts,CORS[Math.floor(Math.random()*CORS.length)]);zupiGota(cx,cy,CORS[Math.floor(Math.random()*CORS.length)],6);if(pts>0&&pts%100===0){nivel++;clearInterval(spInt);spInt=setInterval(spawn,Math.max(600,1400-nivel*80));}}
+    function atuHud(){document.getElementById('p').textContent=pts+' pts';document.getElementById('e').textContent=erros;}
+    function fimDeJogo(){rodando=false;clearInterval(spInt);clearInterval(tmInt);ga.innerHTML='';document.getElementById('ft').textContent=pts>400?'Lendario!':pts>200?'Incrivel!':'Bom jogo!';document.getElementById('fs').textContent='Pontuacao: '+pts+' pts! Nivel '+nivel+'!';document.getElementById('of').style.display='flex';if(pts>150) zupiConfete(30);}
+    function reiniciar(){document.getElementById('of').style.display='none';ga.innerHTML='';iniciar();}
+  </script>
+
+  <script src="/js/routes.js"></script><script src="/js/api.js"></script><script src="/js/auth-guard.js"></script><script src="/js/game-guard.js"></script><script src="/js/game-score.js"></script>
 </body>
 </html>
-

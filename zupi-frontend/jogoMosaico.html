@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mosaico Criativo - Zupi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/jogoMosaico.css">
+</head>
+<body>
+  <div class="mosaic-page">
+    <header class="game-nav">
+      <a class="brand" href="/menuJogos">Zupi<span>.</span></a>
+      <div class="hud" aria-label="Progresso">
+        <span>Nivel <strong id="nivelAtual">1</strong>/<strong id="totalNiveis">8</strong></span>
+        <span>&#11088; <strong id="estrelas">0</strong></span>
+      </div>
+    </header>
+
+    <main class="mosaic-main">
+      <section class="instructions">
+        <span class="tag">Arte com formas</span>
+        <h1>Mosaico Criativo</h1>
+        <p id="missao">Observe o modelo e pinte os quadradinhos iguais.</p>
+        <h2>Escolha uma cor</h2>
+        <div class="palette" id="paleta" aria-label="Paleta de cores"></div>
+        <div class="actions">
+          <button class="primary" id="verificar" type="button">Verificar mosaico</button>
+          <button class="secondary" id="limpar" type="button">Limpar arte</button>
+        </div>
+        <p class="feedback" id="feedback" role="status" aria-live="polite"></p>
+      </section>
+
+      <section class="boards" aria-label="Area do mosaico">
+        <article class="board-card">
+          <h2>Modelo</h2>
+          <div class="grid" id="modelo" aria-label="Modelo para copiar"></div>
+        </article>
+        <article class="board-card artwork">
+          <h2>Sua arte</h2>
+          <div class="grid" id="arte" aria-label="Sua arte"></div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <div class="overlay" id="inicio">
+    <section class="modal">
+      <span class="modal-icon">&#127912;</span>
+      <h2>Mosaico Criativo</h2>
+      <p>Copie os modelos usando as cores certas. Cada nivel traz um desafio maior!</p>
+      <button class="primary" id="comecar" type="button">Comecar</button>
+      <a href="/menuJogos">Voltar ao menu</a>
+    </section>
+  </div>
+
+  <div class="overlay hidden" id="resultado">
+    <section class="modal">
+      <span class="modal-icon" id="iconeResultado">&#11088;</span>
+      <h2 id="tituloResultado">Mosaico completo!</h2>
+      <p id="textoResultado"></p>
+      <button class="primary" id="proximo" type="button">Proximo nivel</button>
+      <a href="/menuJogos">Voltar ao menu</a>
+    </section>
+  </div>
+
+  <script src="/js/routes.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/auth-guard.js"></script>
+  <script src="/js/game-guard.js"></script>
+  <script src="/js/game-score.js"></script>
+  <script src="/js/jogoMosaico.js"></script>
+</body>
+</html>

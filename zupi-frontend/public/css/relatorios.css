@@ -180,6 +180,252 @@ body > .container-fluid > .row {
   min-width: 220px;
 }
 
+.zupi-report-panel {
+  background: #fff;
+  border: 1px solid rgba(126, 200, 230, .28);
+  border-radius: 16px;
+  box-shadow: 0 10px 28px rgba(45, 55, 72, .08);
+  padding: 1.15rem;
+}
+
+.zupi-report-panel header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: .85rem;
+}
+
+.zupi-report-panel header p {
+  margin: 0;
+  color: #647b8e;
+  font-weight: 700;
+}
+
+.zupi-report-panel header strong {
+  color: #2d3748;
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.zupi-report-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: .55rem;
+  margin-bottom: .9rem;
+}
+
+.zupi-report-metrics span {
+  background: #eef8fc;
+  border-radius: 12px;
+  color: #647b8e;
+  font-size: .82rem;
+  padding: .6rem;
+  text-align: center;
+}
+
+.zupi-report-metrics b {
+  color: #2d3748;
+  display: block;
+  font-size: 1.05rem;
+}
+
+.zupi-report-bar {
+  background: #edf2f7;
+  border-radius: 999px;
+  height: .7rem;
+  overflow: hidden;
+}
+
+.zupi-report-bar i {
+  background: linear-gradient(90deg, #7ec8e6, #a8d5ba);
+  display: block;
+  height: 100%;
+}
+
+.zupi-report-list {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+}
+
+.zupi-report-list li {
+  align-items: center;
+  border-top: 1px solid #edf2f7;
+  display: flex;
+  justify-content: space-between;
+  gap: .75rem;
+  padding: .65rem 0;
+}
+
+.zupi-report-list span {
+  color: #647b8e;
+  font-size: .88rem;
+}
+
+.zupi-report-row {
+  align-items: center;
+  display: grid;
+  grid-template-columns: minmax(110px, 1fr) minmax(120px, 2fr) 54px;
+  gap: .75rem;
+  margin-bottom: .75rem;
+}
+
+.zupi-report-row > span {
+  color: #2d3748;
+  font-weight: 700;
+}
+
+.zupi-report-row > div {
+  background: #edf2f7;
+  border-radius: 999px;
+  height: .72rem;
+  overflow: hidden;
+}
+
+.zupi-report-row i {
+  display: block;
+  height: 100%;
+}
+
+.zupi-report-row strong {
+  color: #4d94b2;
+  text-align: right;
+}
+
+.zupi-category-grid {
+  display: grid;
+  gap: .85rem;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.zupi-category-card {
+  background: #f8fbfd;
+  border: 1px solid #e6f2f7;
+  border-radius: 14px;
+  padding: .9rem;
+  position: relative;
+}
+
+.zupi-category-card > span {
+  border-radius: 999px;
+  display: block;
+  height: .38rem;
+  margin-bottom: .7rem;
+  width: 2.5rem;
+}
+
+.zupi-category-card h3 {
+  color: #2d3748;
+  font-size: .98rem;
+  font-weight: 800;
+  margin: 0 0 .25rem;
+}
+
+.zupi-category-card strong {
+  color: #4d94b2;
+  display: block;
+  font-size: 1.55rem;
+  line-height: 1.1;
+}
+
+.zupi-category-card p,
+.zupi-category-card small {
+  color: #647b8e;
+  display: block;
+  margin: .25rem 0 0;
+}
+
+.zupi-game-detail-list {
+  display: grid;
+  gap: .7rem;
+}
+
+.zupi-game-detail {
+  align-items: center;
+  background: #f8fbfd;
+  border: 1px solid #e6f2f7;
+  border-radius: 14px;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .85rem;
+}
+
+.zupi-game-detail p {
+  color: #4d94b2;
+  font-size: .78rem;
+  font-weight: 800;
+  margin: 0 0 .15rem;
+  text-transform: uppercase;
+}
+
+.zupi-game-detail h3 {
+  color: #2d3748;
+  font-size: 1rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.zupi-game-detail small {
+  color: #647b8e;
+}
+
+.zupi-game-score {
+  border-left: 4px solid var(--score-color, #7ec8e6);
+  min-width: 116px;
+  padding-left: .85rem;
+  text-align: right;
+}
+
+.zupi-game-score strong {
+  color: #2d3748;
+  display: block;
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+.zupi-game-score span {
+  color: #647b8e;
+  font-size: .78rem;
+  font-weight: 700;
+}
+
+.zupi-session-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.zupi-session-list li {
+  align-items: flex-start;
+  border-top: 1px solid #edf2f7;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  padding: .8rem 0;
+}
+
+.zupi-session-list li:first-child {
+  border-top: 0;
+}
+
+.zupi-session-list strong,
+.zupi-session-list span {
+  display: block;
+}
+
+.zupi-session-list strong {
+  color: #2d3748;
+  font-weight: 800;
+}
+
+.zupi-session-list span,
+.zupi-session-list time {
+  color: #647b8e;
+  font-size: .88rem;
+}
+
 @media print {
   .dashboard-sidebar,
   .menu-toggle,
@@ -206,5 +452,22 @@ body > .container-fluid > .row {
   .resumo-semanal {
     padding: 1rem;
   }
-}
 
+  .zupi-report-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .zupi-report-row {
+    grid-template-columns: 1fr;
+  }
+
+  .zupi-game-detail,
+  .zupi-session-list li {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .zupi-game-score {
+    text-align: left;
+  }
+}

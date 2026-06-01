@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Montar Cenarios - Zupi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/jogoCenarios.css">
+</head>
+<body>
+  <div class="scenery-page">
+    <header class="game-nav">
+      <a class="brand" href="/menuJogos">Zupi<span>.</span></a>
+      <div class="hud">
+        <span>Mundo <strong id="mundoAtual">1</strong>/6</span>
+        <span>🎨 <strong id="obras">0</strong></span>
+      </div>
+    </header>
+
+    <main class="scenery-main">
+      <section class="tools">
+        <span class="tag">Crie do seu jeito</span>
+        <h1>Montar Cenarios</h1>
+        <section class="mission-card" aria-label="Missao do mundo">
+          <span class="mission-label">O que fazer agora</span>
+          <h2 id="tituloMundo">Jardim alegre</h2>
+          <p id="missaoMundo"></p>
+          <div class="requirements" id="necessarios" aria-label="Itens da missao"></div>
+        </section>
+        <h3><span>1</span> Pegue um adesivo</h3>
+        <div class="stickers" id="adesivos"></div>
+        <p class="selected-tool" id="adesivoSelecionado">Escolha um adesivo para comecar.</p>
+        <div class="actions">
+          <button class="primary" id="concluir" type="button" disabled>Concluir mundo</button>
+          <button class="secondary" id="desfazer" type="button">Desfazer</button>
+          <button class="secondary" id="limparCena" type="button">Limpar cena</button>
+        </div>
+      </section>
+
+      <section class="stage-card">
+        <p class="stage-tip"><strong>2</strong> Toque na paisagem onde voce quer colocar o adesivo.</p>
+        <div class="stage garden" id="cenario" aria-label="Paisagem para colocar adesivos"></div>
+        <p class="status" id="statusCena" role="status" aria-live="polite"></p>
+      </section>
+    </main>
+  </div>
+
+  <div class="overlay" id="inicio">
+    <section class="modal">
+      <span class="modal-icon">🖼️</span>
+      <h2>Montar Cenarios</h2>
+      <p>Escolha um adesivo e toque no lugar onde ele deve ficar. Complete as missoes de seis paisagens e decore do seu jeito!</p>
+      <button class="primary" id="comecar" type="button">Comecar</button>
+      <a href="/menuJogos">Voltar ao menu</a>
+    </section>
+  </div>
+
+  <div class="overlay hidden" id="resultado">
+    <section class="modal">
+      <span class="modal-icon" id="iconeResultado">🎨</span>
+      <h2 id="tituloResultado">Mundo completo!</h2>
+      <p id="textoResultado"></p>
+      <button class="primary" id="proximo" type="button">Proximo mundo</button>
+      <a href="/menuJogos">Voltar ao menu</a>
+    </section>
+  </div>
+
+  <script src="/js/routes.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/auth-guard.js"></script>
+  <script src="/js/game-guard.js"></script>
+  <script src="/js/game-score.js"></script>
+  <script src="/js/jogoCenarios.js"></script>
+</body>
+</html>

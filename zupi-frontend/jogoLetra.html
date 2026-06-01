@@ -1,235 +1,149 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🔤 Qual a Letra? — Zupi</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/zupi-games-theme.css">
-  <link rel="stylesheet" href="/css/jogoLetra.css">
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Qual a Letra - Zupi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{--blue:#7EC8E6;--green:#A8D5BA;--yellow:#FFE66D;--orange:#FFB980;--bg:#F5F7FA;--text:#2D3748;--white:#FFFFFF;}
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);}
+    .bg-s{position:absolute;border-radius:50%;opacity:.11;animation:bgF var(--d,14s) ease-in-out infinite alternate;}
+    @keyframes bgF{0%{transform:translateY(0) rotate(0) scale(1)}100%{transform:translateY(-24px) rotate(18deg) scale(1.07);opacity:.18}}
+    .zj-nav{position:fixed;top:0;left:0;right:0;height:58px;z-index:300;display:flex;align-items:center;justify-content:space-between;padding:0 1.2rem;background:rgba(245,247,250,.92);backdrop-filter:blur(14px);border-bottom:1.5px solid rgba(126,200,230,.18);box-shadow:0 2px 14px rgba(126,200,230,.10);}
+    .zj-logo{font-size:1.25rem;font-weight:900;color:var(--blue);text-decoration:none;}
+    .zj-logo b{color:var(--orange);}
+    .zj-hud{display:flex;gap:.45rem;flex-wrap:wrap;}
+    .zj-pill{padding:.25rem .7rem;border-radius:50px;background:rgba(255,255,255,.85);border:1.5px solid rgba(126,200,230,.25);font-size:.8rem;font-weight:800;}
+    .zj-overlay{position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;background:rgba(45,55,72,.45);backdrop-filter:blur(12px);padding:1rem;}
+    .zj-modal{background:var(--white);border-radius:28px;padding:2.2rem 2rem;max-width:360px;width:100%;text-align:center;border:2px solid rgba(126,200,230,.18);box-shadow:0 20px 60px rgba(45,55,72,.18);animation:mIn .38s cubic-bezier(.34,1.56,.64,1);}
+    @keyframes mIn{from{transform:scale(.85) translateY(16px);opacity:0}to{transform:scale(1);opacity:1}}
+    .modal-icon{width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--green));margin:0 auto 1rem;display:flex;align-items:center;justify-content:center;}
+    .modal-icon svg{width:34px;height:34px;fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
+    .modal-icon.yi{background:linear-gradient(135deg,var(--yellow),var(--orange));}
+    .modal-icon.oi{background:linear-gradient(135deg,var(--orange),var(--yellow));}
+    .modal-icon.gi{background:linear-gradient(135deg,var(--green),var(--blue));}
+    .modal-title{font-size:1.5rem;font-weight:900;margin-bottom:.45rem;}
+    .modal-sub{font-size:.88rem;color:#7A90A4;line-height:1.55;margin-bottom:1.3rem;}
+    .zj-btn{display:block;width:100%;padding:.75rem;border-radius:50px;font-family:'Nunito',sans-serif;font-size:1rem;font-weight:800;cursor:pointer;border:none;text-decoration:none;text-align:center;transition:all .22s;margin-top:.5rem;}
+    .zj-btn-p{background:linear-gradient(135deg,var(--blue),var(--green));color:#fff;box-shadow:0 6px 20px rgba(126,200,230,.35);}
+    .zj-btn-p:hover{transform:scale(1.03) translateY(-2px);}
+    .zj-btn-y{background:linear-gradient(135deg,var(--yellow),var(--orange));color:var(--text);box-shadow:0 6px 20px rgba(255,230,109,.3);}
+    .zj-btn-y:hover{transform:scale(1.03) translateY(-2px);}
+    .zj-btn-g{background:transparent;color:#7A90A4;border:2px solid rgba(126,200,230,.28);}
+    .zj-btn-g:hover{border-color:var(--blue);color:var(--blue);}
+    .zj-main{position:relative;z-index:1;display:flex;align-items:flex-start;justify-content:center;padding:74px 1rem 2rem;min-height:100vh;}
+    .zj-card{background:var(--white);border-radius:24px;padding:1.5rem 1.4rem;width:100%;max-width:480px;border:2px solid rgba(126,200,230,.14);box-shadow:0 8px 32px rgba(126,200,230,.11);}
+    .zj-prog{height:6px;border-radius:6px;background:rgba(126,200,230,.15);overflow:hidden;margin-bottom:1rem;}
+    .zj-prog-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--green));border-radius:6px;transition:width .4s ease;}
+    .zj-opts{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin:.8rem 0;}
+    .zj-opt{padding:.9rem .5rem;border:2.5px solid rgba(126,200,230,.22);border-radius:16px;background:rgba(255,255,255,.85);color:var(--text);font-family:'Nunito',sans-serif;font-size:1.35rem;font-weight:800;cursor:pointer;transition:all .22s cubic-bezier(.34,1.56,.64,1);}
+    .zj-opt:hover{transform:scale(1.06) translateY(-3px);border-color:var(--blue);box-shadow:0 6px 18px rgba(126,200,230,.25);}
+    .zj-opt.ok{background:linear-gradient(135deg,rgba(168,213,186,.25),rgba(126,200,230,.25));border-color:var(--green);animation:optPop .4s;}
+    .zj-opt.no{background:rgba(255,185,128,.2);border-color:var(--orange);animation:optShake .38s;}
+    @keyframes optPop{0%{transform:scale(1)}50%{transform:scale(1.10)}100%{transform:scale(1)}}
+    @keyframes optShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+    .zj-timebar{position:fixed;bottom:0;left:0;right:0;height:5px;z-index:300;background:rgba(126,200,230,.15);}
+    .zj-timebar-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--green));transition:width .9s linear;}
+    .zj-streak{font-size:.82rem;font-weight:700;color:var(--orange);min-height:1.3rem;text-align:center;}
+    @keyframes floatUp{0%{transform:translate(-50%,0);opacity:1}100%{transform:translate(-50%,-52px);opacity:0}}
+    @keyframes confeteQ{0%{transform:translateY(-10vh) rotate(0);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:.1}}
+    @keyframes gotaV{0%{transform:translate(0,0);opacity:.9}100%{transform:translate(var(--gx),var(--gy)) scale(0);opacity:0}}
+    @keyframes zjPop{0%{transform:scale(1)}50%{transform:scale(1.13)}100%{transform:scale(1)}}
+    @keyframes zjShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-9px)}75%{transform:translateX(9px)}}
+
+    .letra-main{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;padding:74px 1rem 2rem;}
+    .letra-card{background:var(--white);border-radius:24px;padding:2rem;text-align:center;border:2px solid rgba(126,200,230,.14);box-shadow:0 8px 32px rgba(126,200,230,.11);max-width:300px;width:100%;margin-bottom:1rem;}
+    .letra-display{font-size:5rem;font-weight:900;color:var(--blue);line-height:1;margin-bottom:.3rem;}
+    .letra-exemplo{font-size:.95rem;font-weight:700;color:#7A90A4;}
+    .letra-emoji{font-size:3.2rem;display:block;margin:.25rem 0 .35rem;}
+    .ouvir-btn{display:flex;align-items:center;gap:.5rem;padding:.65rem 1.5rem;border-radius:50px;background:rgba(126,200,230,.15);border:2px solid rgba(126,200,230,.35);color:var(--blue);font-family:'Nunito',sans-serif;font-weight:800;font-size:.9rem;cursor:pointer;transition:all .22s;margin-bottom:1rem;}
+    .ouvir-btn:hover{background:var(--blue);color:white;}
+    .ouvir-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;}
+    .letra-pergunta{font-weight:800;font-size:.95rem;color:var(--text);margin-bottom:.8rem;text-align:center;}
+    .opcoes-letras{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;max-width:340px;width:100%;}
+    .opcao-letra-btn{padding:1rem .5rem;border-radius:16px;border:none;font-family:'Nunito',sans-serif;font-size:1.5rem;font-weight:900;cursor:pointer;transition:all .25s cubic-bezier(.34,1.56,.64,1);color:var(--text);}
+    .opcao-letra-btn:hover{transform:scale(1.08) translateY(-3px);box-shadow:0 6px 18px rgba(0,0,0,.12);}
+    .opcao-letra-btn.correta{background:linear-gradient(135deg,var(--green),var(--blue))!important;color:white!important;animation:zjPop .4s;}
+    .opcao-letra-btn.errada{background:rgba(255,185,128,.25)!important;border:2px solid var(--orange)!important;animation:zjShake .35s;}
+    .modo-select{display:flex;gap:.5rem;justify-content:center;margin:1rem 0;flex-wrap:wrap;}
+    .modo-btn{padding:.5rem 1rem;border-radius:50px;background:rgba(126,200,230,.1);border:2px solid rgba(126,200,230,.25);color:#7A90A4;font-family:'Nunito',sans-serif;font-weight:700;font-size:.82rem;cursor:pointer;transition:all .22s;}
+    .modo-btn.ativo{background:var(--blue);border-color:var(--blue);color:white;}
+    .zj-prog-bar{height:5px;border-radius:5px;background:rgba(126,200,230,.15);overflow:hidden;max-width:300px;width:100%;margin:.5rem 0 1rem;}
+    .zj-prog-bar-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--green));border-radius:5px;transition:width .4s ease;}
+</style>
 </head>
-<body class="zj-body">
-<a href="/menuJogos" class="z-back-btn">⬅ Menu</a>
-<div class="z-hud">
-  <div class="z-hud-item"><div class="z-hud-label">⭐ Pontos</div><div class="z-hud-value" id="pts" style="color:var(--z-blue)">0</div></div>
-  <div class="z-hud-item"><div class="z-hud-label">📊 Questão</div><div class="z-hud-value" id="qn" style="color:var(--z-green)">1/15</div></div>
-  <div class="z-hud-item"><div class="z-hud-label">🔥 Seguidas</div><div class="z-hud-value" id="str" style="color:var(--z-coral)">0</div></div>
-</div>
-
-<div class="letra-main">
-  <div class="z-progress" style="max-width:500px;margin:.5rem auto 1rem"><div class="z-progress-fill" id="prog" style="width:0%"></div></div>
-
-  <!-- CARD DA LETRA -->
-  <div class="letra-card" id="letra-card">
-    <div class="letra-display" id="letra-disp">A</div>
-    <div class="letra-exemplo" id="letra-ex">🍎 Abacaxi</div>
+<body>
+  <div id="zj-bg" style="position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;">
+    <div style="position:absolute;inset:0;background-image:radial-gradient(circle,rgba(126,200,230,.15) 1.5px,transparent 1.5px);background-size:34px 34px;"></div>
+    <div class="bg-s" style="width:300px;height:300px;background:#7EC8E6;top:-80px;left:-80px;--d:13s;"></div>
+    <div class="bg-s" style="width:190px;height:190px;background:#FFE66D;top:10%;right:-55px;--d:17s;border-radius:40% 60%;"></div>
+    <div class="bg-s" style="width:240px;height:240px;background:#A8D5BA;bottom:15%;left:-65px;--d:11s;"></div>
+    <div class="bg-s" style="width:160px;height:160px;background:#FFB980;bottom:-35px;right:8%;--d:15s;border-radius:60% 40%;"></div>
   </div>
-
-  <!-- BTN OUVIR -->
-  <button class="ouvir-btn" id="ouvir-btn" onclick="falarLetra()">
-    🔊 Ouvir
-  </button>
-
-  <!-- PERGUNTA -->
-  <div class="letra-pergunta" id="pergunta">Qual é essa letra?</div>
-
-  <!-- OPÇÕES -->
-  <div class="opcoes-letras" id="opcoes"></div>
-</div>
-
-<!-- OVERLAYS -->
-<div class="z-overlay" id="ov-inicio">
-  <div class="z-overlay-card">
-    <div style="font-size:5rem;animation:zBounce 1s infinite alternate">🔤</div>
-    <h2 style="font-weight:800;margin:.5rem 0">Qual a Letra?</h2>
-    <p style="color:#7a8ea0;margin-bottom:.8rem">Clique em <b>Ouvir</b> para escutar a letra e então toque na letra certa! 🎵</p>
-    <div class="modo-select">
-      <div class="modo-btn ativo" id="m-nome" onclick="setModo('nome')">🔤 Nome<br><small>Ex: "A"</small></div>
-      <div class="modo-btn" id="m-som" onclick="setModo('som')">🎵 Som<br><small>Ex: "Ã"</small></div>
-      <div class="modo-btn" id="m-palavra" onclick="setModo('palavra')">📖 Palavra<br><small>Ex: "Abacaxi"</small></div>
+  <nav class="zj-nav">
+    <a href="/menuJogos" class="zj-logo">Zupi<b>.</b></a>
+    <div class="zj-hud"><div class="zj-pill" id="pts">0 pts</div><div class="zj-pill">Fase <span id="qn">1/15</span></div><div class="zj-pill">Serie <span id="str">0</span></div></div>
+  </nav>
+  <div class="letra-main">
+    <div class="zj-prog-bar"><div class="zj-prog-bar-fill" id="prog" style="width:0%"></div></div>
+    <div class="letra-card" id="letra-card">
+      <div class="letra-display" id="letra-disp">A</div>
+      <span class="letra-emoji" id="letra-emoji">🍍</span>
+      <div class="letra-exemplo" id="letra-ex">Abacaxi</div>
     </div>
-    <button class="z-btn z-btn-primary" onclick="iniciar()" style="margin-top:1rem">🚀 Jogar!</button>
+    <button class="ouvir-btn" id="ouvir-btn" onclick="falarLetra()">
+      <svg viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+      Ouvir
+    </button>
+    <div class="letra-pergunta" id="pergunta">Qual e o NOME dessa letra?</div>
+    <div class="opcoes-letras" id="opcoes"></div>
   </div>
-</div>
-<div class="z-overlay" id="ov-fim" style="display:none">
-  <div class="z-overlay-card">
-    <div style="font-size:5rem;animation:zBounce 1s infinite alternate" id="fim-e">🏆</div>
-    <h2 style="font-weight:800;margin:.5rem 0" id="fim-t">Muito bom!</h2>
-    <p style="color:#7a8ea0;margin-bottom:1.5rem" id="fim-s">Pontuação: 0</p>
-    <button class="z-btn z-btn-primary" onclick="reiniciar()">🔄 Jogar Novamente</button>
-    <a href="/menuJogos" class="z-btn z-btn-ghost" style="margin-top:.5rem;display:block">⬅ Menu</a>
+  <div class="zj-overlay" id="ov-inicio">
+    <div class="zj-modal">
+      <div class="modal-icon gi"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h6"/></svg></div>
+      <div class="modal-title">Qual a Letra?</div>
+      <div class="modal-sub">Clique em Ouvir para escutar e toque na letra certa!</div>
+      <div class="modo-select">
+        <div class="modo-btn ativo" id="m-nome" onclick="setModo('nome')">Nome</div>
+        <div class="modo-btn" id="m-som" onclick="setModo('som')">Som</div>
+        <div class="modo-btn" id="m-palavra" onclick="setModo('palavra')">Palavra</div>
+      </div>
+      <button class="zj-btn zj-btn-p" onclick="iniciar()">Jogar!</button>
+      <a href="/menuJogos" class="zj-btn zj-btn-g">Menu</a>
+    </div>
+  </div>  <div class="zj-overlay" id="of" style="display:none">
+    <div class="zj-modal">
+      <div class="modal-icon yi"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="#fff" stroke-width="2" stroke-linejoin="round"/></svg></div>
+      <div class="modal-title" id="ft">Fim!</div>
+      <div class="modal-sub" id="fs"></div>
+      <button class="zj-btn zj-btn-p" onclick="reiniciar()">Jogar novamente</button>
+      
+      <a href="/menuJogos" class="zj-btn zj-btn-g">Menu</a>
+    </div>
   </div>
-</div>
+  <script>
+    var _ac;function _gac(){if(!_ac)_ac=new(window.AudioContext||window.webkitAudioContext)();return _ac;}
+    function zupiTone(f,tp,v,dur){try{var c=_gac(),tm=c.currentTime;var o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=f||440;o.type=tp||'sine';g.gain.setValueAtTime(v||.15,tm);g.gain.exponentialRampToValueAtTime(.001,tm+(dur||.18));o.start(tm);o.stop(tm+(dur||.18));}catch(e){}}
+    function zupiRight(){try{var c=_gac(),t=c.currentTime;[523,659,784].forEach(function(f,i){var o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=f;o.type='sine';g.gain.setValueAtTime(.14,t+i*.1);g.gain.exponentialRampToValueAtTime(.001,t+i*.1+.15);o.start(t+i*.1);o.stop(t+i*.1+.15);});}catch(e){}}
+    function zupiWrong(){try{var c=_gac(),t=c.currentTime;var o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=200;o.type='sawtooth';g.gain.setValueAtTime(.14,t);g.gain.exponentialRampToValueAtTime(.001,t+.32);o.start(t);o.stop(t+.32);}catch(e){}}
+    function zupiLevelUp(){try{var c=_gac(),t=c.currentTime;[523,659,784,1046].forEach(function(f,i){var o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=f;o.type='sine';g.gain.setValueAtTime(.16,t+i*.12);g.gain.exponentialRampToValueAtTime(.001,t+i*.12+.18);o.start(t+i*.12);o.stop(t+i*.12+.18);});}catch(e){}}
+    function zupiFloat(x,y,txt,cor){var el=document.createElement('div');el.style.cssText='position:fixed;left:'+x+'px;top:'+y+'px;color:'+(cor||'#7EC8E6')+';font-family:Nunito,sans-serif;font-weight:900;font-size:1.1rem;pointer-events:none;z-index:900;animation:floatUp .9s ease-out forwards;transform:translateX(-50%);white-space:nowrap;';el.textContent=txt;document.body.appendChild(el);setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);},950);}
+    function zupiConfete(q){var c=['#7EC8E6','#A8D5BA','#FFE66D','#FFB980'];for(var i=0;i<(q||30);i++){(function(){var el=document.createElement('div');var dur=(1.4+Math.random()*1.8).toFixed(2);var del=(Math.random()*.8).toFixed(2);el.style.cssText='position:fixed;left:'+Math.random()*100+'vw;top:-20px;width:'+(7+Math.random()*10)+'px;height:'+(7+Math.random()*10)+'px;background:'+c[Math.floor(Math.random()*c.length)]+';border-radius:'+(Math.random()>.5?'50%':'3px')+';pointer-events:none;z-index:800;animation:confeteQ '+dur+'s ease-in '+del+'s forwards;';document.body.appendChild(el);setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);},(parseFloat(dur)+parseFloat(del))*1000+200);})();}}
+    function zupiGota(cx,cy,cor,qtd){for(var i=0;i<(qtd||8);i++){(function(idx){var g=document.createElement('div');var ang=(idx/(qtd||8))*Math.PI*2,d=28+Math.random()*40;g.style.cssText='position:fixed;left:'+cx+'px;top:'+cy+'px;width:'+(5+Math.random()*6)+'px;height:'+(5+Math.random()*6)+'px;background:'+(cor||'#7EC8E6')+';border-radius:50%;pointer-events:none;z-index:700;margin:-3px 0 0 -3px;animation:gotaV .65s ease-out forwards;--gx:'+Math.cos(ang)*d+'px;--gy:'+Math.sin(ang)*d+'px;';document.body.appendChild(g);setTimeout(function(){if(g.parentNode)g.parentNode.removeChild(g);},700);})(i);}}
 
-<script th:inline="none">
-/*<![CDATA[*/
-
-const LETRAS = [
-  {l:'A',ex:'🍎 Abacaxi',  som:'a',  nome:'Á'},
-  {l:'B',ex:'🎈 Bola',     som:'bê', nome:'Bê'},
-  {l:'C',ex:'🏠 Casa',     som:'sê', nome:'Cê'},
-  {l:'D',ex:'🦷 Dente',    som:'dê', nome:'Dê'},
-  {l:'E',ex:'🐘 Elefante', som:'ê',  nome:'Ê'},
-  {l:'F',ex:'🌸 Flor',     som:'efe',nome:'Efe'},
-  {l:'G',ex:'🐱 Gato',     som:'gê', nome:'Gê'},
-  {l:'H',ex:'🌿 Horta',    som:'agá',nome:'Agá'},
-  {l:'I',ex:'🏝️ Ilha',    som:'i',  nome:'I'},
-  {l:'J',ex:'🕹️ Jogo',    som:'jota',nome:'Jota'},
-  {l:'L',ex:'🌙 Lua',      som:'ele',nome:'Ele'},
-  {l:'M',ex:'🍄 Mato',     som:'eme',nome:'Eme'},
-  {l:'N',ex:'🌊 Nuvem',    som:'ene',nome:'Ene'},
-  {l:'O',ex:'🐑 Ovelha',   som:'ó',  nome:'Ó'},
-  {l:'P',ex:'🐟 Peixe',    som:'pê', nome:'Pê'},
-  {l:'R',ex:'🐸 Rato',     som:'erre',nome:'Erre'},
-  {l:'S',ex:'🐍 Sapo',     som:'esse',nome:'Esse'},
-  {l:'T',ex:'🐢 Tartaruga',som:'tê', nome:'Tê'},
-  {l:'U',ex:'🦄 Unicórnio',som:'u',  nome:'U'},
-  {l:'V',ex:'🌬️ Vento',   som:'vê', nome:'Vê'},
-];
-
-const CORES = ['#7EC8E6','#A8D5BA','#FFE66D','#FFB980','#C5A8D5','#F4B8C8'];
-let pts=0,streak=0,qIdx=0,totalQ=15,modo='nome',synth=null;
-let listaQ=[],respondendo=false;
-
-function setModo(m){
-  modo=m;
-  ['nome','som','palavra'].forEach(x=>document.getElementById('m-'+x).classList.remove('ativo'));
-  document.getElementById('m-'+m).classList.add('ativo');
-}
-
-function iniciar(){
-  document.getElementById('ov-inicio').style.display='none';
-  listaQ=shuffle([...LETRAS]).slice(0,totalQ);
-  pts=0;streak=0;qIdx=0;
-  carregarQuestao();
-}
-
-function carregarQuestao(){
-  respondendo=false;
-  const q=listaQ[qIdx];
-  document.getElementById('letra-disp').textContent=q.l;
-  document.getElementById('letra-ex').textContent=q.ex;
-  document.getElementById('qn').textContent=`${qIdx+1}/${totalQ}`;
-  document.getElementById('prog').style.width=(qIdx/totalQ*100)+'%';
-  document.getElementById('pts').textContent=pts;
-  document.getElementById('str').textContent=streak;
-
-  // Animação na carta
-  const card=document.getElementById('letra-card');
-  card.style.animation='none'; void card.offsetWidth;
-  card.style.animation='zPop .4s cubic-bezier(.34,1.56,.64,1)';
-
-  // Pergunta
-  const pergs={nome:'Qual é o NOME dessa letra?',som:'Qual é o SOM dessa letra?',palavra:'Qual letra começa essa palavra?'};
-  document.getElementById('pergunta').textContent=pergs[modo];
-
-  // Opções (4)
-  const erradas=shuffle(LETRAS.filter(x=>x.l!==q.l)).slice(0,3);
-  const opts=shuffle([q,...erradas]);
-  const grid=document.getElementById('opcoes');
-  grid.innerHTML='';
-  opts.forEach((op,i)=>{
-    const btn=document.createElement('button');
-    btn.className='opcao-letra-btn';
-    btn.style.background=CORES[i%CORES.length];
-    if(modo==='nome') btn.textContent=op.l;
-    else if(modo==='som') btn.textContent=op.nome;
-    else btn.textContent=op.l;
-    btn.onclick=()=>responder(btn,op.l===q.l);
-    grid.appendChild(btn);
-  });
-  // Falar automaticamente
-  setTimeout(()=>falarLetra(),300);
-}
-
-function falarLetra(){
-  const q=listaQ[qIdx];
-  const btn=document.getElementById('ouvir-btn');
-  btn.style.animation='zPulse .3s ease';
-  setTimeout(()=>btn.style.animation='',300);
-  let fala='';
-  if(modo==='nome') fala=q.nome||q.l;
-  else if(modo==='som') fala=q.som||q.l;
-  else fala=q.ex.split(' ')[1]||q.ex;
-  try{
-    if('speechSynthesis' in window){
-      window.speechSynthesis.cancel();
-      const u=new SpeechSynthesisUtterance(fala);
-      u.lang='pt-BR'; u.rate=0.85; u.pitch=1.2; u.volume=1;
-      window.speechSynthesis.speak(u);
-    }
-  }catch(e){ somFala(q.l.charCodeAt(0)); }
-}
-
-function responder(btn,correto){
-  if(respondendo) return;
-  respondendo=true;
-  if(correto){
-    btn.classList.add('correta');
-    streak++; pts+=10+Math.floor(streak/3)*5;
-    somAcerto();
-    lancarEstrelinha(btn);
-    setTimeout(()=>{ qIdx++; if(qIdx>=totalQ) fimDeJogo(); else carregarQuestao(); },700);
-  } else {
-    btn.classList.add('errada');
-    streak=0;
-    somErro();
-    setTimeout(()=>{ respondendo=false; },800);
-  }
-  document.getElementById('pts').textContent=pts;
-  document.getElementById('str').textContent=streak;
-}
-
-function lancarEstrelinha(btn){
-  const r=btn.getBoundingClientRect();
-  for(let i=0;i<8;i++){
-    const s=document.createElement('div');
-    const angle=Math.random()*Math.PI*2, dist=30+Math.random()*40;
-    s.style.cssText=`position:fixed;left:${r.left+r.width/2}px;top:${r.top+r.height/2}px;font-size:1.2rem;pointer-events:none;z-index:700;animation:gotaVoa .6s ease-out forwards;--tx:${Math.cos(angle)*dist}px;--ty:${Math.sin(angle)*dist}px;margin:-10px 0 0 -10px;`;
-    s.textContent='⭐';
-    document.body.appendChild(s);
-    setTimeout(()=>s.remove(),700);
-  }
-}
-
-function fimDeJogo(){
-  document.getElementById('fim-e').textContent=pts>=120?'🏆':pts>=70?'⭐':'💪';
-  document.getElementById('fim-t').textContent=pts>=120?'Parabéns!':pts>=70?'Muito bom!':'Continue praticando!';
-  document.getElementById('fim-s').textContent=`${pts} pontos 🎯 | ${qIdx} letras!`;
-  document.getElementById('ov-fim').style.display='flex';
-  if(pts>=70) lancarConfete();
-}
-function reiniciar(){ document.getElementById('ov-fim').style.display='none'; iniciar(); }
-
-function lancarConfete(){
-  const cores=['#7EC8E6','#A8D5BA','#FFE66D','#FFB980','#C5A8D5'];
-  for(let i=0;i<40;i++){
-    const c=document.createElement('div');c.className='z-confete';
-    c.style.cssText=`left:${Math.random()*100}vw;top:-20px;width:${7+Math.random()*10}px;height:${7+Math.random()*10}px;background:${cores[Math.floor(Math.random()*cores.length)]};animation-duration:${1.4+Math.random()*2}s;animation-delay:${Math.random()*0.6}s;border-radius:${Math.random()>.5?'50%':'3px'}`;
-    document.body.appendChild(c);setTimeout(()=>c.remove(),4000);
-  }
-}
-function shuffle(a){return a.sort(()=>Math.random()-.5);}
-
-let actx;
-function getAC(){if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();return actx;}
-function somAcerto(){try{const c=getAC(),t=c.currentTime;[523,659].forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=f;o.type='sine';g.gain.setValueAtTime(.2,t+i*.1);g.gain.exponentialRampToValueAtTime(.001,t+i*.1+.15);o.start(t+i*.1);o.stop(t+i*.1+.15);});}catch(e){}}
-function somErro(){try{const c=getAC(),t=c.currentTime;const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=180;o.type='sawtooth';g.gain.setValueAtTime(.15,t);g.gain.exponentialRampToValueAtTime(.001,t+.35);o.start(t);o.stop(t+.35);}catch(e){}}
-function somFala(code){try{const c=getAC(),t=c.currentTime;const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=200+code*3;o.type='sine';g.gain.setValueAtTime(.2,t);g.gain.exponentialRampToValueAtTime(.001,t+.3);o.start(t);o.stop(t+.3);}catch(e){}}
-
-const st=document.createElement('style');
-st.textContent=`@keyframes gotaVoa{0%{transform:translate(0,0) scale(1);opacity:1}100%{transform:translate(var(--tx),var(--ty)) scale(0);opacity:0}}`;
-document.head.appendChild(st);
-
-/*]]>*/
+    var LETRAS=[{l:'A',ex:'Abacaxi',emoji:'🍍',som:'a',nome:'A'},{l:'B',ex:'Bola',emoji:'⚽',som:'be',nome:'B'},{l:'C',ex:'Casa',emoji:'🏠',som:'ce',nome:'C'},{l:'D',ex:'Dente',emoji:'🦷',som:'de',nome:'D'},{l:'E',ex:'Elefante',emoji:'🐘',som:'e',nome:'E'},{l:'F',ex:'Flor',emoji:'🌸',som:'efe',nome:'Efe'},{l:'G',ex:'Gato',emoji:'🐱',som:'ge',nome:'G'},{l:'I',ex:'Ilha',emoji:'🏝️',som:'i',nome:'I'},{l:'J',ex:'Jogo',emoji:'🎮',som:'jota',nome:'Jota'},{l:'L',ex:'Lua',emoji:'🌙',som:'ele',nome:'Ele'},{l:'M',ex:'Maca',emoji:'🍎',som:'eme',nome:'Eme'},{l:'N',ex:'Nuvem',emoji:'☁️',som:'ene',nome:'Ene'},{l:'O',ex:'Ovelha',emoji:'🐑',som:'o',nome:'O'},{l:'P',ex:'Peixe',emoji:'🐟',som:'pe',nome:'P'},{l:'R',ex:'Rato',emoji:'🐭',som:'erre',nome:'Erre'},{l:'S',ex:'Sapo',emoji:'🐸',som:'esse',nome:'Esse'},{l:'T',ex:'Tartaruga',emoji:'🐢',som:'te',nome:'T'},{l:'U',ex:'Unicornio',emoji:'🦄',som:'u',nome:'U'},{l:'V',ex:'Vela',emoji:'🕯️',som:'ve',nome:'V'}];
+    var CORS=['#7EC8E6','#A8D5BA','#FFE66D','#FFB980','#7EC8E6','#FFB980'];
+    var pts=0,streak=0,qIdx=0,totalQ=15,modo='nome',listaQ=[],respondendo=false;
+    function setModo(m){modo=m;['nome','som','palavra'].forEach(function(x){document.getElementById('m-'+x).classList.remove('ativo');});document.getElementById('m-'+m).classList.add('ativo');}
+    function iniciar(){document.getElementById('ov-inicio').style.display='none';listaQ=shuffle([].concat(LETRAS)).slice(0,totalQ);pts=0;streak=0;qIdx=0;carregarQuestao();}
+    function carregarQuestao(){respondendo=false;var q=listaQ[qIdx];document.getElementById('letra-disp').textContent=q.l;document.getElementById('letra-emoji').textContent=q.emoji;document.getElementById('letra-ex').textContent=q.ex;document.getElementById('qn').textContent=(qIdx+1)+'/'+totalQ;document.getElementById('prog').style.width=(qIdx/totalQ*100)+'%';document.getElementById('pts').textContent=pts+' pts';document.getElementById('str').textContent=streak;var card=document.getElementById('letra-card');card.style.animation='none';void card.offsetWidth;card.style.animation='mIn .4s cubic-bezier(.34,1.56,.64,1)';var pergs={nome:'Qual e o NOME dessa letra?',som:'Qual e o SOM dessa letra?',palavra:'Qual letra comeca essa palavra?'};document.getElementById('pergunta').textContent=pergs[modo];var erradas=shuffle(LETRAS.filter(function(x){return x.l!==q.l;})).slice(0,3);var opts=shuffle([q].concat(erradas));var grid=document.getElementById('opcoes');grid.innerHTML='';opts.forEach(function(op,i){var btn=document.createElement('button');btn.className='opcao-letra-btn';btn.style.background=CORS[i%CORS.length];if(modo==='nome')btn.textContent=op.l;else if(modo==='som')btn.textContent=op.nome;else btn.textContent=op.l;btn.onclick=function(){responder(btn,op.l===q.l);};grid.appendChild(btn);});setTimeout(function(){falarLetra();},300);}
+    function falarLetra(){var q=listaQ[qIdx];var btn=document.getElementById('ouvir-btn');btn.style.transform='scale(.95)';setTimeout(function(){btn.style.transform='';},150);var fala='';if(modo==='nome')fala=q.nome||q.l;else if(modo==='som')fala=q.som||q.l;else fala=q.ex;try{if('speechSynthesis' in window){window.speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(fala);u.lang='pt-BR';u.rate=0.85;u.pitch=1.2;u.volume=1;window.speechSynthesis.speak(u);}}catch(e){zupiTone(200+q.l.charCodeAt(0)*3,'sine',.2,.3);}}
+    function responder(btn,correto){if(respondendo) return;respondendo=true;if(correto){btn.classList.add('correta');streak++;pts+=10+Math.floor(streak/3)*5;zupiRight();zupiGota(btn.getBoundingClientRect().left+btn.offsetWidth/2,btn.getBoundingClientRect().top+btn.offsetHeight/2,'#A8D5BA',6);setTimeout(function(){qIdx++;if(qIdx>=totalQ)fimDeJogo();else carregarQuestao();},700);}else{btn.classList.add('errada');streak=0;zupiWrong();setTimeout(function(){respondendo=false;},800);}document.getElementById('pts').textContent=pts+' pts';document.getElementById('str').textContent=streak;}
+    function fimDeJogo(){document.getElementById('ft').textContent=pts>=120?'Parabens!':pts>=70?'Muito bom!':'Continue praticando!';document.getElementById('fs').textContent=pts+' pontos | '+qIdx+' letras!';document.getElementById('of').style.display='flex';if(pts>=70)zupiConfete(30);}
+    function reiniciar(){document.getElementById('of').style.display='none';iniciar();}
+    function shuffle(a){return a.sort(function(){return Math.random()-.5;});}
 </script>
-  <script src="/js/routes.js"></script>
-  <script src="/js/api.js"></script>
-  <script src="/js/auth-guard.js"></script>
-
-  <script src="/js/game-guard.js"></script>
-
-  <script src="/js/game-score.js"></script>
+  <script src="/js/routes.js"></script><script src="/js/api.js"></script><script src="/js/auth-guard.js"></script><script src="/js/game-guard.js"></script><script src="/js/game-score.js"></script>
 </body>
 </html>
-

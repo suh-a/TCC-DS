@@ -1,0 +1,135 @@
+.profile-page-hero,
+.selection-hero {
+  background: linear-gradient(135deg, rgba(126, 200, 230, .18), rgba(168, 213, 186, .22));
+  border: 1px solid rgba(126, 200, 230, .26);
+  border-radius: 18px;
+  box-shadow: 0 16px 44px rgba(45, 55, 72, .08);
+  margin-bottom: 1.5rem;
+  padding: 1.35rem;
+}
+
+.profile-page-hero h1,
+.selection-hero h1 {
+  color: #2d3748;
+  font-weight: 800;
+  margin-bottom: .35rem;
+}
+
+.profile-page-card,
+.selection-card {
+  border: 1px solid rgba(126, 200, 230, .22);
+  border-radius: 16px;
+  box-shadow: 0 12px 34px rgba(45, 55, 72, .08);
+  overflow: hidden;
+}
+
+.zupi-profile-avatar {
+  border: 4px solid #fff;
+  border-radius: 28px;
+  box-shadow: 0 12px 28px rgba(45, 55, 72, .14);
+  object-fit: cover;
+}
+
+.zupi-profile-avatar--fallback {
+  align-items: center;
+  background: linear-gradient(135deg, #7ec8e6, #a8d5ba);
+  color: #fff;
+  display: inline-flex;
+  font-size: 2.4rem;
+  font-weight: 900;
+  justify-content: center;
+}
+
+.profile-photo-action {
+  display: inline-block;
+  margin-top: .85rem;
+}
+
+.profile-photo-action input {
+  display: none;
+}
+
+.profile-photo-action span {
+  border: 1px solid rgba(126, 200, 230, .6);
+  border-radius: 999px;
+  color: #4a6fa5;
+  cursor: pointer;
+  display: inline-flex;
+  font-weight: 800;
+  padding: .52rem .9rem;
+}
+
+.profile-photo-action + .badge {
+  display: block;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.profile-card {
+  border: 1px solid rgba(126, 200, 230, .22) !important;
+  border-radius: 18px;
+  box-shadow: 0 12px 32px rgba(45, 55, 72, .08);
+  transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+}
+
+.profile-card:hover {
+  border-color: rgba(255, 185, 128, .75) !important;
+  box-shadow: 0 18px 42px rgba(45, 55, 72, .13);
+  transform: translateY(-5px);
+}
+
+.zupi-profile-avatar--saved {
+  animation: zupiAvatarSaved .7s ease;
+}
+
+@keyframes zupiAvatarSaved {
+  0% {
+    box-shadow: 0 0 0 0 rgba(126, 200, 230, .55);
+    transform: scale(.96);
+  }
+
+  60% {
+    box-shadow: 0 0 0 12px rgba(126, 200, 230, 0);
+    transform: scale(1.04);
+  }
+
+  100% {
+    box-shadow: 0 12px 28px rgba(45, 55, 72, .14);
+    transform: scale(1);
+  }
+}
+
+.profile-card .zupi-profile-avatar {
+  border-radius: 24px;
+  margin-bottom: 1rem;
+}
+
+.selection-card-meta {
+  color: #64748b;
+  font-size: .9rem;
+  margin-bottom: .25rem;
+}
+
+.profile-children-section {
+  background: rgba(255, 255, 255, .54);
+  border: 1px solid rgba(126, 200, 230, .18);
+  border-radius: 22px;
+  box-shadow: 0 18px 48px rgba(45, 55, 72, .07);
+  padding: 1.25rem;
+}
+
+.child-profile-dashboard-card {
+  background: linear-gradient(180deg, rgba(255, 255, 255, .98), rgba(246, 251, 253, .98));
+  min-height: 280px;
+}
+
+.child-profile-dashboard-card .card-body {
+  min-height: 280px;
+  padding: 1.35rem;
+}
+
+.child-profile-dashboard-card .profile-photo-action span {
+  font-size: .8rem;
+  padding: .42rem .75rem;
+}

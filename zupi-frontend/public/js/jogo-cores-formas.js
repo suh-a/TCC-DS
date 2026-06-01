@@ -235,6 +235,7 @@ function acertou(shapeElement) {
 }
 
 function errou(shapeElement) {
+    window.GameScore?.recordError?.();
     somError.play().catch(() => {});
     mostrarFeedback('❌ Tente novamente!', 'error');
     
@@ -274,6 +275,12 @@ function finalizarJogo() {
     modalIcon.textContent = '🏆';
     
     modalOverlay.classList.remove('hidden');
+    window.GameScore?.submit?.({
+        gameId: 'jogo-cores-formas',
+        score: pontuacao,
+        maxScore: Math.max(100, pontuacao),
+        errors: window.GameScore?.state?.errors || 0
+    });
 }
 
 function reiniciarJogo() {
@@ -282,5 +289,3 @@ function reiniciarJogo() {
 }
 
 // Estilos já estão no CSS, não precisamos adicionar dinamicamente
-
-

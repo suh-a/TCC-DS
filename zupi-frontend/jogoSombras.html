@@ -3,119 +3,135 @@
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Acha a Sombra - Zupi</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/zupi-jogos.css">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
   <style>
-    .salvo{font-size:.7rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#7EC8E6;margin-bottom:.4rem;font-family:'Poppins',sans-serif;}
-    .salvo-e{font-size:5.5rem;display:block;animation:emojiBounce 2s ease-in-out infinite alternate;}
+    :root{--blue:#7EC8E6;--green:#A8D5BA;--yellow:#FFE66D;--orange:#FFB980;--bg:#F5F7FA;--text:#2D3748;--white:#FFFFFF;}
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);}
+    .bg-s{position:absolute;border-radius:50%;opacity:.11;animation:bgF var(--d,14s) ease-in-out infinite alternate;}
+    @keyframes bgF{0%{transform:translateY(0) rotate(0) scale(1)}100%{transform:translateY(-24px) rotate(18deg) scale(1.07);opacity:.18}}
+    .zj-nav{position:fixed;top:0;left:0;right:0;height:58px;z-index:300;display:flex;align-items:center;justify-content:space-between;padding:0 1.2rem;background:rgba(245,247,250,.92);backdrop-filter:blur(14px);border-bottom:1.5px solid rgba(126,200,230,.18);box-shadow:0 2px 14px rgba(126,200,230,.10);}
+    .zj-logo{font-size:1.25rem;font-weight:900;color:var(--blue);text-decoration:none;}
+    .zj-logo b{color:var(--orange);}
+    .zj-hud{display:flex;gap:.45rem;flex-wrap:wrap;}
+    .zj-pill{padding:.25rem .7rem;border-radius:50px;background:rgba(255,255,255,.85);border:1.5px solid rgba(126,200,230,.25);font-size:.8rem;font-weight:800;}
+    .zj-overlay{position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;background:rgba(45,55,72,.45);backdrop-filter:blur(12px);padding:1rem;}
+    .zj-modal{background:var(--white);border-radius:28px;padding:2.2rem 2rem;max-width:360px;width:100%;text-align:center;border:2px solid rgba(126,200,230,.18);box-shadow:0 20px 60px rgba(45,55,72,.18);animation:mIn .38s cubic-bezier(.34,1.56,.64,1);}
+    @keyframes mIn{from{transform:scale(.85) translateY(16px);opacity:0}to{transform:scale(1);opacity:1}}
+    .modal-icon{width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--green));margin:0 auto 1rem;display:flex;align-items:center;justify-content:center;}
+    .modal-icon svg{width:34px;height:34px;fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
+    .modal-icon.yi{background:linear-gradient(135deg,var(--yellow),var(--orange));}
+    .modal-icon.oi{background:linear-gradient(135deg,var(--orange),var(--yellow));}
+    .modal-icon.gi{background:linear-gradient(135deg,var(--green),var(--blue));}
+    .modal-title{font-size:1.5rem;font-weight:900;margin-bottom:.45rem;}
+    .modal-sub{font-size:.88rem;color:#7A90A4;line-height:1.55;margin-bottom:1.3rem;}
+    .zj-btn{display:block;width:100%;padding:.75rem;border-radius:50px;font-family:'Nunito',sans-serif;font-size:1rem;font-weight:800;cursor:pointer;border:none;text-decoration:none;text-align:center;transition:all .22s;margin-top:.5rem;}
+    .zj-btn-p{background:linear-gradient(135deg,var(--blue),var(--green));color:#fff;box-shadow:0 6px 20px rgba(126,200,230,.35);}
+    .zj-btn-p:hover{transform:scale(1.03) translateY(-2px);}
+    .zj-btn-y{background:linear-gradient(135deg,var(--yellow),var(--orange));color:var(--text);box-shadow:0 6px 20px rgba(255,230,109,.3);}
+    .zj-btn-y:hover{transform:scale(1.03) translateY(-2px);}
+    .zj-btn-g{background:transparent;color:#7A90A4;border:2px solid rgba(126,200,230,.28);}
+    .zj-btn-g:hover{border-color:var(--blue);color:var(--blue);}
+    .zj-main{position:relative;z-index:1;display:flex;align-items:flex-start;justify-content:center;padding:74px 1rem 2rem;min-height:100vh;}
+    .zj-card{background:var(--white);border-radius:24px;padding:1.5rem 1.4rem;width:100%;max-width:480px;border:2px solid rgba(126,200,230,.14);box-shadow:0 8px 32px rgba(126,200,230,.11);}
+    .zj-prog{height:6px;border-radius:6px;background:rgba(126,200,230,.15);overflow:hidden;margin-bottom:1rem;}
+    .zj-prog-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--green));border-radius:6px;transition:width .4s ease;}
+    .zj-opts{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin:.8rem 0;}
+    .zj-opt{padding:.9rem .5rem;border:2.5px solid rgba(126,200,230,.22);border-radius:16px;background:rgba(255,255,255,.85);color:var(--text);font-family:'Nunito',sans-serif;font-size:1.35rem;font-weight:800;cursor:pointer;transition:all .22s cubic-bezier(.34,1.56,.64,1);}
+    .zj-opt:hover{transform:scale(1.06) translateY(-3px);border-color:var(--blue);box-shadow:0 6px 18px rgba(126,200,230,.25);}
+    .zj-opt.ok{background:linear-gradient(135deg,rgba(168,213,186,.25),rgba(126,200,230,.25));border-color:var(--green);animation:optPop .4s;}
+    .zj-opt.no{background:rgba(255,185,128,.2);border-color:var(--orange);animation:optShake .38s;}
+    @keyframes optPop{0%{transform:scale(1)}50%{transform:scale(1.10)}100%{transform:scale(1)}}
+    @keyframes optShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+    .zj-timebar{position:fixed;bottom:0;left:0;right:0;height:5px;z-index:300;background:rgba(126,200,230,.15);}
+    .zj-timebar-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--green));transition:width .9s linear;}
+    .zj-streak{font-size:.82rem;font-weight:700;color:var(--orange);min-height:1.3rem;text-align:center;}
+    @keyframes floatUp{0%{transform:translate(-50%,0);opacity:1}100%{transform:translate(-50%,-52px);opacity:0}}
+    @keyframes confeteQ{0%{transform:translateY(-10vh) rotate(0);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:.1}}
+    @keyframes gotaV{0%{transform:translate(0,0);opacity:.9}100%{transform:translate(var(--gx),var(--gy)) scale(0);opacity:0}}
+    @keyframes zjPop{0%{transform:scale(1)}50%{transform:scale(1.13)}100%{transform:scale(1)}}
+    @keyframes zjShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-9px)}75%{transform:translateX(9px)}}
+
+    .salvo-label{font-size:.7rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--blue);margin-bottom:.4rem;}
+    .salvo-shape{width:110px;height:110px;margin:.8rem auto;animation:zupiFloat 2s ease-in-out infinite alternate;filter:drop-shadow(0 6px 14px rgba(126,200,230,.3));}
+    @keyframes zupiFloat{0%{transform:translateY(0)}100%{transform:translateY(-10px)}}
     .sgrid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin:.8rem 0;}
-    .sbtn{padding:1rem;border:2.5px solid rgba(126,200,230,.22);border-radius:18px;background:rgba(255,255,255,.85);cursor:pointer;font-size:4rem;filter:grayscale(1) brightness(0.12) contrast(2);transition:all .25s cubic-bezier(.34,1.56,.64,1);}
-    .sbtn:hover{transform:scale(1.07) translateY(-4px);border-color:#7EC8E6;filter:grayscale(1) brightness(0.2) contrast(2);}
-    .sbtn.ok{filter:none!important;background:linear-gradient(135deg,rgba(168,213,186,.18),rgba(126,200,230,.18))!important;border-color:#A8D5BA!important;box-shadow:0 0 18px rgba(168,213,186,.5)!important;animation:zjPop .4s cubic-bezier(.34,1.56,.64,1)!important;}
-    .sbtn.no{filter:grayscale(1) brightness(.15)!important;background:rgba(249,198,208,.1)!important;border-color:#F9C6D0!important;animation:zjShake .35s!important;}
-    .smsg{font-size:.85rem;color:#9CA3AF;font-family:'Poppins',sans-serif;margin-top:.5rem;min-height:1.3rem;}
-  </style>
+    .sbtn{padding:1rem;border:2.5px solid rgba(126,200,230,.22);border-radius:18px;background:rgba(255,255,255,.85);cursor:pointer;transition:all .25s cubic-bezier(.34,1.56,.64,1);display:flex;align-items:center;justify-content:center;}
+    .sbtn svg{width:70px;height:70px;filter:grayscale(1) brightness(.12) contrast(2);transition:filter .2s;}
+    .sbtn:hover{transform:scale(1.07) translateY(-4px);border-color:var(--blue);}
+    .sbtn:hover svg{filter:grayscale(1) brightness(.22) contrast(2);}
+    .sbtn.ok{border-color:var(--green)!important;background:linear-gradient(135deg,rgba(168,213,186,.18),rgba(126,200,230,.18))!important;animation:zjPop .4s!important;}
+    .sbtn.ok svg{filter:none!important;}
+    .sbtn.no{border-color:var(--orange)!important;background:rgba(255,185,128,.1)!important;animation:zjShake .35s!important;}
+    .smsg{font-size:.85rem;color:var(--text);margin-top:.5rem;min-height:1.3rem;text-align:center;}
+</style>
 </head>
-<body class="zj-body">
-<div id="zj-sky" class="zj-sky"></div>
-<nav class="zj-nav">
-  <a href="/menuJogos" class="zj-brand">&#x1F43E; Zupi</a>
-  <div class="zj-stats">
-    <div class="zj-pill">&#x2B50; <span id="p">0</span></div>
-    <div class="zj-pill">&#x1F522; <span id="q">1/12</span></div>
+<body>
+  <div id="zj-bg" style="position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;">
+    <div style="position:absolute;inset:0;background-image:radial-gradient(circle,rgba(126,200,230,.15) 1.5px,transparent 1.5px);background-size:34px 34px;"></div>
+    <div class="bg-s" style="width:300px;height:300px;background:#7EC8E6;top:-80px;left:-80px;--d:13s;"></div>
+    <div class="bg-s" style="width:190px;height:190px;background:#FFE66D;top:10%;right:-55px;--d:17s;border-radius:40% 60%;"></div>
+    <div class="bg-s" style="width:240px;height:240px;background:#A8D5BA;bottom:15%;left:-65px;--d:11s;"></div>
+    <div class="bg-s" style="width:160px;height:160px;background:#FFB980;bottom:-35px;right:8%;--d:15s;border-radius:60% 40%;"></div>
   </div>
-</nav>
-<div class="zj-main">
-  <div class="zj-card" id="jcard" style="display:none">
-    <div class="zj-prog"><div class="zj-prog-fill" id="pf" style="width:0%"></div></div>
-    <div class="salvo">Encontre a sombra de:</div>
-    <span class="salvo-e" id="alvo">&#x1F981;</span>
-    <div class="sgrid" id="sgrid"></div>
-    <div class="smsg" id="smsg"></div>
+  <nav class="zj-nav">
+    <a href="/menuJogos" class="zj-logo">Zupi<b>.</b></a>
+    <div class="zj-hud"><div class="zj-pill" id="p">0 pts</div><div class="zj-pill">Fase <span id="q">1/12</span></div></div>
+  </nav>
+  <div class="zj-main">
+    <div class="zj-card" id="jcard" style="display:none;text-align:center">
+      <div class="zj-prog"><div class="zj-prog-fill" id="pf" style="width:0%"></div></div>
+      <div class="salvo-label">Encontre a sombra de:</div>
+      <div class="salvo-shape" id="alvo"></div>
+      <div class="sgrid" id="sgrid"></div>
+      <div class="smsg" id="smsg"></div>
+    </div>
   </div>
-</div>
-<div class="zj-overlay" id="oi">
-  <div class="zj-modal">
-    <span class="zj-modal-emoji">&#x1F311;</span>
-    <div class="zj-modal-title">Acha a Sombra!</div>
-    <div class="zj-modal-sub">Veja o objeto e encontre sua sombra correta entre as opcoes!</div>
-    <button class="zj-btn zj-btn-main" onclick="iniciar()">&#x1F680; Jogar!</button><br>
-    <a href="/menuJogos" class="zj-btn zj-btn-ghost" style="margin-top:.5rem">&#x2B05; Menu</a>
+  <div class="zj-overlay" id="oi">
+    <div class="zj-modal">
+      <div class="modal-icon gi"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l4 4"/></svg></div>
+      <div class="modal-title">Acha a Sombra!</div>
+      <div class="modal-sub">Veja a forma e encontre a sombra correta entre as opcoes!</div>
+      <button class="zj-btn zj-btn-p" onclick="iniciar()">Jogar!</button>
+      <a href="/menuJogos" class="zj-btn zj-btn-g">Menu</a>
+    </div>
+  </div>  <div class="zj-overlay" id="of" style="display:none">
+    <div class="zj-modal">
+      <div class="modal-icon yi"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="#fff" stroke-width="2" stroke-linejoin="round"/></svg></div>
+      <div class="modal-title" id="ft">Fim!</div>
+      <div class="modal-sub" id="fs"></div>
+      <button class="zj-btn zj-btn-p" onclick="reiniciar()">Jogar novamente</button>
+      
+      <a href="/menuJogos" class="zj-btn zj-btn-g">Menu</a>
+    </div>
   </div>
-</div>
-<div class="zj-overlay" id="of" style="display:none">
-  <div class="zj-modal">
-    <span class="zj-modal-emoji" id="fe">&#x1F3C6;</span>
-    <div class="zj-modal-title" id="ft">Fim!</div>
-    <div class="zj-modal-sub" id="fs"></div>
-    <button class="zj-btn zj-btn-main" onclick="reiniciar()">&#x1F504; Jogar novamente</button><br>
-    <a href="/menuJogos" class="zj-btn zj-btn-ghost" style="margin-top:.5rem">&#x2B05; Menu</a>
-  </div>
-</div>
-<script src="/js/zupi-sky.js"></script>
-<script th:inline="none">
-zupiSky();
-var GRUPOS=[
-  ['&#x1F981;','&#x1F42F;','&#x1F43B;','&#x1F43C;'],
-  ['&#x1F436;','&#x1F431;','&#x1F430;','&#x1F439;'],
-  ['&#x1F34E;','&#x1F34A;','&#x1F34B;','&#x1F347;'],
-  ['&#x1F680;','&#x2708;&#xFE0F;','&#x1F682;','&#x1F6F8;'],
-  ['&#x1F338;','&#x1F33A;','&#x1F33B;','&#x1F339;'],
-  ['&#x1F382;','&#x1F381;','&#x1F388;','&#x1F389;'],
-  ['&#x1F98B;','&#x1F41D;','&#x1F41E;','&#x1F997;'],
-  ['&#x1F433;','&#x1F42C;','&#x1F988;','&#x1F419;'],
-  ['&#x1F3E0;','&#x1F3F0;','&#x26FA;&#xFE0F;','&#x1F3E2;'],
-  ['&#x1F3B8;','&#x1F3B9;','&#x1F3BA;','&#x1F941;']
-];
-var pts=0,q=0,total=12,resp=false,alvoE='';
-function shuffle(a){return a.sort(function(){return Math.random()-.5;});}
-function iniciar(){document.getElementById('oi').style.display='none';document.getElementById('jcard').style.display='';pts=0;q=0;gerarQ();}
-function gerarQ(){
-  resp=false; document.getElementById('smsg').textContent='';
-  var g=GRUPOS[Math.floor(Math.random()*GRUPOS.length)];
-  var emb=shuffle(g.slice());
-  alvoE=emb[0];
-  document.getElementById('alvo').innerHTML=alvoE;
-  var grid=document.getElementById('sgrid'); grid.innerHTML='';
-  emb.forEach(function(e){
-    var b=document.createElement('button'); b.className='sbtn';
-    b.innerHTML=e;
-    b.onclick=function(){responder(b,e===alvoE);};
-    grid.appendChild(b);
-  });
-  q++; document.getElementById('q').textContent=q+'/'+total;
-  document.getElementById('pf').style.width=((q-1)/total*100)+'%';
-}
-function responder(btn,certa){
-  if(resp) return; resp=true;
-  if(certa){
-    btn.classList.add('ok'); zupiRight(); pts+=10;
-    document.getElementById('p').textContent=pts;
-    document.getElementById('smsg').textContent='Correto! Que olho bom!';
-    zupiConfete(18);
-    if(q>=total) setTimeout(fimDeJogo,900);
-    else setTimeout(gerarQ,1000);
-  } else {
-    btn.classList.add('no'); zupiWrong();
-    document.getElementById('smsg').textContent='Nao e essa! Tente outra!';
-    setTimeout(function(){btn.classList.remove('no');resp=false;},700);
-  }
-}
-function fimDeJogo(){
-  document.getElementById('fe').innerHTML=pts>=100?'&#x1F3C6;':pts>=60?'&#x2B50;':'&#x1F311;';
-  document.getElementById('ft').textContent=pts>=100?'Detetive das Sombras!!':pts>=60?'Muito bem!':'Continue praticando!';
-  document.getElementById('fs').textContent='Pontuacao: '+pts+' pontos!';
-  document.getElementById('of').style.display='flex'; zupiConfete(30);
-}
-function reiniciar(){document.getElementById('of').style.display='none';pts=0;q=0;gerarQ();}
+  <script>
+    var _ac;function _gac(){if(!_ac)_ac=new(window.AudioContext||window.webkitAudioContext)();return _ac;}
+    function zupiTone(f,tp,v,dur){try{var c=_gac(),tm=c.currentTime;var o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=f||440;o.type=tp||'sine';g.gain.setValueAtTime(v||.15,tm);g.gain.exponentialRampToValueAtTime(.001,tm+(dur||.18));o.start(tm);o.stop(tm+(dur||.18));}catch(e){}}
+    function zupiRight(){try{var c=_gac(),t=c.currentTime;[523,659,784].forEach(function(f,i){var o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=f;o.type='sine';g.gain.setValueAtTime(.14,t+i*.1);g.gain.exponentialRampToValueAtTime(.001,t+i*.1+.15);o.start(t+i*.1);o.stop(t+i*.1+.15);});}catch(e){}}
+    function zupiWrong(){try{var c=_gac(),t=c.currentTime;var o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=200;o.type='sawtooth';g.gain.setValueAtTime(.14,t);g.gain.exponentialRampToValueAtTime(.001,t+.32);o.start(t);o.stop(t+.32);}catch(e){}}
+    function zupiLevelUp(){try{var c=_gac(),t=c.currentTime;[523,659,784,1046].forEach(function(f,i){var o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=f;o.type='sine';g.gain.setValueAtTime(.16,t+i*.12);g.gain.exponentialRampToValueAtTime(.001,t+i*.12+.18);o.start(t+i*.12);o.stop(t+i*.12+.18);});}catch(e){}}
+    function zupiFloat(x,y,txt,cor){var el=document.createElement('div');el.style.cssText='position:fixed;left:'+x+'px;top:'+y+'px;color:'+(cor||'#7EC8E6')+';font-family:Nunito,sans-serif;font-weight:900;font-size:1.1rem;pointer-events:none;z-index:900;animation:floatUp .9s ease-out forwards;transform:translateX(-50%);white-space:nowrap;';el.textContent=txt;document.body.appendChild(el);setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);},950);}
+    function zupiConfete(q){var c=['#7EC8E6','#A8D5BA','#FFE66D','#FFB980'];for(var i=0;i<(q||30);i++){(function(){var el=document.createElement('div');var dur=(1.4+Math.random()*1.8).toFixed(2);var del=(Math.random()*.8).toFixed(2);el.style.cssText='position:fixed;left:'+Math.random()*100+'vw;top:-20px;width:'+(7+Math.random()*10)+'px;height:'+(7+Math.random()*10)+'px;background:'+c[Math.floor(Math.random()*c.length)]+';border-radius:'+(Math.random()>.5?'50%':'3px')+';pointer-events:none;z-index:800;animation:confeteQ '+dur+'s ease-in '+del+'s forwards;';document.body.appendChild(el);setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);},(parseFloat(dur)+parseFloat(del))*1000+200);})();}}
+    function zupiGota(cx,cy,cor,qtd){for(var i=0;i<(qtd||8);i++){(function(idx){var g=document.createElement('div');var ang=(idx/(qtd||8))*Math.PI*2,d=28+Math.random()*40;g.style.cssText='position:fixed;left:'+cx+'px;top:'+cy+'px;width:'+(5+Math.random()*6)+'px;height:'+(5+Math.random()*6)+'px;background:'+(cor||'#7EC8E6')+';border-radius:50%;pointer-events:none;z-index:700;margin:-3px 0 0 -3px;animation:gotaV .65s ease-out forwards;--gx:'+Math.cos(ang)*d+'px;--gy:'+Math.sin(ang)*d+'px;';document.body.appendChild(g);setTimeout(function(){if(g.parentNode)g.parentNode.removeChild(g);},700);})(i);}}
+
+    var FORMAS=[
+      {n:'circulo', fn:function(c){return '<svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="34" fill="'+c+'"/></svg>';}},
+      {n:'quadrado',fn:function(c){return '<svg viewBox="0 0 80 80"><rect x="8" y="8" width="64" height="64" rx="8" fill="'+c+'"/></svg>';}},
+      {n:'triangulo',fn:function(c){return '<svg viewBox="0 0 80 80"><polygon points="40,6 74,74 6,74" fill="'+c+'"/></svg>';}},
+      {n:'estrela',fn:function(c){return '<svg viewBox="0 0 80 80"><polygon points="40,5 49,28 74,30 56,48 61,73 40,60 19,73 24,48 6,30 31,28" fill="'+c+'"/></svg>';}},
+      {n:'diamante',fn:function(c){return '<svg viewBox="0 0 80 80"><polygon points="40,5 75,40 40,75 5,40" fill="'+c+'"/></svg>';}},
+      {n:'lua',fn:function(c){return '<svg viewBox="0 0 80 80"><path d="M55 20 A28 28 0 1 0 55 60 A20 20 0 1 1 55 20Z" fill="'+c+'"/></svg>';}}
+    ];
+    var CORES_VIS=['#7EC8E6','#A8D5BA','#FFE66D','#FFB980'];
+    var pts=0,q=0,total=12,resp=false,alvoF;
+    function shuffle(a){return a.sort(function(){return Math.random()-.5;});}
+    function iniciar(){document.getElementById('oi').style.display='none';document.getElementById('jcard').style.display='';pts=0;q=0;gerarQ();}
+    function gerarQ(){resp=false;document.getElementById('smsg').textContent='';var todas=shuffle(FORMAS.slice());alvoF=todas[0];var opts=todas.slice(0,4);var corVis=CORES_VIS[Math.floor(Math.random()*CORES_VIS.length)];document.getElementById('alvo').innerHTML=alvoF.fn(corVis);var grid=document.getElementById('sgrid');grid.innerHTML='';opts.forEach(function(f){var b=document.createElement('button');b.className='sbtn';b.innerHTML=f.fn('#000000');b.onclick=function(){responder(b,f.n===alvoF.n,f);};grid.appendChild(b);});q++;document.getElementById('q').textContent=q+'/'+total;document.getElementById('pf').style.width=((q-1)/total*100)+'%';}
+    function responder(btn,certa,f){if(resp) return;resp=true;if(certa){btn.classList.add('ok');btn.querySelector('svg').style.filter='none';zupiRight();pts+=10;document.getElementById('p').textContent=pts+' pts';document.getElementById('smsg').textContent='Correto! Que olho bom!';zupiConfete(15);if(q>=total)setTimeout(fimDeJogo,900);else setTimeout(gerarQ,1000);}else{btn.classList.add('no');zupiWrong();document.getElementById('smsg').textContent='Nao e essa! Tente outra!';setTimeout(function(){btn.classList.remove('no');resp=false;},700);}}
+    function fimDeJogo(){document.getElementById('ft').textContent=pts>=100?'Detetive das Sombras!':pts>=60?'Muito bem!':'Continue praticando!';document.getElementById('fs').textContent='Pontuacao: '+pts+' pontos!';document.getElementById('of').style.display='flex';zupiConfete(30);}
+    function reiniciar(){document.getElementById('of').style.display='none';pts=0;q=0;gerarQ();}
 </script>
-  <script src="/js/routes.js"></script>
-  <script src="/js/api.js"></script>
-  <script src="/js/auth-guard.js"></script>
-
-  <script src="/js/game-guard.js"></script>
-
-  <script src="/js/game-score.js"></script>
+  <script src="/js/routes.js"></script><script src="/js/api.js"></script><script src="/js/auth-guard.js"></script><script src="/js/game-guard.js"></script><script src="/js/game-score.js"></script>
 </body>
 </html>
-
