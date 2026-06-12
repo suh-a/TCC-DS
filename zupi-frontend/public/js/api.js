@@ -118,6 +118,7 @@ const ZupiAPI = (() => {
         return {
             id: localStorage.getItem('userId'),
             type: localStorage.getItem('userType'),
+            planType: localStorage.getItem('planType'),
             name: localStorage.getItem('userName'),
             email: localStorage.getItem('userEmail')
         };
@@ -138,11 +139,16 @@ const ZupiAPI = (() => {
         }
         localStorage.setItem('userName', user.name || '');
         localStorage.setItem('userEmail', user.email || user.childLoginEmail || '');
+        if (user.planType) {
+            localStorage.setItem('planType', String(user.planType));
+        } else {
+            localStorage.removeItem('planType');
+        }
     }
 
     function clearSession() {
         [
-            'authToken', 'userId', 'userType', 'userName', 'userEmail',
+            'authToken', 'userId', 'userType', 'planType', 'userName', 'userEmail',
             'activeChildId', 'childId', 'dailyReportId', 'selectedChildId', 'activeProfile'
         ].forEach((k) => localStorage.removeItem(k));
     }
@@ -297,7 +303,9 @@ const ZupiAPI = (() => {
                 window.location.href = R.dashboardAdmin || '/dashboard-admin';
                 break;
             case 'RESPONSAVEL':
-                window.location.href = R.selecaoPerfil || '/selecao-perfil';
+                window.location.href = getUser().planType === 'PESSOA_JURIDICA'
+                    ? (R.dashboardPais || R.dashboard || '/dashboard-pais')
+                    : (R.selecaoPerfil || '/selecao-perfil');
                 break;
             case 'CRIANCA':
             case 'ALUNO_CREDENCIADO':

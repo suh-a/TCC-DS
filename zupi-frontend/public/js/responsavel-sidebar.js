@@ -30,7 +30,7 @@
         { href: '/dashboard-pais', label: 'Dashboard' },
         { href: '/selecao-perfil', label: 'Perfis das crianças' },
         { href: '/selecao-relatorios', label: 'Relatórios' },
-        { href: '/cadastro-dependentes', label: 'Cadastro de dependentes' },
+        { href: '/cadastro-dependentes', label: 'Cadastro de dependentes', plan: 'PF' },
         { href: '/agenda', label: 'Agenda' },
         { href: '/ajuda', label: 'Ajuda?' },
         { href: '/perfil-responsavel', label: 'Perfil' }
@@ -53,6 +53,12 @@
         return !type || type === 'RESPONSAVEL' || type === 'ADMIN';
     }
 
+    function isPjResponsible() {
+        if (typeof ZupiAPI === 'undefined' || !ZupiAPI.isAuthenticated()) return false;
+        const user = ZupiAPI.getUser();
+        return user.type === 'RESPONSAVEL' && user.planType === 'PESSOA_JURIDICA';
+    }
+
     function isActive(href) {
         const path = currentPath();
         if (href === '/dashboard-pais') return path === '/dashboard' || path === '/dashboard-pais';
@@ -66,7 +72,7 @@
     }
 
     function buildNavItems() {
-        return MENU.map((item) => {
+        return MENU.filter((item) => !(item.plan === 'PF' && isPjResponsible())).map((item) => {
             const active = isActive(item.href);
             const cls = 'nav-link text-white' + (active ? ' active' : '');
             const aria = active ? ' aria-current="page"' : '';
@@ -78,6 +84,10 @@
     function applyActiveState(ul) {
         ul.querySelectorAll('a.nav-link[href^="/"]').forEach((link) => {
             const href = link.getAttribute('href');
+            if (href === '/cadastro-dependentes' && isPjResponsible()) {
+                link.closest('li')?.classList.add('d-none');
+                return;
+            }
             const active = isActive(href);
             link.classList.toggle('active', active);
             if (active) {

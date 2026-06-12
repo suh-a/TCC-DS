@@ -113,7 +113,7 @@
 
         <!-- TURMAS -->
         <section id="section-turmas" class="d-none">
-          <button class="btn btn-link ps-0" onclick="showSection('dashboard')">← Voltar</button>
+          <button class="btn btn-outline-primary btn-sm mb-3" onclick="showSection('dashboard')">← Voltar</button>
           <h2 class="h3 text-zupi-primary mb-4">Minhas Turmas</h2>
           <div id="teacherClassesList">
             <p class="text-muted text-center">Nenhuma turma vinculada.</p>
@@ -122,7 +122,7 @@
 
         <!-- ATIVIDADES -->
         <section id="section-atividades" class="d-none">
-          <button class="btn btn-link ps-0" onclick="showSection('dashboard')">← Voltar</button>
+          <button class="btn btn-outline-primary btn-sm mb-3" onclick="showSection('dashboard')">← Voltar</button>
           <h2 class="h3 text-zupi-primary mb-4">Postar Atividade</h2>
           <div class="card"><div class="card-body">
             <form id="activityForm">
@@ -151,25 +151,25 @@
 
         <!-- QUIZZES -->
         <section id="section-quizzes" class="d-none">
-          <button class="btn btn-link ps-0" onclick="showSection('dashboard')">← Voltar</button>
+          <button class="btn btn-outline-primary btn-sm mb-3" onclick="showSection('dashboard')">← Voltar</button>
           <h2 class="h3 text-zupi-primary mb-4">Criar Quiz / Desafio</h2>
           <div class="card"><div class="card-body">
             <p class="text-muted">Funcionalidade de criação de quizzes será integrada em breve.</p>
           </div></div>
         </section>
 
-        <!-- RELATÓRIOS -->
+        <!-- RELATORIOS -->
         <section id="section-relatorios" class="d-none">
-          <button class="btn btn-link ps-0" onclick="showSection('dashboard')">← Voltar</button>
+          <button class="btn btn-outline-primary btn-sm mb-3" onclick="showSection('dashboard')">← Voltar</button>
           <h2 class="h3 text-zupi-primary mb-4">Relatórios dos Alunos</h2>
-          <div class="card"><div class="card-body">
+          <div class="card"><div class="card-body" id="teacherReportsContent">
             <p class="text-muted">Relatórios de desempenho, progresso e resultados dos alunos nas atividades.</p>
           </div></div>
         </section>
 
         <!-- AJUDA -->
         <section id="section-ajuda" class="d-none">
-          <button class="btn btn-link ps-0" onclick="showSection('dashboard')">← Voltar</button>
+          <button class="btn btn-outline-primary btn-sm mb-3" onclick="showSection('dashboard')">← Voltar</button>
           <h2 class="h3 text-zupi-primary mb-4">Ajuda & Suporte</h2>
           <div class="card"><div class="card-body">
             <form id="supportFormDocente">
@@ -211,6 +211,127 @@
       const user = ZupiAPI.getUser();
       const titleEl = document.getElementById('docenteTitle');
       if (titleEl && user.name) titleEl.textContent = `Olá, ${user.name}`;
+    });
+  </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      if (typeof ZupiAPI === 'undefined' || !ZupiAPI.isAuthenticated()) return;
+
+      const user = ZupiAPI.getUser();
+      const titleEl = document.getElementById('docenteTitle');
+      if (titleEl && user.name) titleEl.textContent = `Ola, ${user.name}`;
+
+      function setText(id, value) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value;
+      }
+
+      function escapeHtml(value) {
+        return String(value || '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+      }
+
+      function formatDateTime(value) {
+        if (!value) return 'Sem jogos';
+        return new Date(value).toLocaleString('pt-BR', {
+          day: '2-digit',
+          month: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+      }
+
+      function countClasses(students) {
+        return new Set(students.map(s => s.schoolClass).filter(Boolean)).size;
+      }
+
+      function renderTeacherClasses(students) {
+        const container = document.getElementById('teacherClassesList');
+        if (!container) return;
+        const groups = new Map();
+        students.forEach(student => {
+          const label = student.schoolClass || 'Turma nao informada';
+          groups.set(label, (groups.get(label) || 0) + 1);
+        });
+        if (!groups.size) {
+          container.innerHTML = '<p class="text-muted text-center">Nenhuma turma vinculada.</p>';
+          return;
+        }
+        container.innerHTML = Array.from(groups.entries()).map(([label, count]) => `
+          <div class="card mb-3">
+            <div class="card-body d-flex justify-content-between align-items-center">
+              <div>
+                <h3 class="h6 mb-1">${escapeHtml(label)}</h3>
+                <p class="small text-muted mb-0">${count} aluno${count === 1 ? '' : 's'}</p>
+              </div>
+              <button class="btn btn-sm btn-outline-primary" onclick="showSection('relatorios')">Ver relatorios</button>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      function renderTeacherReports(report) {
+        const container = document.getElementById('teacherReportsContent');
+        if (!container) return;
+        const students = Array.isArray(report?.students) ? report.students : [];
+        const rows = students.length ? students.map(item => `
+          <tr>
+            <td>${escapeHtml(item.name)}</td>
+            <td>${escapeHtml(item.schoolClass || '-')}</td>
+            <td>${item.totalSessions || 0}</td>
+            <td>${item.averageScore || 0}%</td>
+            <td>${formatDateTime(item.lastPlayedAt)}</td>
+            <td><a class="btn btn-sm btn-outline-primary" href="/relatorios?childId=${encodeURIComponent(item.childId)}">Abrir</a></td>
+          </tr>
+        `).join('') : '<tr><td colspan="6" class="text-center text-muted">Nenhum jogo registrado ainda.</td></tr>';
+
+        container.innerHTML = `
+          <div class="row g-3 mb-4">
+            <div class="col-md-4"><div class="card"><div class="card-body text-center">
+              <p class="small text-muted mb-1">Alunos</p>
+              <h3 class="text-zupi-primary mb-0">${report?.totalStudents || 0}</h3>
+            </div></div></div>
+            <div class="col-md-4"><div class="card"><div class="card-body text-center">
+              <p class="small text-muted mb-1">Partidas</p>
+              <h3 class="text-zupi-primary mb-0">${report?.totalSessions || 0}</h3>
+            </div></div></div>
+            <div class="col-md-4"><div class="card"><div class="card-body text-center">
+              <p class="small text-muted mb-1">Media</p>
+              <h3 class="text-zupi-primary mb-0">${report?.averageScore || 0}%</h3>
+            </div></div></div>
+          </div>
+          <div class="table-responsive">
+            <table class="table align-middle">
+              <thead><tr><th>Aluno</th><th>Turma</th><th>Jogos</th><th>Media</th><th>Ultima atividade</th><th></th></tr></thead>
+              <tbody>${rows}</tbody>
+            </table>
+          </div>
+        `;
+      }
+
+      async function loadTeacherDashboard() {
+        try {
+          const [dashboard, students, report] = await Promise.all([
+            ZupiAPI.fetchJson('/school/dashboard'),
+            ZupiAPI.fetchJson('/school/students'),
+            ZupiAPI.fetchJson('/school/reports/summary')
+          ]);
+          const studentList = Array.isArray(students) ? students : [];
+          setText('statTurmas', dashboard.classes ?? countClasses(studentList));
+          setText('statAlunos', dashboard.students ?? studentList.length);
+          setText('statAtividades', dashboard.games ?? report.totalSessions ?? 0);
+          renderTeacherClasses(studentList);
+          renderTeacherReports(report);
+        } catch (err) {
+          console.error('Erro ao carregar dashboard docente:', err);
+        }
+      }
+
+      loadTeacherDashboard();
     });
   </script>
 </body>

@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    bindChildAccessActions();
     dashboardLoad();
 });
 
@@ -163,13 +164,18 @@ async function dashboardLoad() {
         }
 
         const children = await getChildData();
+        toggleResponsiblePlanUi();
 
         const container = document.getElementById('perfil-criancas');
+        if (container) {
+            container.querySelectorAll('[data-child-card]').forEach((card) => card.remove());
+        }
         if (container && children.length > 0) {
             children.forEach(child => {
                 container.insertAdjacentHTML('beforeend', createChildCard(child));
             });
         }
+        renderChildAccessList(children);
     } catch (e) {
         console.error(e);
         const container = document.getElementById('perfil-criancas');
@@ -179,10 +185,100 @@ async function dashboardLoad() {
     }
 }
 
+function toggleResponsiblePlanUi() {
+    const user = ZupiAPI.getUser();
+    if (user.planType !== 'PESSOA_JURIDICA') return;
+    document.querySelectorAll('a[href="/cadastro-dependentes"]').forEach((link) => {
+        link.closest('.col-12, .nav-item')?.classList.add('d-none');
+    });
+}
+
+function renderChildAccessList(children) {
+    const container = document.getElementById('childAccessList');
+    if (!container) return;
+    if (!Array.isArray(children) || !children.length) {
+        container.innerHTML = '<p class="text-muted mb-0">Nenhuma crianca cadastrada ainda.</p>';
+        return;
+    }
+    container.innerHTML = `
+      <table class="table align-middle">
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Login infantil</th>
+            <th>Turma</th>
+            <th class="text-end">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${children.map((child) => `
+            <tr>
+              <td>${escapeHtml(child.name)}</td>
+              <td><code>${escapeHtml(child.childLoginEmail || '-')}</code></td>
+              <td>${escapeHtml(child.schoolClass || '-')}</td>
+              <td class="text-end">
+                <button class="btn btn-outline-primary btn-sm me-2" data-child-access-action="login" data-child-id="${child.id}" data-current-login="${escapeHtml(child.childLoginEmail || '')}">Alterar</button>
+                <button class="btn btn-primary btn-sm" data-child-access-action="reset" data-child-id="${child.id}">Nova senha</button>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    `;
+}
+
+function bindChildAccessActions() {
+    document.getElementById('childAccessList')?.addEventListener('click', async (event) => {
+        const button = event.target.closest('[data-child-access-action]');
+        if (!button) return;
+        const childId = button.dataset.childId;
+        const action = button.dataset.childAccessAction;
+
+        button.disabled = true;
+        try {
+            if (action === 'login') {
+                const email = prompt('Novo login infantil', button.dataset.currentLogin || '');
+                if (!email) return;
+                const response = await ZupiAPI.patch(`/child/${childId}/access/login`, { email: email.trim() });
+                if (!response) return;
+                if (!response.ok) {
+                    alert(await ZupiAPI.readErrorMessage(response, 'Nao foi possivel alterar o login infantil.'));
+                    return;
+                }
+                alert('Login infantil atualizado com sucesso.');
+            } else if (action === 'reset') {
+                if (!confirm('Gerar uma nova senha infantil? A senha antiga deixara de funcionar.')) return;
+                const response = await ZupiAPI.post(`/child/${childId}/access/password/reset`, {});
+                if (!response) return;
+                if (!response.ok) {
+                    alert(await ZupiAPI.readErrorMessage(response, 'Nao foi possivel gerar nova senha.'));
+                    return;
+                }
+                const data = await response.json();
+                alert(`Nova senha gerada.\nLogin: ${data.email || '-'}\nSenha: ${data.generatedPassword || '-'}`);
+            }
+            await dashboardLoad();
+        } catch (error) {
+            alert('Erro de conexao ao gerenciar acesso infantil.');
+        } finally {
+            button.disabled = false;
+        }
+    });
+}
+
+function escapeHtml(value) {
+    return String(value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
 function createChildCard(child) {
     const avatar = ZupiChildAvatar.renderHtml(child, 80, 'mx-auto mb-3');
     return `
-      <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3" data-child-card>
         <div class="card h-100 shadow-sm">
           <div class="card-body text-center d-flex flex-column">
             ${avatar}

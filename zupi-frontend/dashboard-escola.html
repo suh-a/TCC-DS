@@ -60,6 +60,12 @@
               <a class="nav-link text-white" href="#" onclick="showSection('docentes')">Docentes</a>
             </li>
             <li class="nav-item mb-2">
+              <a class="nav-link text-white" href="#" onclick="showSection('responsaveis')">Responsáveis</a>
+            </li>
+            <li class="nav-item mb-2">
+              <a class="nav-link text-white" href="#" onclick="showSection('acessos')">Acessos</a>
+            </li>
+            <li class="nav-item mb-2">
               <a class="nav-link text-white" href="#" onclick="showSection('turmas')">Turmas</a>
             </li>
             <li class="nav-item mb-2">
@@ -91,6 +97,8 @@
               <li class="nav-item mb-2"><a class="nav-link text-white active" href="/dashboard-escola">Dashboard</a></li>
               <li class="nav-item mb-2"><a class="nav-link text-white" href="#" onclick="showSection('alunos')">Alunos</a></li>
               <li class="nav-item mb-2"><a class="nav-link text-white" href="#" onclick="showSection('docentes')">Docentes</a></li>
+              <li class="nav-item mb-2"><a class="nav-link text-white" href="#" onclick="showSection('responsaveis')">Responsáveis</a></li>
+              <li class="nav-item mb-2"><a class="nav-link text-white" href="#" onclick="showSection('acessos')">Acessos</a></li>
               <li class="nav-item mb-2"><a class="nav-link text-white" href="#" onclick="showSection('turmas')">Turmas</a></li>
               <li class="nav-item mb-2"><a class="nav-link text-white" href="#" onclick="showSection('relatorios')">Relatórios</a></li>
               <li class="nav-item mb-2"><a class="nav-link text-white" href="/biblioteca">Biblioteca</a></li>
@@ -101,10 +109,10 @@
         </div>
       </div>
 
-      <!-- CONTEÚDO PRINCIPAL -->
+      <!-- CONTEUDO PRINCIPAL -->
       <main class="col-12 col-lg-10 ms-lg-auto dashboard-main-content px-3 px-lg-4 py-4">
 
-        <!-- ═══ DASHBOARD OVERVIEW ═══ -->
+        <!-- DASHBOARD OVERVIEW -->
         <section id="section-dashboard">
           <header class="mb-4">
             <h1 id="schoolTitle" class="text-zupi-primary mb-3">Painel da Escola</h1>
@@ -130,42 +138,56 @@
               <div class="col-md-3">
                 <div class="card bg-zupi-highlight text-white"><div class="card-body text-center">
                   <p class="card-text small mb-1">Jogos Ativos</p>
-                  <h3 class="mb-0">15</h3>
+                  <h3 id="statJogos" class="mb-0">0</h3>
                 </div></div>
               </div>
             </div>
           </header>
 
           <div class="row g-4">
-            <div class="col-md-4">
+            <div class="col-md-3">
               <div class="card h-100"><div class="card-body text-center">
-                <h3 class="card-title h5">👨‍🎓 Alunos</h3>
+                <h3 class="card-title h5">Alunos</h3>
                 <p class="card-text text-muted small">Gerencie alunos credenciados</p>
                 <button class="btn btn-primary btn-sm" onclick="showSection('alunos')">Ver Alunos</button>
               </div></div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
               <div class="card h-100"><div class="card-body text-center">
-                <h3 class="card-title h5">👩‍🏫 Docentes</h3>
+                <h3 class="card-title h5">Docentes</h3>
                 <p class="card-text text-muted small">Cadastre e gerencie professores</p>
                 <button class="btn btn-primary btn-sm" onclick="showSection('docentes')">Ver Docentes</button>
               </div></div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
               <div class="card h-100"><div class="card-body text-center">
-                <h3 class="card-title h5">📚 Turmas</h3>
+                <h3 class="card-title h5">Responsáveis</h3>
+                <p class="card-text text-muted small">Veja e cadastre responsáveis</p>
+                <button class="btn btn-primary btn-sm" onclick="showSection('responsaveis')">Ver Responsáveis</button>
+              </div></div>
+            </div>
+            <div class="col-md-3">
+              <div class="card h-100"><div class="card-body text-center">
+                <h3 class="card-title h5">Turmas</h3>
                 <p class="card-text text-muted small">Organize turmas e atividades</p>
                 <button class="btn btn-primary btn-sm" onclick="showSection('turmas')">Ver Turmas</button>
+              </div></div>
+            </div>
+            <div class="col-md-3">
+              <div class="card h-100"><div class="card-body text-center">
+                <h3 class="card-title h5">Acessos</h3>
+                <p class="card-text text-muted small">Gerencie logins e senhas</p>
+                <button class="btn btn-primary btn-sm" onclick="showSection('acessos')">Ver Acessos</button>
               </div></div>
             </div>
           </div>
         </section>
 
-        <!-- ═══ SEÇÃO ALUNOS ═══ -->
+        <!-- SECAO ALUNOS -->
         <section id="section-alunos" class="d-none">
           <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
-              <button class="btn btn-link ps-0" onclick="showSection('dashboard')">← Voltar</button>
+              <button class="btn btn-outline-primary btn-sm mb-2" onclick="showSection('dashboard')">← Voltar</button>
               <h2 class="h3 text-zupi-primary">Alunos Credenciados</h2>
             </div>
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addStudentModal">
@@ -177,11 +199,11 @@
           </div>
         </section>
 
-        <!-- ═══ SEÇÃO DOCENTES ═══ -->
+        <!-- SECAO DOCENTES -->
         <section id="section-docentes" class="d-none">
           <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
-              <button class="btn btn-link ps-0" onclick="showSection('dashboard')">← Voltar</button>
+              <button class="btn btn-outline-primary btn-sm mb-2" onclick="showSection('dashboard')">← Voltar</button>
               <h2 class="h3 text-zupi-primary">Docentes</h2>
             </div>
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTeacherModal">
@@ -193,11 +215,59 @@
           </div>
         </section>
 
-        <!-- ═══ SEÇÃO TURMAS ═══ -->
+        <!-- SECAO RESPONSAVEIS -->
+        <section id="section-responsaveis" class="d-none">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+              <button class="btn btn-outline-primary btn-sm mb-2" onclick="showSection('dashboard')">← Voltar</button>
+              <h2 class="h3 text-zupi-primary">Responsáveis</h2>
+            </div>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#registerResponsibleModal">
+              + Cadastrar Responsável
+            </button>
+          </div>
+          <div class="row g-3" id="responsiblesList">
+            <div class="col-12"><p class="text-muted text-center">Nenhum responsável cadastrado ainda.</p></div>
+          </div>
+        </section>
+
+        <!-- SECAO ACESSOS -->
+        <section id="section-acessos" class="d-none">
+          <button class="btn btn-outline-primary btn-sm mb-3" onclick="showSection('dashboard')">← Voltar</button>
+          <h2 class="h3 text-zupi-primary mb-4">Acessos</h2>
+          <div class="row g-4">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-body">
+                  <h3 class="h5">Responsáveis</h3>
+                  <div id="responsibleAccessList" class="table-responsive"></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="card">
+                <div class="card-body">
+                  <h3 class="h5">Docentes</h3>
+                  <div id="teacherAccessList" class="table-responsive"></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="card">
+                <div class="card-body">
+                  <h3 class="h5">Alunos</h3>
+                  <div id="studentAccessList" class="table-responsive"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECAO TURMAS -->
         <section id="section-turmas" class="d-none">
           <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
-              <button class="btn btn-link ps-0" onclick="showSection('dashboard')">← Voltar</button>
+              <button class="btn btn-outline-primary btn-sm mb-2" onclick="showSection('dashboard')">← Voltar</button>
               <h2 class="h3 text-zupi-primary">Turmas</h2>
             </div>
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addClassModal">
@@ -209,20 +279,20 @@
           </div>
         </section>
 
-        <!-- ═══ SEÇÃO RELATÓRIOS ═══ -->
+        <!-- SECAO RELATORIOS -->
         <section id="section-relatorios" class="d-none">
-          <button class="btn btn-link ps-0" onclick="showSection('dashboard')">← Voltar</button>
+              <button class="btn btn-outline-primary btn-sm mb-2" onclick="showSection('dashboard')">← Voltar</button>
           <h2 class="h3 text-zupi-primary mb-4">Relatórios</h2>
           <div class="card">
-            <div class="card-body">
+            <div class="card-body" id="schoolReportsContent">
               <p class="text-muted">Os relatórios de desempenho dos alunos serão exibidos aqui com base nos jogos, quizzes e atividades realizados.</p>
             </div>
           </div>
         </section>
 
-        <!-- ═══ SEÇÃO AJUDA ═══ -->
+        <!-- SECAO AJUDA -->
         <section id="section-ajuda" class="d-none">
-          <button class="btn btn-link ps-0" onclick="showSection('dashboard')">← Voltar</button>
+          <button class="btn btn-outline-primary btn-sm mb-3" onclick="showSection('dashboard')">← Voltar</button>
           <h2 class="h3 text-zupi-primary mb-4">Ajuda & Suporte</h2>
           <div class="card">
             <div class="card-body">
@@ -249,7 +319,7 @@
     </div>
   </div>
 
-  <!-- ═══ MODAL: CADASTRAR DOCENTE ═══ -->
+  <!-- MODAL: CADASTRAR DOCENTE -->
   <div class="modal fade" id="addTeacherModal" tabindex="-1" aria-labelledby="addTeacherModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -282,7 +352,7 @@
     </div>
   </div>
 
-  <!-- ═══ MODAL: CADASTRAR ALUNO ═══ -->
+  <!-- MODAL: CADASTRAR ALUNO -->
   <div class="modal fade" id="addStudentModal" tabindex="-1" aria-labelledby="addStudentModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
@@ -308,7 +378,8 @@
               </div>
               <div class="col-md-6 mb-3">
                 <label for="studentGrade" class="form-label">Ano Escolar</label>
-                <input type="text" class="form-control" id="studentGrade" placeholder="Ex: 3º Ano" required>
+                <input type="text" class="form-control" id="studentGrade" list="schoolClassesDatalist" placeholder="Ex: 3º Ano" required>
+                <datalist id="schoolClassesDatalist"></datalist>
               </div>
             </div>
             <hr>
@@ -337,7 +408,7 @@
     </div>
   </div>
 
-  <!-- ═══ MODAL: CADASTRAR RESPONSÁVEL ═══ -->
+  <!-- MODAL: CADASTRAR RESPONSAVEL -->
   <div class="modal fade" id="registerResponsibleModal" tabindex="-1" aria-labelledby="registerResponsibleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -381,7 +452,7 @@
     </div>
   </div>
 
-  <!-- ═══ MODAL: CRIAR TURMA ═══ -->
+  <!-- MODAL: CRIAR TURMA -->
   <div class="modal fade" id="addClassModal" tabindex="-1" aria-labelledby="addClassModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -422,14 +493,14 @@
   <script src="/js/main.js"></script>
   <script src="/js/theme.js"></script>
   <script>
-    // ─── Section Navigation ─────────────────────
+    // Section Navigation
     function showSection(name) {
       document.querySelectorAll('main > section').forEach(s => s.classList.add('d-none'));
       const target = document.getElementById('section-' + name);
       if (target) target.classList.remove('d-none');
     }
 
-    // ─── Init ───────────────────────────────────
+    // Init
     document.addEventListener('DOMContentLoaded', function() {
       if (!ZupiAPI.requireAuth()) return;
 
@@ -438,6 +509,278 @@
       if (titleEl && user.name) {
         titleEl.textContent = `Painel — ${user.name}`;
       }
+
+      let schoolStudents = [];
+      let schoolTeachers = [];
+      let schoolClasses = [];
+      let schoolResponsibles = [];
+      let schoolAccess = { responsibles: [], teachers: [], students: [] };
+
+      function setText(id, value) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value;
+      }
+
+      function escapeHtml(value) {
+        return String(value || '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+      }
+
+      function formatDateTime(value) {
+        if (!value) return 'Sem jogos';
+        return new Date(value).toLocaleString('pt-BR', {
+          day: '2-digit',
+          month: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+      }
+
+      async function loadSchoolData() {
+        try {
+          const [dashboard, students, teachers, classes, responsibles, accesses, report] = await Promise.all([
+            ZupiAPI.fetchJson('/school/dashboard'),
+            ZupiAPI.fetchJson('/school/students'),
+            ZupiAPI.fetchJson('/school/teachers'),
+            ZupiAPI.fetchJson('/school/classes'),
+            ZupiAPI.fetchJson('/school/responsibles'),
+            ZupiAPI.fetchJson('/school/accesses'),
+            ZupiAPI.fetchJson('/school/reports/summary')
+          ]);
+
+          schoolStudents = Array.isArray(students) ? students : [];
+          schoolTeachers = Array.isArray(teachers) ? teachers : [];
+          schoolClasses = Array.isArray(classes) ? classes : [];
+          schoolResponsibles = Array.isArray(responsibles) ? responsibles : [];
+          schoolAccess = accesses || { responsibles: [], teachers: [], students: [] };
+
+          setText('statAlunos', dashboard?.students ?? schoolStudents.length);
+          setText('statDocentes', dashboard?.teachers ?? schoolTeachers.length);
+          setText('statTurmas', dashboard?.classes ?? schoolClasses.length);
+          setText('statJogos', dashboard?.games ?? report?.totalSessions ?? 0);
+
+          renderStudents();
+          renderTeachers();
+          renderResponsibles();
+          renderClasses();
+          renderAccesses();
+          renderSchoolReports(report);
+          populateTeacherSelect();
+          populateClassDatalist();
+        } catch (err) {
+          console.error('Erro ao carregar dados da escola:', err);
+          renderLoadError();
+        }
+      }
+
+      function countClasses(students) {
+        return new Set(students.map(s => s.schoolClass).filter(Boolean)).size;
+      }
+
+      function renderStudents() {
+        const container = document.getElementById('studentsList');
+        if (!container) return;
+        if (!schoolStudents.length) {
+          container.innerHTML = '<div class="col-12"><p class="text-muted text-center">Nenhum aluno cadastrado ainda.</p></div>';
+          return;
+        }
+        container.innerHTML = schoolStudents.map(student => `
+          <div class="col-md-6 col-lg-4">
+            <div class="card h-100">
+              <div class="card-body">
+                <h3 class="h6">${escapeHtml(student.name)}</h3>
+                <p class="small text-muted mb-2">${escapeHtml(student.schoolClass || 'Turma nao informada')}</p>
+                <p class="small mb-3">Login infantil: <strong>${escapeHtml(student.childLoginEmail || '-')}</strong></p>
+                <a class="btn btn-primary btn-sm" href="/relatorios?childId=${encodeURIComponent(student.id)}">Ver relatorios</a>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      function renderTeachers() {
+        const container = document.getElementById('teachersList');
+        if (!container) return;
+        if (!schoolTeachers.length) {
+          container.innerHTML = '<div class="col-12"><p class="text-muted text-center">Nenhum docente cadastrado ainda.</p></div>';
+          return;
+        }
+        container.innerHTML = schoolTeachers.map(teacher => `
+          <div class="col-md-6 col-lg-4">
+            <div class="card h-100">
+              <div class="card-body">
+                <h3 class="h6">${escapeHtml(teacher.name)}</h3>
+                <p class="small text-muted mb-1">${escapeHtml(teacher.specialty || 'Especialidade nao informada')}</p>
+                <p class="small mb-0">${escapeHtml(teacher.email)}</p>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      function renderResponsibles() {
+        const container = document.getElementById('responsiblesList');
+        if (!container) return;
+        if (!schoolResponsibles.length) {
+          container.innerHTML = '<div class="col-12"><p class="text-muted text-center">Nenhum responsavel cadastrado ainda.</p></div>';
+          return;
+        }
+        container.innerHTML = schoolResponsibles.map(responsible => `
+          <div class="col-md-6 col-lg-4">
+            <div class="card h-100">
+              <div class="card-body">
+                <h3 class="h6">${escapeHtml(responsible.name)}</h3>
+                <p class="small text-muted mb-1">${escapeHtml(responsible.email || 'E-mail nao informado')}</p>
+                <p class="small mb-1">CPF: <strong>${escapeHtml(formatCpfDisplay(responsible.cpf))}</strong></p>
+                <p class="small mb-0">Telefone: ${escapeHtml(responsible.phone || '-')}</p>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      function renderClasses() {
+        const container = document.getElementById('classesList');
+        if (!container) return;
+        if (!schoolClasses.length) {
+          container.innerHTML = '<div class="col-12"><p class="text-muted text-center">Nenhuma turma criada ainda.</p></div>';
+          return;
+        }
+        container.innerHTML = schoolClasses.map((schoolClass) => `
+          <div class="col-md-6 col-lg-4">
+            <div class="card h-100">
+              <div class="card-body">
+                <h3 class="h6">${escapeHtml(schoolClass.name)}</h3>
+                <p class="small text-muted mb-1">Docente: ${escapeHtml(schoolClass.teacherName || 'Nao definido')}</p>
+                <p class="small mb-0">${schoolClass.students || 0} aluno${schoolClass.students === 1 ? '' : 's'} vinculado${schoolClass.students === 1 ? '' : 's'}</p>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      function renderAccesses() {
+        renderAccessTable('responsibleAccessList', schoolAccess.responsibles, 'responsibles', 'E-mail');
+        renderAccessTable('teacherAccessList', schoolAccess.teachers, 'teachers', 'E-mail');
+        renderAccessTable('studentAccessList', schoolAccess.students, 'students', 'Login infantil');
+      }
+
+      function renderAccessTable(containerId, items, type, emailLabel) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        const list = Array.isArray(items) ? items : [];
+        if (!list.length) {
+          container.innerHTML = '<p class="text-muted mb-0">Nenhum acesso cadastrado ainda.</p>';
+          return;
+        }
+        container.innerHTML = `
+          <table class="table align-middle">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>${emailLabel}</th>
+                <th>Detalhe</th>
+                <th class="text-end">Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${list.map((item) => `
+                <tr>
+                  <td>${escapeHtml(item.name)}</td>
+                  <td><code>${escapeHtml(item.email || '-')}</code></td>
+                  <td>${escapeHtml(item.extra || '-')}</td>
+                  <td class="text-end">
+                    <button class="btn btn-outline-primary btn-sm me-2" data-access-action="email" data-access-type="${type}" data-access-id="${item.id}" data-current-email="${escapeHtml(item.email || '')}">Alterar</button>
+                    <button class="btn btn-primary btn-sm" data-access-action="reset" data-access-type="${type}" data-access-id="${item.id}">Nova senha</button>
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `;
+      }
+
+      function renderSchoolReports(report) {
+        const container = document.getElementById('schoolReportsContent');
+        if (!container) return;
+        const students = Array.isArray(report?.students) ? report.students : [];
+        const rows = students.length ? students.map(item => `
+          <tr>
+            <td>${escapeHtml(item.name)}</td>
+            <td>${escapeHtml(item.schoolClass || '-')}</td>
+            <td>${item.totalSessions || 0}</td>
+            <td>${item.averageScore || 0}%</td>
+            <td>${formatDateTime(item.lastPlayedAt)}</td>
+            <td><a class="btn btn-sm btn-outline-primary" href="/relatorios?childId=${encodeURIComponent(item.childId)}">Abrir</a></td>
+          </tr>
+        `).join('') : '<tr><td colspan="6" class="text-center text-muted">Nenhum jogo registrado ainda.</td></tr>';
+
+        container.innerHTML = `
+          <div class="row g-3 mb-4">
+            <div class="col-md-4"><div class="card"><div class="card-body text-center">
+              <p class="small text-muted mb-1">Alunos acompanhados</p>
+              <h3 class="text-zupi-primary mb-0">${report?.totalStudents || 0}</h3>
+            </div></div></div>
+            <div class="col-md-4"><div class="card"><div class="card-body text-center">
+              <p class="small text-muted mb-1">Partidas registradas</p>
+              <h3 class="text-zupi-primary mb-0">${report?.totalSessions || 0}</h3>
+            </div></div></div>
+            <div class="col-md-4"><div class="card"><div class="card-body text-center">
+              <p class="small text-muted mb-1">Media geral</p>
+              <h3 class="text-zupi-primary mb-0">${report?.averageScore || 0}%</h3>
+            </div></div></div>
+          </div>
+          <div class="table-responsive">
+            <table class="table align-middle">
+              <thead><tr><th>Aluno</th><th>Turma</th><th>Jogos</th><th>Media</th><th>Ultima atividade</th><th></th></tr></thead>
+              <tbody>${rows}</tbody>
+            </table>
+          </div>
+        `;
+      }
+
+      function populateTeacherSelect() {
+        const select = document.getElementById('classTeacher');
+        if (!select) return;
+        select.innerHTML = '<option value="">Selecione um professor</option>' + schoolTeachers.map(teacher =>
+          `<option value="${teacher.id}">${escapeHtml(teacher.name)}</option>`
+        ).join('');
+      }
+
+      function populateClassDatalist() {
+        const datalist = document.getElementById('schoolClassesDatalist');
+        if (!datalist) return;
+        datalist.textContent = '';
+        schoolClasses.forEach((schoolClass) => {
+          const option = document.createElement('option');
+          option.value = schoolClass.name;
+          datalist.appendChild(option);
+        });
+      }
+
+      function renderLoadError() {
+        const fallback = '<div class="col-12"><p class="text-danger text-center">Nao foi possivel carregar dados da escola.</p></div>';
+        const students = document.getElementById('studentsList');
+        const teachers = document.getElementById('teachersList');
+        const responsibles = document.getElementById('responsiblesList');
+        const classes = document.getElementById('classesList');
+        const responsibleAccess = document.getElementById('responsibleAccessList');
+        const teacherAccess = document.getElementById('teacherAccessList');
+        const studentAccess = document.getElementById('studentAccessList');
+        if (students) students.innerHTML = fallback;
+        if (teachers) teachers.innerHTML = fallback;
+        if (responsibles) responsibles.innerHTML = fallback;
+        if (classes) classes.innerHTML = fallback;
+        if (responsibleAccess) responsibleAccess.innerHTML = fallback;
+        if (teacherAccess) teacherAccess.innerHTML = fallback;
+        if (studentAccess) studentAccess.innerHTML = fallback;
+      }
+
+      loadSchoolData();
 
       // Support form
       const supportForm = document.getElementById('supportForm');
@@ -460,7 +803,58 @@
         });
       }
 
-      let schoolResponsibles = [];
+      function accessEndpoint(type, id, action) {
+        const base = {
+          teachers: `/school/accesses/teachers/${id}`,
+          responsibles: `/school/accesses/responsibles/${id}`,
+          students: `/school/accesses/students/${id}`
+        }[type];
+        if (!base) return null;
+        if (action === 'email') return type === 'students' ? `${base}/login` : `${base}/email`;
+        if (action === 'reset') return `${base}/password/reset`;
+        return null;
+      }
+
+      document.getElementById('section-acessos')?.addEventListener('click', async (event) => {
+        const button = event.target.closest('[data-access-action]');
+        if (!button) return;
+        const type = button.dataset.accessType;
+        const id = button.dataset.accessId;
+        const action = button.dataset.accessAction;
+        const endpoint = accessEndpoint(type, id, action);
+        if (!endpoint) return;
+
+        button.disabled = true;
+        try {
+          if (action === 'email') {
+            const label = type === 'students' ? 'Novo login infantil' : 'Novo e-mail';
+            const email = prompt(label, button.dataset.currentEmail || '');
+            if (!email) return;
+            const response = await ZupiAPI.patch(endpoint, { email: email.trim() });
+            if (!response) return;
+            if (!response.ok) {
+              alert(await ZupiAPI.readErrorMessage(response, 'Nao foi possivel alterar o acesso.'));
+              return;
+            }
+            alert('Acesso atualizado com sucesso.');
+          } else if (action === 'reset') {
+            if (!confirm('Gerar uma nova senha para este acesso? A senha antiga deixara de funcionar.')) return;
+            const response = await ZupiAPI.post(endpoint, {});
+            if (!response) return;
+            if (!response.ok) {
+              alert(await ZupiAPI.readErrorMessage(response, 'Nao foi possivel gerar nova senha.'));
+              return;
+            }
+            const data = await response.json();
+            alert(`Nova senha gerada.\nLogin: ${data.email || '-'}\nSenha: ${data.generatedPassword || '-'}`);
+          }
+          await loadSchoolData();
+        } catch (err) {
+          alert('Erro de conexao ao gerenciar acesso.');
+        } finally {
+          button.disabled = false;
+        }
+      });
 
       function formatCpfDisplay(cpf) {
         const d = (cpf || '').replace(/\D/g, '');
@@ -490,19 +884,23 @@
       async function loadResponsibles(query) {
         const q = encodeURIComponent(query || '');
         const resp = await ZupiAPI.fetchJson('/school/responsibles?q=' + q);
-        schoolResponsibles = Array.isArray(resp) ? resp : [];
+        const results = Array.isArray(resp) ? resp : [];
+        if (!(query || '').trim()) {
+          schoolResponsibles = results;
+          renderResponsibles();
+        }
         const datalist = document.getElementById('responsiblesDatalist');
         const noFound = document.getElementById('noResponsibleFound');
         if (!datalist) return;
         datalist.textContent = '';
-        schoolResponsibles.forEach((r) => {
+        results.forEach((r) => {
           const opt = document.createElement('option');
           opt.value = responsibleOptionLabel(r);
           opt.dataset.id = r.id;
           datalist.appendChild(opt);
         });
         const hasQuery = (query || '').trim().length > 0;
-        if (hasQuery && schoolResponsibles.length === 0) {
+        if (hasQuery && results.length === 0) {
           noFound?.classList.remove('d-none');
         } else {
           noFound?.classList.add('d-none');
@@ -547,8 +945,24 @@
         const phone = document.getElementById('respPhone')?.value.trim();
         const password = document.getElementById('respPassword')?.value;
 
-        if (!name || cpf.length !== 11 || !birthDate || !email || !password || password.length < 6) {
-          alert('Preencha todos os campos obrigatórios (senha com no mínimo 6 caracteres).');
+        if (!name) {
+          alert('Informe o nome do responsavel.');
+          return;
+        }
+        if (cpf.length !== 11) {
+          alert('Informe um CPF valido com 11 digitos.');
+          return;
+        }
+        if (!birthDate) {
+          alert('Informe a data de nascimento do responsavel.');
+          return;
+        }
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          alert('Informe um e-mail valido para o responsavel.');
+          return;
+        }
+        if (!password || password.length < 6) {
+          alert('A senha do responsavel deve ter no minimo 6 caracteres.');
           return;
         }
 
@@ -560,20 +974,90 @@
           if (!response) return;
           const text = await response.text();
           if (!response.ok) {
-            alert(text || 'Erro ao cadastrar usuário.');
+            alert(ZupiUI.normalizeMessage(text || 'Erro ao cadastrar usuario.'));
             return;
           }
           const created = JSON.parse(text);
           schoolResponsibles = [created, ...schoolResponsibles];
+          renderResponsibles();
           if (respSearch) {
             respSearch.value = responsibleOptionLabel(created);
           }
           selectResponsible(created);
           bootstrap.Modal.getInstance(document.getElementById('registerResponsibleModal'))?.hide();
           document.getElementById('registerResponsibleForm')?.reset();
-          alert('Usuário cadastrado com sucesso. Agora você pode cadastrar o aluno.');
+          await loadSchoolData();
+          await loadResponsibles('');
+          alert('Responsavel cadastrado com sucesso. Agora voce pode cadastrar o aluno.');
         } catch (err) {
-          alert('Erro de conexão ao cadastrar usuário.');
+          alert('Erro de conexao ao cadastrar responsavel.');
+        } finally {
+          btn.disabled = false;
+        }
+      });
+
+      document.getElementById('saveTeacherBtn')?.addEventListener('click', async () => {
+        const btn = document.getElementById('saveTeacherBtn');
+        const name = document.getElementById('teacherName')?.value.trim();
+        const email = document.getElementById('teacherEmail')?.value.trim();
+        const specialty = document.getElementById('teacherSpecialty')?.value.trim();
+
+        if (!name || !email) {
+          alert('Preencha nome e e-mail do docente.');
+          return;
+        }
+
+        btn.disabled = true;
+        try {
+          const response = await ZupiAPI.post('/school/teachers', {
+            name,
+            email,
+            specialty: specialty || null
+          });
+          if (!response) return;
+          const text = await response.text();
+          if (!response.ok) {
+            alert(ZupiUI.normalizeMessage(text || 'Erro ao cadastrar docente.'));
+            return;
+          }
+          const created = JSON.parse(text);
+          alert(`Docente cadastrado!\nLogin: ${created.email || email}\nSenha: ${created.generatedPassword || 'gerada automaticamente'}`);
+          bootstrap.Modal.getInstance(document.getElementById('addTeacherModal'))?.hide();
+          document.getElementById('teacherForm')?.reset();
+          await loadSchoolData();
+        } catch (err) {
+          alert('Erro de conexão ao cadastrar docente.');
+        } finally {
+          btn.disabled = false;
+        }
+      });
+
+      document.getElementById('saveClassBtn')?.addEventListener('click', async () => {
+        const btn = document.getElementById('saveClassBtn');
+        const name = document.getElementById('className')?.value.trim();
+        const teacherIdValue = document.getElementById('classTeacher')?.value;
+        const teacherId = teacherIdValue ? Number(teacherIdValue) : null;
+
+        if (!name) {
+          alert('Informe o nome da turma.');
+          return;
+        }
+
+        btn.disabled = true;
+        try {
+          const response = await ZupiAPI.post('/school/classes', { name, teacherId });
+          if (!response) return;
+          const text = await response.text();
+          if (!response.ok) {
+            alert(ZupiUI.normalizeMessage(text || 'Erro ao criar turma.'));
+            return;
+          }
+          bootstrap.Modal.getInstance(document.getElementById('addClassModal'))?.hide();
+          document.getElementById('classForm')?.reset();
+          alert('Turma criada com sucesso.');
+          await loadSchoolData();
+        } catch (err) {
+          alert('Erro de conexao ao criar turma.');
         } finally {
           btn.disabled = false;
         }
@@ -619,8 +1103,9 @@
               document.getElementById('studentForm')?.reset();
               selectedId.value = '';
               selectedInfo?.classList.add('d-none');
+              await loadSchoolData();
             } else {
-              alert(text || 'Erro ao cadastrar aluno.');
+              alert(ZupiUI.normalizeMessage(text || 'Erro ao cadastrar aluno.'));
             }
           } catch (err) {
             alert('Erro de conexão ao cadastrar aluno.');

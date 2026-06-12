@@ -102,6 +102,13 @@ const ZupiAuthGuard = (() => {
             return;
         }
 
+        if (type === 'RESPONSAVEL'
+            && ZupiAPI.getUser().planType === 'PESSOA_JURIDICA'
+            && path === '/cadastro-dependentes') {
+            window.location.href = `/403?from=${encodeURIComponent(path)}`;
+            return;
+        }
+
         if (CHILD_ONLY_PATHS.has(path) && !['CRIANCA', 'ALUNO_CREDENCIADO'].includes(type) && !localStorage.getItem('activeChildId')) {
             window.location.href = (ZupiRoutes && ZupiRoutes.selecaoPerfil) || '/selecao-perfil';
         }
