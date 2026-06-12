@@ -104,7 +104,7 @@ const ZupiAPI = (() => {
         if (window.ZUPI_API_BASE !== undefined && window.ZUPI_API_BASE !== '') {
             return String(window.ZUPI_API_BASE).replace(/\/$/, '');
         }
-        return 'https://tcc-ds-aplication.onrender.com';
+        return 'https://tcc-ds-dzs2.onrender.com';
     }
 
     const BASE = resolveBase();

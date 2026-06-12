@@ -26,7 +26,7 @@ npm run preview  # preview do build
 Copie `.env.example` para `.env` e ajuste se necessário:
 
 ```
-VITE_API_BASE=https://tcc-ds-aplication.onrender.com
+VITE_API_BASE=https://tcc-ds-dzs2.onrender.com
 ```
 
 Documentação completa: [docs/documentacao-completa-zupi.md](../docs/documentacao-completa-zupi.md)  
