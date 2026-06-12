@@ -102,7 +102,13 @@ const ZupiAPI = (() => {
             return '';
         }
         if (window.ZUPI_API_BASE !== undefined && window.ZUPI_API_BASE !== '') {
-            return String(window.ZUPI_API_BASE).replace(/\/$/, '');
+            const configuredBase = String(window.ZUPI_API_BASE).replace(/\/$/, '');
+            const isLocalApi = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?/i.test(configuredBase);
+            const isLocalPage = typeof location !== 'undefined'
+                && /^(localhost|127\.0\.0\.1)$/i.test(location.hostname);
+            if (!isLocalApi || isLocalPage) {
+                return configuredBase;
+            }
         }
         return 'https://tcc-ds-dzs2.onrender.com';
     }
