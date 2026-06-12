@@ -90,10 +90,19 @@ async function cadastrarCrianca() {
         const text = await response.text();
         if (response.ok) {
             const created = JSON.parse(text);
-            const childData = created.child || created;
+            const child = created.child || created;
+            const childId = child?.id || created.childId || created.id;
             const generatedPassword = created.generatedPassword;
 
-            localStorage.setItem('activeChildId', childData.id);
+            if (!childId) {
+                console.error('Resposta de cadastro sem ID da crianca:', created);
+                alert('Cadastro realizado, mas nao foi possivel abrir o quiz automaticamente.');
+                return;
+            }
+
+            localStorage.setItem('activeChildId', childId);
+            localStorage.setItem('selectedChildId', childId);
+            localStorage.setItem('childId', childId);
 
             // Close modal
             const modalEl = document.getElementById('addChildModal');
@@ -102,11 +111,11 @@ async function cadastrarCrianca() {
 
             // Show credentials if available
             if (generatedPassword) {
-                alert(`Criança cadastrada!\n\nLogin: ${childData.childLoginEmail || 'Gerado automaticamente'}\nSenha: ${generatedPassword}\n\nAnote estas credenciais!`);
+                alert(`Criança cadastrada!\n\nLogin: ${child.childLoginEmail || 'Gerado automaticamente'}\nSenha: ${generatedPassword}\n\nAnote estas credenciais!`);
             }
 
             // Redirect to quiz
-            window.location.href = `/onboarding-crianca?childId=${childData.id}`;
+            window.location.href = `/onboarding-crianca?childId=${encodeURIComponent(childId)}`;
         } else {
             alert(text || 'Erro ao cadastrar criança.');
         }

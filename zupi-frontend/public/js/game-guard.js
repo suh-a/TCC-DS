@@ -34,6 +34,7 @@ function resolveGameChildId() {
     if (childId) {
         localStorage.setItem('activeChildId', String(childId));
         localStorage.setItem('selectedChildId', String(childId));
+        localStorage.setItem('childId', String(childId));
     }
 
     return childId;

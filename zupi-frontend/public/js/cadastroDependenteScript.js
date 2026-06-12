@@ -40,24 +40,25 @@ async function submitDependente(e) {
     const cpf = document.getElementById('cpf').value.replace(/\D/g, '');
     const birthDate = document.getElementById('dataNascimento').value;
     const name = document.getElementById('nomeCompleto').value.trim();
+    const condition = document.getElementById('condicao')?.value.trim() || null;
     const userId = ZupiAPI.getUser().id;
 
-    if (!name || !birthDate) {
-        ZupiUI.error('Preencha nome e data de nascimento.');
+    if (!name || !birthDate || !cpf) {
+        ZupiUI.error('Preencha nome, CPF e data de nascimento.');
         return;
     }
 
-    if (cpf && cpf.length !== 11) {
-        ZupiUI.error('CPF invalido. Informe 11 digitos ou deixe o campo em branco.');
+    if (cpf.length !== 11) {
+        ZupiUI.error('CPF invalido. Informe 11 digitos.');
         return;
     }
 
     const payload = {
         name,
-        cpf: cpf || null,
+        cpf,
         birthDate,
         schoolClass: '',
-        condition: null,
+        condition,
         responsibleId: parseInt(userId, 10),
         schoolLinked: false,
         schoolName: null
@@ -76,11 +77,19 @@ async function submitDependente(e) {
             const text = await response.text();
             const created = JSON.parse(text);
             const child = created.child || created;
+            const childId = child?.id || created.childId || created.id;
+            if (!childId) {
+                console.error('Resposta de cadastro sem ID da crianca:', created);
+                ZupiUI.error('Cadastro realizado, mas nao foi possivel abrir o quiz automaticamente.');
+                submitBtn.disabled = false;
+                return;
+            }
+            localStorage.setItem('activeChildId', String(childId));
+            localStorage.setItem('selectedChildId', String(childId));
+            localStorage.setItem('childId', String(childId));
             successMsg.style.display = 'block';
             e.target.reset();
-            setTimeout(() => {
-                window.location.href = '/onboarding-crianca?childId=' + child.id;
-            }, 1500);
+            window.location.href = '/onboarding-crianca?childId=' + encodeURIComponent(childId);
         } else {
             ZupiUI.error(await ZupiAPI.readErrorMessage(response, 'Erro ao cadastrar dependente.'));
             submitBtn.disabled = false;

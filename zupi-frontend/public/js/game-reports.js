@@ -43,17 +43,26 @@ const ZupiGameReports = (() => {
     const info = window.GameScore?.gameInfo?.(session.gameId) || {};
     const score = Number(session.score) || 0;
     const maxScore = Number(session.maxScore) || info.maxScore || 100;
+    const skillArea = resolveSkillArea(session.skillArea, info.area);
+    const completedAt = session.completedAt || session.playedAt || session.createdAt || new Date().toISOString();
     return {
       ...session,
       gameName: session.gameName || info.name || session.gameId || 'Jogo',
-      skillArea: displayCategory(session.skillArea || info.area || 'Atividades'),
+      skillArea: displayCategory(skillArea),
+      skillAreaId: session.skillAreaId || (typeof session.skillArea === 'object' ? session.skillArea?.id : null),
       score,
       maxScore,
       errors: Number(session.errors) || 0,
       durationSeconds: Number(session.durationSeconds) || 0,
       percentage: Number(session.percentage) || Math.round(score * 100 / Math.max(1, maxScore)),
-      completedAt: session.completedAt || new Date().toISOString()
+      completedAt
     };
+  }
+
+  function resolveSkillArea(value, fallback) {
+    if (typeof value === 'string' && value.trim()) return value;
+    if (value && typeof value === 'object') return value.name || value.label || fallback || 'Atividades';
+    return fallback || 'Atividades';
   }
 
   function mergeSessions(apiSessions, childId) {

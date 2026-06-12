@@ -83,8 +83,8 @@ async function cadastrarCrianca() {
         alert('Preencha o nome da criança.');
         return;
     }
-    if (cpf && cpf.length !== 11) {
-        alert('CPF inválido. Informe 11 dígitos ou deixe o campo em branco.');
+    if (!cpf || cpf.length !== 11) {
+        alert('CPF invalido. Informe 11 digitos.');
         return;
     }
     if (isNaN(age) || age < 5 || age > 25) {
@@ -99,7 +99,7 @@ async function cadastrarCrianca() {
     const childData = {
         name,
         age,
-        cpf: cpf || null,
+        cpf,
         birthDate: birthInput || null,
         schoolClass: childGrade,
         condition: null,
@@ -117,9 +117,20 @@ async function cadastrarCrianca() {
             const text = await response.text();
             const created = JSON.parse(text);
             const child = created.child || created;
+            const childId = child?.id || created.childId || created.id;
             const generatedPassword = created.generatedPassword;
 
-            localStorage.setItem('activeChildId', child.id);
+            if (!childId) {
+                console.error('Resposta de cadastro sem ID da crianca:', created);
+                alert('Cadastro realizado, mas nao foi possivel abrir o quiz automaticamente.');
+                btn.disabled = false;
+                btn.textContent = 'Adicionar Criança';
+                return;
+            }
+
+            localStorage.setItem('activeChildId', childId);
+            localStorage.setItem('selectedChildId', childId);
+            localStorage.setItem('childId', childId);
 
             const modalEl = document.getElementById('addChildModal');
             const modal = bootstrap.Modal.getInstance(modalEl);
@@ -129,7 +140,7 @@ async function cadastrarCrianca() {
                 alert(`Criança cadastrada!\n\nLogin: ${child.childLoginEmail || 'Gerado automaticamente'}\nSenha: ${generatedPassword}\n\nAnote estas credenciais!`);
             }
 
-            window.location.href = `/onboarding-crianca?childId=${child.id}`;
+            window.location.href = `/onboarding-crianca?childId=${encodeURIComponent(childId)}`;
         } else {
             ZupiUI.error(await ZupiAPI.readErrorMessage(response, 'Erro ao cadastrar crianca.'));
         }

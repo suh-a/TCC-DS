@@ -22,11 +22,38 @@
     }
   }
 
-  function applyRecommendations() {
+  function saveRecommendations(id, recommendations) {
+    if (!id || !recommendations) return;
+    try {
+      const data = JSON.parse(localStorage.getItem('zupiGameRecommendations') || '{}') || {};
+      data[String(id)] = recommendations;
+      localStorage.setItem('zupiGameRecommendations', JSON.stringify(data));
+    } catch (e) {
+      // Mantem a tela funcional mesmo sem armazenamento local.
+    }
+  }
+
+  async function loadBackendRecommendations(id) {
+    if (typeof ZupiAPI === 'undefined') return null;
+    try {
+      const response = await ZupiAPI.get(`/quiz/child/${id}`, { skipAuthRedirect: true });
+      if (!response || !response.ok) return null;
+      const quiz = await response.json();
+      if (quiz && quiz.recommendations && Array.isArray(quiz.recommendations.games)) {
+        saveRecommendations(id, quiz.recommendations);
+        return quiz.recommendations;
+      }
+    } catch (e) {
+      console.warn('Sugestoes do quiz usando cache local.', e);
+    }
+    return null;
+  }
+
+  async function applyRecommendations() {
     const id = childId();
     if (!id) return;
 
-    const recommendations = loadRecommendations(id);
+    const recommendations = await loadBackendRecommendations(id) || loadRecommendations(id);
     if (!recommendations || !Array.isArray(recommendations.games)) return;
 
     const recommended = new Map(

@@ -135,6 +135,8 @@ const GameScore = {
 
     const extendedPayload = {
       gameId: session.gameId,
+      gameName: session.gameName,
+      skillArea: session.skillArea,
       score: session.score,
       maxScore: session.maxScore,
       durationSeconds: session.durationSeconds,
@@ -145,9 +147,12 @@ const GameScore = {
     };
     const basicPayload = {
       gameId: session.gameId,
+      gameName: session.gameName,
+      skillArea: session.skillArea,
       score: session.score,
       maxScore: session.maxScore,
       durationSeconds: session.durationSeconds,
+      errors: session.errors,
       skillAreaId: session.skillAreaId
     };
 
@@ -191,16 +196,19 @@ const GameScore = {
     return Math.max(Number(info.maxScore) || 100, Number(score) || 0, 1);
   },
 
-  shouldAutoSubmit(score) {
+  shouldAutoSubmit(score, force = false) {
     const duration = (Date.now() - this.state.startedAt) / 1000;
+    if (force) {
+      return !this.state.submitted && (score > 0 || this.state.errors > 0 || this.state.interactions > 0 || duration >= 3);
+    }
     return !this.state.submitted
       && (score > 0 || this.state.errors > 0 || (this.state.interactions >= 3 && duration >= 12));
   },
 
-  autoSubmit() {
+  autoSubmit(force = false) {
     const gameId = this.currentGameId();
     const score = this.inferScore();
-    if (!this.shouldAutoSubmit(score)) return;
+    if (!this.shouldAutoSubmit(score, force)) return;
     const maxScore = this.inferMaxScore(gameId, score);
     this.submit({
       gameId,
@@ -238,9 +246,9 @@ const GameScore = {
       }, { passive: true });
     });
     this.observeErrors();
-    window.addEventListener('pagehide', () => this.autoSubmit());
+    window.addEventListener('pagehide', () => this.autoSubmit(true));
     document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'hidden') this.autoSubmit();
+      if (document.visibilityState === 'hidden') this.autoSubmit(true);
     });
   }
 };
@@ -286,6 +294,7 @@ document.addEventListener('DOMContentLoaded', () => {
   menuLink.href = '/menuJogos';
   menuLink.textContent = 'Voltar ao menu';
   menuLink.setAttribute('aria-label', 'Voltar ao menu de jogos');
+  menuLink.addEventListener('click', () => GameScore.autoSubmit(true));
   document.head.appendChild(style);
   document.body.appendChild(menuLink);
 });

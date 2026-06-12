@@ -16,11 +16,12 @@
   <!-- Custom CSS -->
   <link rel="stylesheet" href="/css/main.css" />
   <link rel="stylesheet" href="/css/dashboard.css" />
+  <link rel="stylesheet" href="/css/relatorios.css" />
 
   <link rel="icon" href="../assets/img/favicon.png" type="image/png">
 </head>
 
-<body>
+<body data-child-nav="perfil">
 
   <!-- FUNDO DECORATIVO -->
   <div class="background-decor" aria-hidden="true">
@@ -49,22 +50,22 @@
           <div class="navbar-brand text-white mb-4 fs-3 fw-bold">Zupi</div>
           <ul class="nav nav-pills flex-column">
             <li class="nav-item mb-2">
-              <a class="nav-link text-white" href="/dashboard-crianca">Dashboard</a>
+              <a class="nav-link text-white" href="/dashboard-crianca" data-child-nav-link="dashboard">Dashboard</a>
             </li>
             <li class="nav-item mb-2">
-              <a class="nav-link text-white" href="/menuJogos">Jogos</a>
+              <a class="nav-link text-white" href="/menuJogos" data-child-nav-link="jogos">Jogos</a>
             </li>
             <li class="nav-item mb-2">
-              <a class="nav-link text-white" href="/atividades-interativas">Atividades</a>
+              <a class="nav-link text-white" href="/atividades-interativas" data-child-nav-link="atividades">Atividades</a>
             </li>
             <li class="nav-item mb-2">
-              <a class="nav-link text-white" href="/desafios-semanais">Desafios semanais</a>
+              <a class="nav-link text-white" href="/desafios-semanais" data-child-nav-link="desafios">Desafios semanais</a>
             </li>
             <li class="nav-item mb-2">
-              <a class="nav-link text-white" href="/biblioteca">Biblioteca</a>
+              <a class="nav-link text-white" href="/biblioteca" data-child-nav-link="biblioteca">Biblioteca</a>
             </li>
             <li class="nav-item mb-2">
-              <a class="nav-link text-white active" href="/perfil-crianca">Perfil</a>
+              <a class="nav-link text-white active" href="/perfil-crianca" data-child-nav-link="perfil">Perfil</a>
             </li>
             <li class="nav-item mt-auto">
               <a class="nav-link text-white" href="/selecao-perfil">Voltar ao menu</a>
@@ -84,22 +85,22 @@
           <nav role="navigation" aria-label="Navegação do dashboard">
             <ul class="nav nav-pills flex-column p-4">
               <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/dashboard-crianca">Dashboard</a>
+                <a class="nav-link text-white" href="/dashboard-crianca" data-child-nav-link="dashboard">Dashboard</a>
               </li>
               <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/menuJogos">Jogos</a>
+                <a class="nav-link text-white" href="/menuJogos" data-child-nav-link="jogos">Jogos</a>
               </li>
               <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/atividades-interativas">Atividades</a>
+                <a class="nav-link text-white" href="/atividades-interativas" data-child-nav-link="atividades">Atividades</a>
               </li>
               <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/desafios-semanais">Desafios semanais</a>
+                <a class="nav-link text-white" href="/desafios-semanais" data-child-nav-link="desafios">Desafios semanais</a>
               </li>
               <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/biblioteca">Biblioteca</a>
+                <a class="nav-link text-white" href="/biblioteca" data-child-nav-link="biblioteca">Biblioteca</a>
               </li>
               <li class="nav-item mb-2">
-                <a class="nav-link text-white active" aria-current="page" href="/perfil-crianca">Perfil</a>
+                <a class="nav-link text-white active" aria-current="page" href="/perfil-crianca" data-child-nav-link="perfil">Perfil</a>
               </li>
               <li class="nav-item mt-auto">
                 <a class="nav-link text-white" href="/selecao-perfil">Voltar ao menu</a>
@@ -204,6 +205,15 @@
           </div>
         </section>
 
+        <!-- RELATORIOS DOS JOGOS -->
+        <section class="mb-5">
+          <h3 class="h5 text-zupi-primary mb-4">Relatorios dos jogos</h3>
+          <div class="row g-4">
+            <div class="col-lg-6" id="perfilJogoResumo"></div>
+            <div class="col-lg-6" id="perfilUltimasPartidas"></div>
+          </div>
+        </section>
+
         <!-- RECOMPENSAS E CONQUISTAS -->
         <section>
           <h3 class="h5 text-zupi-primary mb-4">Minhas Recompensas</h3>
@@ -225,6 +235,10 @@
   <script src="/js/routes.js"></script>
   <script src="/js/api.js"></script>
   <script src="/js/auth-guard.js"></script>
+  <script src="/js/child-nav.js"></script>
+  <script src="/js/game-score.js"></script>
+  <script src="/js/game-reports.js"></script>
+  <script src="/js/perfilCriancaScript.js"></script>
   <script src="/js/main.js"></script>
 </body>
 
