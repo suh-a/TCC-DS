@@ -316,14 +316,14 @@
       async function loadTeacherDashboard() {
         try {
           const [dashboard, students, report] = await Promise.all([
-            ZupiAPI.fetchJson('/school/dashboard'),
-            ZupiAPI.fetchJson('/school/students'),
-            ZupiAPI.fetchJson('/school/reports/summary')
+            ZupiAPI.fetchJson('/school/dashboard', { skipAuthRedirect: true }),
+            ZupiAPI.fetchJson('/school/students', { skipAuthRedirect: true }),
+            ZupiAPI.fetchJson('/school/reports/summary', { skipAuthRedirect: true })
           ]);
           const studentList = Array.isArray(students) ? students : [];
-          setText('statTurmas', dashboard.classes ?? countClasses(studentList));
-          setText('statAlunos', dashboard.students ?? studentList.length);
-          setText('statAtividades', dashboard.games ?? report.totalSessions ?? 0);
+          setText('statTurmas', dashboard?.classes ?? countClasses(studentList));
+          setText('statAlunos', dashboard?.students ?? studentList.length);
+          setText('statAtividades', dashboard?.games ?? report?.totalSessions ?? 0);
           renderTeacherClasses(studentList);
           renderTeacherReports(report);
         } catch (err) {

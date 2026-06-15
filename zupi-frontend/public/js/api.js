@@ -97,10 +97,6 @@ window.alert = (message) => ZupiUI.show(message);
  */
 const ZupiAPI = (() => {
     function resolveBase() {
-        // Vite dev/preview: sempre usar proxy (evita CORS e 401 em loop)
-        if (typeof location !== 'undefined' && (location.port === '5173' || location.port === '4173')) {
-            return '';
-        }
         if (window.ZUPI_API_BASE !== undefined && window.ZUPI_API_BASE !== '') {
             const configuredBase = String(window.ZUPI_API_BASE).replace(/\/$/, '');
             const isLocalApi = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?/i.test(configuredBase);
@@ -109,6 +105,10 @@ const ZupiAPI = (() => {
             if (!isLocalApi || isLocalPage) {
                 return configuredBase;
             }
+        }
+        // Vite dev/preview sem base injetada: usar proxy local.
+        if (typeof location !== 'undefined' && (location.port === '5173' || location.port === '4173')) {
+            return '';
         }
         return 'https://tcc-ds-dzs2.onrender.com';
     }
@@ -133,11 +133,12 @@ const ZupiAPI = (() => {
     function saveSession(data) {
         if (!data || !data.token) return;
 
-        const user = data.user || data.child || {};
+        const user = data.user || data.child || data;
         localStorage.setItem('authToken', data.token);
 
-        if (user.id != null) {
-            localStorage.setItem('userId', String(user.id));
+        const id = user.id || data.userId;
+        if (id != null) {
+            localStorage.setItem('userId', String(id));
         }
         const type = user.userType || data.userType;
         if (type) {

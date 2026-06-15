@@ -36,6 +36,11 @@ public class Child {
     private boolean schoolLinked;
     private String schoolName;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "school_id")
+    @JsonIgnore
+    private School school;
+
     @OneToMany(mappedBy = "child")
     @JsonIgnore
     private List<Event> activits = new ArrayList<>();
@@ -174,6 +179,14 @@ public class Child {
 
     public void setSchoolName(String schoolName) {
         this.schoolName = schoolName;
+    }
+
+    public School getSchool() {
+        return school;
+    }
+
+    public void setSchool(School school) {
+        this.school = school;
     }
 
     public boolean isOnboardingCompleted() {

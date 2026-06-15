@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Biblioteca — Zupi</title>
+  <title>Biblioteca - Zupi</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/main.css" />
@@ -20,58 +20,54 @@
   </button>
   <section class="container-fluid">
     <section class="row">
-      <nav class="col-lg-2 dashboard-sidebar p-0 position-fixed vh-100 d-none d-lg-block" aria-label="Navegação">
+      <nav class="col-lg-2 dashboard-sidebar p-0 position-fixed vh-100 d-none d-lg-block" aria-label="Navegacao">
         <section class="d-flex flex-column p-4 h-100">
           <p class="navbar-brand text-white mb-4 fs-3 fw-bold">Zupi</p>
           <ul class="nav nav-pills flex-column pf-sidebar-nav" data-pf-sidebar>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/dashboard-pais">Dashboard</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/selecao-perfil">Perfis das crianças</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/selecao-relatorios">Relatórios</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/cadastro-dependentes">Cadastro de dependentes</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/agenda">Agenda</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/ajuda">Ajuda?</a>
-              </li>
-              <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="/perfil-responsavel">Perfil</a>
-              </li>
-              <li class="nav-item mt-auto">
-                <a class="nav-link text-white" href="#" data-action="logout">Sair</a>
-              </li>
-            </ul>
+            <li class="nav-item mb-2"><a class="nav-link text-white" href="/dashboard-pais">Dashboard</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" href="/selecao-perfil">Perfis das criancas</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" href="/selecao-relatorios">Relatorios</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" href="/cadastro-dependentes">Cadastro de dependentes</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" href="/agenda">Agenda</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" href="/ajuda">Ajuda?</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" href="/perfil-responsavel">Perfil</a></li>
+            <li class="nav-item mt-auto"><a class="nav-link text-white" href="#" data-action="logout">Sair</a></li>
+          </ul>
         </section>
       </nav>
       <main class="col-12 col-lg-10 ms-lg-auto dashboard-main-content px-3 px-lg-4 py-4">
-        <h1 class="text-zupi-primary mb-4">Livros</h1>
+        <section class="d-flex justify-content-between align-items-start gap-3 mb-4">
+          <h1 class="text-zupi-primary mb-0">Livros</h1>
+          <button id="showBookFormBtn" class="btn btn-primary d-none" type="button">Anexar livro</button>
+        </section>
+
+        <section id="schoolBookForm" class="card mb-4 d-none">
+          <section class="card-body">
+            <form id="bookForm" class="row g-3 align-items-end">
+              <section class="col-md-5">
+                <label class="form-label" for="bookTitle">Titulo</label>
+                <input class="form-control" id="bookTitle" maxlength="120" required>
+              </section>
+              <section class="col-md-5">
+                <label class="form-label" for="bookPdf">Arquivo PDF</label>
+                <label class="border rounded-3 p-3 w-100 d-flex align-items-center justify-content-between gap-3 bg-light" for="bookPdf" style="cursor:pointer;">
+                  <span>
+                    <span class="fw-semibold d-block">Selecionar PDF</span>
+                    <span class="small text-muted" id="bookPdfName">Nenhum arquivo selecionado</span>
+                  </span>
+                  <span class="badge text-bg-danger">PDF</span>
+                </label>
+                <input class="visually-hidden" id="bookPdf" type="file" accept="application/pdf,.pdf" required>
+              </section>
+              <section class="col-md-2 d-flex align-items-end">
+                <button class="btn btn-primary w-100" type="submit">Salvar</button>
+              </section>
+            </form>
+          </section>
+        </section>
+
         <section id="booksList" class="row g-4 child-books-grid">
-          <section class="col-md-4 col-lg-3">
-            <article class="child-book-card">
-              <span class="child-book-download" title="Download">⬇</span>
-              <p class="mb-0 fw-semibold">Inclusão na prática</p>
-            </article>
-          </section>
-          <section class="col-md-4 col-lg-3">
-            <article class="child-book-card">
-              <span class="child-book-download">⬇</span>
-              <p class="mb-0 fw-semibold">Histórias ilustradas</p>
-            </article>
-          </section>
-          <section class="col-md-4 col-lg-3">
-            <article class="child-book-card">
-              <span class="child-book-download">⬇</span>
-              <p class="mb-0 fw-semibold">Atividades sensoriais</p>
-            </article>
-          </section>
+          <section class="col-12"><p class="text-muted text-center">Carregando livros...</p></section>
         </section>
       </main>
     </section>
@@ -84,6 +80,112 @@
   <script src="/js/main.js"></script>
   <script src="/js/child-nav.js"></script>
   <script src="/js/content-pages.js"></script>
-  <script>document.addEventListener('DOMContentLoaded',()=>ChildNav.init({active:'biblioteca'}));</script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const type = ZupiAPI.getUser().type;
+      if (type === 'ESCOLA') {
+        document.getElementById('showBookFormBtn')?.classList.remove('d-none');
+        loadSchoolBooks();
+      } else {
+        ChildNav.init({ active: 'biblioteca' });
+        renderStaticBooks();
+      }
+    });
+
+    document.getElementById('showBookFormBtn')?.addEventListener('click', () => {
+      document.getElementById('schoolBookForm')?.classList.toggle('d-none');
+    });
+
+    document.getElementById('bookPdf')?.addEventListener('change', (event) => {
+      const file = event.target.files && event.target.files[0];
+      document.getElementById('bookPdfName').textContent = file ? file.name : 'Nenhum arquivo selecionado';
+    });
+
+    document.getElementById('bookForm')?.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const title = document.getElementById('bookTitle').value.trim();
+      const fileInput = document.getElementById('bookPdf');
+      const file = fileInput.files && fileInput.files[0];
+      if (!title) {
+        alert('Informe o titulo do livro.');
+        return;
+      }
+      if (!file) {
+        alert('Selecione um arquivo PDF.');
+        return;
+      }
+      if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+        alert('Envie somente arquivos PDF.');
+        return;
+      }
+      if (file.size > 10 * 1024 * 1024) {
+        alert('O PDF deve ter no maximo 10MB.');
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('title', title);
+      formData.append('file', file);
+
+      const response = await ZupiAPI.upload('/school/library/books', formData);
+      if (!response || !response.ok) {
+        alert(await ZupiAPI.readErrorMessage(response, 'Nao foi possivel anexar o livro.'));
+        return;
+      }
+      event.target.reset();
+      document.getElementById('bookPdfName').textContent = 'Nenhum arquivo selecionado';
+      document.getElementById('schoolBookForm')?.classList.add('d-none');
+      await loadSchoolBooks();
+    });
+
+    async function loadSchoolBooks() {
+      const books = await ZupiAPI.fetchJson('/school/library/books') || [];
+      renderBooks(books);
+    }
+
+    function renderStaticBooks() {
+      renderBooks([
+        { title: 'Inclusao na pratica', fileUrl: '#' },
+        { title: 'Historias ilustradas', fileUrl: '#' },
+        { title: 'Atividades sensoriais', fileUrl: '#' }
+      ]);
+    }
+
+    function renderBooks(books) {
+      const list = document.getElementById('booksList');
+      if (!list) return;
+      if (!books.length) {
+        list.innerHTML = '<section class="col-12"><p class="text-muted text-center">Nenhum livro cadastrado ainda.</p></section>';
+        return;
+      }
+      list.innerHTML = books.map((book) => `
+        <section class="col-md-4 col-lg-3">
+          <article class="child-book-card text-dark h-100 d-flex flex-column gap-3">
+            <section class="d-flex align-items-start justify-content-between gap-3">
+              <span class="badge text-bg-danger">PDF</span>
+              <span class="child-book-download">Livro</span>
+            </section>
+            <p class="mb-0 fw-semibold flex-grow-1">${escapeHtml(book.title || 'Livro')}</p>
+            <a class="btn btn-sm btn-outline-primary" href="${escapeHtml(resolveBookUrl(book.fileUrl))}" target="_blank" rel="noopener">Abrir PDF</a>
+          </article>
+        </section>
+      `).join('');
+    }
+
+    function resolveBookUrl(fileUrl) {
+      if (!fileUrl || fileUrl === '#') return '#';
+      return ZupiAPI.buildUrl(fileUrl);
+    }
+
+    function escapeHtml(value) {
+      return String(value || '').replace(/[&<>"']/g, (char) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[char]));
+    }
+  </script>
 </body>
 </html>

@@ -97,7 +97,7 @@ const ZupiAuthGuard = (() => {
             return;
         }
 
-        if (isResponsibleArea(path) && type && !['RESPONSAVEL', 'ADMIN'].includes(type)) {
+        if (isResponsibleArea(path) && type && !['RESPONSAVEL', 'ADMIN'].includes(type) && !(path === '/biblioteca' && type === 'ESCOLA')) {
             window.location.href = `/403?from=${encodeURIComponent(path)}`;
             return;
         }

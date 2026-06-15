@@ -23,20 +23,19 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         if (username != null && username.matches("\\d+")) {
-            User user = userRepository.findById(Long.parseLong(username))
-                    .orElse(null);
+            User user = userRepository.findById(Long.parseLong(username)).orElse(null);
             if (user != null) {
                 return UserDetailsImpl.build(user);
             }
         }
 
-        User user = userRepository.findByEmail(username).orElse(null);
-        if (user != null) {
-            return UserDetailsImpl.build(user);
+        Child child = childRepository.findByChildLoginEmail(username).orElse(null);
+        if (child != null) {
+            return UserDetailsImpl.buildFromChild(child);
         }
 
-        Child child = childRepository.findByChildLoginEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + username));
-        return UserDetailsImpl.buildFromChild(child);
+        User user = userRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario nao encontrado: " + username));
+        return UserDetailsImpl.build(user);
     }
 }

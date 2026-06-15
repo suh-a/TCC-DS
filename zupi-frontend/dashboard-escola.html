@@ -530,6 +530,46 @@
           .replace(/'/g, '&#039;');
       }
 
+      function onlyDigits(value) {
+        return String(value || '').replace(/\D/g, '');
+      }
+
+      function formatCpfInput(value) {
+        const d = onlyDigits(value).slice(0, 11);
+        return d
+          .replace(/(\d{3})(\d)/, '$1.$2')
+          .replace(/(\d{3})(\d)/, '$1.$2')
+          .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+      }
+
+      function formatPhoneInput(value) {
+        const d = onlyDigits(value).slice(0, 11);
+        if (d.length <= 10) {
+          return d.replace(/(\d{2})(\d)/, '($1) $2').replace(/(\d{4})(\d)/, '$1-$2');
+        }
+        return d.replace(/(\d{2})(\d)/, '($1) $2').replace(/(\d{5})(\d)/, '$1-$2');
+      }
+
+      function bindNumericMasks() {
+        ['studentCpf', 'respCpf'].forEach((id) => {
+          const input = document.getElementById(id);
+          if (!input) return;
+          input.setAttribute('inputmode', 'numeric');
+          input.setAttribute('maxlength', '14');
+          input.addEventListener('input', () => {
+            input.value = formatCpfInput(input.value);
+          });
+        });
+        const phone = document.getElementById('respPhone');
+        if (phone) {
+          phone.setAttribute('inputmode', 'numeric');
+          phone.setAttribute('maxlength', '15');
+          phone.addEventListener('input', () => {
+            phone.value = formatPhoneInput(phone.value);
+          });
+        }
+      }
+
       function formatDateTime(value) {
         if (!value) return 'Sem jogos';
         return new Date(value).toLocaleString('pt-BR', {
@@ -542,6 +582,8 @@
 
       async function loadSchoolData() {
         try {
+          console.log('URL listar alunos:', ZupiAPI.buildUrl('/school/students'));
+          console.log('URL listar professores:', ZupiAPI.buildUrl('/school/teachers'));
           const [dashboard, students, teachers, classes, responsibles, accesses, report] = await Promise.all([
             ZupiAPI.fetchJson('/school/dashboard'),
             ZupiAPI.fetchJson('/school/students'),
@@ -554,6 +596,8 @@
 
           schoolStudents = Array.isArray(students) ? students : [];
           schoolTeachers = Array.isArray(teachers) ? teachers : [];
+          console.log('Resposta alunos:', students);
+          console.log('Resposta professores:', teachers);
           schoolClasses = Array.isArray(classes) ? classes : [];
           schoolResponsibles = Array.isArray(responsibles) ? responsibles : [];
           schoolAccess = accesses || { responsibles: [], teachers: [], students: [] };
@@ -780,6 +824,7 @@
         if (studentAccess) studentAccess.innerHTML = fallback;
       }
 
+      bindNumericMasks();
       loadSchoolData();
 
       // Support form
@@ -942,7 +987,7 @@
         const cpf = (document.getElementById('respCpf')?.value || '').replace(/\D/g, '');
         const birthDate = document.getElementById('respBirthdate')?.value;
         const email = document.getElementById('respEmail')?.value.trim();
-        const phone = document.getElementById('respPhone')?.value.trim();
+        const phone = onlyDigits(document.getElementById('respPhone')?.value);
         const password = document.getElementById('respPassword')?.value;
 
         if (!name) {
@@ -1009,13 +1054,17 @@
 
         btn.disabled = true;
         try {
-          const response = await ZupiAPI.post('/school/teachers', {
+          const payload = {
             name,
             email,
             specialty: specialty || null
-          });
+          };
+          console.log('URL cadastrar professor:', ZupiAPI.buildUrl('/school/teachers'));
+          console.log('Payload professor:', payload);
+          const response = await ZupiAPI.post('/school/teachers', payload);
           if (!response) return;
           const text = await response.text();
+          console.log('Resposta cadastro professor:', response.status, text);
           if (!response.ok) {
             alert(ZupiUI.normalizeMessage(text || 'Erro ao cadastrar docente.'));
             return;
@@ -1083,7 +1132,7 @@
 
           saveStudentBtn.disabled = true;
           try {
-            const response = await ZupiAPI.post('/school/students', {
+            const payload = {
               name,
               cpf,
               birthDate,
@@ -1092,9 +1141,13 @@
               responsibleId,
               schoolLinked: true,
               schoolName: null
-            });
+            };
+            console.log('URL cadastrar aluno:', ZupiAPI.buildUrl('/school/students'));
+            console.log('Payload aluno:', payload);
+            const response = await ZupiAPI.post('/school/students', payload);
             if (!response) return;
             const text = await response.text();
+            console.log('Resposta cadastro aluno:', response.status, text);
             if (response.ok) {
               const created = JSON.parse(text);
               const child = created.child || created;

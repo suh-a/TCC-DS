@@ -20,6 +20,7 @@ import senai.tcc.zupiapi.zupibackend.exceptions.BusinessException;
 import senai.tcc.zupiapi.zupibackend.exceptions.DataBaseExceptions;
 import senai.tcc.zupiapi.zupibackend.exceptions.ResourceNotFoundException;
 import senai.tcc.zupiapi.zupibackend.model.Child;
+import senai.tcc.zupiapi.zupibackend.model.School;
 import senai.tcc.zupiapi.zupibackend.model.User;
 import senai.tcc.zupiapi.zupibackend.repositories.ChildRepository;
 import senai.tcc.zupiapi.zupibackend.repositories.UserRepository;
@@ -87,6 +88,10 @@ public class ChildService {
     }
 
     public ChildRegistrationResponse saveForSchool(ChildRequest childRequest) {
+        return saveForSchool(childRequest, null);
+    }
+
+    public ChildRegistrationResponse saveForSchool(ChildRequest childRequest, School school) {
         if (!SecurityUtils.hasRole(UserType.ESCOLA.name())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Acesso restrito à escola");
         }
@@ -99,6 +104,7 @@ public class ChildService {
         }
         child.setSchoolLinked(childRequest.schoolLinked());
         child.setSchoolName(childRequest.schoolName());
+        child.setSchool(school);
         validateCpf(child.getCpf());
         validateAgeChild(child);
         child.setResponsible(user);
@@ -183,7 +189,17 @@ public class ChildService {
         String normalized = name == null ? "crianca" : name.toLowerCase().replaceAll("[^a-z0-9]", "");
         String prefix = normalized.isBlank() ? "crianca" : normalized.split(" ")[0];
         String suffix = birthDate != null ? String.valueOf(birthDate.getYear()) : String.valueOf(new Random().nextInt(9999));
-        String email = String.format("%s.%s@zupi-kids.app", prefix, suffix).replaceAll("\\.+", ".");
+        String baseEmail = String.format("%s.%s@zupi-kids.app", prefix, suffix).replaceAll("\\.+", ".");
+        String email = baseEmail;
+        int attempts = 0;
+        while (childRepository.findByChildLoginEmail(email).isPresent() || userRepository.existsByEmail(email)) {
+            attempts++;
+            email = String.format("%s.%s.%04d@zupi-kids.app", prefix, suffix, new Random().nextInt(10000));
+            if (attempts > 20) {
+                email = String.format("%s.%s.%d@zupi-kids.app", prefix, suffix, System.currentTimeMillis());
+                break;
+            }
+        }
 
         String password = generatePassword();
         return new ChildCredentials(email, password);

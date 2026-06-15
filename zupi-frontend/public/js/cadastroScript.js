@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     renderCadastro();
     initMasks();
+    bindCadastroActions();
     updateStep();
 });
 
@@ -92,6 +93,20 @@ function field(id, label, type = 'text') {
     return { id, label, type };
 }
 
+function numericAttrs(id) {
+    const attrs = {
+        cpf: 'maxlength="14" inputmode="numeric" autocomplete="off"',
+        cnpj: 'maxlength="18" inputmode="numeric" autocomplete="off"',
+        telefone: 'maxlength="15" inputmode="numeric" autocomplete="tel"',
+        cep: 'maxlength="9" inputmode="numeric" autocomplete="postal-code"',
+        numero: 'maxlength="10" inputmode="numeric"',
+        numeroCartao: 'maxlength="19" inputmode="numeric"',
+        validadeCartao: 'maxlength="5" inputmode="numeric"',
+        cvvCartao: 'maxlength="4" inputmode="numeric"'
+    };
+    return attrs[id] || '';
+}
+
 function addressFields() {
     return [
         field('cep', 'CEP'),
@@ -162,6 +177,7 @@ function renderField(fieldConfig) {
                 id="${fieldConfig.id}"
                 name="${fieldConfig.id}"
                 class="form-control"
+                ${numericAttrs(fieldConfig.id)}
                 required
             >
         </div>
@@ -192,15 +208,15 @@ function renderPaymentStep() {
             </div>
             <div class="col-12 mb-3">
                 <label class="form-label" for="numeroCartao">Numero do cartao</label>
-                <input type="text" id="numeroCartao" class="form-control" required>
+                <input type="text" id="numeroCartao" class="form-control" maxlength="19" inputmode="numeric" required>
             </div>
             <div class="col-12 col-md-6 mb-3">
                 <label class="form-label" for="validadeCartao">Validade</label>
-                <input type="text" id="validadeCartao" class="form-control" placeholder="MM/AA" required>
+                <input type="text" id="validadeCartao" class="form-control" placeholder="MM/AA" maxlength="5" inputmode="numeric" required>
             </div>
             <div class="col-12 col-md-6 mb-3">
                 <label class="form-label" for="cvvCartao">CVV</label>
-                <input type="text" id="cvvCartao" class="form-control" required>
+                <input type="text" id="cvvCartao" class="form-control" maxlength="4" inputmode="numeric" required>
             </div>
         </div>
     `;
@@ -211,11 +227,29 @@ function renderActions(actions) {
         <div class="cadastro-actions">
             ${actions.map((action) => {
                 const className = action.type === 'finish' ? 'btn-success' : action.type === 'prev' ? 'btn-outline-secondary' : 'btn-primary';
-                const handler = action.type === 'finish' ? 'finalizarCadastro()' : action.type === 'prev' ? 'prevStep()' : 'nextStep()';
-                return `<button type="button" class="btn ${className}" onclick="${handler}">${action.label}</button>`;
+                return `<button type="button" class="btn ${className}" data-cadastro-action="${action.type}">${action.label}</button>`;
             }).join('')}
         </div>
     `;
+}
+
+function bindCadastroActions() {
+    const form = document.getElementById('cadastroForm');
+    if (!form) return;
+
+    form.addEventListener('click', (event) => {
+        const button = event.target.closest('[data-cadastro-action]');
+        if (!button) return;
+
+        const action = button.dataset.cadastroAction;
+        if (action === 'prev') {
+            prevStep();
+        } else if (action === 'next') {
+            nextStep();
+        } else if (action === 'finish') {
+            finalizarCadastro(button);
+        }
+    });
 }
 
 function nextStep() {
@@ -256,13 +290,18 @@ function updateResumoPagamento() {
     setValue('resumoEmail', email);
 }
 
-async function finalizarCadastro() {
+async function finalizarCadastro(button = null) {
     if (!validateCurrentStep()) return;
     if (!validatePasswords()) return;
 
     const userData = tipoCadastro === 'pj' ? buildPessoaJuridicaData() : buildPessoaFisicaData();
+    const originalText = button?.textContent;
 
     try {
+        if (button) {
+            button.disabled = true;
+            button.textContent = 'Cadastrando...';
+        }
         const registerResponse = await ZupiAPI.postPublic('/auth/register', userData);
         if (!registerResponse || !registerResponse.ok) {
             const erroTexto = await registerResponse.text(); // ← lê o corpo do erro
@@ -291,6 +330,11 @@ async function finalizarCadastro() {
     } catch (error) {
         console.error('Erro ao finalizar cadastro:', error);
         alert('Erro no servidor.');
+    } finally {
+        if (button) {
+            button.disabled = false;
+            button.textContent = originalText || 'Concluir pagamento e se cadastrar';
+        }
     }
 }
 
@@ -341,7 +385,8 @@ function validateCurrentStep() {
 
     for (const input of fields) {
         if (!input.value.trim()) {
-            alert('Preencha todos os campos obrigatorios desta etapa.');
+            const label = activeStep.querySelector(`label[for="${input.id}"]`)?.textContent || 'campo obrigatorio';
+            alert(`Preencha o campo ${label}.`);
             input.focus();
             return false;
         }

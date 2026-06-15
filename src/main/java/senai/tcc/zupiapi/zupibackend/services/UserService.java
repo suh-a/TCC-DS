@@ -14,10 +14,12 @@ import senai.tcc.zupiapi.zupibackend.dto.response.UserResponse;
 import senai.tcc.zupiapi.zupibackend.exceptions.BusinessException;
 import senai.tcc.zupiapi.zupibackend.exceptions.ResourceNotFoundException;
 import senai.tcc.zupiapi.zupibackend.model.Address;
+import senai.tcc.zupiapi.zupibackend.model.Child;
 import senai.tcc.zupiapi.zupibackend.model.School;
 import senai.tcc.zupiapi.zupibackend.model.User;
 import senai.tcc.zupiapi.zupibackend.model.enums.PlanType;
 import senai.tcc.zupiapi.zupibackend.model.enums.UserType;
+import senai.tcc.zupiapi.zupibackend.repositories.ChildRepository;
 import senai.tcc.zupiapi.zupibackend.repositories.SchoolRepository;
 import senai.tcc.zupiapi.zupibackend.repositories.UserRepository;
 import senai.tcc.zupiapi.zupibackend.security.SecurityUtils;
@@ -32,6 +34,9 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ChildRepository childRepository;
 
     @Autowired
     private UserMapper userMapper;
@@ -85,7 +90,7 @@ public class UserService {
         userEntity.setPassword(passwordEncoder.encode(user.password()));
         userEntity.setUserType(type);
         userEntity.setPlanType(planType);
-        userEntity.setPhone(user.phone());
+        userEntity.setPhone(normalizePhone(user.phone()));
         userEntity.setAddress(toAddress(user));
 
         if (type == UserType.ESCOLA) {
@@ -99,6 +104,29 @@ public class UserService {
 
     public LoginResponse login(LoginDTO user) {
         try {
+            var childMatch = childRepository == null ? null : childRepository.findByChildLoginEmail(user.email());
+            Child child = childMatch == null ? null : childMatch.orElse(null);
+            if (child != null) {
+                if (!passwordEncoder.matches(user.password(), child.getChildPasswordHash())) {
+                    throw new RuntimeException();
+                }
+                UserType type = child.isSchoolLinked() ? UserType.ALUNO_CREDENCIADO : UserType.CRIANCA;
+                UserResponse response = new UserResponse(
+                        child.getId(),
+                        child.getName(),
+                        child.getChildLoginEmail(),
+                        child.getCpf(),
+                        null,
+                        null,
+                        type,
+                        true,
+                        false,
+                        child.getProfilePhotoUrl()
+                );
+                String token = jwtUtil.generateToken(child.getChildLoginEmail(), child.getId(), type);
+                return new LoginResponse(token, response);
+            }
+
             User userEntity = userRepository.findByEmail(user.email())
                     .orElseThrow(() -> new RuntimeException());
 
@@ -239,9 +267,9 @@ public class UserService {
 
     private Address toAddress(UserRequest user) {
         Address address = new Address();
-        address.setCep(user.address().cep());
+        address.setCep(normalizeCep(user.address().cep()));
         address.setStreet(user.address().street());
-        address.setNumber(user.address().number());
+        address.setNumber(normalizeAddressNumber(user.address().number()));
         address.setNeighborhood(user.address().neighborhood());
         address.setState(user.address().state());
         address.setCountry(user.address().country());
@@ -259,6 +287,31 @@ public class UserService {
     private static String onlyDigits(String value) {
         if (value == null) return "";
         return value.replaceAll("\\D", "");
+    }
+
+    private static String normalizePhone(String value) {
+        String phone = onlyDigits(value);
+        if (phone.isBlank()) return null;
+        if (phone.length() < 10 || phone.length() > 11) {
+            throw new BusinessException("Telefone invalido");
+        }
+        return phone;
+    }
+
+    private static String normalizeCep(String value) {
+        String cep = onlyDigits(value);
+        if (cep.length() != 8) {
+            throw new BusinessException("CEP invalido");
+        }
+        return cep;
+    }
+
+    private static String normalizeAddressNumber(String value) {
+        String number = onlyDigits(value);
+        if (number.isBlank() || number.length() > 10) {
+            throw new BusinessException("Numero do endereco invalido");
+        }
+        return number;
     }
 
     private static boolean hasText(String value) {

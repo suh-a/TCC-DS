@@ -14,6 +14,7 @@ public interface ChildMapper {
     @Mapping(target = "activits", ignore = true)
     @Mapping(target = "responsible", ignore = true)
     @Mapping(target = "reports", ignore = true)
+    @Mapping(target = "school", ignore = true)
     Child toEntity(ChildRequest request);
 
 
