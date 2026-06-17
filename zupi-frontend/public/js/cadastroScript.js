@@ -1,6 +1,7 @@
 let currentStep = 0;
 let tipoCadastro = 'pf';
 let stepsConfig = [];
+let googlePending = null;
 
 document.addEventListener('DOMContentLoaded', function () {
     if (ZupiAPI.isAuthenticated()) {
@@ -9,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     const params = new URLSearchParams(window.location.search);
+    googlePending = params.get('google') === '1' ? readGooglePending() : null;
     tipoCadastro = params.get('tipo') === 'pj' ? 'pj' : 'pf';
     stepsConfig = tipoCadastro === 'pj' ? getPessoaJuridicaSteps() : getPessoaFisicaSteps();
 
@@ -57,17 +59,24 @@ function getPessoaFisicaSteps() {
 }
 
 function getPessoaJuridicaSteps() {
+    const accountFields = [
+        field('nome', 'Nome da instituicao'),
+        field('cnpj', 'CNPJ'),
+        field('email', 'E-mail', 'email'),
+        field('telefone', 'Telefone')
+    ];
+
+    if (!isGoogleRegistration()) {
+        accountFields.push(
+            field('senha', 'Senha', 'password'),
+            field('confirmarSenha', 'Confirmar senha', 'password')
+        );
+    }
+
     return [
         {
             title: 'Dados institucionais / Contato / Seguranca',
-            fields: [
-                field('nome', 'Nome da instituicao'),
-                field('cnpj', 'CNPJ'),
-                field('email', 'E-mail', 'email'),
-                field('telefone', 'Telefone'),
-                field('senha', 'Senha', 'password'),
-                field('confirmarSenha', 'Confirmar senha', 'password')
-            ],
+            fields: accountFields,
             actions: [{ label: 'Proximo', type: 'next' }]
         },
         {
@@ -119,12 +128,17 @@ function addressFields() {
 }
 
 function securityFields() {
-    return [
+    const fields = [
         field('email', 'E-mail', 'email'),
-        field('telefone', 'Telefone'),
-        field('senha', 'Senha', 'password'),
-        field('confirmarSenha', 'Confirmar senha', 'password')
+        field('telefone', 'Telefone')
     ];
+    if (!isGoogleRegistration()) {
+        fields.push(
+            field('senha', 'Senha', 'password'),
+            field('confirmarSenha', 'Confirmar senha', 'password')
+        );
+    }
+    return fields;
 }
 
 function renderCadastro() {
@@ -135,6 +149,39 @@ function renderCadastro() {
 
     renderStepIndicator();
     renderSteps();
+    renderGoogleTypeSelector();
+    applyGooglePrefill();
+}
+
+function renderGoogleTypeSelector() {
+    const existing = document.getElementById('googleTypeSelector');
+    if (existing) existing.remove();
+    if (!isGoogleRegistration()) return;
+
+    const header = document.querySelector('.cadastro-header');
+    const selector = document.createElement('div');
+    selector.id = 'googleTypeSelector';
+    selector.className = 'd-flex gap-2 justify-content-center mb-4 flex-wrap';
+    selector.innerHTML = `
+        <button class="btn ${tipoCadastro === 'pf' ? 'btn-primary' : 'btn-outline-primary'}" type="button" data-google-tipo="pf">
+            <span>Pessoa Fisica</span>
+        </button>
+        <button class="btn ${tipoCadastro === 'pj' ? 'btn-primary' : 'btn-outline-primary'}" type="button" data-google-tipo="pj">
+            <span>Pessoa Juridica</span>
+        </button>
+    `;
+    header.insertAdjacentElement('afterend', selector);
+
+    selector.querySelectorAll('[data-google-tipo]').forEach((button) => {
+        button.addEventListener('click', () => {
+            tipoCadastro = button.dataset.googleTipo === 'pj' ? 'pj' : 'pf';
+            currentStep = 0;
+            stepsConfig = tipoCadastro === 'pj' ? getPessoaJuridicaSteps() : getPessoaFisicaSteps();
+            renderCadastro();
+            initMasks();
+            updateStep();
+        });
+    });
 }
 
 function renderStepIndicator() {
@@ -278,6 +325,7 @@ function updateStep() {
     });
 
     updateResumoPagamento();
+    applyGooglePrefill();
 }
 
 function updateResumoPagamento() {
@@ -313,10 +361,12 @@ async function finalizarCadastro(button = null) {
 
         alert('Pagamento aprovado!');
 
-        const loginResponse = await ZupiAPI.postPublic('/auth/login', {
-            email: userData.email,
-            password: userData.password
-        });
+        const loginResponse = isGoogleRegistration()
+            ? await ZupiAPI.postPublic('/auth/google', { token: googlePending.token })
+            : await ZupiAPI.postPublic('/auth/login', {
+                email: userData.email,
+                password: userData.password
+            });
 
         if (!loginResponse || !loginResponse.ok) {
             alert('Cadastro concluido, mas nao foi possivel fazer login automatico.');
@@ -326,6 +376,9 @@ async function finalizarCadastro(button = null) {
 
         const data = await loginResponse.json();
         ZupiAPI.saveSession(data);
+        if (isGoogleRegistration()) {
+            sessionStorage.removeItem('zupiGooglePending');
+        }
         ZupiAPI.redirectByUserType(userData.userType);
     } catch (error) {
         console.error('Erro ao finalizar cadastro:', error);
@@ -342,13 +395,14 @@ function buildPessoaFisicaData() {
     return {
         name: getValue('nome'),
         email: getValue('email'),
-        password: getValue('senha'),
+        password: isGoogleRegistration() ? null : getValue('senha'),
         cpf: getValue('cpf'),
         cnpj: null,
         birthDate: getValue('nascimento'),
         phone: getValue('telefone'),
         address: buildAddress(),
-        userType: 'RESPONSAVEL'
+        userType: 'RESPONSAVEL',
+        googleToken: googlePending?.token || null
     };
 }
 
@@ -356,13 +410,14 @@ function buildPessoaJuridicaData() {
     return {
         name: getValue('nome'),
         email: getValue('email'),
-        password: getValue('senha'),
+        password: isGoogleRegistration() ? null : getValue('senha'),
         cpf: null,
         cnpj: getValue('cnpj'),
         birthDate: null,
         phone: getValue('telefone'),
         address: buildAddress(),
-        userType: 'ESCOLA'
+        userType: 'ESCOLA',
+        googleToken: googlePending?.token || null
     };
 }
 
@@ -396,6 +451,8 @@ function validateCurrentStep() {
 }
 
 function validatePasswords(scope = document) {
+    if (isGoogleRegistration()) return true;
+
     const senha = document.getElementById('senha');
     const confirmarSenha = document.getElementById('confirmarSenha');
 
@@ -503,4 +560,32 @@ function setValue(id, value) {
     if (el) {
         el.value = value || '';
     }
+}
+
+function readGooglePending() {
+    try {
+        const pending = JSON.parse(sessionStorage.getItem('zupiGooglePending') || 'null');
+        if (pending && pending.token && pending.email) return pending;
+    } catch (_) {
+        return null;
+    }
+    return null;
+}
+
+function isGoogleRegistration() {
+    return !!googlePending;
+}
+
+function applyGooglePrefill() {
+    if (!isGoogleRegistration()) return;
+
+    setValue('nome', googlePending.name);
+    setValue('email', googlePending.email);
+
+    ['nome', 'email'].forEach((id) => {
+        const input = document.getElementById(id);
+        if (input) {
+            input.readOnly = true;
+        }
+    });
 }

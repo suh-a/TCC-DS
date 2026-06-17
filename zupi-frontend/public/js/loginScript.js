@@ -1,5 +1,5 @@
 /**
- * Login — autenticação via ZupiAPI.
+ * Login - autenticacao via ZupiAPI.
  */
 document.addEventListener('DOMContentLoaded', function () {
     if (ZupiAPI.isAuthenticated()) {
@@ -8,15 +8,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     const loginForm = document.getElementById('signupForm');
-    const googleLoginBtn = document.getElementById('googleLoginBtn');
 
     if (loginForm) {
         loginForm.addEventListener('submit', loginUser);
-    }
-    if (googleLoginBtn) {
-        googleLoginBtn.addEventListener('click', () => {
-            ZupiUI.show('Login com Google estara disponivel em breve.');
-        });
     }
 });
 
@@ -53,69 +47,76 @@ async function loginUser(event) {
     }
 }
 
-window.onload = function () {
+let googleInitAttempts = 0;
+
+window.addEventListener('load', initGoogleButton);
+
+function initGoogleButton() {
+    const container = document.getElementById('googleBtn');
+    if (!container) {
+        return;
+    }
+
+    if (!window.google?.accounts?.id) {
+        if (googleInitAttempts < 20) {
+            googleInitAttempts++;
+            window.setTimeout(initGoogleButton, 250);
+        } else {
+            ZupiUI.error('Nao foi possivel carregar o botao do Google. Tente novamente em instantes.');
+        }
+        return;
+    }
+
+    if (container.dataset.googleRendered === 'true') return;
+    container.dataset.googleRendered = 'true';
 
     google.accounts.id.initialize({
-        client_id: "841923211184-gn3apap7cv42s3nrbtrri7seh31h0gvp.apps.googleusercontent.com",
-
+        client_id: '841923211184-gn3apap7cv42s3nrbtrri7seh31h0gvp.apps.googleusercontent.com',
         callback: handleGoogleLogin
     });
 
     google.accounts.id.renderButton(
-        document.getElementById("googleBtn"),
+        document.getElementById('googleBtn'),
         {
-            theme: "outline",
-            size: "large",
-            shape: "rectangular",
+            theme: 'outline',
+            size: 'large',
+            shape: 'rectangular',
             width: 360,
-            text: "continue_with"
+            text: 'continue_with'
         }
     );
-};
+}
 
 async function handleGoogleLogin(response) {
-
     try {
+        const res = await ZupiAPI.postPublic('/auth/google', {
+            token: response.credential
+        });
 
-        const res = await fetch(
-            ZupiAPI.buildUrl('/auth/google'),
-            {
-                method: 'POST',
-
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-
-                body: JSON.stringify({
-                    token: response.credential
-                })
-            }
-        );
-
-        if (!res.ok) {
-            throw new Error('Erro no login Google');
+        if (!res || !res.ok) {
+            const message = await ZupiAPI.readErrorMessage(res, 'Erro no login Google');
+            throw new Error(message);
         }
 
         const data = await res.json();
 
-        console.log(data);
+        if (data.status === 'REGISTRATION_REQUIRED') {
+            sessionStorage.setItem('zupiGooglePending', JSON.stringify({
+                token: response.credential,
+                name: data.pendingUser?.name || '',
+                email: data.pendingUser?.email || '',
+                googleId: data.pendingUser?.googleId || '',
+                picture: data.pendingUser?.picture || ''
+            }));
+            window.location.href = '/cadastro?google=1';
+            return;
+        }
 
-        // salva sessão
         ZupiAPI.saveSession(data);
-
-        // pega tipo usuário
-        const userType =
-            data.user?.userType || 'RESPONSAVEL';
-
-        // redireciona corretamente
+        const userType = data.user?.userType || ZupiAPI.getUser().type || 'RESPONSAVEL';
         ZupiAPI.redirectByUserType(userType);
-
     } catch (error) {
-
-        console.error(
-            'Erro login Google:',
-            error
-        );
-        ZupiUI.error('Erro ao fazer login com Google.');
+        console.error('Erro login Google:', error);
+        ZupiUI.error(error.message || 'Erro ao fazer login com Google.');
     }
 }

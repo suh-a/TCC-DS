@@ -28,6 +28,7 @@ import senai.tcc.zupiapi.zupibackend.security.services.AccessControlService;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -52,6 +53,9 @@ public class UserService {
 
     @Autowired
     private AccessControlService accessControl;
+
+    @Autowired
+    private GoogleAuthService googleAuthService;
 
     public List<UserResponse> findAll() {
         return userMapper.toResponseList(userRepository.findAll());
@@ -79,19 +83,36 @@ public class UserService {
     public UserResponse save(UserRequest user) {
         validateRequiredRegistrationFields(user);
 
+        var googlePayload = hasText(user.googleToken()) ? googleAuthService.requireValidPayload(user.googleToken()) : null;
+        String normalizedEmail = GoogleAuthService.normalizeEmail(user.email());
+        if (googlePayload != null && !GoogleAuthService.normalizeEmail(googlePayload.getEmail()).equals(normalizedEmail)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "E-mail do Google nao confere com o cadastro");
+        }
+
         UserType type = user.userType() != null ? user.userType() : UserType.RESPONSAVEL;
         PlanType planType = resolvePlanType(type);
 
-        if (userRepository.existsByEmail(user.email())) {
+        if (userRepository.existsByEmailIgnoreCase(normalizedEmail)) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "E-mail ja cadastrado");
         }
 
         User userEntity = userMapper.toEntity(user);
-        userEntity.setPassword(passwordEncoder.encode(user.password()));
+        String password = hasText(user.password()) ? user.password() : UUID.randomUUID().toString();
+        userEntity.setPassword(passwordEncoder.encode(password));
+        userEntity.setEmail(normalizedEmail);
         userEntity.setUserType(type);
         userEntity.setPlanType(planType);
         userEntity.setPhone(normalizePhone(user.phone()));
         userEntity.setAddress(toAddress(user));
+        if (googlePayload != null) {
+            userEntity.setGoogleAccount(true);
+            userEntity.setGoogleId(googlePayload.getSubject());
+            userEntity.setProvider("GOOGLE");
+            String picture = (String) googlePayload.get("picture");
+            if (picture != null && !picture.isBlank()) {
+                userEntity.setProfilePhotoUrl(picture);
+            }
+        }
 
         if (type == UserType.ESCOLA) {
             userEntity = saveSchoolAccount(user, userEntity);
@@ -257,7 +278,7 @@ public class UserService {
         if (!hasText(user.email())) {
             throw new BusinessException("E-mail e obrigatorio");
         }
-        if (user.password() == null || user.password().length() < 6) {
+        if (!hasText(user.googleToken()) && (user.password() == null || user.password().length() < 6)) {
             throw new BusinessException("Senha deve ter no minimo 6 caracteres");
         }
         if (user.address() == null) {

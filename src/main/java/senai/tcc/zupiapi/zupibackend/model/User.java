@@ -98,6 +98,30 @@ public class User {
         this.password = password;
     }
 
+    public String getGoogleId() {
+        return googleId;
+    }
+
+    public void setGoogleId(String googleId) {
+        this.googleId = googleId;
+    }
+
+    public Boolean getGoogleAccount() {
+        return googleAccount;
+    }
+
+    public void setGoogleAccount(Boolean googleAccount) {
+        this.googleAccount = googleAccount;
+    }
+
+    public String getProvider() {
+        return provider;
+    }
+
+    public void setProvider(String provider) {
+        this.provider = provider;
+    }
+
     public String getCpf() {
         return cpf;
     }

@@ -8,6 +8,7 @@ import java.util.List;
 public interface ChildRepository extends JpaRepository<Child, Long> {
     List<Child> findByResponsibleId(Long responsible_id);
     java.util.Optional<Child> findByChildLoginEmail(String email);
+    java.util.Optional<Child> findByChildLoginEmailIgnoreCase(String email);
     List<Child> findBySchoolLinkedTrueAndSchoolName(String schoolName);
     List<Child> findBySchoolId(Long schoolId);
 }

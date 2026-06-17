@@ -76,6 +76,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/auth/login",
                                 "/auth/register",
+                                "/auth/google",
                                 "/auth/forgot-password",
                                 "/auth/reset-password",
                                 "/auth/child/login",
