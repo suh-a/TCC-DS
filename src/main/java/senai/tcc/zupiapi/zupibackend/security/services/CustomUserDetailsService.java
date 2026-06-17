@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import senai.tcc.zupiapi.zupibackend.model.Child;
 import senai.tcc.zupiapi.zupibackend.model.User;
+import senai.tcc.zupiapi.zupibackend.model.enums.UserType;
 import senai.tcc.zupiapi.zupibackend.repositories.ChildRepository;
 import senai.tcc.zupiapi.zupibackend.repositories.UserRepository;
 import senai.tcc.zupiapi.zupibackend.security.UserDetailsImpl;
@@ -25,7 +26,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (username != null && username.matches("\\d+")) {
             User user = userRepository.findById(Long.parseLong(username)).orElse(null);
             if (user != null) {
-                return UserDetailsImpl.build(user);
+                return UserDetailsImpl.build(user, effectiveUserType(user));
             }
         }
 
@@ -36,6 +37,14 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario nao encontrado: " + username));
-        return UserDetailsImpl.build(user);
+        return UserDetailsImpl.build(user, effectiveUserType(user));
+    }
+
+    private UserType effectiveUserType(User user) {
+        if (user.getUserType() == UserType.RESPONSAVEL
+                && childRepository.findByResponsibleId(user.getId()).stream().anyMatch(Child::isSchoolLinked)) {
+            return UserType.RESPONSAVEL_CREDENCIADO;
+        }
+        return user.getUserType();
     }
 }

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard Responsavel Credenciado - Zupi</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/dashboard.css" />
+  <link rel="stylesheet" href="/css/dark-mode.css" />
+</head>
+<body>
+  <button class="menu-toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#dashboardOffcanvas" aria-controls="dashboardOffcanvas" aria-label="Abrir menu">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </button>
+
+  <div class="container-fluid">
+    <div class="row">
+      <nav class="col-lg-2 dashboard-sidebar p-0 position-fixed vh-100 d-none d-lg-block" aria-label="Navegacao do responsavel credenciado">
+        <div class="d-flex flex-column p-4 h-100">
+          <div class="navbar-brand text-white mb-4 fs-3 fw-bold">Zupi</div>
+          <ul class="nav nav-pills flex-column">
+            <li class="nav-item mb-2"><a class="nav-link text-white active" href="/dashboard-responsavel-credenciado">Dashboard</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" href="#aluno-vinculado">Aluno vinculado</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" href="#acompanhamento">Acompanhamento</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" href="#relatorios-escola">Relatorios</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" href="#chat-escola">Chat</a></li>
+            <li class="nav-item mt-auto"><a class="nav-link text-white" href="#" data-action="logout">Sair</a></li>
+          </ul>
+        </div>
+      </nav>
+
+      <div class="offcanvas offcanvas-start dashboard-offcanvas" tabindex="-1" id="dashboardOffcanvas">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title">Zupi</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Fechar"></button>
+        </div>
+        <div class="offcanvas-body p-0">
+          <ul class="nav nav-pills flex-column p-4">
+            <li class="nav-item mb-2"><a class="nav-link text-white active" href="/dashboard-responsavel-credenciado">Dashboard</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" href="#aluno-vinculado">Aluno vinculado</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" href="#acompanhamento">Acompanhamento</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" href="#relatorios-escola">Relatorios</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" href="#chat-escola">Chat</a></li>
+            <li class="nav-item mt-auto"><a class="nav-link text-white" href="#" data-action="logout">Sair</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <main class="col-12 col-lg-10 ms-lg-auto dashboard-main-content px-3 px-lg-4 py-4">
+        <header class="mb-4">
+          <p class="text-muted mb-1">Plano escolar</p>
+          <h1 id="responsibleTitle" class="text-zupi-primary mb-3">Painel do responsavel</h1>
+        </header>
+
+        <section id="aluno-vinculado" class="mb-5">
+          <h2 class="h4 mb-3">Aluno vinculado</h2>
+          <div id="linkedStudentList" class="row g-4">
+            <div class="col-12"><p class="text-muted">Carregando aluno vinculado...</p></div>
+          </div>
+        </section>
+
+        <section id="acompanhamento" class="row g-4 mb-5">
+          <div class="col-md-4"><div class="card h-100"><div class="card-body"><h2 class="h5">Atividades</h2><p class="text-muted mb-0">Serao exibidas quando a etapa de atividades escolares for implementada.</p></div></div></div>
+          <div class="col-md-4"><div class="card h-100"><div class="card-body"><h2 class="h5">Desempenho</h2><p class="text-muted mb-0">Resumo vinculado aos relatorios da escola.</p></div></div></div>
+          <div class="col-md-4"><div class="card h-100"><div class="card-body"><h2 class="h5">Biblioteca</h2><p class="text-muted">Livros disponibilizados pela escola para o aluno.</p><a class="btn btn-outline-primary btn-sm" href="/biblioteca">Abrir biblioteca</a></div></div></div>
+        </section>
+
+        <section id="relatorios-escola" class="mb-5">
+          <h2 class="h4 mb-3">Relatorios disponibilizados pela escola</h2>
+          <div class="card"><div class="card-body"><p class="text-muted mb-0">A listagem detalhada entra na etapa de relatorios.</p></div></div>
+        </section>
+
+        <section id="chat-escola">
+          <h2 class="h4 mb-3">Chat com professores e escola</h2>
+          <div class="card"><div class="card-body"><p class="text-muted mb-0">O chat sera implementado em etapa propria.</p></div></div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+  <script src="/js/routes.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/auth-guard.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/dashboardResponsavelCredenciado.js"></script>
+</body>
+</html>

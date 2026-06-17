@@ -6,5 +6,6 @@ public enum UserType {
     ESCOLA,
     DOCENTE,
     ALUNO_CREDENCIADO,
+    RESPONSAVEL_CREDENCIADO,
     ADMIN
 }

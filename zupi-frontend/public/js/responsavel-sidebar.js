@@ -56,7 +56,7 @@
     function isPjResponsible() {
         if (typeof ZupiAPI === 'undefined' || !ZupiAPI.isAuthenticated()) return false;
         const user = ZupiAPI.getUser();
-        return user.type === 'RESPONSAVEL' && user.planType === 'PESSOA_JURIDICA';
+        return user.type === 'RESPONSAVEL_CREDENCIADO';
     }
 
     function isActive(href) {

@@ -17,8 +17,13 @@ import senai.tcc.zupiapi.zupibackend.security.jwt.JwtUtil;
 import senai.tcc.zupiapi.zupibackend.dto.request.AddressRequest;
 import senai.tcc.zupiapi.zupibackend.dto.request.UserRequest;
 import senai.tcc.zupiapi.zupibackend.dto.response.UserResponse;
+import senai.tcc.zupiapi.zupibackend.exceptions.BusinessException;
 import senai.tcc.zupiapi.zupibackend.exceptions.ResourceNotFoundException;
+import senai.tcc.zupiapi.zupibackend.model.Child;
 import senai.tcc.zupiapi.zupibackend.model.User;
+import senai.tcc.zupiapi.zupibackend.model.enums.PlanType;
+import senai.tcc.zupiapi.zupibackend.model.enums.UserType;
+import senai.tcc.zupiapi.zupibackend.repositories.ChildRepository;
 import senai.tcc.zupiapi.zupibackend.repositories.UserRepository;
 import senai.tcc.zupiapi.zupibackend.security.services.AccessControlService;
 
@@ -40,6 +45,9 @@ class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private ChildRepository childRepository;
 
     @Mock
     private UserMapper userMapper;
@@ -67,8 +75,11 @@ class UserServiceTest {
 
         user = new User();
         user.setId(1L);
+        user.setName("Teste");
         user.setEmail("teste@email.com");
         user.setPassword("123");
+        user.setUserType(UserType.RESPONSAVEL);
+        user.setPlanType(PlanType.PESSOA_FISICA);
 
         userResponse = mock(UserResponse.class);
     }
@@ -333,7 +344,7 @@ class UserServiceTest {
             when(userMapper.toEntity(request)).thenReturn(user);
             when(passwordEncoder.encode(null)).thenThrow(new IllegalArgumentException("password required"));
 
-            assertThrows(IllegalArgumentException.class,
+            assertThrows(BusinessException.class,
                     () -> userService.save(request));
         }
 
@@ -351,5 +362,31 @@ class UserServiceTest {
 
             assertEquals(userResponse, result);
         }
-    }
 
+        @Test
+        void shouldResolvePlanTypeForCredentialedResponsible() {
+            assertEquals(PlanType.PESSOA_JURIDICA, UserService.resolvePlanType(UserType.RESPONSAVEL_CREDENCIADO));
+        }
+
+        @Test
+        void shouldResolvePlanTypeForCredentialedStudent() {
+            assertEquals(PlanType.PESSOA_JURIDICA, UserService.resolvePlanType(UserType.ALUNO_CREDENCIADO));
+        }
+
+        @Test
+        void shouldLoginSchoolLinkedResponsibleAsCredentialedResponsible() {
+            LoginDTO login = new LoginDTO("teste@email.com", "123");
+            Child linkedStudent = new Child();
+            linkedStudent.setSchoolLinked(true);
+
+            when(userRepository.findByEmail(login.email())).thenReturn(Optional.of(user));
+            when(childRepository.findByResponsibleId(user.getId())).thenReturn(List.of(linkedStudent));
+            when(jwtUtil.generateToken(user.getEmail(), user.getId(), UserType.RESPONSAVEL_CREDENCIADO)).thenReturn("token");
+
+            LoginResponse result = userService.login(login);
+
+            assertEquals(UserType.RESPONSAVEL_CREDENCIADO, result.user().userType());
+            assertEquals(PlanType.PESSOA_JURIDICA, result.user().planType());
+            assertEquals("token", result.token());
+        }
+    }

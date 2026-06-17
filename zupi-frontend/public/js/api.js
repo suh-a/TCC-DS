@@ -146,8 +146,9 @@ const ZupiAPI = (() => {
         }
         localStorage.setItem('userName', user.name || '');
         localStorage.setItem('userEmail', user.email || user.childLoginEmail || '');
-        if (user.planType) {
-            localStorage.setItem('planType', String(user.planType));
+        const planType = user.planType || data.planType;
+        if (planType) {
+            localStorage.setItem('planType', String(planType));
         } else {
             localStorage.removeItem('planType');
         }
@@ -311,12 +312,17 @@ const ZupiAPI = (() => {
                 break;
             case 'RESPONSAVEL':
                 window.location.href = getUser().planType === 'PESSOA_JURIDICA'
-                    ? (R.dashboardPais || R.dashboard || '/dashboard-pais')
+                    ? (R.dashboardResponsavelCredenciado || '/dashboard-responsavel-credenciado')
                     : (R.selecaoPerfil || '/selecao-perfil');
                 break;
+            case 'RESPONSAVEL_CREDENCIADO':
+                window.location.href = R.dashboardResponsavelCredenciado || '/dashboard-responsavel-credenciado';
+                break;
             case 'CRIANCA':
-            case 'ALUNO_CREDENCIADO':
                 window.location.href = R.dashboardCrianca || '/dashboard-crianca';
+                break;
+            case 'ALUNO_CREDENCIADO':
+                window.location.href = R.dashboardAlunoCredenciado || '/dashboard-aluno-credenciado';
                 break;
             default:
                 window.location.href = R.dashboard || '/dashboard-pais';
@@ -326,6 +332,11 @@ const ZupiAPI = (() => {
     function logout() {
         clearSession();
         window.location.href = loginPath;
+    }
+
+    function markCredentialedResponsible() {
+        localStorage.setItem('userType', 'RESPONSAVEL_CREDENCIADO');
+        localStorage.setItem('planType', 'PESSOA_JURIDICA');
     }
 
     return {
@@ -349,6 +360,7 @@ const ZupiAPI = (() => {
         upload,
         redirectByUserType,
         logout,
+        markCredentialedResponsible,
         buildUrl,
         BASE
     };

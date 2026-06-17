@@ -3,8 +3,13 @@
  * Defina data-child-nav no <body> com: dashboard | jogos | atividades | desafios | biblioteca | perfil
  */
 const ChildNav = (() => {
+    function dashboardHref() {
+        const type = typeof ZupiAPI !== 'undefined' ? ZupiAPI.getUser().type : null;
+        return type === 'ALUNO_CREDENCIADO' ? '/dashboard-aluno-credenciado' : '/dashboard-crianca';
+    }
+
     const MENU = [
-        { id: 'dashboard', href: '/dashboard-crianca', label: 'Dashboard' },
+        { id: 'dashboard', href: dashboardHref, label: 'Dashboard' },
         { id: 'jogos', href: '/menuJogos', label: 'Jogos' },
         { id: 'atividades', href: '/atividades-interativas', label: 'Atividades' },
         { id: 'desafios', href: '/desafios-semanais', label: 'Desafios semanais' },
@@ -33,15 +38,20 @@ const ChildNav = (() => {
 
     function init(options = {}) {
         const active = document.body.dataset.childNav || options.active || '';
-        const childId = resolveChildId();
+        const user = typeof ZupiAPI !== 'undefined' ? ZupiAPI.getUser() : {};
+        const childId = resolveChildId() || (['CRIANCA', 'ALUNO_CREDENCIADO'].includes(user.type) ? user.id : null);
 
         if (!childId && options.requireChild !== false) {
-            window.location.href = '/selecao-perfil';
+            window.location.href = user.type === 'ALUNO_CREDENCIADO' ? '/dashboard-aluno-credenciado' : '/selecao-perfil';
             return null;
         }
 
         document.querySelectorAll('[data-child-nav-link]').forEach(link => {
-            const base = link.getAttribute('href');
+            let base = link.getAttribute('href');
+            if (link.getAttribute('data-child-nav-link') === 'dashboard') {
+                base = dashboardHref();
+                link.setAttribute('href', base);
+            }
             if (base && childId) {
                 link.setAttribute('href', hrefWithChild(base, childId));
             }
@@ -70,8 +80,9 @@ const ChildNav = (() => {
     function menuItemsHtml(active) {
         return MENU.map(item => {
             const cls = item.id === active ? 'nav-link text-white active' : 'nav-link text-white';
+            const href = typeof item.href === 'function' ? item.href() : item.href;
             return `<li class="nav-item mb-2">
-              <a class="${cls}" href="${item.href}" data-child-nav-link="${item.id}">${item.label}</a>
+              <a class="${cls}" href="${href}" data-child-nav-link="${item.id}">${item.label}</a>
             </li>`;
         }).join('');
     }

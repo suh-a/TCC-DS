@@ -20,6 +20,12 @@ async function loadProfileSelection() {
 
     try {
         const children = await ZupiAPI.fetchMyChildren();
+        const hasSchoolLinkedStudent = Array.isArray(children) && children.some((child) => child.schoolLinked);
+        if (user.type === 'RESPONSAVEL_CREDENCIADO' || hasSchoolLinkedStudent) {
+            ZupiAPI.markCredentialedResponsible();
+            window.location.href = (typeof ZupiRoutes !== 'undefined' && ZupiRoutes.dashboardResponsavelCredenciado) || '/dashboard-responsavel-credenciado';
+            return;
+        }
 
         container.innerHTML = '';
 
@@ -33,7 +39,6 @@ async function loadProfileSelection() {
             });
         }
 
-        // Card de adicionar
         container.insertAdjacentHTML('beforeend', createAddCard());
 
     } catch (error) {
@@ -97,6 +102,10 @@ function createAddCard() {
 function selectResponsibleProfile() {
     localStorage.setItem('activeProfile', 'RESPONSAVEL');
     localStorage.removeItem('activeChildId');
+    if (ZupiAPI.getUser().type === 'RESPONSAVEL_CREDENCIADO') {
+        window.location.href = (typeof ZupiRoutes !== 'undefined' && ZupiRoutes.dashboardResponsavelCredenciado) || '/dashboard-responsavel-credenciado';
+        return;
+    }
     window.location.href = (typeof ZupiRoutes !== 'undefined' && ZupiRoutes.dashboard) || '/dashboard-pais';
 }
 

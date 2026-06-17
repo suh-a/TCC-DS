@@ -8,6 +8,8 @@ const ZupiRoutes = {
     dashboard: '/dashboard-pais',
     dashboardPais: '/dashboard-pais',
     dashboardCrianca: '/dashboard-crianca',
+    dashboardAlunoCredenciado: '/dashboard-aluno-credenciado',
+    dashboardResponsavelCredenciado: '/dashboard-responsavel-credenciado',
     dashboardEscola: '/dashboard-escola',
     dashboardDocente: '/dashboard-docente',
     dashboardAdmin: '/dashboard-admin',

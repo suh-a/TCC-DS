@@ -81,10 +81,55 @@
   <script src="/js/child-nav.js"></script>
   <script src="/js/content-pages.js"></script>
   <script>
+    function applyLibrarySidebar(type) {
+      const menus = document.querySelectorAll('[data-pf-sidebar]');
+      if (!menus.length) return;
+      const schoolMenu = `
+        <li class="nav-item mb-2"><a class="nav-link text-white" href="/dashboard-escola">Dashboard</a></li>
+        <li class="nav-item mb-2"><a class="nav-link text-white" href="/dashboard-escola#alunos">Alunos</a></li>
+        <li class="nav-item mb-2"><a class="nav-link text-white" href="/dashboard-escola#docentes">Docentes</a></li>
+        <li class="nav-item mb-2"><a class="nav-link text-white" href="/dashboard-escola#responsaveis">Responsaveis</a></li>
+        <li class="nav-item mb-2"><a class="nav-link text-white" href="/dashboard-escola#acessos">Acessos</a></li>
+        <li class="nav-item mb-2"><a class="nav-link text-white" href="/dashboard-escola#turmas">Turmas</a></li>
+        <li class="nav-item mb-2"><a class="nav-link text-white" href="/dashboard-escola#relatorios">Relatorios</a></li>
+        <li class="nav-item mb-2"><a class="nav-link text-white active" href="/biblioteca">Biblioteca</a></li>
+        <li class="nav-item mt-auto"><a class="nav-link text-white" href="#" data-action="logout">Sair</a></li>`;
+      const teacherMenu = `
+        <li class="nav-item mb-2"><a class="nav-link text-white" href="/dashboard-docente">Dashboard</a></li>
+        <li class="nav-item mb-2"><a class="nav-link text-white" href="/dashboard-docente#turmas">Minhas Turmas</a></li>
+        <li class="nav-item mb-2"><a class="nav-link text-white" href="/dashboard-docente#atividades">Atividades</a></li>
+        <li class="nav-item mb-2"><a class="nav-link text-white" href="/dashboard-docente#quizzes">Quizzes</a></li>
+        <li class="nav-item mb-2"><a class="nav-link text-white" href="/dashboard-docente#relatorios">Relatorios</a></li>
+        <li class="nav-item mb-2"><a class="nav-link text-white active" href="/biblioteca">Biblioteca</a></li>
+        <li class="nav-item mt-auto"><a class="nav-link text-white" href="#" data-action="logout">Sair</a></li>`;
+      const responsibleMenu = `
+        <li class="nav-item mb-2"><a class="nav-link text-white" href="/dashboard-responsavel-credenciado">Dashboard</a></li>
+        <li class="nav-item mb-2"><a class="nav-link text-white" href="/dashboard-responsavel-credenciado#aluno-vinculado">Aluno vinculado</a></li>
+        <li class="nav-item mb-2"><a class="nav-link text-white" href="/dashboard-responsavel-credenciado#acompanhamento">Acompanhamento</a></li>
+        <li class="nav-item mb-2"><a class="nav-link text-white" href="/dashboard-responsavel-credenciado#relatorios-escola">Relatorios</a></li>
+        <li class="nav-item mb-2"><a class="nav-link text-white active" href="/biblioteca">Biblioteca</a></li>
+        <li class="nav-item mt-auto"><a class="nav-link text-white" href="#" data-action="logout">Sair</a></li>`;
+      const menu = type === 'ESCOLA' ? schoolMenu
+        : type === 'DOCENTE' ? teacherMenu
+        : type === 'RESPONSAVEL_CREDENCIADO' ? responsibleMenu
+        : null;
+      if (!menu) return;
+      menus.forEach((el) => { el.innerHTML = menu; });
+      document.querySelectorAll('[data-action="logout"]').forEach((btn) => {
+        btn.addEventListener('click', (event) => {
+          event.preventDefault();
+          ZupiAPI.logout();
+        });
+      });
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       const type = ZupiAPI.getUser().type;
+      applyLibrarySidebar(type);
       if (type === 'ESCOLA') {
         document.getElementById('showBookFormBtn')?.classList.remove('d-none');
+        loadSchoolBooks();
+      } else if (['DOCENTE', 'ALUNO_CREDENCIADO', 'RESPONSAVEL_CREDENCIADO'].includes(type)) {
         loadSchoolBooks();
       } else {
         ChildNav.init({ active: 'biblioteca' });
@@ -129,7 +174,8 @@
 
       const response = await ZupiAPI.upload('/school/library/books', formData);
       if (!response || !response.ok) {
-        alert(await ZupiAPI.readErrorMessage(response, 'Nao foi possivel anexar o livro.'));
+        const message = await ZupiAPI.readErrorMessage(response, 'Nao foi possivel anexar o livro.');
+        alert(message);
         return;
       }
       event.target.reset();
@@ -139,7 +185,19 @@
     });
 
     async function loadSchoolBooks() {
-      const books = await ZupiAPI.fetchJson('/school/library/books') || [];
+      const list = document.getElementById('booksList');
+      if (list) {
+        list.innerHTML = '<section class="col-12"><p class="text-muted text-center">Carregando livros da escola...</p></section>';
+      }
+      const response = await ZupiAPI.get('/school/library/books', { skipAuthRedirect: true });
+      if (!response || !response.ok) {
+        renderBooks([]);
+        if (list) {
+          list.innerHTML = '<section class="col-12"><p class="text-danger text-center">Nao foi possivel carregar a biblioteca da escola.</p></section>';
+        }
+        return;
+      }
+      const books = await response.json();
       renderBooks(books);
     }
 

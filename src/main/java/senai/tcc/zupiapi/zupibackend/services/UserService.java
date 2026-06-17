@@ -70,7 +70,10 @@ public class UserService {
     }
 
     public UserResponse getCurrentUser() {
-        return findById(SecurityUtils.getCurrentUserId());
+        User user = userRepository.findById(SecurityUtils.getCurrentUserId())
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario nao encontrado"));
+        UserType effectiveType = effectiveUserType(user);
+        return toEffectiveResponse(user, effectiveType);
     }
 
     public UserResponse findByEmail(String email) {
@@ -140,6 +143,7 @@ public class UserService {
                         null,
                         null,
                         type,
+                        child.isSchoolLinked() ? PlanType.PESSOA_JURIDICA : PlanType.PESSOA_FISICA,
                         true,
                         false,
                         child.getProfilePhotoUrl()
@@ -155,8 +159,9 @@ public class UserService {
                 throw new RuntimeException();
             }
 
-            UserResponse response = userMapper.toResponse(userEntity);
-            String token = jwtUtil.generateToken(userEntity.getEmail(), userEntity.getId(), userEntity.getUserType());
+            UserType effectiveType = effectiveUserType(userEntity);
+            UserResponse response = toEffectiveResponse(userEntity, effectiveType);
+            String token = jwtUtil.generateToken(userEntity.getEmail(), userEntity.getId(), effectiveType);
             return new LoginResponse(token, response);
         } catch (ResponseStatusException e) {
             throw e;
@@ -228,7 +233,35 @@ public class UserService {
     }
 
     static PlanType resolvePlanType(UserType userType) {
-        return userType == UserType.ESCOLA ? PlanType.PESSOA_JURIDICA : PlanType.PESSOA_FISICA;
+        return switch (userType) {
+            case ESCOLA, DOCENTE, ALUNO_CREDENCIADO, RESPONSAVEL_CREDENCIADO -> PlanType.PESSOA_JURIDICA;
+            default -> PlanType.PESSOA_FISICA;
+        };
+    }
+
+    private UserType effectiveUserType(User user) {
+        if (user.getUserType() == UserType.RESPONSAVEL
+                && childRepository != null
+                && childRepository.findByResponsibleId(user.getId()).stream().anyMatch(Child::isSchoolLinked)) {
+            return UserType.RESPONSAVEL_CREDENCIADO;
+        }
+        return user.getUserType();
+    }
+
+    private UserResponse toEffectiveResponse(User user, UserType effectiveType) {
+        return new UserResponse(
+                user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getCpf(),
+                user.getPhone(),
+                user.getAddress() != null ? user.getAddress().toString() : null,
+                effectiveType,
+                resolvePlanType(effectiveType),
+                user.isActive(),
+                user.isTwoFactorEnabled(),
+                user.getProfilePhotoUrl()
+        );
     }
 
     private User saveSchoolAccount(UserRequest user, User userEntity) {

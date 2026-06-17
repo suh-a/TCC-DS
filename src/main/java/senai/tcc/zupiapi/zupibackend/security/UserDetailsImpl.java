@@ -5,6 +5,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import senai.tcc.zupiapi.zupibackend.model.Child;
 import senai.tcc.zupiapi.zupibackend.model.User;
+import senai.tcc.zupiapi.zupibackend.model.enums.UserType;
 
 import java.util.Collection;
 import java.util.List;
@@ -27,7 +28,11 @@ public class UserDetailsImpl implements UserDetails {
     }
 
     public static UserDetailsImpl build(User user) {
-        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + user.getUserType().name()));
+        return build(user, user.getUserType());
+    }
+
+    public static UserDetailsImpl build(User user, UserType effectiveType) {
+        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + effectiveType.name()));
         return new UserDetailsImpl(user.getId(), user.getEmail(), user.getPassword(), authorities, user.isActive());
     }
 

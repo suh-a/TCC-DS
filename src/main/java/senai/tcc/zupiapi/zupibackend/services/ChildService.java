@@ -5,6 +5,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import senai.tcc.zupiapi.zupibackend.model.enums.UserType;
+import senai.tcc.zupiapi.zupibackend.model.enums.PlanType;
 import senai.tcc.zupiapi.zupibackend.security.services.AccessControlService;
 import senai.tcc.zupiapi.zupibackend.security.SecurityUtils;
 import org.springframework.stereotype.Service;
@@ -73,7 +74,8 @@ public class ChildService {
 
         UserType type = child.isSchoolLinked() ? UserType.ALUNO_CREDENCIADO : UserType.CRIANCA;
         String token = jwtUtil.generateToken(child.getChildLoginEmail(), child.getId(), type);
-        return new ChildLoginResponse(token, childMapper.toResponse(child));
+        PlanType planType = child.isSchoolLinked() ? PlanType.PESSOA_JURIDICA : PlanType.PESSOA_FISICA;
+        return new ChildLoginResponse(token, childMapper.toResponse(child), type, planType);
     }
 
     public void validateAgeChild(Child child) {

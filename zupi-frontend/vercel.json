@@ -7,6 +7,8 @@
     { "source": "/dashboad", "destination": "/dashboard-pais.html" },
     { "source": "/dashboad-pais", "destination": "/dashboard-pais.html" },
     { "source": "/dashboard-crianca", "destination": "/dashboard-crianca.html" },
+    { "source": "/dashboard-aluno-credenciado", "destination": "/dashboard-aluno-credenciado.html" },
+    { "source": "/dashboard-responsavel-credenciado", "destination": "/dashboard-responsavel-credenciado.html" },
     { "source": "/dashboard-escola", "destination": "/dashboard-escola.html" },
     { "source": "/dashboard-docente", "destination": "/dashboard-docente.html" },
     { "source": "/dashboard-admin", "destination": "/dashboard-admin.html" },

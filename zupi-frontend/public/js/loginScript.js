@@ -3,7 +3,7 @@
  */
 document.addEventListener('DOMContentLoaded', function () {
     if (ZupiAPI.isAuthenticated()) {
-        ZupiAPI.redirectByUserType(ZupiAPI.getUser().type);
+        redirectAuthenticatedUser();
         return;
     }
 
@@ -39,7 +39,7 @@ async function loginUser(event) {
         const data = await response.json();
         ZupiAPI.saveSession(data);
 
-        const userType = data.user?.userType || ZupiAPI.getUser().type || 'RESPONSAVEL';
+        const userType = await resolvePostLoginUserType(data.user?.userType || ZupiAPI.getUser().type || 'RESPONSAVEL');
         ZupiAPI.redirectByUserType(userType);
     } catch (error) {
         console.error('Erro ao fazer login:', error);
@@ -113,10 +113,34 @@ async function handleGoogleLogin(response) {
         }
 
         ZupiAPI.saveSession(data);
-        const userType = data.user?.userType || ZupiAPI.getUser().type || 'RESPONSAVEL';
+        const userType = await resolvePostLoginUserType(data.user?.userType || ZupiAPI.getUser().type || 'RESPONSAVEL');
         ZupiAPI.redirectByUserType(userType);
     } catch (error) {
         console.error('Erro login Google:', error);
         ZupiUI.error(error.message || 'Erro ao fazer login com Google.');
     }
+}
+
+async function redirectAuthenticatedUser() {
+    const userType = await resolvePostLoginUserType(ZupiAPI.getUser().type || 'RESPONSAVEL');
+    ZupiAPI.redirectByUserType(userType);
+}
+
+async function resolvePostLoginUserType(userType) {
+    if (userType !== 'RESPONSAVEL') {
+        return userType;
+    }
+
+    try {
+        const children = await ZupiAPI.fetchMyChildren();
+        const hasSchoolLinkedStudent = Array.isArray(children) && children.some((child) => child.schoolLinked);
+        if (hasSchoolLinkedStudent) {
+            ZupiAPI.markCredentialedResponsible();
+            return 'RESPONSAVEL_CREDENCIADO';
+        }
+    } catch (error) {
+        console.warn('Nao foi possivel verificar vinculo escolar do responsavel:', error);
+    }
+
+    return userType;
 }

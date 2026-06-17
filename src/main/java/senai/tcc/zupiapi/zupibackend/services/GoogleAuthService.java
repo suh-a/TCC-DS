@@ -14,6 +14,7 @@ import senai.tcc.zupiapi.zupibackend.dto.response.UserResponse;
 import senai.tcc.zupiapi.zupibackend.model.Child;
 import senai.tcc.zupiapi.zupibackend.model.User;
 import senai.tcc.zupiapi.zupibackend.model.enums.UserType;
+import senai.tcc.zupiapi.zupibackend.model.enums.PlanType;
 import senai.tcc.zupiapi.zupibackend.repositories.ChildRepository;
 import senai.tcc.zupiapi.zupibackend.repositories.UserRepository;
 import senai.tcc.zupiapi.zupibackend.security.jwt.JwtUtil;
@@ -68,6 +69,7 @@ public class GoogleAuthService {
                     null,
                     null,
                     type,
+                    child.isSchoolLinked() ? PlanType.PESSOA_JURIDICA : PlanType.PESSOA_FISICA,
                     true,
                     false,
                     child.getProfilePhotoUrl()
@@ -95,6 +97,8 @@ public class GoogleAuthService {
 
         linkGoogleAccountIfNeeded(user, payload);
 
+        UserType effectiveType = effectiveUserType(user);
+        PlanType effectivePlanType = UserService.resolvePlanType(effectiveType);
         UserResponse response = new UserResponse(
                 user.getId(),
                 user.getName(),
@@ -102,12 +106,13 @@ public class GoogleAuthService {
                 user.getCpf(),
                 user.getPhone(),
                 user.getAddress() != null ? user.getAddress().toString() : null,
-                user.getUserType(),
+                effectiveType,
+                effectivePlanType,
                 user.isActive(),
                 user.isTwoFactorEnabled(),
                 user.getProfilePhotoUrl()
         );
-        String token = jwtUtil.generateToken(user.getEmail(), user.getId(), user.getUserType());
+        String token = jwtUtil.generateToken(user.getEmail(), user.getId(), effectiveType);
         return new GoogleAuthResponse("AUTHENTICATED", "Login Google realizado", token, response, null);
     }
 
@@ -151,5 +156,13 @@ public class GoogleAuthService {
     private static String stringPayload(GoogleIdToken.Payload payload, String key) {
         Object value = payload.get(key);
         return value == null ? null : String.valueOf(value);
+    }
+
+    private UserType effectiveUserType(User user) {
+        if (user.getUserType() == UserType.RESPONSAVEL
+                && childRepository.findByResponsibleId(user.getId()).stream().anyMatch(Child::isSchoolLinked)) {
+            return UserType.RESPONSAVEL_CREDENCIADO;
+        }
+        return user.getUserType();
     }
 }

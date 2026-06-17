@@ -57,17 +57,23 @@ const ZupiAuthGuard = (() => {
         const responsible = [
             '/dashboard', '/dashboard-pais', '/selecao-perfil', '/selecao-relatorios', '/relatorios',
             '/agenda', '/configuracoes', '/cadastro-dependentes', '/perfil',
-            '/perfil-criancas', '/perfil-responsavel', '/feed', '/biblioteca',
-            '/dicas-inclusao', '/atividades-interativas', '/guia-casa',
-            '/desafios-semanais', '/ajuda', '/recompensas', '/onboarding-crianca',
+            '/perfil-criancas', '/perfil-responsavel', '/feed',
+            '/dicas-inclusao', '/guia-casa',
+            '/ajuda',
             '/pagamento'
         ];
         return responsible.includes(path);
     }
 
+    function isChildContentArea(path = normalizePath()) {
+        return ['/biblioteca', '/atividades-interativas', '/desafios-semanais', '/menuJogos', '/recompensas'].includes(path);
+    }
+
     const ROLE_AREAS = [
         { paths: ['/dashboard-escola'], roles: ['ESCOLA', 'ADMIN'] },
         { paths: ['/dashboard-docente'], roles: ['DOCENTE', 'ADMIN'] },
+        { paths: ['/dashboard-aluno-credenciado'], roles: ['ALUNO_CREDENCIADO', 'ADMIN'] },
+        { paths: ['/dashboard-responsavel-credenciado'], roles: ['RESPONSAVEL_CREDENCIADO', 'ADMIN'] },
         { paths: ['/dashboard-admin'], roles: ['ADMIN'] }
     ];
 
@@ -97,14 +103,19 @@ const ZupiAuthGuard = (() => {
             return;
         }
 
-        if (isResponsibleArea(path) && type && !['RESPONSAVEL', 'ADMIN'].includes(type) && !(path === '/biblioteca' && type === 'ESCOLA')) {
+        if (isResponsibleArea(path) && type && !['RESPONSAVEL', 'ADMIN'].includes(type)) {
             window.location.href = `/403?from=${encodeURIComponent(path)}`;
             return;
         }
 
-        if (type === 'RESPONSAVEL'
-            && ZupiAPI.getUser().planType === 'PESSOA_JURIDICA'
-            && path === '/cadastro-dependentes') {
+        if (type === 'RESPONSAVEL_CREDENCIADO' && path === '/cadastro-dependentes') {
+            window.location.href = `/403?from=${encodeURIComponent(path)}`;
+            return;
+        }
+
+        if (isChildContentArea(path)
+            && type
+            && !['CRIANCA', 'ALUNO_CREDENCIADO', 'RESPONSAVEL', 'RESPONSAVEL_CREDENCIADO', 'ESCOLA', 'DOCENTE', 'ADMIN'].includes(type)) {
             window.location.href = `/403?from=${encodeURIComponent(path)}`;
             return;
         }

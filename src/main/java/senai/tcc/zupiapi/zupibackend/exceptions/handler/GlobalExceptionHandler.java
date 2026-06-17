@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.server.ResponseStatusException;
 import senai.tcc.zupiapi.zupibackend.exceptions.BusinessException;
 import senai.tcc.zupiapi.zupibackend.exceptions.DataBaseExceptions;
@@ -58,6 +59,14 @@ public class GlobalExceptionHandler {
     public ProblemDetail dataIntegrityViolationException(DataIntegrityViolationException ex) {
         ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.CONFLICT);
         problem.setDetail("Ja existe um cadastro com estes dados");
+        problem.setProperty("timeStamp", Instant.now());
+        return problem;
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ProblemDetail maxUploadSizeExceededException(MaxUploadSizeExceededException ex) {
+        ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        problem.setDetail("O PDF deve ter no maximo 10MB");
         problem.setProperty("timeStamp", Instant.now());
         return problem;
     }

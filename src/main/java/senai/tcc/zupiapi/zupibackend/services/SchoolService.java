@@ -92,7 +92,7 @@ public class SchoolService {
 
         User responsible = userRepository.findById(request.responsibleId())
                 .orElseThrow(() -> new ResourceNotFoundException("Responsavel nao encontrado"));
-        if (responsible.getUserType() != UserType.RESPONSAVEL) {
+        if (!isResponsibleType(responsible)) {
             throw new BusinessException("Usuario selecionado nao e um responsavel");
         }
 
@@ -122,7 +122,7 @@ public class SchoolService {
 
         childRepository.findBySchoolLinkedTrueAndSchoolName(schoolName).forEach(child -> {
             User resp = child.getResponsible();
-            if (resp != null && resp.getUserType() == UserType.RESPONSAVEL) {
+            if (resp != null && isResponsibleType(resp)) {
                 byId.putIfAbsent(resp.getId(), resp);
             }
         });
@@ -131,10 +131,13 @@ public class SchoolService {
             String digits = q.replaceAll("\\D", "");
             if (digits.length() == 11) {
                 userRepository.findByCpf(digits)
-                        .filter(u -> u.getUserType() == UserType.RESPONSAVEL)
+                        .filter(this::isResponsibleType)
                         .ifPresent(u -> byId.putIfAbsent(u.getId(), u));
             }
             userRepository.findByUserType(UserType.RESPONSAVEL).stream()
+                    .filter(u -> matchesQuery(u, q, digits))
+                    .forEach(u -> byId.putIfAbsent(u.getId(), u));
+            userRepository.findByUserType(UserType.RESPONSAVEL_CREDENCIADO).stream()
                     .filter(u -> matchesQuery(u, q, digits))
                     .forEach(u -> byId.putIfAbsent(u.getId(), u));
         }
@@ -184,8 +187,8 @@ public class SchoolService {
         user.setCpf(cpf);
         user.setBirthDate(request.birthDate());
         user.setPhone(phone.isBlank() ? null : phone);
-        user.setUserType(UserType.RESPONSAVEL);
-        user.setPlanType(PlanType.PESSOA_FISICA);
+        user.setUserType(UserType.RESPONSAVEL_CREDENCIADO);
+        user.setPlanType(PlanType.PESSOA_JURIDICA);
         user.setAddress(new Address());
 
         return toSummary(userRepository.save(user));
@@ -366,8 +369,8 @@ public class SchoolService {
     }
 
     public List<LibraryBookResponse> listBooks() {
-        School school = requireCurrentSchool();
-        return libraryBookRepository.findBySchoolId(school.getId()).stream()
+        return librarySchoolsForCurrentUser().stream()
+                .flatMap(school -> libraryBookRepository.findBySchoolId(school.getId()).stream())
                 .map(this::toBookResponse)
                 .toList();
     }
@@ -402,9 +405,16 @@ public class SchoolService {
     }
 
     public LibraryBookFile getBookFile(Long id) {
-        School school = requireCurrentSchool();
-        LibraryBook book = libraryBookRepository.findByIdAndSchoolId(id, school.getId())
+        Set<Long> allowedSchoolIds = librarySchoolsForCurrentUser().stream()
+                .map(School::getId)
+                .filter(Objects::nonNull)
+                .collect(java.util.stream.Collectors.toSet());
+        LibraryBook book = libraryBookRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Livro nao encontrado"));
+        Long bookSchoolId = book.getSchool() == null ? null : book.getSchool().getId();
+        if (bookSchoolId == null || !allowedSchoolIds.contains(bookSchoolId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Livro nao pertence a esta escola");
+        }
         String storedFileName = book.getFileUrl();
         if (storedFileName == null || storedFileName.isBlank() || storedFileName.startsWith("http")) {
             throw new ResourceNotFoundException("PDF do livro nao encontrado");
@@ -445,10 +455,62 @@ public class SchoolService {
         requireCurrentSchool();
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Responsavel nao encontrado"));
-        if (user.getUserType() != UserType.RESPONSAVEL) {
+        if (!isResponsibleType(user)) {
             throw new BusinessException("Usuario nao e responsavel");
         }
         return user;
+    }
+
+    private boolean isResponsibleType(User user) {
+        return user != null
+                && (user.getUserType() == UserType.RESPONSAVEL
+                || user.getUserType() == UserType.RESPONSAVEL_CREDENCIADO);
+    }
+
+    private List<School> librarySchoolsForCurrentUser() {
+        if (SecurityUtils.hasRole(UserType.ESCOLA.name())) {
+            return List.of(requireCurrentSchool());
+        }
+
+        Long currentUserId = SecurityUtils.getCurrentUserId();
+        if (SecurityUtils.hasRole(UserType.DOCENTE.name())) {
+            Teacher teacher = teacherRepository.findByAccountId(currentUserId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Docente nao encontrado para esta conta"));
+            return teacher.getSchool() == null ? List.of() : List.of(teacher.getSchool());
+        }
+
+        if (SecurityUtils.hasRole(UserType.ALUNO_CREDENCIADO.name())) {
+            Child child = childRepository.findById(currentUserId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Aluno nao encontrado"));
+            return schoolsForChild(child);
+        }
+
+        if (SecurityUtils.hasRole(UserType.RESPONSAVEL_CREDENCIADO.name()) || SecurityUtils.hasRole(UserType.RESPONSAVEL.name())) {
+            Map<Long, School> schools = new LinkedHashMap<>();
+            for (Child child : childRepository.findByResponsibleId(currentUserId)) {
+                for (School school : schoolsForChild(child)) {
+                    if (school.getId() != null) {
+                        schools.putIfAbsent(school.getId(), school);
+                    }
+                }
+            }
+            return new ArrayList<>(schools.values());
+        }
+
+        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Acesso restrito a biblioteca escolar");
+    }
+
+    private List<School> schoolsForChild(Child child) {
+        if (child == null || !child.isSchoolLinked()) {
+            return List.of();
+        }
+        if (child.getSchool() != null) {
+            return List.of(child.getSchool());
+        }
+        if (child.getSchoolName() != null && !child.getSchoolName().isBlank()) {
+            return schoolRepository.findByNameIgnoreCase(child.getSchoolName());
+        }
+        return List.of();
     }
 
     private List<Child> studentsFor(School school) {

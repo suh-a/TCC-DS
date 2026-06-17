@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard Aluno Credenciado - Zupi</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/dashboard.css" />
+  <link rel="stylesheet" href="/css/dark-mode.css" />
+</head>
+<body>
+  <button class="menu-toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#dashboardOffcanvas" aria-controls="dashboardOffcanvas" aria-label="Abrir menu">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </button>
+
+  <div class="container-fluid">
+    <div class="row">
+      <nav class="col-lg-2 dashboard-sidebar p-0 position-fixed vh-100 d-none d-lg-block" aria-label="Navegacao do aluno credenciado">
+        <div class="d-flex flex-column p-4 h-100">
+          <div class="navbar-brand text-white mb-4 fs-3 fw-bold">Zupi</div>
+          <ul class="nav nav-pills flex-column">
+            <li class="nav-item mb-2"><a class="nav-link text-white active" href="/dashboard-aluno-credenciado">Dashboard</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" href="/menuJogos">Jogos</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" href="/atividades-interativas">Atividades</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" href="/desafios-semanais">Desafios Semanais</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" href="/biblioteca">Biblioteca</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" href="/perfil-crianca">Perfil</a></li>
+            <li class="nav-item mt-auto"><a class="nav-link text-white" href="#" data-action="logout">Voltar ao Menu</a></li>
+          </ul>
+        </div>
+      </nav>
+
+      <div class="offcanvas offcanvas-start dashboard-offcanvas" tabindex="-1" id="dashboardOffcanvas">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title">Zupi</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Fechar"></button>
+        </div>
+        <div class="offcanvas-body p-0">
+          <ul class="nav nav-pills flex-column p-4">
+            <li class="nav-item mb-2"><a class="nav-link text-white active" href="/dashboard-aluno-credenciado">Dashboard</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" href="/menuJogos">Jogos</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" href="/atividades-interativas">Atividades</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" href="/desafios-semanais">Desafios Semanais</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" href="/biblioteca">Biblioteca</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" href="/perfil-crianca">Perfil</a></li>
+            <li class="nav-item mt-auto"><a class="nav-link text-white" href="#" data-action="logout">Voltar ao Menu</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <main class="col-12 col-lg-10 ms-lg-auto dashboard-main-content px-3 px-lg-4 py-4">
+        <header class="mb-4">
+          <p class="text-muted mb-1">Plano escolar</p>
+          <h1 id="studentTitle" class="text-zupi-primary mb-3">Painel do aluno</h1>
+          <div class="row g-3">
+            <div class="col-md-4"><div class="card"><div class="card-body"><p class="small text-muted mb-1">Perfil</p><strong>Aluno credenciado</strong></div></div></div>
+            <div class="col-md-4"><div class="card"><div class="card-body"><p class="small text-muted mb-1">Atividades</p><strong>Publicadas pela escola</strong></div></div></div>
+            <div class="col-md-4"><div class="card"><div class="card-body"><p class="small text-muted mb-1">Biblioteca</p><strong>Conteudo escolar</strong></div></div></div>
+          </div>
+        </header>
+
+        <section class="row g-4">
+          <div class="col-md-4"><div class="card h-100"><div class="card-body text-center"><h2 class="h5">Jogos</h2><a class="btn btn-primary" href="/menuJogos">Abrir</a></div></div></div>
+          <div class="col-md-4"><div class="card h-100"><div class="card-body text-center"><h2 class="h5">Atividades</h2><a class="btn btn-primary" href="/atividades-interativas">Abrir</a></div></div></div>
+          <div class="col-md-4"><div class="card h-100"><div class="card-body text-center"><h2 class="h5">Desafios Semanais</h2><a class="btn btn-primary" href="/desafios-semanais">Abrir</a></div></div></div>
+          <div class="col-md-4"><div class="card h-100"><div class="card-body text-center"><h2 class="h5">Biblioteca</h2><a class="btn btn-primary" href="/biblioteca">Abrir</a></div></div></div>
+          <div class="col-md-4"><div class="card h-100"><div class="card-body text-center"><h2 class="h5">Perfil</h2><a class="btn btn-primary" href="/perfil-crianca">Abrir</a></div></div></div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+  <script src="/js/routes.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/auth-guard.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/dashboardAlunoCredenciado.js"></script>
+</body>
+</html>

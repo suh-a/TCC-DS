@@ -3,6 +3,10 @@ document.addEventListener('DOMContentLoaded', async function () {
         window.location.href = '/login';
         return;
     }
+    if (typeof ZupiAPI !== 'undefined' && ZupiAPI.getUser().type === 'ALUNO_CREDENCIADO') {
+        window.location.href = '/dashboard-aluno-credenciado';
+        return;
+    }
 
     const childId = ChildNav.init({ active: 'dashboard' });
     if (!childId) return;
