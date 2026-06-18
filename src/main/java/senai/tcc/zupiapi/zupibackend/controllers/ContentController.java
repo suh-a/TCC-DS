@@ -6,7 +6,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import senai.tcc.zupiapi.zupibackend.dto.response.SchoolActivityResponse;
+import senai.tcc.zupiapi.zupibackend.dto.response.SchoolQuizResponse;
 import senai.tcc.zupiapi.zupibackend.dto.response.WeeklyQuizResponse;
+import senai.tcc.zupiapi.zupibackend.services.SchoolLearningService;
 import senai.tcc.zupiapi.zupibackend.services.WeeklyQuizService;
 
 @RestController
@@ -16,6 +19,9 @@ public class ContentController {
 
     @Autowired
     private WeeklyQuizService weeklyQuizService;
+
+    @Autowired
+    private SchoolLearningService schoolLearningService;
 
     @GetMapping("/dicas-inclusao")
     public ResponseEntity<List<Map<String, String>>> dicas() {
@@ -62,6 +68,11 @@ public class ContentController {
         ));
     }
 
+    @GetMapping("/school/activities/{childId}")
+    public ResponseEntity<List<SchoolActivityResponse>> schoolActivities(@PathVariable Long childId) {
+        return ResponseEntity.ok(schoolLearningService.activitiesForChild(childId));
+    }
+
     @GetMapping("/guia-casa/{childId}")
     public ResponseEntity<Map<String, Object>> guiaCasa(@PathVariable Long childId) {
         return ResponseEntity.ok(Map.of(
@@ -81,6 +92,11 @@ public class ContentController {
                 Map.of("title", "Quiz: Emoções", "questions", "5", "status", "disponível"),
                 Map.of("title", "Quiz: Cores e formas", "questions", "8", "status", "disponível")
         ));
+    }
+
+    @GetMapping("/school/desafios-semanais/{childId}")
+    public ResponseEntity<List<SchoolQuizResponse>> schoolDesafios(@PathVariable Long childId) {
+        return ResponseEntity.ok(schoolLearningService.quizzesForChild(childId));
     }
 
     @GetMapping("/pf/desafios-semanais")

@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface SchoolClassRepository extends JpaRepository<SchoolClass, Long> {
     List<SchoolClass> findBySchoolId(Long schoolId);
+    List<SchoolClass> findByTeacherId(Long teacherId);
+    java.util.Optional<SchoolClass> findByIdAndSchoolId(Long id, Long schoolId);
 }

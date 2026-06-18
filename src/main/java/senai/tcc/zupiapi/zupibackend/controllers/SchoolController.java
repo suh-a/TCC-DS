@@ -13,6 +13,7 @@ import senai.tcc.zupiapi.zupibackend.dto.ChildRegistrationResponse;
 import senai.tcc.zupiapi.zupibackend.dto.request.AccessEmailRequest;
 import senai.tcc.zupiapi.zupibackend.dto.request.ChildRequest;
 import senai.tcc.zupiapi.zupibackend.dto.request.ResponsibleRegisterRequest;
+import senai.tcc.zupiapi.zupibackend.dto.request.SchoolChatMessageRequest;
 import senai.tcc.zupiapi.zupibackend.dto.request.SchoolClassRequest;
 import senai.tcc.zupiapi.zupibackend.dto.request.TeacherRequest;
 import senai.tcc.zupiapi.zupibackend.dto.response.ChildResponse;
@@ -20,8 +21,10 @@ import senai.tcc.zupiapi.zupibackend.dto.response.LibraryBookResponse;
 import senai.tcc.zupiapi.zupibackend.dto.response.PasswordResetResponse;
 import senai.tcc.zupiapi.zupibackend.dto.response.ResponsibleSummaryResponse;
 import senai.tcc.zupiapi.zupibackend.dto.response.SchoolAccessResponse;
+import senai.tcc.zupiapi.zupibackend.dto.response.SchoolChatMessageResponse;
 import senai.tcc.zupiapi.zupibackend.dto.response.SchoolClassResponse;
 import senai.tcc.zupiapi.zupibackend.dto.response.TeacherResponse;
+import senai.tcc.zupiapi.zupibackend.services.SchoolLearningService;
 import senai.tcc.zupiapi.zupibackend.services.SchoolService;
 
 import java.util.List;
@@ -33,6 +36,9 @@ public class SchoolController {
 
     @Autowired
     private SchoolService schoolService;
+
+    @Autowired
+    private SchoolLearningService schoolLearningService;
 
     @GetMapping("/dashboard")
     public ResponseEntity<Map<String, Object>> dashboard() {
@@ -124,6 +130,16 @@ public class SchoolController {
     @GetMapping("/reports/summary")
     public ResponseEntity<Map<String, Object>> reportsSummary() {
         return ResponseEntity.ok(schoolService.reportsSummary());
+    }
+
+    @GetMapping("/chat")
+    public ResponseEntity<List<SchoolChatMessageResponse>> chatMessages() {
+        return ResponseEntity.ok(schoolLearningService.chatMessages());
+    }
+
+    @PostMapping("/chat")
+    public ResponseEntity<SchoolChatMessageResponse> postChat(@RequestBody SchoolChatMessageRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(schoolLearningService.postChatMessage(request));
     }
 
     @GetMapping("/library/books")

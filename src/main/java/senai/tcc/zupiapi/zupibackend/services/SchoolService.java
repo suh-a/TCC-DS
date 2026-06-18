@@ -47,7 +47,13 @@ public class SchoolService {
     private SchoolClassRepository schoolClassRepository;
 
     @Autowired
+    private SchoolResponsibleRepository schoolResponsibleRepository;
+
+    @Autowired
     private LibraryBookRepository libraryBookRepository;
+
+    @Autowired
+    private SchoolLearningService schoolLearningService;
 
     @Autowired
     private ChildService childService;
@@ -95,13 +101,18 @@ public class SchoolService {
         if (!isResponsibleType(responsible)) {
             throw new BusinessException("Usuario selecionado nao e um responsavel");
         }
+        if (!schoolResponsibleRepository.existsBySchoolIdAndResponsibleId(school.getId(), responsible.getId())
+                && !linkLegacyResponsibleIfNeeded(school, responsible)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Responsavel nao pertence a esta escola");
+        }
+        String schoolClassName = requireSchoolClassName(school, request.schoolClass());
 
         ChildRequest schoolChild = new ChildRequest(
                 request.name(),
                 null,
                 request.cpf(),
                 request.birthDate(),
-                request.schoolClass(),
+                schoolClassName,
                 request.condition(),
                 responsible.getId(),
                 true,
@@ -119,6 +130,12 @@ public class SchoolService {
         String q = query == null ? "" : query.trim().toLowerCase();
 
         Map<Long, User> byId = new LinkedHashMap<>();
+
+        schoolResponsibleRepository.findResponsibleUsersBySchoolId(school.getId()).forEach(u -> {
+            if (isResponsibleType(u)) {
+                byId.putIfAbsent(u.getId(), u);
+            }
+        });
 
         childRepository.findBySchoolLinkedTrueAndSchoolName(schoolName).forEach(child -> {
             User resp = child.getResponsible();
@@ -150,7 +167,7 @@ public class SchoolService {
     }
 
     public ResponsibleSummaryResponse registerResponsible(ResponsibleRegisterRequest request) {
-        requireCurrentSchool();
+        School school = requireCurrentSchool();
 
         if (request.name() == null || request.name().isBlank()) {
             throw new BusinessException("Nome do responsavel e obrigatorio");
@@ -191,7 +208,9 @@ public class SchoolService {
         user.setPlanType(PlanType.PESSOA_JURIDICA);
         user.setAddress(new Address());
 
-        return toSummary(userRepository.save(user));
+        User saved = userRepository.save(user);
+        schoolResponsibleRepository.save(new SchoolResponsible(school, saved));
+        return toSummary(saved);
     }
 
     public TeacherResponse registerTeacher(TeacherRequest request) {
@@ -350,20 +369,23 @@ public class SchoolService {
 
     public Map<String, Object> reportsSummary() {
         School school = requireCurrentSchool();
-        List<Map<String, Object>> rows = studentsFor(school).stream()
-                .map(c -> Map.<String, Object>of(
-                        "childId", c.getId(),
-                        "name", c.getName(),
-                        "schoolClass", c.getSchoolClass() == null ? "" : c.getSchoolClass(),
-                        "totalSessions", 0,
-                        "averageScore", 0,
-                        "lastPlayedAt", ""
-                ))
+        SchoolReportSummaryResponse summary = schoolLearningService.reportFor(studentsFor(school));
+        List<Map<String, Object>> rows = summary.students().stream()
+                .map(c -> {
+                    Map<String, Object> row = new LinkedHashMap<>();
+                    row.put("childId", c.childId());
+                    row.put("name", c.name());
+                    row.put("schoolClass", c.schoolClass() == null ? "" : c.schoolClass());
+                    row.put("totalSessions", c.totalSessions());
+                    row.put("averageScore", c.averageScore());
+                    row.put("lastPlayedAt", c.lastPlayedAt());
+                    return row;
+                })
                 .toList();
         return Map.of(
-                "totalStudents", rows.size(),
-                "totalSessions", 0,
-                "averageScore", 0,
+                "totalStudents", summary.totalStudents(),
+                "totalSessions", summary.totalSessions(),
+                "averageScore", summary.averageScore(),
                 "students", rows
         );
     }
@@ -530,6 +552,30 @@ public class SchoolService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Aluno nao pertence a esta escola");
         }
         return child;
+    }
+
+    private String requireSchoolClassName(School school, String value) {
+        if (value == null || value.isBlank()) {
+            throw new BusinessException("Selecione uma turma");
+        }
+        String normalized = value.trim();
+        return schoolClassRepository.findBySchoolId(school.getId()).stream()
+                .filter(schoolClass -> schoolClass.getName() != null
+                        && schoolClass.getName().equalsIgnoreCase(normalized))
+                .findFirst()
+                .map(SchoolClass::getName)
+                .orElseThrow(() -> new BusinessException("Turma nao encontrada nesta escola"));
+    }
+
+    private boolean linkLegacyResponsibleIfNeeded(School school, User responsible) {
+        boolean hasLegacyChild = studentsFor(school).stream()
+                .map(Child::getResponsible)
+                .filter(Objects::nonNull)
+                .anyMatch(user -> Objects.equals(user.getId(), responsible.getId()));
+        if (hasLegacyChild) {
+            schoolResponsibleRepository.save(new SchoolResponsible(school, responsible));
+        }
+        return hasLegacyChild;
     }
 
     private static boolean matchesQuery(User u, String q, String digits) {
