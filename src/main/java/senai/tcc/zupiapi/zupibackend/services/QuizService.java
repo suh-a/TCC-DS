@@ -2,6 +2,7 @@ package senai.tcc.zupiapi.zupibackend.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import senai.tcc.zupiapi.zupibackend.dto.request.QuizAnswerRequest;
 import senai.tcc.zupiapi.zupibackend.dto.response.QuizResponse;
 import senai.tcc.zupiapi.zupibackend.exceptions.ResourceNotFoundException;
@@ -13,7 +14,8 @@ import senai.tcc.zupiapi.zupibackend.repositories.QuizRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.security.SecureRandom;
+import senai.tcc.zupiapi.zupibackend.security.services.AccessControlService;
 
 @Service
 public class QuizService {
@@ -24,7 +26,19 @@ public class QuizService {
     @Autowired
     private ChildRepository childRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private AccessControlService accessControl;
+
+    private final SecureRandom secureRandom = new SecureRandom();
+
     public QuizResponse createInitialQuiz(Long childId) {
+        accessControl.ensureCanAccessChild(childId);
         Child child = childRepository.findById(childId)
                 .orElseThrow(() -> new ResourceNotFoundException("Child not found"));
 
@@ -40,6 +54,7 @@ public class QuizService {
     }
 
     public QuizResponse completeQuiz(QuizAnswerRequest request) {
+        accessControl.ensureCanAccessChild(request.childId());
         Quiz quiz = quizRepository.findTopByChildIdOrderByCreatedAtDesc(request.childId())
                 .orElseThrow(() -> new ResourceNotFoundException("Quiz inicial não encontrado"));
 
@@ -47,14 +62,29 @@ public class QuizService {
         quiz.setCompleted(true);
         quiz.setSummary(generateSummary(request.answers()));
 
+        Child child = quiz.getChild();
+        String generatedPassword = null;
+        if (!child.isSchoolLinked()) {
+            generatedPassword = generatePassword();
+            child.setChildPasswordHash(passwordEncoder.encode(generatedPassword));
+            child.setOnboardingCompleted(true);
+            childRepository.save(child);
+        }
+
         Quiz saved = quizRepository.save(quiz);
-        return mapToResponse(saved);
+        if (generatedPassword != null && child.getResponsible() != null) {
+            emailService.sendChildCredentialsEmail(
+                    child.getResponsible().getEmail(), child.getName(),
+                    child.getChildLoginEmail(), generatedPassword);
+        }
+        return mapToResponse(saved, generatedPassword);
     }
 
     public QuizResponse getLatestQuiz(Long childId) {
+        accessControl.ensureCanAccessChild(childId);
         Quiz quiz = quizRepository.findTopByChildIdOrderByCreatedAtDesc(childId)
                 .orElseThrow(() -> new ResourceNotFoundException("Quiz não encontrado"));
-        return mapToResponse(quiz);
+        return mapToResponse(quiz, null);
     }
 
     private List<String> generateInitialQuestions() {
@@ -76,7 +106,20 @@ public class QuizService {
         return "Resumo automático gerado com base nas respostas: " + answers.keySet().stream().findFirst().orElse("sem dados") + ".";
     }
 
+    private String generatePassword() {
+        String chars = "ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#$%";
+        StringBuilder password = new StringBuilder(12);
+        for (int i = 0; i < 12; i++) {
+            password.append(chars.charAt(secureRandom.nextInt(chars.length())));
+        }
+        return password.toString();
+    }
+
     private QuizResponse mapToResponse(Quiz quiz) {
+        return mapToResponse(quiz, null);
+    }
+
+    private QuizResponse mapToResponse(Quiz quiz, String generatedPassword) {
         return new QuizResponse(
                 quiz.getId(),
                 quiz.getChild().getId(),
@@ -84,7 +127,9 @@ public class QuizService {
                 quiz.isCompleted(),
                 quiz.getQuestions(),
                 quiz.getAnswers(),
-                quiz.getSummary()
+                quiz.getSummary(),
+                quiz.getChild().getChildLoginEmail(),
+                generatedPassword
         );
     }
 }

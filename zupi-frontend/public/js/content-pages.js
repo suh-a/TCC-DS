@@ -93,11 +93,103 @@ const ContentPages = {
   async loadDesafios() {
     const el = document.getElementById('desafiosList');
     if (!el) return;
-    const items = (await ZupiAPI.fetchJson('/content/desafios-semanais')) || [];
+    const isPfChild = ZupiAPI.getUser().type === 'CRIANCA';
+    const endpoint = isPfChild ? '/content/pf/desafios-semanais' : '/content/desafios-semanais';
+    const items = (await ZupiAPI.fetchJson(endpoint)) || [];
     if (!items.length) return;
+    if (!isPfChild) {
+      el.innerHTML = items.map((q) => `
+        <article class="desafio-quiz-card mb-3">${this.escape(q.title || 'Quiz')}</article>
+      `).join('');
+      return;
+    }
     el.innerHTML = items.map((q) => `
-      <article class="desafio-quiz-card mb-3" role="button" tabindex="0">${q.title || 'Quiz'}</article>
+      <article class="desafio-quiz-card weekly-quiz-card mb-3" data-weekly-quiz="${this.escape(q.slug)}">
+        <span class="weekly-quiz-card__icon" aria-hidden="true">${q.slug === 'meus-superpoderes' ? '⚡' : '💛'}</span>
+        <section>
+          <h3 class="h5 mb-1">${this.escape(q.title)}</h3>
+          <p class="mb-2 text-muted">${this.escape(q.objective)}</p>
+          <span class="badge rounded-pill text-bg-light">${q.questions.length} perguntas</span>
+        </section>
+        <button class="btn btn-primary ms-md-auto" type="button" data-start-quiz="${this.escape(q.slug)}">Começar</button>
+      </article>
     `).join('');
+    el.insertAdjacentHTML('beforeend', '<section id="weeklyQuizPlayer" class="weekly-quiz-player d-none" aria-live="polite"></section>');
+    el.addEventListener('click', (event) => {
+      const button = event.target.closest('[data-start-quiz]');
+      if (button) this.startWeeklyQuiz(items.find(q => q.slug === button.dataset.startQuiz));
+    });
+  },
+
+  startWeeklyQuiz(quiz) {
+    if (!quiz) return;
+    this.activeWeeklyQuiz = { quiz, index: 0, answers: [] };
+    this.renderWeeklyQuestion();
+    document.getElementById('weeklyQuizPlayer')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  },
+
+  renderWeeklyQuestion() {
+    const state = this.activeWeeklyQuiz;
+    const player = document.getElementById('weeklyQuizPlayer');
+    if (!state || !player) return;
+    const question = state.quiz.questions[state.index];
+    const progress = Math.round(((state.index + 1) / state.quiz.questions.length) * 100);
+    player.classList.remove('d-none');
+    player.innerHTML = `
+      <header class="mb-3">
+        <p class="small text-muted mb-1">Pergunta ${state.index + 1} de ${state.quiz.questions.length}</p>
+        <div class="progress weekly-quiz-progress" role="progressbar" aria-valuenow="${progress}" aria-valuemin="0" aria-valuemax="100">
+          <div class="progress-bar" style="width:${progress}%"></div>
+        </div>
+      </header>
+      <h3 class="h4 mb-4">${this.escape(question.prompt)}</h3>
+      <section class="weekly-quiz-options">
+        ${question.options.map((option) => `<button class="weekly-quiz-option" type="button" data-weekly-answer="${this.escape(option)}">${this.escape(option)}</button>`).join('')}
+      </section>`;
+    player.querySelectorAll('[data-weekly-answer]').forEach(button => {
+      button.addEventListener('click', () => this.answerWeeklyQuiz(button.dataset.weeklyAnswer));
+    });
+  },
+
+  answerWeeklyQuiz(answer) {
+    const state = this.activeWeeklyQuiz;
+    if (!state) return;
+    state.answers[state.index] = answer;
+    if (state.index < state.quiz.questions.length - 1) {
+      state.index += 1;
+      this.renderWeeklyQuestion();
+      return;
+    }
+    this.finishWeeklyQuiz();
+  },
+
+  finishWeeklyQuiz() {
+    const state = this.activeWeeklyQuiz;
+    const player = document.getElementById('weeklyQuizPlayer');
+    if (!state || !player) return;
+    const isStrengths = state.quiz.slug === 'meus-superpoderes';
+    const highlights = state.answers.slice(0, 3).map(answer => answer.replace(/^\S+\s*/, '')).join(', ');
+    const feedback = isStrengths
+      ? `Seus superpoderes incluem ${highlights}. Cada um deles torna seu jeito de aprender e ajudar muito especial!`
+      : `${state.quiz.feedback} Quando precisar, lembre que respirar, pedir ajuda ou fazer uma pausa são escolhas muito corajosas.`;
+    localStorage.setItem(`weeklyQuiz:${state.quiz.slug}:${this.childId()}`, JSON.stringify({
+      answers: state.answers,
+      completedAt: new Date().toISOString()
+    }));
+    player.innerHTML = `
+      <section class="text-center py-3">
+        <div class="weekly-quiz-result-icon" aria-hidden="true">${isStrengths ? '🌟' : '🌈'}</div>
+        <h3 class="h4 mt-3">Você conseguiu!</h3>
+        <p class="weekly-quiz-feedback">${this.escape(feedback)}</p>
+        <button class="btn btn-outline-primary" type="button" data-restart-weekly>Responder novamente</button>
+      </section>`;
+    player.querySelector('[data-restart-weekly]')?.addEventListener('click', () => this.startWeeklyQuiz(state.quiz));
+  },
+
+  escape(value) {
+    return String(value == null ? '' : value).replace(/[&<>"']/g, (char) => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[char]));
   },
 
   downloadPdf(tipo) {

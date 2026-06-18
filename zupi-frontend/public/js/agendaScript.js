@@ -42,7 +42,9 @@ async function getChildren() {
 }
 
 async function getSkillThemes() {
-    return (await ZupiAPI.fetchJson('/skillAreas')) || [];
+    const user = ZupiAPI.getUser();
+    const path = user.planType === 'PESSOA_FISICA' ? '/skillAreas/pf/agenda' : '/skillAreas';
+    return (await ZupiAPI.fetchJson(path)) || [];
 }
 
 function createEventCard(event) {

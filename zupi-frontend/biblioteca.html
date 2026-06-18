@@ -126,6 +126,10 @@
 
     document.addEventListener('DOMContentLoaded', () => {
       const type = ZupiAPI.getUser().type;
+      if (type === 'CRIANCA') {
+        window.location.replace('/dashboard-crianca');
+        return;
+      }
       applyLibrarySidebar(type);
       if (type === 'ESCOLA') {
         document.getElementById('showBookFormBtn')?.classList.remove('d-none');

@@ -10,6 +10,7 @@ import senai.tcc.zupiapi.zupibackend.model.SkillArea;
 import senai.tcc.zupiapi.zupibackend.repositories.SkillAreaRepository;
 
 import java.util.List;
+import senai.tcc.zupiapi.zupibackend.model.enums.PlanType;
 
 @Service
 public class SkillAreaService {
@@ -22,6 +23,15 @@ public class SkillAreaService {
 
     public List<SkillAreaResponse> findAllSkillAreas() {
         return skillAreaMapper.toResponse(skillAreaRepository.findAll());
+    }
+
+    public List<SkillAreaResponse> findGeneralSkillAreas() {
+        return skillAreaMapper.toResponse(skillAreaRepository.findAllByPlanTypeIsNullOrderByName());
+    }
+
+    public List<SkillAreaResponse> findPfAgendaSkillAreas() {
+        return skillAreaMapper.toResponse(
+                skillAreaRepository.findAllByPlanTypeOrderByName(PlanType.PESSOA_FISICA));
     }
 
     public SkillAreaResponse save(SkillAreaRequest skillAreaRequest) {

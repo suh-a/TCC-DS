@@ -5,11 +5,17 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
+import senai.tcc.zupiapi.zupibackend.dto.response.WeeklyQuizResponse;
+import senai.tcc.zupiapi.zupibackend.services.WeeklyQuizService;
 
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/content")
 public class ContentController {
+
+    @Autowired
+    private WeeklyQuizService weeklyQuizService;
 
     @GetMapping("/dicas-inclusao")
     public ResponseEntity<List<Map<String, String>>> dicas() {
@@ -75,5 +81,10 @@ public class ContentController {
                 Map.of("title", "Quiz: Emoções", "questions", "5", "status", "disponível"),
                 Map.of("title", "Quiz: Cores e formas", "questions", "8", "status", "disponível")
         ));
+    }
+
+    @GetMapping("/pf/desafios-semanais")
+    public ResponseEntity<List<WeeklyQuizResponse>> desafiosPf() {
+        return ResponseEntity.ok(weeklyQuizService.findPfQuizzes());
     }
 }

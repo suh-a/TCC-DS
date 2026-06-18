@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import senai.tcc.zupiapi.zupibackend.model.enums.PlanType;
 
 @Entity
 public class SkillArea {
@@ -16,6 +17,9 @@ public class SkillArea {
 
     @Column(unique = true)
     private String name;
+
+    @Enumerated(EnumType.STRING)
+    private PlanType planType;
 
     public SkillArea(Long id, String name) {
         this.id = id;
@@ -38,6 +42,14 @@ public class SkillArea {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public PlanType getPlanType() {
+        return planType;
+    }
+
+    public void setPlanType(PlanType planType) {
+        this.planType = planType;
     }
 
     @Override

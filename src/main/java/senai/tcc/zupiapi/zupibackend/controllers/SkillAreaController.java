@@ -22,9 +22,14 @@ public class SkillAreaController {
 
     @GetMapping
     public ResponseEntity<List<SkillAreaResponse>>  findAllSkillAreas(){
-        List<SkillAreaResponse> skillAreas = skillAreaService.findAllSkillAreas();
+        List<SkillAreaResponse> skillAreas = skillAreaService.findGeneralSkillAreas();
 
         return ResponseEntity.ok().body(skillAreas);
+    }
+
+    @GetMapping("/pf/agenda")
+    public ResponseEntity<List<SkillAreaResponse>> findPfAgendaSkillAreas() {
+        return ResponseEntity.ok(skillAreaService.findPfAgendaSkillAreas());
     }
 
     @PostMapping

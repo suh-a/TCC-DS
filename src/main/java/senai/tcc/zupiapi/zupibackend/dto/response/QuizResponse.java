@@ -11,6 +11,8 @@ public record QuizResponse(
         boolean completed,
         List<String> questions,
         Map<String, String> answers,
-        String summary
+        String summary,
+        String childLoginEmail,
+        String generatedPassword
 ) {
 }

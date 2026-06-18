@@ -64,4 +64,23 @@ public class EmailService {
         message.setText(body);
         mailSender.send(message);
     }
+
+    public void sendChildCredentialsEmail(String toEmail, String childName, String login, String password) {
+        String body = "Olá!\n\nO acesso de " + childName + " ao Zupi está pronto.\n\n"
+                + "E-mail: " + login + "\n"
+                + "Senha: " + password + "\n\n"
+                + "Guarde estas credenciais em um local seguro. A senha não será exibida novamente.";
+
+        if (mailSender == null || fromEmail == null || fromEmail.isBlank()) {
+            log.info("Credenciais infantis simuladas para {} (login: {})", toEmail, login);
+            return;
+        }
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(fromEmail);
+        message.setTo(toEmail);
+        message.setSubject("Acesso infantil — Zupi");
+        message.setText(body);
+        mailSender.send(message);
+    }
 }

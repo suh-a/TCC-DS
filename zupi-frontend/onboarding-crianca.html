@@ -303,16 +303,17 @@
         if (resp && resp.ok) {
           const data = await resp.json();
           document.getElementById('quizSummary').textContent = data.summary || recommendations.summary;
+          document.getElementById('childEmail').textContent = data.childLoginEmail || 'Nao gerado';
+          document.getElementById('childPassword').textContent = data.generatedPassword || 'Nao gerada';
         } else {
           document.getElementById('quizSummary').textContent = recommendations.summary;
         }
 
         const childResp = await ZupiAPI.get(`/child/details/${childId}`);
-        if (childResp && childResp.ok) {
+        if (childResp && childResp.ok && document.getElementById('childEmail').textContent === '-') {
           const child = await childResp.json();
           document.getElementById('childEmail').textContent = child.childLoginEmail || 'Nao gerado';
         }
-        document.getElementById('childPassword').textContent = '(exibida apenas no momento do cadastro)';
         document.getElementById('recommendedGamesLink').href = `/menuJogos?childId=${childId}`;
 
         document.getElementById('quizStep').classList.add('d-none');
