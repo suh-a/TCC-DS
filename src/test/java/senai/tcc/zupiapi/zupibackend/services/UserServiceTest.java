@@ -9,6 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 import senai.tcc.zupiapi.zupibackend.dto.LoginDTO;
 import senai.tcc.zupiapi.zupibackend.dto.LoginResponse;
@@ -388,5 +389,33 @@ class UserServiceTest {
             assertEquals(UserType.RESPONSAVEL_CREDENCIADO, result.user().userType());
             assertEquals(PlanType.PESSOA_JURIDICA, result.user().planType());
             assertEquals("token", result.token());
+        }
+
+        @Test
+        void shouldVerifyParentPasswordForFamilyChild() {
+            Child child = new Child();
+            child.setId(10L);
+            child.setResponsible(user);
+            child.setSchoolLinked(false);
+            when(childRepository.findById(10L)).thenReturn(Optional.of(child));
+            when(passwordEncoder.matches("senha-correta", user.getPassword())).thenReturn(true);
+
+            assertDoesNotThrow(() -> userService.verifyParentAccess(10L, "senha-correta"));
+
+            verify(accessControl).ensureCanAccessChild(10L);
+        }
+
+        @Test
+        void shouldRejectIncorrectParentPassword() {
+            Child child = new Child();
+            child.setId(10L);
+            child.setResponsible(user);
+            when(childRepository.findById(10L)).thenReturn(Optional.of(child));
+            when(passwordEncoder.matches("senha-errada", user.getPassword())).thenReturn(false);
+
+            ResponseStatusException exception = assertThrows(ResponseStatusException.class,
+                    () -> userService.verifyParentAccess(10L, "senha-errada"));
+
+            assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
         }
     }

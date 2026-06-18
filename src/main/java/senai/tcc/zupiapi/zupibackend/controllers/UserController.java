@@ -101,6 +101,14 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("/parent-access/verify")
+    public ResponseEntity<Void> verifyParentAccess(
+            @Valid @RequestBody ParentAccessVerificationRequest request
+    ) {
+        userService.verifyParentAccess(request.childId(), request.password());
+        return ResponseEntity.noContent().build();
+    }
+
     @PatchMapping("/{id}/two-factor")
     public ResponseEntity<UserResponse> toggleTwoFactor(
             @PathVariable Long id,

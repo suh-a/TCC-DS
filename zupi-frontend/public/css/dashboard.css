@@ -118,6 +118,21 @@
   }
 }
 
+.parent-access-dialog {
+  width: min(92vw, 430px);
+  padding: 0;
+  border: 0;
+  border-radius: 22px;
+  box-shadow: 0 24px 70px rgba(26, 54, 75, .28);
+}
+.parent-access-dialog::backdrop { background: rgba(20, 42, 58, .58); backdrop-filter: blur(3px); }
+.parent-access-form { position: relative; padding: 2rem; }
+.parent-access-close {
+  position: absolute; top: .75rem; right: 1rem; border: 0; background: transparent;
+  color: #667; font-size: 1.75rem; line-height: 1;
+}
+.parent-access-icon { margin-bottom: .75rem; font-size: 2.4rem; }
+
 
 /* ===================================================
    SEÇÃO HERO DO DASHBOARD — Mascote como fundo

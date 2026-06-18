@@ -16,6 +16,13 @@ const ChildNav = (() => {
         { id: 'perfil', href: '/perfil-crianca', label: 'Perfil' }
     ];
 
+    function isChildContext(user = {}) {
+        return ['CRIANCA', 'ALUNO_CREDENCIADO'].includes(user.type)
+            || (user.type === 'RESPONSAVEL'
+                && localStorage.getItem('activeProfile') === 'CRIANCA'
+                && Boolean(resolveChildId()));
+    }
+
     function resolveChildId() {
         const params = new URLSearchParams(window.location.search);
         const fromUrl = params.get('childId');
@@ -40,9 +47,11 @@ const ChildNav = (() => {
         const user = typeof ZupiAPI !== 'undefined' ? ZupiAPI.getUser() : {};
         const childId = resolveChildId() || (['CRIANCA', 'ALUNO_CREDENCIADO'].includes(user.type) ? user.id : null);
 
-        if (user.type === 'CRIANCA') {
+        const childContext = isChildContext(user);
+
+        if (childContext && user.type !== 'ALUNO_CREDENCIADO') {
             document.querySelectorAll('[data-pf-sidebar]').forEach(menu => {
-                menu.innerHTML = menuItemsHtml(active);
+                menu.innerHTML = menuItemsHtml(active, true);
                 menu.classList.remove('pf-sidebar-nav');
             });
             if (!document.getElementById('dashboardOffcanvas')) {
@@ -53,7 +62,7 @@ const ChildNav = (() => {
                       <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Fechar"></button>
                     </div>
                     <nav class="offcanvas-body p-0" aria-label="Navegação infantil">
-                      <ul class="nav nav-pills flex-column p-4">${menuItemsHtml(active)}</ul>
+                      <ul class="nav nav-pills flex-column p-4">${menuItemsHtml(active, true)}</ul>
                     </nav>
                   </div>`);
             }
@@ -92,18 +101,102 @@ const ChildNav = (() => {
             });
         });
 
+        if (childContext && user.type !== 'ALUNO_CREDENCIADO') {
+            bindParentGate(childId);
+        }
+
         return childId;
     }
 
-    function menuItemsHtml(active) {
-        return MENU.map(item => {
+    function menuItemsHtml(active, includeExit = false) {
+        const items = MENU.map(item => {
             const cls = item.id === active ? 'nav-link text-white active' : 'nav-link text-white';
             const href = typeof item.href === 'function' ? item.href() : item.href;
             return `<li class="nav-item mb-2">
               <a class="${cls}" href="${href}" data-child-nav-link="${item.id}">${item.label}</a>
             </li>`;
         }).join('');
+        if (!includeExit) return items;
+        return items + `<li class="nav-item mt-auto">
+          <a class="nav-link text-white" href="/selecao-perfil" data-parent-gate>Voltar ao menu</a>
+        </li>`;
     }
 
-    return { init, resolveChildId, MENU, menuItemsHtml };
+    function bindParentGate(childId) {
+        document.querySelectorAll('a[href="/selecao-perfil"]').forEach(link => {
+            if (link.dataset.parentGateBound) return;
+            link.dataset.parentGate = '1';
+            link.dataset.parentGateBound = '1';
+            link.addEventListener('click', event => {
+                event.preventDefault();
+                showParentGate(childId);
+            });
+        });
+    }
+
+    function showParentGate(childId) {
+        let dialog = document.getElementById('parentAccessDialog');
+        if (!dialog) {
+            document.body.insertAdjacentHTML('beforeend', `
+              <dialog id="parentAccessDialog" class="parent-access-dialog">
+                <form method="dialog" id="parentAccessForm" class="parent-access-form">
+                  <button class="parent-access-close" type="button" data-parent-access-close aria-label="Fechar">×</button>
+                  <p class="parent-access-icon" aria-hidden="true">🔒</p>
+                  <h2 class="h4">Área do responsável</h2>
+                  <p class="text-muted">Digite a senha do responsável para sair do acesso infantil.</p>
+                  <label class="form-label" for="parentAccessPassword">Senha do responsável</label>
+                  <input class="form-control" id="parentAccessPassword" type="password" autocomplete="current-password" required>
+                  <p class="text-danger small mt-2 mb-0 d-none" id="parentAccessError" role="alert"></p>
+                  <button class="btn btn-primary w-100 mt-3" type="submit">Confirmar e sair</button>
+                </form>
+              </dialog>`);
+            dialog = document.getElementById('parentAccessDialog');
+            dialog.querySelector('[data-parent-access-close]').addEventListener('click', () => dialog.close());
+            dialog.addEventListener('click', event => {
+                if (event.target === dialog) dialog.close();
+            });
+            dialog.querySelector('#parentAccessForm').addEventListener('submit', event => {
+                event.preventDefault();
+                verifyParentAccess(dialog, childId);
+            });
+        }
+        dialog.dataset.childId = String(childId);
+        dialog.querySelector('#parentAccessPassword').value = '';
+        dialog.querySelector('#parentAccessError').classList.add('d-none');
+        dialog.showModal();
+        dialog.querySelector('#parentAccessPassword').focus();
+    }
+
+    async function verifyParentAccess(dialog, fallbackChildId) {
+        const password = dialog.querySelector('#parentAccessPassword').value;
+        const error = dialog.querySelector('#parentAccessError');
+        const submit = dialog.querySelector('button[type="submit"]');
+        submit.disabled = true;
+        error.classList.add('d-none');
+        try {
+            const response = await ZupiAPI.post('/auth/parent-access/verify', {
+                childId: Number(dialog.dataset.childId || fallbackChildId),
+                password
+            });
+            if (!response || !response.ok) {
+                error.textContent = response
+                    ? await ZupiAPI.readErrorMessage(response, 'Senha do responsável incorreta.')
+                    : 'Não foi possível validar a senha.';
+                error.classList.remove('d-none');
+                return;
+            }
+            localStorage.setItem('activeProfile', 'RESPONSAVEL');
+            localStorage.removeItem('activeChildId');
+            localStorage.removeItem('selectedChildId');
+            localStorage.removeItem('childId');
+            window.location.href = '/selecao-perfil';
+        } catch (e) {
+            error.textContent = 'Não foi possível validar a senha. Tente novamente.';
+            error.classList.remove('d-none');
+        } finally {
+            submit.disabled = false;
+        }
+    }
+
+    return { init, resolveChildId, isChildContext, MENU, menuItemsHtml };
 })();

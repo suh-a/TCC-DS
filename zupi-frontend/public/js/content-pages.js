@@ -93,7 +93,9 @@ const ContentPages = {
   async loadDesafios() {
     const el = document.getElementById('desafiosList');
     if (!el) return;
-    const isPfChild = ZupiAPI.getUser().type === 'CRIANCA';
+    const user = ZupiAPI.getUser();
+    const isPfChild = user.type === 'CRIANCA'
+      || (user.type === 'RESPONSAVEL' && localStorage.getItem('activeProfile') === 'CRIANCA');
     const endpoint = isPfChild ? '/content/pf/desafios-semanais' : '/content/desafios-semanais';
     const items = (await ZupiAPI.fetchJson(endpoint)) || [];
     if (!items.length) return;

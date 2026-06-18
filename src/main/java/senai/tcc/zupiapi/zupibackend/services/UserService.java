@@ -217,6 +217,20 @@ public class UserService {
         resetPasswordDirect(id, newPassword);
     }
 
+    public void verifyParentAccess(Long childId, String password) {
+        Child child = childRepository.findById(childId)
+                .orElseThrow(() -> new ResourceNotFoundException("Crianca nao encontrada"));
+        if (child.isSchoolLinked()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Recurso disponivel apenas no plano familiar");
+        }
+
+        accessControl.ensureCanAccessChild(childId);
+        User responsible = child.getResponsible();
+        if (responsible == null || !passwordEncoder.matches(password, responsible.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Senha do responsavel incorreta");
+        }
+    }
+
     public void resetPasswordDirect(Long id, String newPassword) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario nao encontrado"));

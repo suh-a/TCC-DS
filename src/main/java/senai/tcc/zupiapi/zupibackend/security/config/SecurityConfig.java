@@ -89,7 +89,7 @@ public class SecurityConfig {
                         ).permitAll()
                         .requestMatchers("/auth").hasRole("ADMIN")
                         .requestMatchers("/skillAreas").permitAll()
-                        .requestMatchers("/content/pf/**").hasRole("CRIANCA")
+                        .requestMatchers("/content/pf/**").hasAnyRole("CRIANCA", "RESPONSAVEL", "ADMIN")
                         .requestMatchers("/content/**").permitAll()
                         .anyRequest().authenticated()
                 )
