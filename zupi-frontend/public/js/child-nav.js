@@ -1,5 +1,5 @@
 /**
- * Navegação compartilhada do dashboard infantil.
+ * Navegacao compartilhada do dashboard infantil.
  * Defina data-child-nav no <body> com: dashboard | jogos | atividades | desafios | perfil
  */
 const ChildNav = (() => {
@@ -49,15 +49,16 @@ const ChildNav = (() => {
         const childId = resolveChildId() || (['CRIANCA', 'ALUNO_CREDENCIADO'].includes(user.type) ? user.id : null);
 
         const childContext = isChildContext(user);
-        const includeExit = childContext && user.type !== 'ALUNO_CREDENCIADO';
+        const includeExit = childContext;
+        const exitMode = ['CRIANCA', 'ALUNO_CREDENCIADO'].includes(user.type) ? 'logout' : 'profile';
 
         if (childContext) {
             document.querySelectorAll('[data-pf-sidebar]').forEach(menu => {
-                menu.innerHTML = menuItemsHtml(active, includeExit);
+                menu.innerHTML = menuItemsHtml(active, includeExit, exitMode);
                 menu.classList.remove('pf-sidebar-nav');
             });
             document.querySelectorAll('.dashboard-sidebar ul.nav:not([data-pf-sidebar]), .dashboard-offcanvas ul.nav:not([data-pf-sidebar])').forEach(menu => {
-                menu.innerHTML = menuItemsHtml(active, includeExit);
+                menu.innerHTML = menuItemsHtml(active, includeExit, exitMode);
             });
             if (!document.getElementById('dashboardOffcanvas')) {
                 document.body.insertAdjacentHTML('afterbegin', `
@@ -66,8 +67,8 @@ const ChildNav = (() => {
                       <h2 class="offcanvas-title h5" id="dashboardOffcanvasLabel">Zupi</h2>
                       <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Fechar"></button>
                     </div>
-                    <nav class="offcanvas-body p-0" aria-label="Navegação infantil">
-                      <ul class="nav nav-pills flex-column p-4">${menuItemsHtml(active, includeExit)}</ul>
+                    <nav class="offcanvas-body p-0" aria-label="Navegacao infantil">
+                      <ul class="nav nav-pills flex-column p-4">${menuItemsHtml(active, includeExit, exitMode)}</ul>
                     </nav>
                   </div>`);
             }
@@ -99,21 +100,12 @@ const ChildNav = (() => {
             }
         });
 
-        document.querySelectorAll('[data-action="logout"]').forEach(btn => {
-            btn.addEventListener('click', e => {
-                e.preventDefault();
-                if (typeof ZupiAPI !== 'undefined') ZupiAPI.logout();
-            });
-        });
-
-        if (childContext && user.type !== 'ALUNO_CREDENCIADO') {
-            bindParentGate(childId);
-        }
+        bindExitLinks(exitMode);
 
         return childId;
     }
 
-    function menuItemsHtml(active, includeExit = false) {
+    function menuItemsHtml(active, includeExit = false, exitMode = 'profile') {
         const user = typeof ZupiAPI !== 'undefined' ? ZupiAPI.getUser() : {};
         const hideLibrary = user.type === 'CRIANCA'
             || (user.type === 'RESPONSAVEL' && localStorage.getItem('activeProfile') === 'CRIANCA');
@@ -125,113 +117,39 @@ const ChildNav = (() => {
             </li>`;
         }).join('');
         if (!includeExit) return items;
-        return items + `<li class="nav-item mt-auto">
-          <a class="nav-link text-white" href="/selecao-perfil" data-parent-gate>Voltar ao menu</a>
-        </li>`;
+        const exitLink = exitMode === 'logout'
+            ? '<a class="nav-link text-white" href="#" data-action="logout">Sair</a>'
+            : '<a class="nav-link text-white" href="/selecao-perfil" data-child-exit-profile>Voltar ao menu</a>';
+        return items + `<li class="nav-item mt-auto">${exitLink}</li>`;
     }
 
-    function bindParentGate(childId) {
-        document.querySelectorAll('a[href="/selecao-perfil"]').forEach(link => {
-            if (link.dataset.parentGateBound) return;
-            link.dataset.parentGate = '1';
-            link.dataset.parentGateBound = '1';
+    function bindExitLinks(exitMode) {
+        if (exitMode === 'logout') {
+            document.querySelectorAll('[data-action="logout"]').forEach(link => {
+                if (link.dataset.childLogoutBound) return;
+                link.dataset.childLogoutBound = '1';
+                link.addEventListener('click', event => {
+                    event.preventDefault();
+                    if (typeof ZupiAPI !== 'undefined') ZupiAPI.logout();
+                });
+            });
+            return;
+        }
+
+        document.querySelectorAll('[data-child-exit-profile]').forEach(link => {
+            if (link.dataset.childExitProfileBound) return;
+            link.dataset.childExitProfileBound = '1';
             link.addEventListener('click', event => {
                 event.preventDefault();
-                showParentGate(childId);
+                localStorage.setItem('activeProfile', 'RESPONSAVEL');
+                localStorage.removeItem('activeChildId');
+                localStorage.removeItem('selectedChildId');
+                localStorage.removeItem('childId');
+                window.location.href = '/selecao-perfil';
             });
         });
     }
 
-    function showParentGate(childId) {
-        const directChildLogin = ZupiAPI.getUser().type === 'CRIANCA';
-        let dialog = document.getElementById('parentAccessDialog');
-        if (!dialog) {
-            document.body.insertAdjacentHTML('beforeend', `
-              <dialog id="parentAccessDialog" class="parent-access-dialog">
-                <form method="dialog" id="parentAccessForm" class="parent-access-form">
-                  <button class="parent-access-close" type="button" data-parent-access-close aria-label="Fechar">×</button>
-                  <p class="parent-access-icon" aria-hidden="true">🔒</p>
-                  <h2 class="h4">Área do responsável</h2>
-                  <p class="text-muted" id="parentAccessDescription"></p>
-                  <section id="parentAccessEmailGroup" class="mb-3 d-none">
-                    <label class="form-label" for="parentAccessEmail">E-mail do responsável</label>
-                    <input class="form-control" id="parentAccessEmail" type="email" autocomplete="username">
-                  </section>
-                  <label class="form-label" for="parentAccessPassword">Senha do responsável</label>
-                  <input class="form-control" id="parentAccessPassword" type="password" autocomplete="current-password" required>
-                  <p class="text-danger small mt-2 mb-0 d-none" id="parentAccessError" role="alert"></p>
-                  <button class="btn btn-primary w-100 mt-3" type="submit">Confirmar e sair</button>
-                </form>
-              </dialog>`);
-            dialog = document.getElementById('parentAccessDialog');
-            dialog.querySelector('[data-parent-access-close]').addEventListener('click', () => dialog.close());
-            dialog.addEventListener('click', event => {
-                if (event.target === dialog) dialog.close();
-            });
-            dialog.querySelector('#parentAccessForm').addEventListener('submit', event => {
-                event.preventDefault();
-                verifyParentAccess(dialog, childId);
-            });
-        }
-        dialog.dataset.childId = String(childId);
-        dialog.dataset.directChildLogin = directChildLogin ? '1' : '0';
-        dialog.querySelector('#parentAccessDescription').textContent = directChildLogin
-            ? 'Digite o e-mail e a senha do responsável para sair do acesso infantil.'
-            : 'Digite a senha do responsável para sair do acesso infantil.';
-        const emailGroup = dialog.querySelector('#parentAccessEmailGroup');
-        const emailInput = dialog.querySelector('#parentAccessEmail');
-        emailGroup.classList.toggle('d-none', !directChildLogin);
-        emailInput.required = directChildLogin;
-        emailInput.value = '';
-        dialog.querySelector('#parentAccessPassword').value = '';
-        dialog.querySelector('#parentAccessError').classList.add('d-none');
-        dialog.showModal();
-        (directChildLogin ? emailInput : dialog.querySelector('#parentAccessPassword')).focus();
-    }
-
-    async function verifyParentAccess(dialog, fallbackChildId) {
-        const directChildLogin = dialog.dataset.directChildLogin === '1';
-        const email = dialog.querySelector('#parentAccessEmail').value.trim();
-        const password = dialog.querySelector('#parentAccessPassword').value;
-        const error = dialog.querySelector('#parentAccessError');
-        const submit = dialog.querySelector('button[type="submit"]');
-        submit.disabled = true;
-        error.classList.add('d-none');
-        try {
-            const childId = Number(dialog.dataset.childId || fallbackChildId);
-            const response = directChildLogin
-                ? await ZupiAPI.post('/auth/parent-access/login', { childId, email, password }, { skipAuthRedirect: true })
-                : await ZupiAPI.post('/auth/parent-access/verify', { childId, password }, { skipAuthRedirect: true });
-            if (!response || !response.ok) {
-                error.textContent = response
-                    ? await ZupiAPI.readErrorMessage(response, directChildLogin
-                        ? 'E-mail ou senha do responsável inválidos.'
-                        : 'Senha do responsável incorreta.')
-                    : 'Não foi possível validar a senha.';
-                error.classList.remove('d-none');
-                return;
-            }
-            if (directChildLogin) {
-                const session = await response.json();
-                if (!session?.user || !['RESPONSAVEL', 'RESPONSAVEL_CREDENCIADO'].includes(session.user.userType)) {
-                    error.textContent = 'As credenciais informadas não pertencem ao responsável.';
-                    error.classList.remove('d-none');
-                    return;
-                }
-                ZupiAPI.saveSession(session);
-            }
-            localStorage.setItem('activeProfile', 'RESPONSAVEL');
-            localStorage.removeItem('activeChildId');
-            localStorage.removeItem('selectedChildId');
-            localStorage.removeItem('childId');
-            window.location.href = '/selecao-perfil';
-        } catch (e) {
-            error.textContent = 'Não foi possível validar a senha. Tente novamente.';
-            error.classList.remove('d-none');
-        } finally {
-            submit.disabled = false;
-        }
-    }
 
     return { init, resolveChildId, isChildContext, MENU, menuItemsHtml };
 })();
