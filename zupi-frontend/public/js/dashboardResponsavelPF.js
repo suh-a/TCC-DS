@@ -284,7 +284,7 @@ function createChildCard(child) {
             ${avatar}
             <h3 class="card-title h6 mb-2">${child.name}</h3>
             <p class="card-text text-muted small flex-grow-1">Idade: ${child.age ?? '—'}</p>
-            <a href="/perfil?childId=${child.id}" class="btn btn-primary btn-sm mt-auto">Ver Perfil</a>
+            <a href="/perfil-crianca?childId=${child.id}" class="btn btn-primary btn-sm mt-auto">Ver Perfil</a>
           </div>
         </div>
       </div>`;
