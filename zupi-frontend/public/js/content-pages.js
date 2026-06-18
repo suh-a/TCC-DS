@@ -20,6 +20,59 @@ const ContentPages = {
     }
   ],
 
+  desafiosPf: [
+    {
+      id: 'missao-gentileza',
+      titulo: 'Missão da Gentileza',
+      icone: '💛',
+      categoria: 'Cuidar',
+      descricao: 'Faça uma coisa gentil por alguém nesta semana.',
+      missao: 'Você pode ajudar, agradecer, dividir algo ou fazer um elogio.',
+      dica: 'Um gesto pequeno já conta. Escolha algo que deixe você confortável.',
+      tema: 'amarelo'
+    },
+    {
+      id: 'desafio-emocoes',
+      titulo: 'Desafio das Emoções',
+      icone: '😊',
+      categoria: 'Sentir',
+      descricao: 'Escolha uma carinha ou uma cor para mostrar como você se sentiu hoje.',
+      missao: 'Vale desenhar, apontar ou contar para uma pessoa de confiança.',
+      dica: 'Todas as emoções são bem-vindas. Não existe resposta certa ou errada.',
+      tema: 'azul'
+    },
+    {
+      id: 'organizacao-divertida',
+      titulo: 'Organização Divertida',
+      icone: '🧸',
+      categoria: 'Organizar',
+      descricao: 'Escolha um cantinho pequeno para organizar.',
+      missao: 'Guarde alguns brinquedos, lápis ou materiais enquanto ouve uma música.',
+      dica: 'Faça só um pouquinho. Quando terminar, comemore sua conquista!',
+      tema: 'verde'
+    },
+    {
+      id: 'explorador-semana',
+      titulo: 'Explorador da Semana',
+      icone: '🔎',
+      categoria: 'Descobrir',
+      descricao: 'Observe algo interessante perto de você.',
+      missao: 'Encontre três cores, um som diferente ou algo bonito na natureza.',
+      dica: 'Você pode contar, desenhar ou mostrar o que descobriu.',
+      tema: 'lilas'
+    },
+    {
+      id: 'super-respiracao',
+      titulo: 'Super Respiração',
+      icone: '🌬️',
+      categoria: 'Pausar',
+      descricao: 'Faça uma pausa curta para respirar e alongar o corpo.',
+      missao: 'Puxe o ar devagar, solte como se apagasse uma vela e repita três vezes.',
+      dica: 'Pare se não estiver confortável. Você também pode só espreguiçar os braços.',
+      tema: 'coral'
+    }
+  ],
+
   childId() {
     const user = typeof ZupiAPI !== 'undefined' ? ZupiAPI.getUser() : {};
     return localStorage.getItem('activeChildId')
@@ -149,96 +202,114 @@ const ContentPages = {
       `).join('');
       return;
     }
-    const endpoint = isPfChild ? '/content/pf/desafios-semanais' : '/content/desafios-semanais';
-    const items = (await ZupiAPI.fetchJson(endpoint)) || [];
-    if (!items.length) return;
     if (!isPfChild) {
+      const items = (await ZupiAPI.fetchJson('/content/desafios-semanais')) || [];
+      if (!items.length) return;
       el.innerHTML = items.map((q) => `
         <article class="desafio-quiz-card mb-3">${this.escape(q.title || 'Quiz')}</article>
       `).join('');
       return;
     }
-    el.innerHTML = items.map((q) => `
-      <article class="desafio-quiz-card weekly-quiz-card mb-3" data-weekly-quiz="${this.escape(q.slug)}">
-        <span class="weekly-quiz-card__icon" aria-hidden="true">${q.slug === 'meus-superpoderes' ? '⚡' : '💛'}</span>
-        <section>
-          <h3 class="h5 mb-1">${this.escape(q.title)}</h3>
-          <p class="mb-2 text-muted">${this.escape(q.objective)}</p>
-          <span class="badge rounded-pill text-bg-light">${q.questions.length} perguntas</span>
-        </section>
-        <button class="btn btn-primary ms-md-auto" type="button" data-start-quiz="${this.escape(q.slug)}">Começar</button>
-      </article>
+    const items = this.desafiosPf;
+    const completed = this.completedWeeklyChallenges();
+    el.innerHTML = items.map((challenge) => `
+      <section class="col-12 col-md-6 col-xl-4">
+        <article class="weekly-challenge-card weekly-challenge-card--${challenge.tema} h-100 ${completed.has(challenge.id) ? 'is-complete' : ''}">
+          <header class="weekly-challenge-card__header">
+            <span class="weekly-challenge-card__icon" aria-hidden="true">${challenge.icone}</span>
+            <span class="weekly-challenge-card__category">${this.escape(challenge.categoria)}</span>
+          </header>
+          <h2 class="weekly-challenge-card__title">${this.escape(challenge.titulo)}</h2>
+          <p class="weekly-challenge-card__description">${this.escape(challenge.descricao)}</p>
+          <p class="weekly-challenge-card__status" aria-live="polite">
+            ${completed.has(challenge.id) ? '⭐ Missão concluída!' : 'Pronta para começar'}
+          </p>
+          <button class="btn weekly-challenge-card__button" type="button" data-open-challenge="${challenge.id}">
+            ${completed.has(challenge.id) ? 'Ver novamente' : 'Começar missão'}
+          </button>
+        </article>
+      </section>
     `).join('');
-    el.insertAdjacentHTML('beforeend', '<section id="weeklyQuizPlayer" class="weekly-quiz-player d-none" aria-live="polite"></section>');
+    el.insertAdjacentHTML('beforeend', '<section class="col-12"><section id="weeklyChallengeDetail" class="weekly-challenge-detail d-none" aria-live="polite"></section></section>');
     el.addEventListener('click', (event) => {
-      const button = event.target.closest('[data-start-quiz]');
-      if (button) this.startWeeklyQuiz(items.find(q => q.slug === button.dataset.startQuiz));
+      const button = event.target.closest('[data-open-challenge]');
+      if (button) this.openWeeklyChallenge(items.find(item => item.id === button.dataset.openChallenge));
     });
+    this.renderWeeklyProgress();
   },
 
-  startWeeklyQuiz(quiz) {
-    if (!quiz) return;
-    this.activeWeeklyQuiz = { quiz, index: 0, answers: [] };
-    this.renderWeeklyQuestion();
-    document.getElementById('weeklyQuizPlayer')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  weeklyChallengeStorageKey() {
+    return `weeklyChallenges:${this.childId() || 'pf'}`;
   },
 
-  renderWeeklyQuestion() {
-    const state = this.activeWeeklyQuiz;
-    const player = document.getElementById('weeklyQuizPlayer');
-    if (!state || !player) return;
-    const question = state.quiz.questions[state.index];
-    const progress = Math.round(((state.index + 1) / state.quiz.questions.length) * 100);
-    player.classList.remove('d-none');
-    player.innerHTML = `
-      <header class="mb-3">
-        <p class="small text-muted mb-1">Pergunta ${state.index + 1} de ${state.quiz.questions.length}</p>
-        <div class="progress weekly-quiz-progress" role="progressbar" aria-valuenow="${progress}" aria-valuemin="0" aria-valuemax="100">
-          <div class="progress-bar" style="width:${progress}%"></div>
-        </div>
-      </header>
-      <h3 class="h4 mb-4">${this.escape(question.prompt)}</h3>
-      <section class="weekly-quiz-options">
-        ${question.options.map((option) => `<button class="weekly-quiz-option" type="button" data-weekly-answer="${this.escape(option)}">${this.escape(option)}</button>`).join('')}
-      </section>`;
-    player.querySelectorAll('[data-weekly-answer]').forEach(button => {
-      button.addEventListener('click', () => this.answerWeeklyQuiz(button.dataset.weeklyAnswer));
-    });
-  },
-
-  answerWeeklyQuiz(answer) {
-    const state = this.activeWeeklyQuiz;
-    if (!state) return;
-    state.answers[state.index] = answer;
-    if (state.index < state.quiz.questions.length - 1) {
-      state.index += 1;
-      this.renderWeeklyQuestion();
-      return;
+  completedWeeklyChallenges() {
+    try {
+      return new Set(JSON.parse(localStorage.getItem(this.weeklyChallengeStorageKey()) || '[]'));
+    } catch (_) {
+      return new Set();
     }
-    this.finishWeeklyQuiz();
   },
 
-  finishWeeklyQuiz() {
-    const state = this.activeWeeklyQuiz;
-    const player = document.getElementById('weeklyQuizPlayer');
-    if (!state || !player) return;
-    const isStrengths = state.quiz.slug === 'meus-superpoderes';
-    const highlights = state.answers.slice(0, 3).map(answer => answer.replace(/^\S+\s*/, '')).join(', ');
-    const feedback = isStrengths
-      ? `Seus superpoderes incluem ${highlights}. Cada um deles torna seu jeito de aprender e ajudar muito especial!`
-      : `${state.quiz.feedback} Quando precisar, lembre que respirar, pedir ajuda ou fazer uma pausa são escolhas muito corajosas.`;
-    localStorage.setItem(`weeklyQuiz:${state.quiz.slug}:${this.childId()}`, JSON.stringify({
-      answers: state.answers,
-      completedAt: new Date().toISOString()
-    }));
-    player.innerHTML = `
-      <section class="text-center py-3">
-        <div class="weekly-quiz-result-icon" aria-hidden="true">${isStrengths ? '🌟' : '🌈'}</div>
-        <h3 class="h4 mt-3">Você conseguiu!</h3>
-        <p class="weekly-quiz-feedback">${this.escape(feedback)}</p>
-        <button class="btn btn-outline-primary" type="button" data-restart-weekly>Responder novamente</button>
+  openWeeklyChallenge(challenge) {
+    const detail = document.getElementById('weeklyChallengeDetail');
+    if (!challenge || !detail) return;
+    const completed = this.completedWeeklyChallenges().has(challenge.id);
+    detail.classList.remove('d-none');
+    detail.innerHTML = `
+      <section class="weekly-challenge-detail__icon" aria-hidden="true">${challenge.icone}</section>
+      <section class="weekly-challenge-detail__content">
+        <span class="weekly-challenge-detail__eyebrow">Sua missão</span>
+        <h2 class="h3">${this.escape(challenge.titulo)}</h2>
+        <p class="weekly-challenge-detail__mission">${this.escape(challenge.missao)}</p>
+        <p class="weekly-challenge-detail__tip"><span aria-hidden="true">💡</span> ${this.escape(challenge.dica)}</p>
+        <section class="weekly-challenge-detail__actions">
+          <button class="btn btn-primary" type="button" data-complete-challenge="${challenge.id}">
+            ${completed ? 'Já concluí esta missão ⭐' : 'Concluí minha missão!'}
+          </button>
+          <button class="btn btn-outline-primary" type="button" data-close-challenge>Escolher outra</button>
+        </section>
       </section>`;
-    player.querySelector('[data-restart-weekly]')?.addEventListener('click', () => this.startWeeklyQuiz(state.quiz));
+    detail.querySelector('[data-complete-challenge]').addEventListener('click', () => this.completeWeeklyChallenge(challenge.id));
+    detail.querySelector('[data-close-challenge]').addEventListener('click', () => {
+      detail.classList.add('d-none');
+      document.getElementById('desafiosList')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    detail.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  },
+
+  completeWeeklyChallenge(challengeId) {
+    const completed = this.completedWeeklyChallenges();
+    completed.add(challengeId);
+    localStorage.setItem(this.weeklyChallengeStorageKey(), JSON.stringify([...completed]));
+    const card = document.querySelector(`[data-open-challenge="${challengeId}"]`)?.closest('.weekly-challenge-card');
+    card?.classList.add('is-complete');
+    if (card) {
+      card.querySelector('.weekly-challenge-card__status').textContent = '⭐ Missão concluída!';
+      card.querySelector('.weekly-challenge-card__button').textContent = 'Ver novamente';
+    }
+    const detail = document.getElementById('weeklyChallengeDetail');
+    if (detail) {
+      detail.querySelector('[data-complete-challenge]').textContent = 'Você conseguiu! ⭐';
+      detail.classList.add('is-complete');
+    }
+    this.renderWeeklyProgress();
+  },
+
+  renderWeeklyProgress() {
+    const progress = document.getElementById('weeklyProgress');
+    if (!progress) return;
+    const count = this.completedWeeklyChallenges().size;
+    const total = this.desafiosPf.length;
+    const percentage = Math.round((count / total) * 100);
+    progress.innerHTML = `
+      <section>
+        <strong>${count === 0 ? 'Sua semana começa aqui!' : `${count} ${count === 1 ? 'missão concluída' : 'missões concluídas'}`}</strong>
+        <span>${count === total ? 'Que semana incrível! Você completou todas as missões.' : 'Cada pequena conquista merece comemoração.'}</span>
+      </section>
+      <section class="weekly-progress-card__bar" aria-label="${percentage}% das missões concluídas">
+        <span style="width:${percentage}%"></span>
+      </section>
+      <strong class="weekly-progress-card__count">${count}/${total}</strong>`;
   },
 
   escape(value) {

@@ -51,11 +51,18 @@
             </ul>
         </section>
       </nav>
-      <main class="col-12 col-lg-10 ms-lg-auto dashboard-main-content px-3 px-lg-4 py-4">
-        <h1 class="text-zupi-primary mb-2">Desafios</h1>
-        <h2 class="h5 mb-4">Desafio semanal</h2>
-        <section id="desafiosList">
-          <article class="desafio-quiz-card mb-3" role="button" tabindex="0">Quiz</article>
+      <main class="col-12 col-lg-10 ms-lg-auto dashboard-main-content px-3 px-lg-4 py-4 weekly-challenges-page">
+        <header class="weekly-challenges-hero mb-4">
+          <section>
+            <span class="weekly-challenges-eyebrow">Uma aventura por vez</span>
+            <h1 class="text-zupi-primary mb-2">Desafios Semanais</h1>
+            <p class="text-muted mb-0">Escolha uma missão divertida, faça no seu tempo e celebre cada conquista.</p>
+          </section>
+          <span class="weekly-challenges-hero__mascot" aria-hidden="true">🌟</span>
+        </header>
+        <section class="weekly-progress-card mb-4" id="weeklyProgress" aria-live="polite"></section>
+        <section id="desafiosList" class="row g-4" aria-label="Lista de desafios semanais">
+          <section class="col-12"><p class="text-muted text-center">Preparando suas missões...</p></section>
         </section>
       </main>
     </section>
