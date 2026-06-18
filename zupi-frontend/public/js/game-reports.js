@@ -71,6 +71,11 @@ const ZupiGameReports = (() => {
     return !['ESCOLA', 'DOCENTE', 'ALUNO_CREDENCIADO', 'RESPONSAVEL_CREDENCIADO'].includes(type);
   }
 
+  function freshUrl(path) {
+    const separator = path.includes('?') ? '&' : '?';
+    return `${path}${separator}_=${Date.now()}`;
+  }
+
   function mergeSessions(apiSessions, childId, options = {}) {
     const includeLocal = options.includeLocal ?? shouldIncludeLocalSessions();
     const all = [
@@ -90,7 +95,7 @@ const ZupiGameReports = (() => {
   async function fetchApiSessions(childId) {
     if (!childId || typeof ZupiAPI === 'undefined') return [];
     try {
-      const response = await ZupiAPI.get(`/child/${childId}/games/sessions`, { skipAuthRedirect: true });
+      const response = await ZupiAPI.get(freshUrl(`/child/${childId}/games/sessions`), { skipAuthRedirect: true, cache: 'no-store' });
       if (response && response.ok) return await response.json();
     } catch (e) {
       console.warn('Relatorios usando dados locais dos jogos.', e);

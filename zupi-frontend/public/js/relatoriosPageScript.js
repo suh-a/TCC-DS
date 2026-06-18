@@ -36,9 +36,11 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     const childId = getChildId();
     if (!childId) {
-        window.location.href = '/selecao-relatorios';
+        window.location.href = getReportFallbackPath();
         return;
     }
+
+    setupReportBackLink(childId);
 
     localStorage.setItem('activeChildId', childId);
     localStorage.setItem('childId', childId);
@@ -56,9 +58,75 @@ function getChildId() {
         || localStorage.getItem('childId');
 }
 
+function freshUrl(path) {
+    const separator = path.includes('?') ? '&' : '?';
+    return `${path}${separator}_=${Date.now()}`;
+}
+
+function safeLocalPath(value) {
+    if (!value) return '';
+    try {
+        const url = new URL(value, window.location.origin);
+        if (url.origin !== window.location.origin) return '';
+        return `${url.pathname}${url.search}${url.hash}`;
+    } catch (_) {
+        return '';
+    }
+}
+
+function getReportFallbackPath(childId = getChildId()) {
+    const type = typeof ZupiAPI !== 'undefined' ? ZupiAPI.getUser().type : '';
+    const encodedChildId = childId ? encodeURIComponent(childId) : '';
+
+    if (type === 'ESCOLA') return '/dashboard-escola#relatorios';
+    if (type === 'DOCENTE') return '/dashboard-docente#relatorios';
+    if (type === 'RESPONSAVEL_CREDENCIADO') return '/dashboard-responsavel-credenciado#relatorios-escola';
+    if (type === 'ALUNO_CREDENCIADO') return encodedChildId ? `/perfil-crianca?childId=${encodedChildId}` : '/dashboard-aluno-credenciado';
+    if (type === 'CRIANCA') return encodedChildId ? `/perfil-crianca?childId=${encodedChildId}` : '/dashboard-crianca';
+    if (type === 'ADMIN') return '/dashboard-admin';
+    return '/selecao-relatorios';
+}
+
+function resolveReportBackPath(childId) {
+    const params = new URLSearchParams(window.location.search);
+    const explicitReturn = safeLocalPath(params.get('returnTo'));
+    if (explicitReturn) return explicitReturn;
+
+    const referrer = safeLocalPath(document.referrer);
+    if (referrer.startsWith('/perfil-crianca')) {
+        return `/perfil-crianca?childId=${encodeURIComponent(childId)}`;
+    }
+
+    const userType = typeof ZupiAPI !== 'undefined' ? ZupiAPI.getUser().type : '';
+    if (userType === 'RESPONSAVEL' && localStorage.getItem('activeProfile') === 'CRIANCA') {
+        return `/perfil-crianca?childId=${encodeURIComponent(childId)}`;
+    }
+
+    return getReportFallbackPath(childId);
+}
+
+function labelForBackPath(path) {
+    if (path.includes('/perfil-crianca')) return '\u2190 Voltar ao perfil';
+    if (path.includes('/dashboard-escola')) return '\u2190 Voltar ao painel da escola';
+    if (path.includes('/dashboard-docente')) return '\u2190 Voltar ao painel do docente';
+    if (path.includes('/dashboard-responsavel-credenciado')) return '\u2190 Voltar ao painel do responsavel';
+    if (path.includes('/dashboard-aluno-credenciado') || path.includes('/dashboard-crianca')) return '\u2190 Voltar ao painel';
+    if (path.includes('/dashboard-admin')) return '\u2190 Voltar ao painel admin';
+    return '\u2190 Trocar perfil';
+}
+
+function setupReportBackLink(childId) {
+    const backLink = document.querySelector('main a[href="/selecao-relatorios"]')
+        || document.querySelector('a[href="/selecao-relatorios"]');
+    if (!backLink) return;
+    const path = resolveReportBackPath(childId);
+    backLink.href = path;
+    backLink.textContent = labelForBackPath(path);
+}
+
 async function loadChildHeader(childId) {
     try {
-        const response = await ZupiAPI.get(`/child/details/${childId}`, { skipAuthRedirect: true });
+        const response = await ZupiAPI.get(freshUrl(`/child/details/${childId}`), { skipAuthRedirect: true, cache: 'no-store' });
         if (!response || !response.ok) return;
         const child = await response.json();
 
@@ -93,9 +161,9 @@ async function loadCharts(childId) {
 
     try {
         const [avgRes, progRes, sessRes] = await Promise.all([
-            ZupiAPI.get(`/child/${childId}/reports/avg`, { skipAuthRedirect: true }),
-            ZupiAPI.get(`/child/${childId}/games/progress`, { skipAuthRedirect: true }),
-            ZupiAPI.get(`/child/${childId}/games/sessions`, { skipAuthRedirect: true })
+            ZupiAPI.get(freshUrl(`/child/${childId}/reports/avg`), { skipAuthRedirect: true, cache: 'no-store' }),
+            ZupiAPI.get(freshUrl(`/child/${childId}/games/progress`), { skipAuthRedirect: true, cache: 'no-store' }),
+            ZupiAPI.get(freshUrl(`/child/${childId}/games/sessions`), { skipAuthRedirect: true, cache: 'no-store' })
         ]);
 
         if (avgRes && avgRes.ok) averages = await avgRes.json();

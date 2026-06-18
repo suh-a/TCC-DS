@@ -35,13 +35,13 @@
         <div class="d-flex flex-column p-4 h-100">
           <div class="navbar-brand text-white mb-4 fs-3 fw-bold">Zupi</div>
           <ul class="nav nav-pills flex-column">
-            <li class="nav-item mb-2"><a class="nav-link text-white active" href="/dashboard-docente">Dashboard</a></li>
-            <li class="nav-item mb-2"><a class="nav-link text-white" href="#" onclick="showSection('turmas')">Minhas Turmas</a></li>
-            <li class="nav-item mb-2"><a class="nav-link text-white" href="#" onclick="showSection('atividades')">Atividades</a></li>
-            <li class="nav-item mb-2"><a class="nav-link text-white" href="#" onclick="showSection('quizzes')">Quizzes</a></li>
-            <li class="nav-item mb-2"><a class="nav-link text-white" href="#" onclick="showSection('relatorios')">Relatórios</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white active" data-section="dashboard" href="/dashboard-docente" onclick="showSection('dashboard'); return false;">Perfil</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" data-section="turmas" href="#turmas" onclick="showSection('turmas'); return false;">Turmas</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" data-section="relatorios" href="#relatorios" onclick="showSection('relatorios'); return false;">Relatorios</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" data-section="atividades" href="#atividades" onclick="showSection('atividades'); return false;">Atividades</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" data-section="quizzes" href="#quizzes" onclick="showSection('quizzes'); return false;">Quizzes</a></li>
             <li class="nav-item mb-2"><a class="nav-link text-white" href="/biblioteca">Biblioteca</a></li>
-            <li class="nav-item mb-2"><a class="nav-link text-white" href="#" onclick="showSection('ajuda')">Ajuda</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" href="/configuracoes">Configuracoes</a></li>
             <li class="nav-item mt-auto"><a class="nav-link text-white" href="#" data-action="logout">Sair</a></li>
           </ul>
         </div>
@@ -55,13 +55,13 @@
         </div>
         <div class="offcanvas-body p-0">
           <ul class="nav nav-pills flex-column p-4">
-            <li class="nav-item mb-2"><a class="nav-link text-white active" href="/dashboard-docente">Dashboard</a></li>
-            <li class="nav-item mb-2"><a class="nav-link text-white" href="#" onclick="showSection('turmas')">Minhas Turmas</a></li>
-            <li class="nav-item mb-2"><a class="nav-link text-white" href="#" onclick="showSection('atividades')">Atividades</a></li>
-            <li class="nav-item mb-2"><a class="nav-link text-white" href="#" onclick="showSection('quizzes')">Quizzes</a></li>
-            <li class="nav-item mb-2"><a class="nav-link text-white" href="#" onclick="showSection('relatorios')">Relatórios</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white active" data-section="dashboard" href="/dashboard-docente" onclick="showSection('dashboard'); return false;">Perfil</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" data-section="turmas" href="#turmas" onclick="showSection('turmas'); return false;">Turmas</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" data-section="relatorios" href="#relatorios" onclick="showSection('relatorios'); return false;">Relatorios</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" data-section="atividades" href="#atividades" onclick="showSection('atividades'); return false;">Atividades</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" data-section="quizzes" href="#quizzes" onclick="showSection('quizzes'); return false;">Quizzes</a></li>
             <li class="nav-item mb-2"><a class="nav-link text-white" href="/biblioteca">Biblioteca</a></li>
-            <li class="nav-item mb-2"><a class="nav-link text-white" href="#" onclick="showSection('ajuda')">Ajuda</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" href="/configuracoes">Configuracoes</a></li>
             <li class="nav-item mt-auto"><a class="nav-link text-white" href="#" data-action="logout">Sair</a></li>
           </ul>
         </div>
@@ -237,9 +237,14 @@
   <script src="/js/main.js"></script>
   <script>
       function showSection(name) {
+        const allowedSections = new Set(['dashboard', 'turmas', 'relatorios', 'atividades', 'quizzes']);
+        if (!allowedSections.has(name)) name = 'dashboard';
         document.querySelectorAll('main > section').forEach(s => s.classList.add('d-none'));
         const target = document.getElementById('section-' + name);
         if (target) target.classList.remove('d-none');
+        document.querySelectorAll('[data-section]').forEach(link => {
+          link.classList.toggle('active', link.dataset.section === name);
+        });
         if (name && name !== 'dashboard') {
           history.replaceState(null, '', '#' + name);
         } else {

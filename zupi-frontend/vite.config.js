@@ -12,6 +12,8 @@ const ROUTE_ALIASES = {
   '/perfil': '/perfil-criancas.html',
   '/jogoMath': '/JogoMath.html',
   '/JogoLigarObjetos': '/jogo-ligar-objetos.html',
+  '/jogoLigarObjetos': '/jogo-ligar-objetos.html',
+  '/jogoCoresFormas': '/jogo-cores-formas.html',
 };
 
 function buildHtmlRoutes(rootDir) {

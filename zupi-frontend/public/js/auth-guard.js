@@ -84,6 +84,10 @@ const ZupiAuthGuard = (() => {
         return path === '/relatorios';
     }
 
+    function isSharedSettingsArea(path = normalizePath()) {
+        return path === '/configuracoes';
+    }
+
     const ROLE_AREAS = [
         { paths: ['/dashboard-escola'], roles: ['ESCOLA', 'ADMIN'] },
         { paths: ['/dashboard-docente'], roles: ['DOCENTE', 'ADMIN'] },
@@ -125,6 +129,8 @@ const ZupiAuthGuard = (() => {
 
         const responsibleAreaRoles = isSchoolChildReportArea(path)
             ? ['RESPONSAVEL', 'RESPONSAVEL_CREDENCIADO', 'ESCOLA', 'DOCENTE', 'ALUNO_CREDENCIADO', 'ADMIN']
+            : isSharedSettingsArea(path)
+                ? ['RESPONSAVEL', 'RESPONSAVEL_CREDENCIADO', 'ESCOLA', 'DOCENTE', 'ADMIN']
             : ['RESPONSAVEL', 'RESPONSAVEL_CREDENCIADO', 'ADMIN'];
         if (isResponsibleArea(path) && type && !responsibleAreaRoles.includes(type)) {
             window.location.href = `/403?from=${encodeURIComponent(path)}`;

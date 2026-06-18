@@ -57,6 +57,7 @@
     { "source": "/jogoMosaico", "destination": "/jogoMosaico.html" },
     { "source": "/jogoCenarios", "destination": "/jogoCenarios.html" },
     { "source": "/JogoLigarObjetos", "destination": "/jogo-ligar-objetos.html" },
+    { "source": "/jogoLigarObjetos", "destination": "/jogo-ligar-objetos.html" },
     { "source": "/jogo-ligar-objetos", "destination": "/jogo-ligar-objetos.html" },
     { "source": "/jogoSombras", "destination": "/jogoSombras.html" },
     { "source": "/jogoMath", "destination": "/JogoMath.html" },

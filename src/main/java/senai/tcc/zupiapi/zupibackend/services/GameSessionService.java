@@ -20,12 +20,38 @@ import java.util.Map;
 @Service
 public class GameSessionService {
 
-    private static final Map<String, Long> GAME_SKILL_MAP = Map.of(
-            "jogoMemoria", 1L,
-            "jogoMath", 2L,
-            "jogoPalavras", 3L,
-            "jogoCoresFormas", 4L,
-            "jogoSequencia", 5L
+    private static final String COGNICAO = "Cogni\u00e7\u00e3o";
+    private static final String COMUNICACAO = "Comunica\u00e7\u00e3o";
+    private static final String MOTRICIDADE = "Motricidade";
+    private static final String REGULACAO = "Regula\u00e7\u00e3o Emocional";
+
+    private static final Map<String, String> GAME_SKILL_NAME_MAP = Map.ofEntries(
+            Map.entry("jogoMemoria", COGNICAO),
+            Map.entry("jogoMath", COGNICAO),
+            Map.entry("JogoMath", COGNICAO),
+            Map.entry("jogoContagem", COGNICAO),
+            Map.entry("jogoOrdem", COGNICAO),
+            Map.entry("jogoSequencia", COGNICAO),
+            Map.entry("jogoSequenciaSons", COGNICAO),
+            Map.entry("jogoPadroes", COGNICAO),
+            Map.entry("jogoRotas", COGNICAO),
+            Map.entry("jogoFocoCores", COGNICAO),
+            Map.entry("jogoSombras", COGNICAO),
+            Map.entry("jogoCoresFormas", COGNICAO),
+            Map.entry("jogo-cores-formas", COGNICAO),
+            Map.entry("jogo-ligar-objetos", COGNICAO),
+            Map.entry("jogoPalavras", COMUNICACAO),
+            Map.entry("jogoLetra", COMUNICACAO),
+            Map.entry("jogoColorir", MOTRICIDADE),
+            Map.entry("jogoPintura", MOTRICIDADE),
+            Map.entry("jogoMosaico", MOTRICIDADE),
+            Map.entry("jogoCenarios", MOTRICIDADE),
+            Map.entry("jogoBolhas", MOTRICIDADE),
+            Map.entry("jogoClique", MOTRICIDADE),
+            Map.entry("jogoBalao", MOTRICIDADE),
+            Map.entry("jogoCatch", MOTRICIDADE),
+            Map.entry("jogoBolao", MOTRICIDADE),
+            Map.entry("jogoBomba", REGULACAO)
     );
 
     @Autowired
@@ -57,12 +83,8 @@ public class GameSessionService {
         session.setDurationSeconds(request.durationSeconds());
         session.setPlayedAt(LocalDateTime.now());
 
-        Long skillId = request.skillAreaId() != null
-                ? request.skillAreaId()
-                : GAME_SKILL_MAP.get(request.gameId());
-
-        if (skillId != null) {
-            SkillArea area = skillAreaRepository.findById(skillId).orElse(null);
+        SkillArea area = resolveSkillArea(request);
+        if (area != null) {
             session.setSkillArea(area);
         }
 
@@ -74,5 +96,17 @@ public class GameSessionService {
     public List<GameSession> findByChild(Long childId) {
         accessControl.ensureCanAccessChild(childId);
         return gameSessionRepository.findByChildIdOrderByPlayedAtDesc(childId);
+    }
+
+    private SkillArea resolveSkillArea(GameSessionRequest request) {
+        if (request.skillAreaId() != null) {
+            return skillAreaRepository.findById(request.skillAreaId()).orElse(null);
+        }
+
+        String skillName = GAME_SKILL_NAME_MAP.get(request.gameId());
+        if (skillName == null) {
+            return null;
+        }
+        return skillAreaRepository.findByName(skillName);
     }
 }
