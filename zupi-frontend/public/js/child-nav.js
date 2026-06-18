@@ -13,6 +13,7 @@ const ChildNav = (() => {
         { id: 'jogos', href: '/menuJogos', label: 'Jogos' },
         { id: 'atividades', href: '/atividades-interativas', label: 'Atividades' },
         { id: 'desafios', href: '/desafios-semanais', label: 'Desafios semanais' },
+        { id: 'biblioteca', href: '/biblioteca', label: 'Biblioteca' },
         { id: 'perfil', href: '/perfil-crianca', label: 'Perfil' }
     ];
 
@@ -48,11 +49,15 @@ const ChildNav = (() => {
         const childId = resolveChildId() || (['CRIANCA', 'ALUNO_CREDENCIADO'].includes(user.type) ? user.id : null);
 
         const childContext = isChildContext(user);
+        const includeExit = childContext && user.type !== 'ALUNO_CREDENCIADO';
 
-        if (childContext && user.type !== 'ALUNO_CREDENCIADO') {
+        if (childContext) {
             document.querySelectorAll('[data-pf-sidebar]').forEach(menu => {
-                menu.innerHTML = menuItemsHtml(active, true);
+                menu.innerHTML = menuItemsHtml(active, includeExit);
                 menu.classList.remove('pf-sidebar-nav');
+            });
+            document.querySelectorAll('.dashboard-sidebar ul.nav:not([data-pf-sidebar]), .dashboard-offcanvas ul.nav:not([data-pf-sidebar])').forEach(menu => {
+                menu.innerHTML = menuItemsHtml(active, includeExit);
             });
             if (!document.getElementById('dashboardOffcanvas')) {
                 document.body.insertAdjacentHTML('afterbegin', `
@@ -62,7 +67,7 @@ const ChildNav = (() => {
                       <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Fechar"></button>
                     </div>
                     <nav class="offcanvas-body p-0" aria-label="Navegação infantil">
-                      <ul class="nav nav-pills flex-column p-4">${menuItemsHtml(active, true)}</ul>
+                      <ul class="nav nav-pills flex-column p-4">${menuItemsHtml(active, includeExit)}</ul>
                     </nav>
                   </div>`);
             }

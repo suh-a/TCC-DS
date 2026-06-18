@@ -79,9 +79,15 @@
           </div>
         </section>
 
-        <section id="ajuda-escola">
-          <h2 class="h4 mb-3">Ajuda</h2>
-          <div class="card"><div class="card-body"><p class="text-muted mb-0">Use os relatórios e a biblioteca para acompanhar os alunos vinculados pela escola.</p></div></div>
+        <section id="chat-escola">
+          <h2 class="h4 mb-3">Chat escolar</h2>
+          <div class="card"><div class="card-body">
+            <div id="responsibleChatMessages" class="border rounded p-3 mb-3" style="max-height: 260px; overflow:auto;"></div>
+            <form id="responsibleChatForm" class="d-flex gap-2">
+              <input class="form-control" id="responsibleChatInput" placeholder="Mensagem para escola e professores" required>
+              <button class="btn btn-primary" type="submit">Enviar</button>
+            </form>
+          </div></div>
         </section>
       </main>
     </div>

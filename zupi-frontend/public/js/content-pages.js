@@ -21,12 +21,45 @@ const ContentPages = {
   ],
 
   childId() {
-    return localStorage.getItem('activeChildId') || localStorage.getItem('selectedChildId') || '1';
+    const user = typeof ZupiAPI !== 'undefined' ? ZupiAPI.getUser() : {};
+    return localStorage.getItem('activeChildId')
+      || localStorage.getItem('selectedChildId')
+      || (['CRIANCA', 'ALUNO_CREDENCIADO'].includes(user.type) ? user.id : null);
+  },
+
+  isSchoolContext() {
+    const type = typeof ZupiAPI !== 'undefined' ? ZupiAPI.getUser().type : null;
+    return ['ALUNO_CREDENCIADO', 'RESPONSAVEL_CREDENCIADO', 'ESCOLA', 'DOCENTE'].includes(type);
   },
 
   async loadAtividades() {
     const el = document.getElementById('atividadesList');
     if (!el) return;
+    if (this.isSchoolContext()) {
+      const childId = this.childId();
+      if (!childId) {
+        el.innerHTML = '<section class="col-12"><p class="text-muted text-center">Selecione um aluno para ver as atividades da turma.</p></section>';
+        return;
+      }
+      const items = (await ZupiAPI.fetchJson(`/content/school/activities/${childId}`, { skipAuthRedirect: true })) || [];
+      if (!items.length) {
+        el.innerHTML = '<section class="col-12"><p class="text-muted text-center">Nenhuma atividade publicada para esta turma.</p></section>';
+        return;
+      }
+      el.innerHTML = items.map((atividade) => `
+        <section class="col-12 col-md-6 col-xl-4">
+          <article class="activity-card h-100">
+            <span class="activity-card__badge" aria-hidden="true">${this.escape(atividade.className || 'Turma')}</span>
+            <h2 class="activity-card__title">${this.escape(atividade.title)}</h2>
+            <p class="activity-card__description">${this.escape(atividade.description || '')}</p>
+            ${atividade.deadline ? `<p class="activity-card__objective"><strong>Prazo:</strong> ${new Date(atividade.deadline + 'T00:00:00').toLocaleDateString('pt-BR')}</p>` : ''}
+            <section class="activity-card__actions" aria-label="Acoes para ${this.escape(atividade.title)}">
+              ${atividade.link ? `<a class="btn btn-primary" href="${this.escape(atividade.link)}" target="_blank" rel="noopener">Abrir atividade</a>` : ''}
+            </section>
+          </article>
+        </section>`).join('');
+      return;
+    }
     el.innerHTML = this.atividades.map((atividade) => `
       <section class="col-12 col-md-6 col-xl-4">
         <article class="activity-card h-100">
@@ -96,6 +129,26 @@ const ContentPages = {
     const user = ZupiAPI.getUser();
     const isPfChild = user.type === 'CRIANCA'
       || (user.type === 'RESPONSAVEL' && localStorage.getItem('activeProfile') === 'CRIANCA');
+    if (this.isSchoolContext()) {
+      const childId = this.childId();
+      if (!childId) {
+        el.innerHTML = '<p class="text-muted text-center">Selecione um aluno para ver os desafios da turma.</p>';
+        return;
+      }
+      const items = (await ZupiAPI.fetchJson(`/content/school/desafios-semanais/${childId}`, { skipAuthRedirect: true })) || [];
+      if (!items.length) {
+        el.innerHTML = '<p class="text-muted text-center">Nenhum desafio semanal publicado para esta turma.</p>';
+        return;
+      }
+      el.innerHTML = items.map((q) => `
+        <article class="desafio-quiz-card mb-3">
+          <h3 class="h5 mb-1">${this.escape(q.title || 'Quiz')}</h3>
+          <p class="mb-1">${this.escape(q.description || '')}</p>
+          <span class="badge rounded-pill text-bg-light">${this.escape(q.className || 'Turma')}</span>
+        </article>
+      `).join('');
+      return;
+    }
     const endpoint = isPfChild ? '/content/pf/desafios-semanais' : '/content/desafios-semanais';
     const items = (await ZupiAPI.fetchJson(endpoint)) || [];
     if (!items.length) return;

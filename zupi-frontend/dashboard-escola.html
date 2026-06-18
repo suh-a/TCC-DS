@@ -294,6 +294,16 @@
         <section id="section-ajuda" class="d-none">
           <button class="btn btn-outline-primary btn-sm mb-3" onclick="showSection('dashboard')">← Voltar</button>
           <h2 class="h3 text-zupi-primary mb-4">Ajuda & Suporte</h2>
+          <div class="card mb-4">
+            <div class="card-body">
+              <h3 class="h5">Chat escolar</h3>
+              <div id="schoolChatMessages" class="border rounded p-3 mb-3" style="max-height: 260px; overflow:auto;"></div>
+              <form id="schoolChatForm" class="d-flex gap-2">
+                <input class="form-control" id="schoolChatInput" placeholder="Mensagem para docentes e responsáveis" required>
+                <button class="btn btn-primary" type="submit">Enviar</button>
+              </form>
+            </div>
+          </div>
           <div class="card">
             <div class="card-body">
               <form id="supportForm">
@@ -377,9 +387,10 @@
                 <input type="date" class="form-control" id="studentBirthdate" required>
               </div>
               <div class="col-md-6 mb-3">
-                <label for="studentGrade" class="form-label">Ano Escolar</label>
-                <input type="text" class="form-control" id="studentGrade" list="schoolClassesDatalist" placeholder="Ex: 3º Ano" required>
-                <datalist id="schoolClassesDatalist"></datalist>
+                <label for="studentGrade" class="form-label">Turma</label>
+                <select class="form-select" id="studentGrade" required>
+                  <option value="">Crie ou selecione uma turma</option>
+                </select>
               </div>
             </div>
             <hr>
@@ -601,14 +612,15 @@
         try {
           console.log('URL listar alunos:', ZupiAPI.buildUrl('/school/students'));
           console.log('URL listar professores:', ZupiAPI.buildUrl('/school/teachers'));
-          const [dashboard, students, teachers, classes, responsibles, accesses, report] = await Promise.all([
+          const [dashboard, students, teachers, classes, responsibles, accesses, report, chat] = await Promise.all([
             ZupiAPI.fetchJson('/school/dashboard'),
             ZupiAPI.fetchJson('/school/students'),
             ZupiAPI.fetchJson('/school/teachers'),
             ZupiAPI.fetchJson('/school/classes'),
             ZupiAPI.fetchJson('/school/responsibles'),
             ZupiAPI.fetchJson('/school/accesses'),
-            ZupiAPI.fetchJson('/school/reports/summary')
+            ZupiAPI.fetchJson('/school/reports/summary'),
+            ZupiAPI.fetchJson('/school/chat', { skipAuthRedirect: true })
           ]);
 
           schoolStudents = Array.isArray(students) ? students : [];
@@ -634,6 +646,7 @@
           renderClasses();
           renderAccesses();
           renderSchoolReports(report);
+          renderSchoolChat(Array.isArray(chat) ? chat : []);
           populateTeacherSelect();
           populateClassDatalist();
         } catch (err) {
@@ -817,14 +830,42 @@
       }
 
       function populateClassDatalist() {
-        const datalist = document.getElementById('schoolClassesDatalist');
-        if (!datalist) return;
-        datalist.textContent = '';
+        const select = document.getElementById('studentGrade');
+        if (!select) return;
+        const current = select.value;
+        select.innerHTML = '';
+        const placeholder = document.createElement('option');
+        placeholder.value = '';
+        placeholder.textContent = schoolClasses.length ? 'Selecione uma turma' : 'Nenhuma turma criada';
+        select.appendChild(placeholder);
         schoolClasses.forEach((schoolClass) => {
           const option = document.createElement('option');
           option.value = schoolClass.name;
-          datalist.appendChild(option);
+          option.textContent = schoolClass.teacherName
+            ? `${schoolClass.name} - ${schoolClass.teacherName}`
+            : schoolClass.name;
+          select.appendChild(option);
         });
+        if (current && schoolClasses.some((schoolClass) => schoolClass.name === current)) {
+          select.value = current;
+        }
+      }
+
+      function renderSchoolChat(messages) {
+        const container = document.getElementById('schoolChatMessages');
+        if (!container) return;
+        if (!messages.length) {
+          container.innerHTML = '<p class="text-muted mb-0">Nenhuma mensagem ainda.</p>';
+          return;
+        }
+        container.innerHTML = messages.map((item) => `
+          <div class="mb-2">
+            <strong>${escapeHtml(item.senderName || item.senderType || 'Usuario')}</strong>
+            <span class="text-muted small">${formatDateTime(item.createdAt)}</span>
+            <p class="mb-0">${escapeHtml(item.message)}</p>
+          </div>
+        `).join('');
+        container.scrollTop = container.scrollHeight;
       }
 
       function renderLoadError() {
@@ -847,6 +888,18 @@
 
       bindNumericMasks();
       loadSchoolData();
+
+      document.getElementById('schoolChatForm')?.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const input = document.getElementById('schoolChatInput');
+        const response = await ZupiAPI.post('/school/chat', { message: input?.value.trim() });
+        if (response?.ok) {
+          input.value = '';
+          await loadSchoolData();
+        } else if (response) {
+          alert(await ZupiAPI.readErrorMessage(response, 'Nao foi possivel enviar a mensagem.'));
+        }
+      });
 
       // Support form
       const supportForm = document.getElementById('supportForm');

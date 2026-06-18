@@ -88,7 +88,7 @@
             </div></div></div>
             <div class="col-md-3"><div class="card bg-zupi-highlight text-white"><div class="card-body text-center">
               <p class="small mb-1">Desafios Ativos</p>
-              <h3 class="mb-0">0</h3>
+              <h3 class="mb-0" id="statQuizzes">0</h3>
             </div></div></div>
           </div>
 
@@ -127,6 +127,12 @@
           <div class="card"><div class="card-body">
             <form id="activityForm">
               <div class="mb-3">
+                <label for="actClass" class="form-label">Turma</label>
+                <select class="form-select" id="actClass" required>
+                  <option value="">Carregando turmas...</option>
+                </select>
+              </div>
+              <div class="mb-3">
                 <label for="actTitle" class="form-label">Título</label>
                 <input type="text" class="form-control" id="actTitle" required>
               </div>
@@ -147,6 +153,7 @@
               <button type="submit" class="btn btn-primary">Publicar Atividade</button>
             </form>
           </div></div>
+          <div id="teacherActivitiesList" class="row g-3 mt-3"></div>
         </section>
 
         <!-- QUIZZES -->
@@ -154,8 +161,29 @@
           <button class="btn btn-outline-primary btn-sm mb-3" onclick="showSection('dashboard')">← Voltar</button>
           <h2 class="h3 text-zupi-primary mb-4">Criar Quiz / Desafio</h2>
           <div class="card"><div class="card-body">
-            <p class="text-muted">Funcionalidade de criação de quizzes será integrada em breve.</p>
+            <form id="quizForm">
+              <div class="mb-3">
+                <label for="quizClass" class="form-label">Turma</label>
+                <select class="form-select" id="quizClass" required>
+                  <option value="">Carregando turmas...</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="quizTitle" class="form-label">Título</label>
+                <input type="text" class="form-control" id="quizTitle" required>
+              </div>
+              <div class="mb-3">
+                <label for="quizDescription" class="form-label">Descrição</label>
+                <textarea class="form-control" id="quizDescription" rows="3"></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="quizQuestions" class="form-label">Perguntas</label>
+                <textarea class="form-control" id="quizQuestions" rows="5" placeholder="Ex: Pergunta 1 | alternativa A; alternativa B"></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">Publicar Quiz</button>
+            </form>
           </div></div>
+          <div id="teacherQuizzesList" class="row g-3 mt-3"></div>
         </section>
 
         <!-- RELATORIOS -->
@@ -171,6 +199,14 @@
         <section id="section-ajuda" class="d-none">
           <button class="btn btn-outline-primary btn-sm mb-3" onclick="showSection('dashboard')">← Voltar</button>
           <h2 class="h3 text-zupi-primary mb-4">Ajuda & Suporte</h2>
+          <div class="card mb-4"><div class="card-body">
+            <h3 class="h5">Chat escolar</h3>
+            <div id="teacherChatMessages" class="border rounded p-3 mb-3" style="max-height: 260px; overflow:auto;"></div>
+            <form id="teacherChatForm" class="d-flex gap-2">
+              <input class="form-control" id="teacherChatInput" placeholder="Mensagem para escola e responsáveis" required>
+              <button class="btn btn-primary" type="submit">Enviar</button>
+            </form>
+          </div></div>
           <div class="card"><div class="card-body">
             <form id="supportFormDocente">
               <div class="mb-3">
@@ -200,11 +236,16 @@
   <script src="/js/auth-guard.js"></script>
   <script src="/js/main.js"></script>
   <script>
-    function showSection(name) {
-      document.querySelectorAll('main > section').forEach(s => s.classList.add('d-none'));
-      const target = document.getElementById('section-' + name);
-      if (target) target.classList.remove('d-none');
-    }
+      function showSection(name) {
+        document.querySelectorAll('main > section').forEach(s => s.classList.add('d-none'));
+        const target = document.getElementById('section-' + name);
+        if (target) target.classList.remove('d-none');
+        if (name && name !== 'dashboard') {
+          history.replaceState(null, '', '#' + name);
+        } else {
+          history.replaceState(null, '', window.location.pathname);
+        }
+      }
 
     document.addEventListener('DOMContentLoaded', function() {
       if (!ZupiAPI.requireAuth()) return;
@@ -249,10 +290,11 @@
         return new Set(students.map(s => s.schoolClass).filter(Boolean)).size;
       }
 
-      function renderTeacherClasses(students) {
+      function renderTeacherClasses(students, classes = []) {
         const container = document.getElementById('teacherClassesList');
         if (!container) return;
         const groups = new Map();
+        classes.forEach(schoolClass => groups.set(schoolClass.name || 'Turma sem nome', 0));
         students.forEach(student => {
           const label = student.schoolClass || 'Turma nao informada';
           groups.set(label, (groups.get(label) || 0) + 1);
@@ -313,25 +355,150 @@
         `;
       }
 
+      function renderOptionLists(classes) {
+        const html = classes.length
+          ? '<option value="">Selecione uma turma</option>' + classes.map(item => `<option value="${item.id}">${escapeHtml(item.name)}</option>`).join('')
+          : '<option value="">Nenhuma turma vinculada</option>';
+        ['actClass', 'quizClass'].forEach(id => {
+          const select = document.getElementById(id);
+          if (select) select.innerHTML = html;
+        });
+      }
+
+      function renderActivities(items) {
+        const container = document.getElementById('teacherActivitiesList');
+        if (!container) return;
+        if (!items.length) {
+          container.innerHTML = '<div class="col-12"><p class="text-muted text-center">Nenhuma atividade publicada ainda.</p></div>';
+          return;
+        }
+        container.innerHTML = items.map(item => `
+          <div class="col-md-6">
+            <div class="card h-100"><div class="card-body">
+              <span class="badge bg-light text-dark mb-2">${escapeHtml(item.className || 'Turma')}</span>
+              <h3 class="h6">${escapeHtml(item.title)}</h3>
+              <p class="small text-muted">${escapeHtml(item.description || '')}</p>
+              ${item.link ? `<a class="btn btn-sm btn-outline-primary" href="${escapeHtml(item.link)}" target="_blank" rel="noopener">Abrir</a>` : ''}
+            </div></div>
+          </div>
+        `).join('');
+      }
+
+      function renderQuizzes(items) {
+        const container = document.getElementById('teacherQuizzesList');
+        if (!container) return;
+        if (!items.length) {
+          container.innerHTML = '<div class="col-12"><p class="text-muted text-center">Nenhum quiz publicado ainda.</p></div>';
+          return;
+        }
+        container.innerHTML = items.map(item => `
+          <div class="col-md-6">
+            <div class="card h-100"><div class="card-body">
+              <span class="badge bg-light text-dark mb-2">${escapeHtml(item.className || 'Turma')}</span>
+              <h3 class="h6">${escapeHtml(item.title)}</h3>
+              <p class="small text-muted">${escapeHtml(item.description || '')}</p>
+            </div></div>
+          </div>
+        `).join('');
+      }
+
+      function renderChat(messages) {
+        const container = document.getElementById('teacherChatMessages');
+        if (!container) return;
+        if (!messages.length) {
+          container.innerHTML = '<p class="text-muted mb-0">Nenhuma mensagem ainda.</p>';
+          return;
+        }
+        container.innerHTML = messages.map(item => `
+          <div class="mb-2">
+            <strong>${escapeHtml(item.senderName || item.senderType || 'Usuario')}</strong>
+            <span class="text-muted small">${formatDateTime(item.createdAt)}</span>
+            <p class="mb-0">${escapeHtml(item.message)}</p>
+          </div>
+        `).join('');
+        container.scrollTop = container.scrollHeight;
+      }
+
       async function loadTeacherDashboard() {
         try {
-          const [dashboard, students, report] = await Promise.all([
-            ZupiAPI.fetchJson('/school/dashboard', { skipAuthRedirect: true }),
-            ZupiAPI.fetchJson('/school/students', { skipAuthRedirect: true }),
-            ZupiAPI.fetchJson('/school/reports/summary', { skipAuthRedirect: true })
+          const [dashboard, students, report, classes, activities, quizzes, chat] = await Promise.all([
+            ZupiAPI.fetchJson('/teacher/dashboard', { skipAuthRedirect: true }),
+            ZupiAPI.fetchJson('/teacher/students', { skipAuthRedirect: true }),
+            ZupiAPI.fetchJson('/teacher/reports/summary', { skipAuthRedirect: true }),
+            ZupiAPI.fetchJson('/teacher/classes', { skipAuthRedirect: true }),
+            ZupiAPI.fetchJson('/teacher/activities', { skipAuthRedirect: true }),
+            ZupiAPI.fetchJson('/teacher/quizzes', { skipAuthRedirect: true }),
+            ZupiAPI.fetchJson('/teacher/chat', { skipAuthRedirect: true })
           ]);
           const studentList = Array.isArray(students) ? students : [];
-          setText('statTurmas', dashboard?.classes ?? countClasses(studentList));
+          const classList = Array.isArray(classes) ? classes : [];
+          const activityList = Array.isArray(activities) ? activities : [];
+          const quizList = Array.isArray(quizzes) ? quizzes : [];
+          setText('statTurmas', dashboard?.classes ?? classList.length ?? countClasses(studentList));
           setText('statAlunos', dashboard?.students ?? studentList.length);
-          setText('statAtividades', dashboard?.games ?? report?.totalSessions ?? 0);
-          renderTeacherClasses(studentList);
+          setText('statAtividades', dashboard?.activities ?? activityList.length);
+          setText('statQuizzes', dashboard?.quizzes ?? quizList.length);
+          renderTeacherClasses(studentList, classList);
           renderTeacherReports(report);
+          renderOptionLists(classList);
+          renderActivities(activityList);
+          renderQuizzes(quizList);
+          renderChat(Array.isArray(chat) ? chat : []);
         } catch (err) {
           console.error('Erro ao carregar dashboard docente:', err);
         }
       }
 
+      document.getElementById('activityForm')?.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const response = await ZupiAPI.post('/teacher/activities', {
+          classId: Number(document.getElementById('actClass')?.value),
+          title: document.getElementById('actTitle')?.value.trim(),
+          description: document.getElementById('actDescription')?.value.trim(),
+          link: document.getElementById('actLink')?.value.trim() || null,
+          deadline: document.getElementById('actDeadline')?.value || null
+        });
+        if (response?.ok) {
+          event.target.reset();
+          await loadTeacherDashboard();
+          alert('Atividade publicada para a turma.');
+        } else if (response) {
+          alert(await ZupiAPI.readErrorMessage(response, 'Nao foi possivel publicar a atividade.'));
+        }
+      });
+
+      document.getElementById('quizForm')?.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const response = await ZupiAPI.post('/teacher/quizzes', {
+          classId: Number(document.getElementById('quizClass')?.value),
+          title: document.getElementById('quizTitle')?.value.trim(),
+          description: document.getElementById('quizDescription')?.value.trim(),
+          questionsJson: document.getElementById('quizQuestions')?.value.trim() || null
+        });
+        if (response?.ok) {
+          event.target.reset();
+          await loadTeacherDashboard();
+          alert('Quiz publicado como desafio semanal.');
+        } else if (response) {
+          alert(await ZupiAPI.readErrorMessage(response, 'Nao foi possivel publicar o quiz.'));
+        }
+      });
+
+      document.getElementById('teacherChatForm')?.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const input = document.getElementById('teacherChatInput');
+        const response = await ZupiAPI.post('/teacher/chat', { message: input?.value.trim() });
+        if (response?.ok) {
+          input.value = '';
+          await loadTeacherDashboard();
+        } else if (response) {
+          alert(await ZupiAPI.readErrorMessage(response, 'Nao foi possivel enviar a mensagem.'));
+        }
+      });
+
       loadTeacherDashboard();
+      const initialSection = (window.location.hash || '').replace('#', '');
+      if (initialSection) showSection(initialSection);
     });
   </script>
 </body>

@@ -31,7 +31,7 @@
             <li class="nav-item mb-2"><a class="nav-link text-white" href="/desafios-semanais">Desafios Semanais</a></li>
             <li class="nav-item mb-2"><a class="nav-link text-white" href="/biblioteca">Biblioteca</a></li>
             <li class="nav-item mb-2"><a class="nav-link text-white" href="/perfil-crianca">Perfil</a></li>
-            <li class="nav-item mt-auto"><a class="nav-link text-white" href="#" data-action="logout">Voltar ao Menu</a></li>
+            <li class="nav-item mt-auto"><a class="nav-link text-white" href="#" data-switch-responsible>Voltar ao Menu</a></li>
           </ul>
         </div>
       </nav>
@@ -49,7 +49,7 @@
             <li class="nav-item mb-2"><a class="nav-link text-white" href="/desafios-semanais">Desafios Semanais</a></li>
             <li class="nav-item mb-2"><a class="nav-link text-white" href="/biblioteca">Biblioteca</a></li>
             <li class="nav-item mb-2"><a class="nav-link text-white" href="/perfil-crianca">Perfil</a></li>
-            <li class="nav-item mt-auto"><a class="nav-link text-white" href="#" data-action="logout">Voltar ao Menu</a></li>
+            <li class="nav-item mt-auto"><a class="nav-link text-white" href="#" data-switch-responsible>Voltar ao Menu</a></li>
           </ul>
         </div>
       </div>
@@ -73,6 +73,34 @@
           <div class="col-md-4"><div class="card h-100"><div class="card-body text-center"><h2 class="h5">Perfil</h2><a class="btn btn-primary" href="/perfil-crianca">Abrir</a></div></div></div>
         </section>
       </main>
+    </div>
+  </div>
+
+  <div class="modal fade" id="switchResponsibleModal" tabindex="-1" aria-labelledby="switchResponsibleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-zupi-primary text-white">
+          <h5 class="modal-title" id="switchResponsibleModalLabel">Acesso do responsavel</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <form id="switchResponsibleForm">
+          <div class="modal-body">
+            <p class="text-muted small">Informe o e-mail e a senha do responsavel credenciado para voltar ao painel da escola.</p>
+            <div class="mb-3">
+              <label for="responsibleEmailSwitch" class="form-label">E-mail</label>
+              <input type="email" class="form-control" id="responsibleEmailSwitch" required>
+            </div>
+            <div class="mb-3">
+              <label for="responsiblePasswordSwitch" class="form-label">Senha</label>
+              <input type="password" class="form-control" id="responsiblePasswordSwitch" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Entrar</button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 

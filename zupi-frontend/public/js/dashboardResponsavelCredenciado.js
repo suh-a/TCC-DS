@@ -53,6 +53,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <div class="d-flex flex-wrap gap-2 mt-auto">
                             <a class="btn btn-outline-primary btn-sm" data-child-link="${escapeHtml(student.id)}" href="/relatorios?childId=${encodeURIComponent(student.id)}">Relatorios</a>
                             <a class="btn btn-primary btn-sm" data-child-link="${escapeHtml(student.id)}" href="/perfil-crianca?childId=${encodeURIComponent(student.id)}">Perfil</a>
+                            <a class="btn btn-outline-primary btn-sm" data-child-link="${escapeHtml(student.id)}" href="/atividades-interativas?childId=${encodeURIComponent(student.id)}">Atividades</a>
+                            <a class="btn btn-outline-primary btn-sm" data-child-link="${escapeHtml(student.id)}" href="/desafios-semanais?childId=${encodeURIComponent(student.id)}">Desafios</a>
                         </div>
                     </div>
                 </article>
@@ -61,6 +63,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderSummaryStats(summaries);
         renderReportsList(summaries);
         bindChildLinks();
+        await loadSchoolChat();
+        bindSchoolChat();
     } catch (error) {
         container.innerHTML = '<div class="col-12"><p class="text-danger">Nao foi possivel carregar o aluno vinculado.</p></div>';
     }
@@ -164,6 +168,55 @@ function bindChildLinks() {
             localStorage.setItem('selectedChildId', String(childId));
             localStorage.setItem('childId', String(childId));
         });
+    });
+}
+
+async function loadSchoolChat() {
+    const container = document.getElementById('responsibleChatMessages');
+    if (!container) return;
+    try {
+        const messages = await ZupiAPI.fetchJson('/school/chat', { skipAuthRedirect: true }) || [];
+        if (!messages.length) {
+            container.innerHTML = '<p class="text-muted mb-0">Nenhuma mensagem ainda.</p>';
+            return;
+        }
+        container.innerHTML = messages.map((item) => `
+            <div class="mb-2">
+                <strong>${escapeHtml(item.senderName || item.senderType || 'Usuario')}</strong>
+                <span class="text-muted small">${formatDateTime(item.createdAt)}</span>
+                <p class="mb-0">${escapeHtml(item.message)}</p>
+            </div>
+        `).join('');
+        container.scrollTop = container.scrollHeight;
+    } catch (_) {
+        container.innerHTML = '<p class="text-danger mb-0">Nao foi possivel carregar o chat escolar.</p>';
+    }
+}
+
+function bindSchoolChat() {
+    const form = document.getElementById('responsibleChatForm');
+    if (!form || form.dataset.bound === '1') return;
+    form.dataset.bound = '1';
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const input = document.getElementById('responsibleChatInput');
+        const response = await ZupiAPI.post('/school/chat', { message: input?.value.trim() });
+        if (response?.ok) {
+            input.value = '';
+            await loadSchoolChat();
+        } else if (response) {
+            alert(await ZupiAPI.readErrorMessage(response, 'Nao foi possivel enviar a mensagem.'));
+        }
+    });
+}
+
+function formatDateTime(value) {
+    if (!value) return '';
+    return new Date(value).toLocaleString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
     });
 }
 

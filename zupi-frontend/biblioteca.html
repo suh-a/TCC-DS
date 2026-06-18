@@ -126,8 +126,13 @@
 
     document.addEventListener('DOMContentLoaded', () => {
       const type = ZupiAPI.getUser().type;
-      if (type === 'CRIANCA') {
-        window.location.replace('/dashboard-crianca');
+      if (type === 'CRIANCA' || type === 'ALUNO_CREDENCIADO') {
+        ChildNav.init({ active: 'biblioteca' });
+        if (type === 'ALUNO_CREDENCIADO') {
+          loadSchoolBooks();
+        } else {
+          renderStaticBooks();
+        }
         return;
       }
       applyLibrarySidebar(type);
