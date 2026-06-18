@@ -6,7 +6,8 @@ const GameScore = {
     errors: 0,
     interactions: 0,
     submitted: false,
-    lastErrorAt: 0
+    lastErrorAt: 0,
+    flushPromise: null
   },
   catalog: {
     jogoMemoria: { name: 'Jogo da Memoria', area: 'Memoria', maxScore: 100 },
@@ -75,6 +76,44 @@ const GameScore = {
     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(sessions.slice(-250)));
   },
 
+  resolveApiBase() {
+    if (typeof ZupiAPI !== 'undefined' && ZupiAPI.BASE !== undefined) return ZupiAPI.BASE;
+    if (window.ZUPI_API_BASE !== undefined && window.ZUPI_API_BASE !== '') {
+      const configuredBase = String(window.ZUPI_API_BASE).replace(/\/$/, '');
+      const isLocalApi = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?/i.test(configuredBase);
+      const isLocalPage = /^(localhost|127\.0\.0\.1)$/i.test(window.location.hostname);
+      if (!isLocalApi || isLocalPage) return configuredBase;
+    }
+    if (window.location.port === '5173' || window.location.port === '4173') return '';
+    return 'https://tcc-ds-dzs2.onrender.com';
+  },
+
+  authToken() {
+    return localStorage.getItem('authToken');
+  },
+
+  canPostToApi() {
+    if (typeof ZupiAPI !== 'undefined') return ZupiAPI.isAuthenticated();
+    const token = this.authToken();
+    const userId = localStorage.getItem('userId');
+    return !!(token && userId && userId !== 'undefined' && userId !== 'null');
+  },
+
+  async postJson(path, payload, options = {}) {
+    const token = this.authToken();
+    const base = this.resolveApiBase();
+    const url = path.startsWith('http') ? path : `${base}${path}`;
+    return fetch(url, {
+      method: 'POST',
+      keepalive: options.keepalive === true,
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {})
+      },
+      body: JSON.stringify(payload)
+    });
+  },
+
   localSessions(childId) {
     return this.readSessions().filter((session) => String(session.childId) === String(childId));
   },
@@ -88,11 +127,86 @@ const GameScore = {
     const sessions = this.readSessions();
     const exists = sessions.some((item) => item.sessionId === session.sessionId);
     if (!exists) {
-      sessions.push(session);
+      sessions.push({ ...session, synced: session.synced === true });
       this.writeSessions(sessions);
     }
     window.dispatchEvent(new CustomEvent('zupi:game-session-saved', { detail: session }));
     return session;
+  },
+
+  markSynced(sessionId) {
+    if (!sessionId) return;
+    const sessions = this.readSessions().map((item) => (
+      item.sessionId === sessionId ? { ...item, synced: true, syncedAt: new Date().toISOString() } : item
+    ));
+    this.writeSessions(sessions);
+  },
+
+  buildPayload(session, basic = false) {
+    const payload = {
+      sessionId: session.sessionId,
+      gameId: session.gameId,
+      gameName: session.gameName,
+      skillArea: session.skillArea,
+      score: session.score,
+      maxScore: session.maxScore,
+      durationSeconds: session.durationSeconds,
+      errors: session.errors,
+      skillAreaId: session.skillAreaId
+    };
+
+    if (!basic) {
+      payload.percentage = session.percentage;
+      payload.completedAt = session.completedAt;
+    }
+
+    return payload;
+  },
+
+  async postSessionToApi(session, options = {}) {
+    if (!this.canPostToApi()) return false;
+    if (!session || !session.childId) return false;
+
+    const requestOptions = {
+      skipAuthRedirect: true,
+      keepalive: options.keepalive === true
+    };
+    const path = `/child/${session.childId}/games/session`;
+    const post = (payload) => (typeof ZupiAPI !== 'undefined'
+      ? ZupiAPI.post(path, payload, requestOptions)
+      : this.postJson(path, payload, requestOptions));
+
+    try {
+      const response = await post(this.buildPayload(session));
+      if (response && response.ok) return true;
+
+      const fallback = await post(this.buildPayload(session, true));
+      return !!(fallback && fallback.ok);
+    } catch (e) {
+      console.warn('Nao foi possivel registrar pontuacao na API. A sessao ficou pendente para reenvio.', e);
+      return false;
+    }
+  },
+
+  async flushPendingSessions(childId = null) {
+    if (this.state.flushPromise) return this.state.flushPromise;
+    if (!this.canPostToApi()) return Promise.resolve();
+
+    this.state.flushPromise = (async () => {
+      const pending = this.readSessions()
+        .filter((session) => session && session.synced !== true && session.childId)
+        .filter((session) => !childId || String(session.childId) === String(childId))
+        .slice(-40);
+
+      for (const session of pending) {
+        const synced = await this.postSessionToApi(session);
+        if (synced) this.markSynced(session.sessionId);
+      }
+    })().finally(() => {
+      this.state.flushPromise = null;
+    });
+
+    return this.state.flushPromise;
   },
 
   normalizePayload(input, score, maxScore, durationSeconds, skillAreaId) {
@@ -124,52 +238,17 @@ const GameScore = {
     };
   },
 
-  async submit(input, score, maxScore, durationSeconds, skillAreaId) {
+  async submit(input, score, maxScore, durationSeconds, skillAreaId, options = {}) {
     const session = this.normalizePayload(input, score, maxScore, durationSeconds, skillAreaId);
     if (!session.childId) return null;
 
     this.saveLocal(session);
     this.state.submitted = true;
 
-    if (typeof ZupiAPI === 'undefined') return session;
-
-    const extendedPayload = {
-      gameId: session.gameId,
-      gameName: session.gameName,
-      skillArea: session.skillArea,
-      score: session.score,
-      maxScore: session.maxScore,
-      durationSeconds: session.durationSeconds,
-      skillAreaId: session.skillAreaId,
-      errors: session.errors,
-      percentage: session.percentage,
-      completedAt: session.completedAt
-    };
-    const basicPayload = {
-      gameId: session.gameId,
-      gameName: session.gameName,
-      skillArea: session.skillArea,
-      score: session.score,
-      maxScore: session.maxScore,
-      durationSeconds: session.durationSeconds,
-      errors: session.errors,
-      skillAreaId: session.skillAreaId
-    };
-
-    try {
-      const response = await ZupiAPI.post(`/child/${session.childId}/games/session`, extendedPayload, {
-        skipAuthRedirect: true
-      });
-      if (response && !response.ok) {
-        await ZupiAPI.post(`/child/${session.childId}/games/session`, basicPayload, {
-          skipAuthRedirect: true
-        });
-      }
-    } catch (e) {
-      console.warn('Não foi possível registrar pontuação na API. O relatório local foi salvo.', e);
-    }
-
+    const synced = await this.postSessionToApi(session, options);
+    if (synced) this.markSynced(session.sessionId);
     return session;
+
   },
 
   recordError() {
@@ -208,15 +287,23 @@ const GameScore = {
   autoSubmit(force = false) {
     const gameId = this.currentGameId();
     const score = this.inferScore();
-    if (!this.shouldAutoSubmit(score, force)) return;
+    if (!this.shouldAutoSubmit(score, force)) return Promise.resolve(null);
     const maxScore = this.inferMaxScore(gameId, score);
-    this.submit({
+    return this.submit({
       gameId,
       score,
       maxScore,
       errors: this.state.errors,
       durationSeconds: (Date.now() - this.state.startedAt) / 1000
-    });
+    }, undefined, undefined, undefined, undefined, { keepalive: force });
+  },
+
+  async submitBeforeNavigation(url) {
+    await Promise.race([
+      this.autoSubmit(true),
+      new Promise((resolve) => setTimeout(resolve, 1800))
+    ]);
+    window.location.href = url;
   },
 
   observeErrors() {
@@ -260,7 +347,21 @@ document.addEventListener('DOMContentLoaded', () => {
   const isMenu = /\/menuJogos(?:\.html)?$/i.test(path);
   const isGame = /\/jogo/i.test(path) || /\/JogoMath(?:\.html)?$/i.test(path);
 
-  if (isGame && !isMenu) GameScore.initAutoTracking();
+  window.ZupiGameScoreReady = GameScore.flushPendingSessions();
+
+  if (isGame && !isMenu) {
+    GameScore.initAutoTracking();
+    document.addEventListener('click', (event) => {
+      const link = event.target?.closest?.('a[href]');
+      if (!link || event.defaultPrevented || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+
+      const target = new URL(link.href, window.location.origin);
+      if (target.origin !== window.location.origin || target.pathname !== '/menuJogos') return;
+
+      event.preventDefault();
+      GameScore.submitBeforeNavigation(`${target.pathname}${target.search}${target.hash}`);
+    }, true);
+  }
   if (!isGame || isMenu || document.querySelector('.game-return-menu')) return;
 
   const style = document.createElement('style');
@@ -294,7 +395,6 @@ document.addEventListener('DOMContentLoaded', () => {
   menuLink.href = '/menuJogos';
   menuLink.textContent = 'Voltar ao menu';
   menuLink.setAttribute('aria-label', 'Voltar ao menu de jogos');
-  menuLink.addEventListener('click', () => GameScore.autoSubmit(true));
   document.head.appendChild(style);
   document.body.appendChild(menuLink);
 });

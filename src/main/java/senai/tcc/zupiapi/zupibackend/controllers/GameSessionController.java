@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import senai.tcc.zupiapi.zupibackend.dto.request.GameSessionRequest;
-import senai.tcc.zupiapi.zupibackend.model.GameSession;
+import senai.tcc.zupiapi.zupibackend.dto.response.GameSessionResponse;
 import senai.tcc.zupiapi.zupibackend.services.AutoReportService;
 import senai.tcc.zupiapi.zupibackend.services.GameSessionService;
 
@@ -24,7 +24,7 @@ public class GameSessionController {
     private AutoReportService autoReportService;
 
     @PostMapping("/session")
-    public ResponseEntity<GameSession> record(
+    public ResponseEntity<GameSessionResponse> record(
             @PathVariable Long childId,
             @Valid @RequestBody GameSessionRequest request
     ) {
@@ -32,7 +32,7 @@ public class GameSessionController {
     }
 
     @GetMapping("/sessions")
-    public ResponseEntity<List<GameSession>> list(@PathVariable Long childId) {
+    public ResponseEntity<List<GameSessionResponse>> list(@PathVariable Long childId) {
         return ResponseEntity.ok(gameSessionService.findByChild(childId));
     }
 

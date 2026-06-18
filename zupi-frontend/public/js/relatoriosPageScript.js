@@ -52,6 +52,12 @@ document.addEventListener('DOMContentLoaded', async function () {
     localStorage.setItem('activeChildId', childId);
     localStorage.setItem('childId', childId);
 
+    if (window.GameScore?.flushPendingSessions) {
+        await GameScore.flushPendingSessions(childId);
+    } else if (window.ZupiGameScoreReady) {
+        await window.ZupiGameScoreReady;
+    }
+
     await loadSkillThemes();
     await loadChildHeader(childId);
     await loadCharts(childId);
@@ -184,18 +190,23 @@ async function loadCharts(childId) {
         sessions = ZupiGameReports.mergeSessions(sessions, childId, {
             includeLocal: ZupiGameReports.shouldIncludeLocalSessions()
         });
-        const summary = ZupiGameReports.summarize(sessions);
-        progress = {
-            ...(progress || {}),
-            averageScore: summary.average,
-            errors: summary.totalErrors,
-            totalSeconds: summary.totalSeconds
-        };
-        renderGameReportDetails(sessions);
+        if (sessions.length) {
+            const summary = ZupiGameReports.summarize(sessions);
+            progress = {
+                ...(progress || {}),
+                averageScore: summary.average,
+                errors: summary.totalErrors,
+                totalSeconds: summary.totalSeconds,
+                totalGames: summary.totalSessions
+            };
+            renderGameReportDetails(sessions);
+        } else {
+            renderGameReportFallback(averages, progress);
+        }
     }
 
     renderPerformanceChart(averages, sessions);
-    renderSubjectsChart(sessions);
+    renderSubjectsChart(sessions, averages);
     renderActivityChart(sessions, progress);
 }
 
@@ -219,7 +230,7 @@ function renderPerformanceChart(averages, sessions) {
         averages.forEach(item => {
             const name = item.skillArea?.name || item.skillArea || 'Area';
             labels.push(name);
-            data.push(Math.round(item.average ?? 0));
+            data.push(Math.round(Number(item.average ?? item.score ?? item.value ?? 0)));
         });
     } else {
         labels = ['Sem dados'];
@@ -241,7 +252,7 @@ function renderPerformanceChart(averages, sessions) {
     }));
 }
 
-function renderSubjectsChart(sessions) {
+function renderSubjectsChart(sessions, averages = []) {
     const canvas = document.getElementById('chartSubjects');
     if (!canvas) return;
 
@@ -251,6 +262,14 @@ function renderSubjectsChart(sessions) {
             const key = s.skillArea || GAME_SUBJECT_LABELS[s.gameId] || GAME_SUBJECT_LABELS.default;
             if (!grouped[key]) grouped[key] = [];
             grouped[key].push(s.percentage ?? (s.maxScore ? ((s.score || 0) * 100 / s.maxScore) : (s.score || 0)));
+        });
+    }
+
+    if (Object.keys(grouped).length === 0 && Array.isArray(averages)) {
+        averages.forEach(item => {
+            const key = item.skillArea?.name || item.skillArea || 'Area';
+            if (!grouped[key]) grouped[key] = [];
+            grouped[key].push(Number(item.average ?? item.score ?? item.value ?? 0));
         });
     }
 
@@ -287,13 +306,17 @@ function renderActivityChart(sessions, progress) {
     const totalMin = Array.isArray(sessions)
         ? sessions.reduce((acc, s) => acc + (s.durationSeconds || 0), 0) / 60
         : 0;
-    const playCount = Array.isArray(sessions) ? sessions.length : 0;
-    const avgScore = progress.averageScore ?? 0;
-    const totalErrors = progress.errors ?? (Array.isArray(sessions) ? sessions.reduce((acc, s) => acc + (s.errors || 0), 0) : 0);
+    const fallbackSeconds = Number(progress?.totalSeconds ?? progress?.durationSeconds ?? progress?.totalDurationSeconds ?? 0);
+    const effectiveTotalMin = totalMin || (fallbackSeconds / 60);
+    const playCount = Array.isArray(sessions) && sessions.length
+        ? sessions.length
+        : Number(progress?.totalGames ?? progress?.sessions ?? progress?.count ?? 0);
+    const avgScore = Number(progress?.averageScore ?? progress?.average ?? progress?.percentage ?? 0);
+    const totalErrors = Number(progress?.errors ?? progress?.totalErrors ?? (Array.isArray(sessions) ? sessions.reduce((acc, s) => acc + (s.errors || 0), 0) : 0));
 
     const labels = ['Tempo de jogo', 'Partidas', 'Desempenho', 'Precisao'];
     const data = [
-        Math.min(100, Math.round(totalMin)),
+        Math.min(100, Math.round(effectiveTotalMin)),
         Math.min(100, Math.round(playCount * 8)),
         Math.min(100, Math.round(avgScore)),
         Math.min(100, Math.max(0, Math.round(avgScore - totalErrors)))
@@ -323,6 +346,121 @@ function renderActivityChart(sessions, progress) {
             }
         }
     }));
+}
+
+function averageNumbers(values) {
+    const nums = values.map(Number).filter(value => Number.isFinite(value));
+    return nums.length ? Math.round(nums.reduce((sum, value) => sum + value, 0) / nums.length) : 0;
+}
+
+function averageItemsFromReports(averages) {
+    if (!Array.isArray(averages)) return [];
+    return averages.map(item => ({
+        label: item.skillArea?.name || item.skillArea || 'Area',
+        value: Math.round(Number(item.average ?? item.score ?? item.value ?? 0))
+    })).filter(item => item.label && Number.isFinite(item.value));
+}
+
+function renderGameReportFallback(averages, progress = {}) {
+    const items = averageItemsFromReports(averages);
+    const avg = Number(progress?.averageScore ?? progress?.average ?? progress?.percentage ?? averageNumbers(items.map(item => item.value))) || 0;
+    const totalGames = Number(progress?.totalGames ?? progress?.sessions ?? progress?.count ?? 0);
+    const totalSeconds = Number(progress?.totalSeconds ?? progress?.durationSeconds ?? progress?.totalDurationSeconds ?? 0);
+    const totalErrors = Number(progress?.errors ?? progress?.totalErrors ?? 0);
+    const hasAnyData = items.length > 0 || totalGames > 0 || avg > 0 || totalSeconds > 0 || totalErrors > 0;
+    const displayItems = items.length ? items : (hasAnyData ? [{ label: 'Desempenho geral', value: avg }] : []);
+
+    if (!hasAnyData) {
+        renderGameReportDetails([]);
+        return;
+    }
+
+    const summary = document.getElementById('gameReportSummary');
+    if (summary) {
+        const latestRows = displayItems.length
+            ? displayItems.slice(0, 4).map(item => `<li><strong>${item.label}</strong><span>Media registrada: ${item.value}%</span></li>`).join('')
+            : '<li><strong>Relatorio encontrado</strong><span>Aguardando partidas detalhadas dos jogos.</span></li>';
+
+        summary.innerHTML = `
+          <article class="zupi-report-panel">
+            <header>
+              <p>Relatorio automatico dos jogos</p>
+              <strong>${avg}%</strong>
+            </header>
+            <div class="zupi-report-metrics">
+              <span><b>${totalGames}</b> partidas</span>
+              <span><b>${window.ZupiGameReports ? ZupiGameReports.formatMinutes(totalSeconds) : '0 min'}</b> de jogo</span>
+              <span><b>${totalErrors}</b> erros</span>
+            </div>
+            <div class="zupi-report-bar" aria-label="Porcentagem media">
+              <i style="width:${Math.max(4, avg)}%"></i>
+            </div>
+            <ul class="zupi-report-list">${latestRows}</ul>
+          </article>
+        `;
+    }
+
+    const avgEl = document.getElementById('gameReportAverage');
+    if (avgEl) avgEl.textContent = `${avg}%`;
+    if (window.ZupiGameReports) {
+        ZupiGameReports.renderSimpleBars(document.getElementById('gameReportBars'), displayItems);
+    }
+
+    const category = document.getElementById('gameCategoryDetails');
+    if (category) {
+        category.innerHTML = `
+          <article class="zupi-report-panel">
+            <header>
+              <p>Categorias trabalhadas</p>
+              <strong>${displayItems.length}</strong>
+            </header>
+            <div class="zupi-category-grid">
+              ${displayItems.map((item, index) => `
+                <section class="zupi-category-card">
+                  <span style="background:${CHART_COLORS[index % CHART_COLORS.length]}"></span>
+                  <h3>${item.label}</h3>
+                  <strong>${item.value}%</strong>
+                  <p>${item.value >= 70 ? 'Bom progresso' : 'Em desenvolvimento'}</p>
+                  <small>Media registrada em relatorio</small>
+                </section>
+              `).join('')}
+            </div>
+          </article>
+        `;
+    }
+
+    const details = document.getElementById('gameDetails');
+    if (details) {
+        details.innerHTML = `
+          <article class="zupi-report-panel">
+            <header><p>Detalhes por jogo</p><strong>${totalGames}</strong></header>
+            <div class="zupi-game-detail-list">
+              <section class="zupi-game-detail">
+                <div>
+                  <p>Resumo geral</p>
+                  <h3>Partidas registradas</h3>
+                  <small>${totalGames} partida${totalGames === 1 ? '' : 's'} | ${window.ZupiGameReports ? ZupiGameReports.formatMinutes(totalSeconds) : '0 min'} | ${totalErrors} erro${totalErrors === 1 ? '' : 's'}</small>
+                </div>
+                <div class="zupi-game-score" style="--score-color:${CHART_COLORS[0]}">
+                  <strong>${avg}%</strong>
+                  <span>${avg >= 70 ? 'Bom progresso' : 'Em desenvolvimento'}</span>
+                </div>
+              </section>
+            </div>
+          </article>
+        `;
+    }
+
+    const latest = document.getElementById('gameLatestSessions');
+    if (latest) {
+        latest.innerHTML = `<article class="zupi-report-panel"><header><p>Ultimas partidas</p><strong>${totalGames}</strong></header><p class="text-muted mb-0">Resumo carregado. As partidas detalhadas aparecerao aqui assim que a API retornar o historico completo.</p></article>`;
+    }
+
+    const narrative = document.getElementById('gameNarrative');
+    if (narrative) {
+        const best = [...displayItems].sort((a, b) => b.value - a.value)[0];
+        narrative.textContent = `Foram carregadas ${totalGames} partida${totalGames === 1 ? '' : 's'} no resumo, com media geral de ${avg}% e ${window.ZupiGameReports ? ZupiGameReports.formatMinutes(totalSeconds) : '0 min'} de jogo. ${best ? `Melhor indicador: ${best.label} (${best.value}%).` : 'As partidas detalhadas aparecerao quando os jogos forem sincronizados com a API.'}`;
+    }
 }
 
 function renderGameReportDetails(sessions) {

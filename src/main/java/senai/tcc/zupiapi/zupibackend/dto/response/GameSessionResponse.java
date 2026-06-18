@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 public record GameSessionResponse(
         Long id,
+        String sessionId,
         Long childId,
         String gameId,
         String gameName,

@@ -5,10 +5,13 @@ import senai.tcc.zupiapi.zupibackend.model.GameSession;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface GameSessionRepository extends JpaRepository<GameSession, Long> {
 
     List<GameSession> findByChildIdOrderByPlayedAtDesc(Long childId);
 
     List<GameSession> findByChildIdAndPlayedAtAfter(Long childId, LocalDateTime after);
+
+    Optional<GameSession> findBySessionId(String sessionId);
 }

@@ -86,17 +86,27 @@ public class AutoReportService {
             return Map.of(
                     "totalGames", 0,
                     "averageScore", 0,
+                    "totalSeconds", 0,
+                    "errors", 0,
                     "trend", "sem_dados",
+                    "difficulties", List.of(),
                     "message", "Ainda não há jogos registrados."
             );
         }
 
         double avg = recent.stream().limit(10).mapToDouble(GameSession::getPercentage).average().orElse(0);
+        int totalSeconds = recent.stream()
+                .mapToInt(s -> s.getDurationSeconds() != null ? s.getDurationSeconds() : 0)
+                .sum();
+        int totalErrors = recent.stream()
+                .mapToInt(s -> s.getErrors() != null ? s.getErrors() : 0)
+                .sum();
         String trend = avg >= 70 ? "evoluindo" : avg >= 40 ? "em_progresso" : "precisa_apoio";
 
         List<String> difficulties = recent.stream()
                 .filter(s -> s.getPercentage() < 50)
                 .map(GameSession::getGameId)
+                .filter(gameId -> gameId != null && !gameId.isBlank())
                 .distinct()
                 .limit(3)
                 .toList();
@@ -104,8 +114,11 @@ public class AutoReportService {
         return Map.of(
                 "totalGames", recent.size(),
                 "averageScore", Math.round(avg),
+                "totalSeconds", totalSeconds,
+                "errors", totalErrors,
                 "trend", trend,
                 "difficulties", difficulties,
+                "lastPlayedAt", recent.getFirst().getPlayedAt() != null ? recent.getFirst().getPlayedAt() : "",
                 "message", generateMessage(avg, difficulties)
         );
     }

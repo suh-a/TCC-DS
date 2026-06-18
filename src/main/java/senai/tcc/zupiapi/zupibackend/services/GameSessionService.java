@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import senai.tcc.zupiapi.zupibackend.dto.request.GameSessionRequest;
+import senai.tcc.zupiapi.zupibackend.dto.response.GameSessionResponse;
 import senai.tcc.zupiapi.zupibackend.exceptions.ResourceNotFoundException;
 import senai.tcc.zupiapi.zupibackend.model.Child;
 import senai.tcc.zupiapi.zupibackend.model.GameSession;
@@ -70,17 +71,27 @@ public class GameSessionService {
     private AccessControlService accessControl;
 
     @Transactional
-    public GameSession recordSession(Long childId, GameSessionRequest request) {
+    public GameSessionResponse recordSession(Long childId, GameSessionRequest request) {
         accessControl.ensureCanAccessChild(childId);
         Child child = childRepository.findById(childId)
                 .orElseThrow(() -> new ResourceNotFoundException("Criança não encontrada"));
 
+        if (request.sessionId() != null && !request.sessionId().isBlank()) {
+            GameSession existing = gameSessionRepository.findBySessionId(request.sessionId()).orElse(null);
+            if (existing != null && existing.getChild() != null && existing.getChild().getId().equals(childId)) {
+                return toResponse(existing);
+            }
+        }
+
         GameSession session = new GameSession();
         session.setChild(child);
-        session.setGameId(request.gameId());
-        session.setScore(request.score());
-        session.setMaxScore(request.maxScore());
-        session.setDurationSeconds(request.durationSeconds());
+        session.setSessionId(blankToNull(request.sessionId()));
+        session.setGameId(blankToNull(request.gameId()));
+        session.setGameName(blankToNull(request.gameName()));
+        session.setScore(nonNegative(request.score()));
+        session.setMaxScore(positiveOrDefault(request.maxScore(), 100));
+        session.setDurationSeconds(nonNegative(request.durationSeconds()));
+        session.setErrors(nonNegative(request.errors()));
         session.setPlayedAt(LocalDateTime.now());
 
         SkillArea area = resolveSkillArea(request);
@@ -90,12 +101,15 @@ public class GameSessionService {
 
         GameSession saved = gameSessionRepository.save(session);
         autoReportService.updateReportFromSessions(child);
-        return saved;
+        return toResponse(saved);
     }
 
-    public List<GameSession> findByChild(Long childId) {
+    public List<GameSessionResponse> findByChild(Long childId) {
         accessControl.ensureCanAccessChild(childId);
-        return gameSessionRepository.findByChildIdOrderByPlayedAtDesc(childId);
+        return gameSessionRepository.findByChildIdOrderByPlayedAtDesc(childId)
+                .stream()
+                .map(this::toResponse)
+                .toList();
     }
 
     private SkillArea resolveSkillArea(GameSessionRequest request) {
@@ -104,9 +118,48 @@ public class GameSessionService {
         }
 
         String skillName = GAME_SKILL_NAME_MAP.get(request.gameId());
-        if (skillName == null) {
-            return null;
+        if (skillName != null) {
+            SkillArea mappedArea = skillAreaRepository.findByName(skillName);
+            if (mappedArea != null) {
+                return mappedArea;
+            }
         }
-        return skillAreaRepository.findByName(skillName);
+
+        String requestedArea = blankToNull(request.skillArea());
+        if (requestedArea != null) {
+            return skillAreaRepository.findByName(requestedArea);
+        }
+        return null;
+    }
+
+    private GameSessionResponse toResponse(GameSession session) {
+        SkillArea area = session.getSkillArea();
+        return new GameSessionResponse(
+                session.getId(),
+                session.getSessionId(),
+                session.getChild() != null ? session.getChild().getId() : null,
+                session.getGameId(),
+                session.getGameName() != null ? session.getGameName() : session.getGameId(),
+                area != null ? area.getName() : null,
+                area != null ? area.getId() : null,
+                session.getScore(),
+                session.getMaxScore(),
+                session.getDurationSeconds(),
+                session.getErrors() != null ? session.getErrors() : 0,
+                (int) Math.round(session.getPercentage()),
+                session.getPlayedAt()
+        );
+    }
+
+    private String blankToNull(String value) {
+        return value == null || value.isBlank() ? null : value;
+    }
+
+    private int nonNegative(Integer value) {
+        return Math.max(0, value != null ? value : 0);
+    }
+
+    private int positiveOrDefault(Integer value, int fallback) {
+        return value != null && value > 0 ? value : fallback;
     }
 }

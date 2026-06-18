@@ -40,21 +40,29 @@ const ZupiGameReports = (() => {
   }
 
   function normalizeSession(session) {
-    const info = window.GameScore?.gameInfo?.(session.gameId) || {};
-    const score = Number(session.score) || 0;
-    const maxScore = Number(session.maxScore) || info.maxScore || 100;
-    const skillArea = resolveSkillArea(session.skillArea, info.area);
-    const completedAt = session.completedAt || session.playedAt || session.createdAt || new Date().toISOString();
+    const gameId = session.gameId || session.gameSlug || session.slug || session.game?.id || session.game?.slug || 'jogo';
+    const info = window.GameScore?.gameInfo?.(gameId) || {};
+    const score = Number(session.score ?? session.points ?? session.totalScore ?? session.correctAnswers ?? 0) || 0;
+    const maxScore = Number(session.maxScore ?? session.maximumScore ?? session.totalQuestions ?? session.totalItems ?? info.maxScore ?? 100) || 100;
+    const rawArea = session.skillArea ?? session.area ?? session.category ?? session.theme;
+    const skillArea = resolveSkillArea(rawArea, info.area);
+    const completedAt = session.completedAt || session.playedAt || session.createdAt || session.date || new Date().toISOString();
+    const durationSeconds = Number(session.durationSeconds ?? session.totalSeconds ?? session.timeSeconds ?? session.timeSpentSeconds ?? session.duration ?? 0) || 0;
+    const errors = Number(session.errors ?? session.totalErrors ?? session.mistakes ?? session.wrongAnswers ?? session.incorrectAnswers ?? 0) || 0;
+    const rawPercentage = session.percentage ?? session.averageScore ?? session.accuracy ?? session.performance;
     return {
       ...session,
-      gameName: session.gameName || info.name || session.gameId || 'Jogo',
+      childId: session.childId || session.child?.id,
+      sessionId: session.sessionId || session.id,
+      gameId,
+      gameName: session.gameName || session.name || session.game?.name || info.name || gameId || 'Jogo',
       skillArea: displayCategory(skillArea),
-      skillAreaId: session.skillAreaId || (typeof session.skillArea === 'object' ? session.skillArea?.id : null),
+      skillAreaId: session.skillAreaId || (typeof rawArea === 'object' ? rawArea?.id : null),
       score,
       maxScore,
-      errors: Number(session.errors) || 0,
-      durationSeconds: Number(session.durationSeconds) || 0,
-      percentage: Number(session.percentage) || Math.round(score * 100 / Math.max(1, maxScore)),
+      errors,
+      durationSeconds,
+      percentage: Number(rawPercentage ?? Math.round(score * 100 / Math.max(1, maxScore))) || 0,
       completedAt
     };
   }

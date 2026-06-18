@@ -12,9 +12,13 @@ public class GameSession {
     private Long id;
 
     private String gameId;
+    @Column(unique = true)
+    private String sessionId;
+    private String gameName;
     private Integer score;
     private Integer maxScore;
     private Integer durationSeconds;
+    private Integer errors;
     private LocalDateTime playedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -33,6 +37,12 @@ public class GameSession {
     public String getGameId() { return gameId; }
     public void setGameId(String gameId) { this.gameId = gameId; }
 
+    public String getSessionId() { return sessionId; }
+    public void setSessionId(String sessionId) { this.sessionId = sessionId; }
+
+    public String getGameName() { return gameName; }
+    public void setGameName(String gameName) { this.gameName = gameName; }
+
     public Integer getScore() { return score; }
     public void setScore(Integer score) { this.score = score; }
 
@@ -41,6 +51,9 @@ public class GameSession {
 
     public Integer getDurationSeconds() { return durationSeconds; }
     public void setDurationSeconds(Integer durationSeconds) { this.durationSeconds = durationSeconds; }
+
+    public Integer getErrors() { return errors; }
+    public void setErrors(Integer errors) { this.errors = errors; }
 
     public LocalDateTime getPlayedAt() { return playedAt; }
     public void setPlayedAt(LocalDateTime playedAt) { this.playedAt = playedAt; }
