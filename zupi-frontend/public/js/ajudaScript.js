@@ -108,11 +108,11 @@ function createHelpAnswer(message, user) {
     const answers = [
         {
             match: ['cadastro', 'cadastrar', 'dependente', 'crianca', 'filho', 'aluno'],
-            reply: `${greeting}para cadastrar uma crianca, entre em "Cadastro de dependentes" no menu lateral, preencha os dados principais e salve. Depois ela aparece em "Perfis das criancas".`
+            reply: `${greeting}para cadastrar uma crianca, entre em "Cadastro de dependentes" no menu lateral, preencha os dados principais e salve. Depois ela aparece em "Selecao de Perfil".`
         },
         {
             match: ['perfil', 'perfis', 'selecionar', 'trocar crianca'],
-            reply: 'Para trocar ou abrir um perfil, use "Perfis das criancas" no menu. Ali voce escolhe a crianca e entra no painel, atividades e relatorios dela.'
+            reply: 'Para trocar ou abrir um perfil, use "Selecao de Perfil" no menu. Ali voce escolhe a crianca e entra no painel, atividades e relatorios dela.'
         },
         {
             match: ['relatorio', 'relatorios', 'desempenho', 'progresso', 'evolucao'],

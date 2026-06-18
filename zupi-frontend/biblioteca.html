@@ -25,7 +25,7 @@
           <p class="navbar-brand text-white mb-4 fs-3 fw-bold">Zupi</p>
           <ul class="nav nav-pills flex-column pf-sidebar-nav" data-pf-sidebar>
             <li class="nav-item mb-2"><a class="nav-link text-white" href="/dashboard-pais">Dashboard</a></li>
-            <li class="nav-item mb-2"><a class="nav-link text-white" href="/selecao-perfil">Perfis das criancas</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" href="/selecao-perfil">Seleção de Perfil</a></li>
             <li class="nav-item mb-2"><a class="nav-link text-white" href="/selecao-relatorios">Relatorios</a></li>
             <li class="nav-item mb-2"><a class="nav-link text-white" href="/cadastro-dependentes">Cadastro de dependentes</a></li>
             <li class="nav-item mb-2"><a class="nav-link text-white" href="/agenda">Agenda</a></li>
@@ -126,6 +126,13 @@
 
     document.addEventListener('DOMContentLoaded', () => {
       const type = ZupiAPI.getUser().type;
+      const isPfChildContext = type === 'CRIANCA'
+        || (type === 'RESPONSAVEL' && localStorage.getItem('activeProfile') === 'CRIANCA');
+      if (isPfChildContext) {
+        const childId = localStorage.getItem('activeChildId') || ZupiAPI.getUser().id;
+        window.location.replace(`/dashboard-crianca${childId ? `?childId=${encodeURIComponent(childId)}` : ''}`);
+        return;
+      }
       if (type === 'CRIANCA' || type === 'ALUNO_CREDENCIADO') {
         ChildNav.init({ active: 'biblioteca' });
         if (type === 'ALUNO_CREDENCIADO') {

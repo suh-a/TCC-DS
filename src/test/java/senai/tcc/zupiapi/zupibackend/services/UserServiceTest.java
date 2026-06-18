@@ -418,4 +418,38 @@ class UserServiceTest {
 
             assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
         }
+
+        @Test
+        void shouldLoginLinkedResponsibleFromDirectChildSession() {
+            Child child = new Child();
+            child.setId(10L);
+            child.setResponsible(user);
+            child.setSchoolLinked(false);
+            when(childRepository.findById(10L)).thenReturn(Optional.of(child));
+            when(passwordEncoder.matches("senha-correta", user.getPassword())).thenReturn(true);
+            when(jwtUtil.generateToken(user.getEmail(), user.getId(), UserType.RESPONSAVEL)).thenReturn("parent-token");
+
+            LoginResponse result = userService.loginResponsibleForChild(
+                    10L, "TESTE@EMAIL.COM", "senha-correta");
+
+            assertEquals("parent-token", result.token());
+            assertEquals(UserType.RESPONSAVEL, result.user().userType());
+            assertEquals(PlanType.PESSOA_FISICA, result.user().planType());
+            verify(accessControl).ensureCanAccessChild(10L);
+        }
+
+        @Test
+        void shouldRejectCredentialsFromUnlinkedResponsible() {
+            Child child = new Child();
+            child.setId(10L);
+            child.setResponsible(user);
+            child.setSchoolLinked(false);
+            when(childRepository.findById(10L)).thenReturn(Optional.of(child));
+
+            ResponseStatusException exception = assertThrows(ResponseStatusException.class,
+                    () -> userService.loginResponsibleForChild(
+                            10L, "outro@email.com", "senha-correta"));
+
+            assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+        }
     }

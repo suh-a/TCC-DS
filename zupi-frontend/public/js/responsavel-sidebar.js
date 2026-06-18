@@ -28,7 +28,7 @@
     /** Rotas permitidas no menu do responsável (PF) */
     const MENU = [
         { href: '/dashboard-pais', label: 'Dashboard' },
-        { href: '/selecao-perfil', label: 'Perfis das crianças' },
+        { href: '/selecao-perfil', label: 'Seleção de Perfil' },
         { href: '/selecao-relatorios', label: 'Relatórios' },
         { href: '/cadastro-dependentes', label: 'Cadastro de dependentes', plan: 'PF' },
         { href: '/agenda', label: 'Agenda' },

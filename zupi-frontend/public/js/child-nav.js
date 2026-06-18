@@ -114,7 +114,10 @@ const ChildNav = (() => {
     }
 
     function menuItemsHtml(active, includeExit = false) {
-        const items = MENU.map(item => {
+        const user = typeof ZupiAPI !== 'undefined' ? ZupiAPI.getUser() : {};
+        const hideLibrary = user.type === 'CRIANCA'
+            || (user.type === 'RESPONSAVEL' && localStorage.getItem('activeProfile') === 'CRIANCA');
+        const items = MENU.filter(item => !(hideLibrary && item.id === 'biblioteca')).map(item => {
             const cls = item.id === active ? 'nav-link text-white active' : 'nav-link text-white';
             const href = typeof item.href === 'function' ? item.href() : item.href;
             return `<li class="nav-item mb-2">
@@ -140,6 +143,7 @@ const ChildNav = (() => {
     }
 
     function showParentGate(childId) {
+        const directChildLogin = ZupiAPI.getUser().type === 'CRIANCA';
         let dialog = document.getElementById('parentAccessDialog');
         if (!dialog) {
             document.body.insertAdjacentHTML('beforeend', `
@@ -148,7 +152,11 @@ const ChildNav = (() => {
                   <button class="parent-access-close" type="button" data-parent-access-close aria-label="Fechar">×</button>
                   <p class="parent-access-icon" aria-hidden="true">🔒</p>
                   <h2 class="h4">Área do responsável</h2>
-                  <p class="text-muted">Digite a senha do responsável para sair do acesso infantil.</p>
+                  <p class="text-muted" id="parentAccessDescription"></p>
+                  <section id="parentAccessEmailGroup" class="mb-3 d-none">
+                    <label class="form-label" for="parentAccessEmail">E-mail do responsável</label>
+                    <input class="form-control" id="parentAccessEmail" type="email" autocomplete="username">
+                  </section>
                   <label class="form-label" for="parentAccessPassword">Senha do responsável</label>
                   <input class="form-control" id="parentAccessPassword" type="password" autocomplete="current-password" required>
                   <p class="text-danger small mt-2 mb-0 d-none" id="parentAccessError" role="alert"></p>
@@ -166,29 +174,51 @@ const ChildNav = (() => {
             });
         }
         dialog.dataset.childId = String(childId);
+        dialog.dataset.directChildLogin = directChildLogin ? '1' : '0';
+        dialog.querySelector('#parentAccessDescription').textContent = directChildLogin
+            ? 'Digite o e-mail e a senha do responsável para sair do acesso infantil.'
+            : 'Digite a senha do responsável para sair do acesso infantil.';
+        const emailGroup = dialog.querySelector('#parentAccessEmailGroup');
+        const emailInput = dialog.querySelector('#parentAccessEmail');
+        emailGroup.classList.toggle('d-none', !directChildLogin);
+        emailInput.required = directChildLogin;
+        emailInput.value = '';
         dialog.querySelector('#parentAccessPassword').value = '';
         dialog.querySelector('#parentAccessError').classList.add('d-none');
         dialog.showModal();
-        dialog.querySelector('#parentAccessPassword').focus();
+        (directChildLogin ? emailInput : dialog.querySelector('#parentAccessPassword')).focus();
     }
 
     async function verifyParentAccess(dialog, fallbackChildId) {
+        const directChildLogin = dialog.dataset.directChildLogin === '1';
+        const email = dialog.querySelector('#parentAccessEmail').value.trim();
         const password = dialog.querySelector('#parentAccessPassword').value;
         const error = dialog.querySelector('#parentAccessError');
         const submit = dialog.querySelector('button[type="submit"]');
         submit.disabled = true;
         error.classList.add('d-none');
         try {
-            const response = await ZupiAPI.post('/auth/parent-access/verify', {
-                childId: Number(dialog.dataset.childId || fallbackChildId),
-                password
-            });
+            const childId = Number(dialog.dataset.childId || fallbackChildId);
+            const response = directChildLogin
+                ? await ZupiAPI.post('/auth/parent-access/login', { childId, email, password }, { skipAuthRedirect: true })
+                : await ZupiAPI.post('/auth/parent-access/verify', { childId, password }, { skipAuthRedirect: true });
             if (!response || !response.ok) {
                 error.textContent = response
-                    ? await ZupiAPI.readErrorMessage(response, 'Senha do responsável incorreta.')
+                    ? await ZupiAPI.readErrorMessage(response, directChildLogin
+                        ? 'E-mail ou senha do responsável inválidos.'
+                        : 'Senha do responsável incorreta.')
                     : 'Não foi possível validar a senha.';
                 error.classList.remove('d-none');
                 return;
+            }
+            if (directChildLogin) {
+                const session = await response.json();
+                if (!session?.user || !['RESPONSAVEL', 'RESPONSAVEL_CREDENCIADO'].includes(session.user.userType)) {
+                    error.textContent = 'As credenciais informadas não pertencem ao responsável.';
+                    error.classList.remove('d-none');
+                    return;
+                }
+                ZupiAPI.saveSession(session);
             }
             localStorage.setItem('activeProfile', 'RESPONSAVEL');
             localStorage.removeItem('activeChildId');

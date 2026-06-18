@@ -231,6 +231,28 @@ public class UserService {
         }
     }
 
+    public LoginResponse loginResponsibleForChild(Long childId, String email, String password) {
+        Child child = childRepository.findById(childId)
+                .orElseThrow(() -> new ResourceNotFoundException("Crianca nao encontrada"));
+        if (child.isSchoolLinked()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Recurso disponivel apenas no plano familiar");
+        }
+
+        accessControl.ensureCanAccessChild(childId);
+        User responsible = child.getResponsible();
+        String normalizedEmail = GoogleAuthService.normalizeEmail(email);
+        if (responsible == null
+                || !GoogleAuthService.normalizeEmail(responsible.getEmail()).equals(normalizedEmail)
+                || !passwordEncoder.matches(password, responsible.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email ou senha do responsavel invalidos");
+        }
+
+        UserType type = UserType.RESPONSAVEL;
+        UserResponse response = toEffectiveResponse(responsible, type);
+        String token = jwtUtil.generateToken(responsible.getEmail(), responsible.getId(), type);
+        return new LoginResponse(token, response);
+    }
+
     public void resetPasswordDirect(Long id, String newPassword) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario nao encontrado"));

@@ -109,6 +109,14 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("/parent-access/login")
+    public ResponseEntity<LoginResponse> loginResponsibleForChild(
+            @Valid @RequestBody ParentLoginRequest request
+    ) {
+        return ResponseEntity.ok(userService.loginResponsibleForChild(
+                request.childId(), request.email(), request.password()));
+    }
+
     @PatchMapping("/{id}/two-factor")
     public ResponseEntity<UserResponse> toggleTwoFactor(
             @PathVariable Long id,
