@@ -209,7 +209,7 @@ const ZupiAPI = (() => {
                 headers
             });
 
-            if (!options.skipAuthRedirect && (response.status === 401 || response.status === 403)) {
+            if (!options.skipAuthRedirect && response.status === 401) {
                 clearSession();
                 window.location.href = loginPath;
                 return null;

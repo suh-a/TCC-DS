@@ -20,9 +20,7 @@ async function loadProfileSelection() {
 
     try {
         const children = await ZupiAPI.fetchMyChildren();
-        const hasSchoolLinkedStudent = Array.isArray(children) && children.some((child) => child.schoolLinked);
-        if (user.type === 'RESPONSAVEL_CREDENCIADO' || hasSchoolLinkedStudent) {
-            ZupiAPI.markCredentialedResponsible();
+        if (user.type === 'RESPONSAVEL_CREDENCIADO') {
             window.location.href = (typeof ZupiRoutes !== 'undefined' && ZupiRoutes.dashboardResponsavelCredenciado) || '/dashboard-responsavel-credenciado';
             return;
         }

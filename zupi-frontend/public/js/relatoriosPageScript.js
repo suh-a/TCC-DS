@@ -58,7 +58,7 @@ function getChildId() {
 
 async function loadChildHeader(childId) {
     try {
-        const response = await ZupiAPI.get(`/child/details/${childId}`);
+        const response = await ZupiAPI.get(`/child/details/${childId}`, { skipAuthRedirect: true });
         if (!response || !response.ok) return;
         const child = await response.json();
 
@@ -93,9 +93,9 @@ async function loadCharts(childId) {
 
     try {
         const [avgRes, progRes, sessRes] = await Promise.all([
-            ZupiAPI.get(`/child/${childId}/reports/avg`),
-            ZupiAPI.get(`/child/${childId}/games/progress`),
-            ZupiAPI.get(`/child/${childId}/games/sessions`)
+            ZupiAPI.get(`/child/${childId}/reports/avg`, { skipAuthRedirect: true }),
+            ZupiAPI.get(`/child/${childId}/games/progress`, { skipAuthRedirect: true }),
+            ZupiAPI.get(`/child/${childId}/games/sessions`, { skipAuthRedirect: true })
         ]);
 
         if (avgRes && avgRes.ok) averages = await avgRes.json();
@@ -106,7 +106,9 @@ async function loadCharts(childId) {
     }
 
     if (window.ZupiGameReports) {
-        sessions = ZupiGameReports.mergeSessions(sessions, childId);
+        sessions = ZupiGameReports.mergeSessions(sessions, childId, {
+            includeLocal: ZupiGameReports.shouldIncludeLocalSessions()
+        });
         const summary = ZupiGameReports.summarize(sessions);
         progress = {
             ...(progress || {}),
@@ -282,7 +284,7 @@ function chartOptions(title) {
 
 async function loadSkillThemes() {
     try {
-        const response = await ZupiAPI.get('/skillAreas');
+        const response = await ZupiAPI.get('/skillAreas', { skipAuthRedirect: true });
         if (response && response.ok) {
             skillThemes = await response.json();
         }

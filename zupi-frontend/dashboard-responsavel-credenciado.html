@@ -66,19 +66,22 @@
         </section>
 
         <section id="acompanhamento" class="row g-4 mb-5">
-          <div class="col-md-4"><div class="card h-100"><div class="card-body"><h2 class="h5">Atividades</h2><p class="text-muted mb-0">Serao exibidas quando a etapa de atividades escolares for implementada.</p></div></div></div>
-          <div class="col-md-4"><div class="card h-100"><div class="card-body"><h2 class="h5">Desempenho</h2><p class="text-muted mb-0">Resumo vinculado aos relatorios da escola.</p></div></div></div>
+          <div class="col-md-4"><div class="card h-100"><div class="card-body"><h2 class="h5">Alunos vinculados</h2><p class="display-6 text-zupi-primary mb-0" id="statLinkedStudents">0</p></div></div></div>
+          <div class="col-md-4"><div class="card h-100"><div class="card-body"><h2 class="h5">Partidas registradas</h2><p class="display-6 text-zupi-primary mb-0" id="statTotalGames">0</p></div></div></div>
+          <div class="col-md-4"><div class="card h-100"><div class="card-body"><h2 class="h5">Media geral</h2><p class="display-6 text-zupi-primary mb-0" id="statAverageScore">0%</p></div></div></div>
           <div class="col-md-4"><div class="card h-100"><div class="card-body"><h2 class="h5">Biblioteca</h2><p class="text-muted">Livros disponibilizados pela escola para o aluno.</p><a class="btn btn-outline-primary btn-sm" href="/biblioteca">Abrir biblioteca</a></div></div></div>
         </section>
 
         <section id="relatorios-escola" class="mb-5">
           <h2 class="h4 mb-3">Relatorios disponibilizados pela escola</h2>
-          <div class="card"><div class="card-body"><p class="text-muted mb-0">A listagem detalhada entra na etapa de relatorios.</p></div></div>
+          <div id="responsibleReportsList" class="row g-4">
+            <div class="col-12"><p class="text-muted">Carregando relatorios dos alunos vinculados...</p></div>
+          </div>
         </section>
 
-        <section id="chat-escola">
-          <h2 class="h4 mb-3">Chat com professores e escola</h2>
-          <div class="card"><div class="card-body"><p class="text-muted mb-0">O chat sera implementado em etapa propria.</p></div></div>
+        <section id="ajuda-escola">
+          <h2 class="h4 mb-3">Ajuda</h2>
+          <div class="card"><div class="card-body"><p class="text-muted mb-0">Use os relatórios e a biblioteca para acompanhar os alunos vinculados pela escola.</p></div></div>
         </section>
       </main>
     </div>
@@ -88,6 +91,7 @@
   <script src="/js/routes.js"></script>
   <script src="/js/api.js"></script>
   <script src="/js/auth-guard.js"></script>
+  <script src="/js/credentialed-responsible-sidebar.js"></script>
   <script src="/js/main.js"></script>
   <script src="/js/dashboardResponsavelCredenciado.js"></script>
 </body>

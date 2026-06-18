@@ -65,10 +65,17 @@ const ZupiGameReports = (() => {
     return fallback || 'Atividades';
   }
 
-  function mergeSessions(apiSessions, childId) {
+  function shouldIncludeLocalSessions() {
+    if (typeof ZupiAPI === 'undefined' || !ZupiAPI.isAuthenticated()) return true;
+    const type = ZupiAPI.getUser().type;
+    return !['ESCOLA', 'DOCENTE', 'ALUNO_CREDENCIADO', 'RESPONSAVEL_CREDENCIADO'].includes(type);
+  }
+
+  function mergeSessions(apiSessions, childId, options = {}) {
+    const includeLocal = options.includeLocal ?? shouldIncludeLocalSessions();
     const all = [
       ...(Array.isArray(apiSessions) ? apiSessions : []),
-      ...localSessions(childId)
+      ...(includeLocal ? localSessions(childId) : [])
     ].map(normalizeSession);
 
     const unique = new Map();
@@ -91,9 +98,9 @@ const ZupiGameReports = (() => {
     return [];
   }
 
-  async function loadSessions(childId = getChildId()) {
+  async function loadSessions(childId = getChildId(), options = {}) {
     const apiSessions = await fetchApiSessions(childId);
-    return mergeSessions(apiSessions, childId);
+    return mergeSessions(apiSessions, childId, options);
   }
 
   function average(values) {
@@ -350,6 +357,7 @@ const ZupiGameReports = (() => {
     getChildId,
     loadSessions,
     mergeSessions,
+    shouldIncludeLocalSessions,
     summarize,
     areaAverages,
     gameAverages,

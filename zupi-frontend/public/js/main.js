@@ -38,6 +38,14 @@ document.addEventListener('pf-sidebar-ready', () => {
     initSwipeSidebar();
 });
 
+document.addEventListener('school-sidebar-ready', () => {
+    initSwipeSidebar();
+});
+
+document.addEventListener('credentialed-sidebar-ready', () => {
+    initSwipeSidebar();
+});
+
 // Função para destacar link ativo na navbar pública (não altera sidebar PF)
 function highlightActiveNavLink() {
     const currentPage = window.location.pathname.split('/').pop();

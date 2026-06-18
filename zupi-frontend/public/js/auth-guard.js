@@ -69,6 +69,21 @@ const ZupiAuthGuard = (() => {
         return ['/biblioteca', '/atividades-interativas', '/desafios-semanais', '/menuJogos', '/recompensas'].includes(path);
     }
 
+    function isResponsibleCredentialArea(path = normalizePath()) {
+        return [
+            '/relatorios',
+            '/perfil-crianca',
+            '/perfil',
+            '/ajuda',
+            '/configuracoes',
+            '/biblioteca'
+        ].includes(path);
+    }
+
+    function isSchoolChildReportArea(path = normalizePath()) {
+        return path === '/relatorios';
+    }
+
     const ROLE_AREAS = [
         { paths: ['/dashboard-escola'], roles: ['ESCOLA', 'ADMIN'] },
         { paths: ['/dashboard-docente'], roles: ['DOCENTE', 'ADMIN'] },
@@ -103,7 +118,15 @@ const ZupiAuthGuard = (() => {
             return;
         }
 
-        if (isResponsibleArea(path) && type && !['RESPONSAVEL', 'ADMIN'].includes(type)) {
+        if (isResponsibleArea(path) && type === 'RESPONSAVEL_CREDENCIADO' && !isResponsibleCredentialArea(path)) {
+            window.location.href = `/403?from=${encodeURIComponent(path)}`;
+            return;
+        }
+
+        const responsibleAreaRoles = isSchoolChildReportArea(path)
+            ? ['RESPONSAVEL', 'RESPONSAVEL_CREDENCIADO', 'ESCOLA', 'DOCENTE', 'ALUNO_CREDENCIADO', 'ADMIN']
+            : ['RESPONSAVEL', 'RESPONSAVEL_CREDENCIADO', 'ADMIN'];
+        if (isResponsibleArea(path) && type && !responsibleAreaRoles.includes(type)) {
             window.location.href = `/403?from=${encodeURIComponent(path)}`;
             return;
         }
@@ -120,7 +143,8 @@ const ZupiAuthGuard = (() => {
             return;
         }
 
-        if (CHILD_ONLY_PATHS.has(path) && !['CRIANCA', 'ALUNO_CREDENCIADO'].includes(type) && !localStorage.getItem('activeChildId')) {
+        const requestedChildId = new URLSearchParams(window.location.search).get('childId');
+        if (CHILD_ONLY_PATHS.has(path) && !['CRIANCA', 'ALUNO_CREDENCIADO'].includes(type) && !localStorage.getItem('activeChildId') && !requestedChildId) {
             window.location.href = (ZupiRoutes && ZupiRoutes.selecaoPerfil) || '/selecao-perfil';
         }
     }

@@ -386,12 +386,13 @@
             <h6 class="mb-3">Responsável</h6>
             <p class="text-muted small">Busque por nome ou CPF. Se não encontrar, cadastre um novo responsável.</p>
             <div class="mb-3">
-              <label for="respSearch" class="form-label">Buscar responsável (nome ou CPF)</label>
+              <label for="responsibleSelect" class="form-label">Responsável</label>
               <div class="input-group">
-                <input type="search" class="form-control" id="respSearch" list="responsiblesDatalist" placeholder="Nome ou CPF..." autocomplete="off" required>
+                <select class="form-select" id="responsibleSelect" required>
+                  <option value="">Carregando responsáveis...</option>
+                </select>
                 <button type="button" class="btn btn-outline-primary" id="openRegisterResponsibleBtn">Cadastrar usuário</button>
               </div>
-              <datalist id="responsiblesDatalist"></datalist>
               <input type="hidden" id="selectedResponsibleId">
             </div>
             <div id="selectedResponsibleInfo" class="alert alert-light border small d-none"></div>
@@ -500,9 +501,16 @@
       if (target) target.classList.remove('d-none');
     }
 
+    function showSectionFromHash() {
+      const section = (window.location.hash || '#dashboard').replace('#', '') || 'dashboard';
+      showSection(section);
+    }
+
     // Init
     document.addEventListener('DOMContentLoaded', function() {
       if (!ZupiAPI.requireAuth()) return;
+      showSectionFromHash();
+      window.addEventListener('hashchange', showSectionFromHash);
 
       const user = ZupiAPI.getUser();
       const titleEl = document.getElementById('schoolTitle');
@@ -580,7 +588,16 @@
         });
       }
 
-      async function loadSchoolData() {
+      function mergeResponsibleLists(primary, preserved = []) {
+        const byId = new Map();
+        [...preserved, ...primary].forEach((responsible) => {
+          if (!responsible || responsible.id == null) return;
+          byId.set(String(responsible.id), responsible);
+        });
+        return Array.from(byId.values());
+      }
+
+      async function loadSchoolData(options = {}) {
         try {
           console.log('URL listar alunos:', ZupiAPI.buildUrl('/school/students'));
           console.log('URL listar professores:', ZupiAPI.buildUrl('/school/teachers'));
@@ -599,7 +616,10 @@
           console.log('Resposta alunos:', students);
           console.log('Resposta professores:', teachers);
           schoolClasses = Array.isArray(classes) ? classes : [];
-          schoolResponsibles = Array.isArray(responsibles) ? responsibles : [];
+          schoolResponsibles = mergeResponsibleLists(
+            Array.isArray(responsibles) ? responsibles : [],
+            options.preserveResponsibles || []
+          );
           schoolAccess = accesses || { responsibles: [], teachers: [], students: [] };
 
           setText('statAlunos', dashboard?.students ?? schoolStudents.length);
@@ -610,6 +630,7 @@
           renderStudents();
           renderTeachers();
           renderResponsibles();
+          renderResponsibleSelect();
           renderClasses();
           renderAccesses();
           renderSchoolReports(report);
@@ -915,64 +936,97 @@
         const selectedId = document.getElementById('selectedResponsibleId');
         const selectedInfo = document.getElementById('selectedResponsibleInfo');
         const noFound = document.getElementById('noResponsibleFound');
+        const responsibleSelect = document.getElementById('responsibleSelect');
         if (match) {
           selectedId.value = match.id;
+          if (responsibleSelect) responsibleSelect.value = String(match.id);
           selectedInfo.classList.remove('d-none');
           selectedInfo.textContent = `${match.name} | ${match.email} | CPF: ${formatCpfDisplay(match.cpf)}`;
           noFound?.classList.add('d-none');
         } else {
           selectedId.value = '';
+          if (responsibleSelect) responsibleSelect.value = '';
           selectedInfo.classList.add('d-none');
         }
       }
 
-      async function loadResponsibles(query) {
-        const q = encodeURIComponent(query || '');
-        const resp = await ZupiAPI.fetchJson('/school/responsibles?q=' + q);
-        const results = Array.isArray(resp) ? resp : [];
-        if (!(query || '').trim()) {
-          schoolResponsibles = results;
-          renderResponsibles();
-        }
-        const datalist = document.getElementById('responsiblesDatalist');
+      function renderResponsibleSelect(options = schoolResponsibles) {
+        const responsibleSelect = document.getElementById('responsibleSelect');
         const noFound = document.getElementById('noResponsibleFound');
-        if (!datalist) return;
-        datalist.textContent = '';
-        results.forEach((r) => {
+        if (!responsibleSelect) return;
+
+        const currentValue = responsibleSelect.value || document.getElementById('selectedResponsibleId')?.value || '';
+        responsibleSelect.innerHTML = '';
+
+        const placeholder = document.createElement('option');
+        placeholder.value = '';
+        placeholder.textContent = options.length
+          ? 'Selecione um responsável'
+          : 'Nenhum responsável cadastrado';
+        responsibleSelect.appendChild(placeholder);
+
+        options.forEach((responsible) => {
           const opt = document.createElement('option');
-          opt.value = responsibleOptionLabel(r);
-          opt.dataset.id = r.id;
-          datalist.appendChild(opt);
+          opt.value = String(responsible.id);
+          opt.textContent = responsibleOptionLabel(responsible);
+          responsibleSelect.appendChild(opt);
         });
-        const hasQuery = (query || '').trim().length > 0;
-        if (hasQuery && results.length === 0) {
+
+        if (currentValue && options.some((responsible) => String(responsible.id) === String(currentValue))) {
+          responsibleSelect.value = String(currentValue);
+        }
+
+        if (options.length === 0) {
           noFound?.classList.remove('d-none');
         } else {
           noFound?.classList.add('d-none');
         }
       }
 
-      const respSearch = document.getElementById('respSearch');
+      async function loadResponsibles(query, options = {}) {
+        const q = encodeURIComponent(query || '');
+        const resp = await ZupiAPI.fetchJson('/school/responsibles?q=' + q);
+        const results = Array.isArray(resp) ? resp : [];
+        let optionResults = results;
+        if (!(query || '').trim()) {
+          schoolResponsibles = mergeResponsibleLists(results, options.preserveResponsibles || []);
+          optionResults = schoolResponsibles;
+          renderResponsibles();
+        }
+        const responsibleSelect = document.getElementById('responsibleSelect');
+        const noFound = document.getElementById('noResponsibleFound');
+        if (!responsibleSelect) return;
+        const currentValue = responsibleSelect.value || document.getElementById('selectedResponsibleId')?.value || '';
+        responsibleSelect.innerHTML = '';
+        const placeholder = document.createElement('option');
+        placeholder.value = '';
+        placeholder.textContent = optionResults.length
+          ? 'Selecione um responsável'
+          : 'Nenhum responsável cadastrado';
+        responsibleSelect.appendChild(placeholder);
+        optionResults.forEach((r) => {
+          const opt = document.createElement('option');
+          opt.value = String(r.id);
+          opt.textContent = responsibleOptionLabel(r);
+          responsibleSelect.appendChild(opt);
+        });
+        if (currentValue && optionResults.some((r) => String(r.id) === String(currentValue))) {
+          responsibleSelect.value = String(currentValue);
+        }
+        if (optionResults.length === 0) {
+          noFound?.classList.remove('d-none');
+        } else {
+          noFound?.classList.add('d-none');
+        }
+      }
+
+      const responsibleSelect = document.getElementById('responsibleSelect');
       const selectedId = document.getElementById('selectedResponsibleId');
       const selectedInfo = document.getElementById('selectedResponsibleInfo');
 
-      if (respSearch) {
-        loadResponsibles('');
-        let debounce;
-        respSearch.addEventListener('input', () => {
-          clearTimeout(debounce);
-          debounce = setTimeout(() => loadResponsibles(respSearch.value.trim()), 300);
-        });
-        respSearch.addEventListener('change', () => {
-          const value = respSearch.value.trim();
-          let match = schoolResponsibles.find((r) => responsibleOptionLabel(r) === value);
-          if (!match && value) {
-            const digits = value.replace(/\D/g, '');
-            match = schoolResponsibles.find((r) =>
-              (r.name && r.name.toLowerCase().includes(value.toLowerCase()))
-              || (digits.length >= 3 && r.cpf && r.cpf.includes(digits))
-            );
-          }
+      if (responsibleSelect) {
+        responsibleSelect.addEventListener('change', () => {
+          const match = schoolResponsibles.find((r) => String(r.id) === String(responsibleSelect.value));
           selectResponsible(match || null);
         });
       }
@@ -1025,14 +1079,13 @@
           const created = JSON.parse(text);
           schoolResponsibles = [created, ...schoolResponsibles];
           renderResponsibles();
-          if (respSearch) {
-            respSearch.value = responsibleOptionLabel(created);
-          }
+          await loadResponsibles('', { preserveResponsibles: [created] });
           selectResponsible(created);
           bootstrap.Modal.getInstance(document.getElementById('registerResponsibleModal'))?.hide();
           document.getElementById('registerResponsibleForm')?.reset();
-          await loadSchoolData();
-          await loadResponsibles('');
+          await loadSchoolData({ preserveResponsibles: [created] });
+          await loadResponsibles('', { preserveResponsibles: [created] });
+          selectResponsible(created);
           alert('Responsavel cadastrado com sucesso. Agora voce pode cadastrar o aluno.');
         } catch (err) {
           alert('Erro de conexao ao cadastrar responsavel.');

@@ -49,12 +49,12 @@ function htmlRoutesPlugin(routes) {
   };
 }
 
-function injectApiBasePlugin(apiTarget) {
+function injectRuntimeConfigPlugin(apiTarget, googleClientId) {
   return {
-    name: 'zupi-inject-api-base',
+    name: 'zupi-inject-runtime-config',
     transformIndexHtml(html) {
-      if (html.includes('ZUPI_API_BASE')) return html;
-      const snippet = `<script>window.ZUPI_API_BASE="${apiTarget}";</script>`;
+      if (html.includes('ZUPI_API_BASE') || html.includes('ZUPI_GOOGLE_CLIENT_ID')) return html;
+      const snippet = `<script>window.ZUPI_API_BASE="${apiTarget}";window.ZUPI_GOOGLE_CLIENT_ID="${googleClientId}";</script>`;
       return html.includes('</head>')
         ? html.replace('</head>', `${snippet}\n</head>`)
         : `${snippet}\n${html}`;
@@ -77,6 +77,7 @@ export default defineConfig(({ mode }) => {
     ? 'http://localhost:8080'
     : 'https://tcc-ds-dzs2.onrender.com';
   const apiTarget = (env.VITE_API_BASE || defaultApiTarget).replace(/\/$/, '');
+  const googleClientId = env.VITE_GOOGLE_CLIENT_ID || '841923211184-gn3apap7cv42s3nrbtrri7seh31h0gvp.apps.googleusercontent.com';
   const htmlRoutes = buildHtmlRoutes(__dirname);
 
   return {
@@ -84,7 +85,7 @@ export default defineConfig(({ mode }) => {
     publicDir: 'public',
     plugins: [
       htmlRoutesPlugin(htmlRoutes),
-      injectApiBasePlugin(apiTarget),
+      injectRuntimeConfigPlugin(apiTarget, googleClientId),
     ],
     server: {
       port: 5173,

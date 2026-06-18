@@ -70,8 +70,15 @@ function initGoogleButton() {
     if (container.dataset.googleRendered === 'true') return;
     container.dataset.googleRendered = 'true';
 
+    const googleClientId = window.ZUPI_GOOGLE_CLIENT_ID || '';
+    if (!googleClientId) {
+        container.innerHTML = '';
+        console.warn('Google Client ID nao configurado. Defina VITE_GOOGLE_CLIENT_ID no build do front.');
+        return;
+    }
+
     google.accounts.id.initialize({
-        client_id: '841923211184-gn3apap7cv42s3nrbtrri7seh31h0gvp.apps.googleusercontent.com',
+        client_id: googleClientId,
         callback: handleGoogleLogin
     });
 
@@ -127,20 +134,5 @@ async function redirectAuthenticatedUser() {
 }
 
 async function resolvePostLoginUserType(userType) {
-    if (userType !== 'RESPONSAVEL') {
-        return userType;
-    }
-
-    try {
-        const children = await ZupiAPI.fetchMyChildren();
-        const hasSchoolLinkedStudent = Array.isArray(children) && children.some((child) => child.schoolLinked);
-        if (hasSchoolLinkedStudent) {
-            ZupiAPI.markCredentialedResponsible();
-            return 'RESPONSAVEL_CREDENCIADO';
-        }
-    } catch (error) {
-        console.warn('Nao foi possivel verificar vinculo escolar do responsavel:', error);
-    }
-
     return userType;
 }
