@@ -18,6 +18,13 @@ const GAME_SUBJECT_LABELS = {
     'jogo-ligar-objetos': 'Associacao',
     jogoBolhas: 'Coordenacao',
     jogoContagem: 'Matematica',
+    jogoBalao: 'Atencao',
+    jogoClique: 'Atencao',
+    jogoOrdem: 'Sequenciamento',
+    jogoSombras: 'Percepcao visual',
+    jogoCatch: 'Coordenacao motora',
+    jogoBolao: 'Coordenacao motora',
+    jogoBomba: 'Controle inibitorio',
     default: 'Atividades'
 };
 
@@ -204,16 +211,16 @@ function renderPerformanceChart(averages, sessions) {
     let labels = [];
     let data = [];
 
-    if (Array.isArray(averages) && averages.length > 0) {
+    if (window.ZupiGameReports && Array.isArray(sessions) && sessions.length) {
+        const areas = ZupiGameReports.areaAverages(sessions);
+        labels = areas.map(item => item.label);
+        data = areas.map(item => item.value);
+    } else if (Array.isArray(averages) && averages.length > 0) {
         averages.forEach(item => {
             const name = item.skillArea?.name || item.skillArea || 'Area';
             labels.push(name);
             data.push(Math.round(item.average ?? 0));
         });
-    } else if (window.ZupiGameReports && Array.isArray(sessions) && sessions.length) {
-        const areas = ZupiGameReports.areaAverages(sessions);
-        labels = areas.map(item => item.label);
-        data = areas.map(item => item.value);
     } else {
         labels = ['Sem dados'];
         data = [1];
